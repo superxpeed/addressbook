@@ -12,6 +12,7 @@ import org.apache.ignite.Ignition;
 import org.apache.ignite.cache.CacheAtomicityMode;
 import org.apache.ignite.cache.CacheMode;
 import org.apache.ignite.cache.CachePeekMode;
+import org.apache.ignite.cache.CacheWriteSynchronizationMode;
 import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.ignite.cache.query.SqlQuery;
 import org.apache.ignite.configuration.CacheConfiguration;
@@ -33,13 +34,15 @@ public class GridUtils {
         try{
             final DefaultResourceLoader loader = new DefaultResourceLoader();
             ignite = Ignition.start(loader.getResource("classpath:example-default.xml").getFile().getAbsolutePath());
+            ignite.active(true);
 
             for(Map.Entry<String, Class> cache : UniversalFieldsDescriptor.getCacheClasses().entrySet()){
                 CacheConfiguration cfg = new CacheConfiguration<>();
 
                 cfg.setCacheMode(CacheMode.PARTITIONED);
                 cfg.setName(cache.getKey());
-                cfg.setAtomicityMode(CacheAtomicityMode.ATOMIC);
+                cfg.setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL);
+                cfg.setWriteSynchronizationMode(CacheWriteSynchronizationMode.FULL_SYNC);
                 cfg.setIndexedTypes(String.class, cache.getValue());
 
                 try (IgniteCache createdCache = ignite.getOrCreateCache(cfg)) {

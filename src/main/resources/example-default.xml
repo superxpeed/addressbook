@@ -34,6 +34,25 @@
 	<!-- Enable client mode. -->
     	<property name="clientMode" value="true"/>
         <!-- Enable task execution events for examples. -->
+        <property name="dataStorageConfiguration">
+            <bean class="org.apache.ignite.configuration.DataStorageConfiguration">
+                <property name="defaultDataRegionConfiguration">
+                    <bean class="org.apache.ignite.configuration.DataRegionConfiguration">
+                        <property name="persistenceEnabled" value="true"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+
+        <property name="pluginConfigurations">
+            <bean class="org.gridgain.grid.configuration.GridGainConfiguration">
+                <!-- Enabling snapshots. -->
+                <property name="snapshotConfiguration">
+                    <bean class="org.gridgain.grid.configuration.SnapshotConfiguration"/>
+                </property>
+            </bean>
+        </property>
+
         <property name="includeEventTypes">
             <list>
                 <!--Task execution events-->
