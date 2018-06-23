@@ -1,0 +1,12 @@
+.container {
+    width: 100%!important;
+}
+.breadcrumb {
+    margin-bottom: 0px!important;
+}
+.navbar-default {
+    margin-bottom: 0px!important;
+}
+.navbar-nav {
+    margin-top: 8px!important;
+}
