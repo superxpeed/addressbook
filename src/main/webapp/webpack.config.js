@@ -1,4 +1,3 @@
-// var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
@@ -7,15 +6,8 @@ module.exports = {
         './src/index.js'
     ],
     output: {
-        // path: path.join(__dirname, '../webapp/dist'),
-        publicPath: '/webapp',
-        // filename: 'bundle.js', // если указать в отдельной опции папку в отдельной файл то live reload не работает
-        filename: './dist/bundle.js', // если указать в отдельной опции папку в отдельной файл то live reload не работает
+        filename: './dist/bundle.js',
     },
-    /*externals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM'
-    },*/
     module: {
         loaders: [
             {
@@ -23,7 +15,6 @@ module.exports = {
                 include: /(src)/,
                 loader: ['babel-loader', 'eslint-loader'],
                 exclude: /disposables/
-                // loader: ['babel']
             },
             {
                 test: /\.less$/,
@@ -37,21 +28,24 @@ module.exports = {
             },
             {
                 test: /\.png$/,
-                // loader: 'url?limit=10000&name=build/img/[name].[ext]'
                 loader: "url-loader"
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|gif)$/,
                 loader: "url-loader"
-                //webpackfdsf loader: 'file?name=build/fonts/[name].[ext]'
             }
         ]
     },
     devServer: {
         port: 7070,
         proxy: {
-            "**" : "http://localhost:8080"
-        },
+            '/rest/**': {
+                target: 'http://localhost:8080',
+                secure: false,
+                changeOrigin: true,
+                pathRewrite: {'/rest': '/webapp-1.0-SNAPSHOT/rest'}
+            }
+        }
     },
     plugins: []
 };

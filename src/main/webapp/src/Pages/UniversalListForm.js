@@ -11,6 +11,7 @@ import * as Url from '../Common/Url';
 import {Caches} from '../Table/Enums';
 import {Tab, Tabs, Navbar, Nav, Button, Breadcrumb, Glyphicon} from 'react-bootstrap'
 import * as TableActions from "../Table/TableActions";
+import {GGDialog} from "../Common/GGDialog";
 @connect(
     state => ({
         tableDataOrganization: state.universalListReducer.tableDataOrganization,
@@ -32,7 +33,7 @@ import * as TableActions from "../Table/TableActions";
 class UniversalListForm extends React.Component {
 
     state = {
-        lgShow: false
+        ggShow: false
     };
 
     constructor(props, context) {
@@ -72,9 +73,16 @@ class UniversalListForm extends React.Component {
         }
     };
 
+    ggClose = () => {
+        this.setState({ ggShow: false });
+    };
+
     refreshTable = (start, pageSize, sortName,sortOrder, filterDto, cache) => {
+        if(cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId !== undefined && this.state.selectedRowsOrgId !== null)
+            filterDto.push({name: 'orgId', value: this.state.selectedRowsOrgId, comparator: '', type: 'TextFilter'});
         this.props.getList( Url.GET_LIST_4_UNIVERSAL_LIST_FORM + '?start=' + start + '&pageSize=' + pageSize + '&sortName=' + sortName + '&sortOrder=' + sortOrder + '&cache=' + cache, filterDto, cache);
     };
+
 
     handleSelect(key){
         console.log(key);
@@ -85,7 +93,6 @@ class UniversalListForm extends React.Component {
         console.log('Organizations: ' + this.props.selectedRowsOrganization);
         console.log('Persons: ' + this.props.selectedRowsPerson);
 
-        let lgClose = () => this.setState({ lgShow: false });
 
         let personTable;
 
@@ -145,9 +152,8 @@ class UniversalListForm extends React.Component {
                             </Breadcrumb>
                         </Nav>
                         <Nav pullRight>
-                            <Button disabled={this.props.selectedRowsOrganization.length === 0}
-                                onClick={() => this.setState({ lgShow: true })}>
-                                Show details
+                            <Button onClick={() => this.setState({ ggShow: true })}>
+                                GridGain control
                             </Button>
                         </Nav>
                     </Navbar.Collapse>
@@ -169,6 +175,7 @@ class UniversalListForm extends React.Component {
                     {personTable}
                     {persons}
                 </Tabs>
+                <GGDialog show={this.state.ggShow} handleClose={this.ggClose}/>
             </div>)
     }
 }

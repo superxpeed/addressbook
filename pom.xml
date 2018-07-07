@@ -304,9 +304,6 @@
                     </plugin>
                 </plugins>
             </build>
-            <properties>
-                <npm.executable>npm</npm.executable>
-            </properties>
         </profile>
 
         <profile>
@@ -352,9 +349,6 @@
                     </plugin>
                 </plugins>
             </build>
-            <properties>
-                <npm.executable>npm</npm.executable>
-            </properties>
         </profile>
     </profiles>
 </project>

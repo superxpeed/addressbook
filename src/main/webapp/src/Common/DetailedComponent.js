@@ -38,7 +38,7 @@ export class DetailedComponent extends React.Component {
                         <FormControl
                             type='text'
                             value={this.state.person['id']}
-                            placeholder="Enter id"
+                            placeholder='Enter id'
                             onChange={this.handleChange.bind(this, 'id')}
                         />
                         <FormControl.Feedback />
@@ -52,7 +52,7 @@ export class DetailedComponent extends React.Component {
                         <FormControl
                             type='text'
                             value={this.state.person['orgId']}
-                            placeholder="Enter organization id"
+                            placeholder='Enter organization id'
                             onChange={this.handleChange.bind(this, 'orgId')}
                         />
                         <FormControl.Feedback />
@@ -66,7 +66,7 @@ export class DetailedComponent extends React.Component {
                         <FormControl
                             type='text'
                             value={this.state.person['firstName']}
-                            placeholder="Enter first name"
+                            placeholder='Enter first name'
                             onChange={this.handleChange.bind(this, 'firstName')}
                         />
                         <FormControl.Feedback />
@@ -94,7 +94,7 @@ export class DetailedComponent extends React.Component {
                         <FormControl
                             componentClass='textarea'
                             value={this.state.person['resume']}
-                            placeholder="Enter resume"
+                            placeholder='Enter resume'
                             onChange={this.handleChange.bind(this, 'resume')}
                         />
                         <FormControl.Feedback />
@@ -108,7 +108,7 @@ export class DetailedComponent extends React.Component {
                         <FormControl
                             type='text'
                             value={this.state.person['salary']}
-                            placeholder="Enter salary"
+                            placeholder='Enter salary'
                             onChange={this.handleChange.bind(this, 'salary')}
                         />
                         <FormControl.Feedback />
