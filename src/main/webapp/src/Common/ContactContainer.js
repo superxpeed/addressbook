@@ -20,7 +20,7 @@ export class ContactContainer extends React.Component {
             });
             this.setState({ contacts: contactsMap, conRefs: conRefsLocal});
         }
-    }
+    };
 
     addEmptyContact = () =>{
         let contacts = new Map(this.state.contacts);

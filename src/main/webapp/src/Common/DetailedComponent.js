@@ -1,6 +1,7 @@
 import {FormControl, FormGroup, ControlLabel, HelpBlock, Button} from 'react-bootstrap'
 import update from 'react-addons-update'
 import React from 'react';
+import {ContactContainer} from './ContactContainer'
 
 export class DetailedComponent extends React.Component {
 
@@ -28,6 +29,11 @@ export class DetailedComponent extends React.Component {
     }
 
     render() {
+
+        let contact1 ='[{"data":"8-915-287-9000","description":"mobile1","type":"1","id":816}, {"data":"","description":"","type":"2","id":3256}, {"data":"","description":"","type":"3","id":2403}]';
+
+        let parsed = JSON.parse(contact1);
+
         return (
             <div>
                 <form>
@@ -114,6 +120,7 @@ export class DetailedComponent extends React.Component {
                         <FormControl.Feedback />
                     </FormGroup>
                 </form>
+                <ContactContainer ref={(input) => { this.container = input; if(input !== null) input.addFullContact(parsed);}}/>
             </div>
         );
     }
