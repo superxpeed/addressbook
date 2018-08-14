@@ -111,7 +111,7 @@ public class GridUtils {
         return baseSql;
     }
 
-    public static List<OrganizationDto> selectCachePage(int page, int pageSize, String sortName, String sortOrder, List<FilterDto> filterDto, String cacheName){
+    public static List<?> selectCachePage(int page, int pageSize, String sortName, String sortOrder, List<FilterDto> filterDto, String cacheName){
         IgniteCache cache = ignite.getOrCreateCache(cacheName);
         ArrayList cacheDtoArrayList = new ArrayList<>();
         SqlQuery sql = new SqlQuery(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto).append(" order by " + sortName + " " + sortOrder + " limit ? offset ?").toString());

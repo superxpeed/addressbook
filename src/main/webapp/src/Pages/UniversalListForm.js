@@ -138,11 +138,6 @@ class UniversalListForm extends React.Component {
         return (
             <div>
                 <Navbar>
-                    <Navbar.Header>
-                        <Navbar.Brand>
-                            <a href='#home'>React-Bootstrap</a>
-                        </Navbar.Brand>
-                    </Navbar.Header>
                     <Navbar.Collapse>
                         <Nav>
                             <Breadcrumb>
