@@ -80,8 +80,6 @@ public class GridUtils {
         return null;
     }
 
-
-
     private static StringBuilder getQuerySql(List<FilterDto> filterDto){
         StringBuilder baseSql = new StringBuilder(" ");
         if(filterDto.size() != 0){
