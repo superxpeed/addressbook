@@ -1,11 +1,9 @@
 package com.webapp;
 
+import com.webapp.dto.ContactDto;
 import com.webapp.dto.FilterDto;
 import com.webapp.dto.OrganizationDto;
-import com.webapp.model.Address;
-import com.webapp.model.Organization;
-import com.webapp.model.OrganizationType;
-import com.webapp.model.Person;
+import com.webapp.model.*;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.Ignition;
@@ -125,6 +123,20 @@ public class GridUtils {
         return cacheDtoArrayList;
     }
 
+    public static List<ContactDto> getContactsByPersonId(String id){
+        IgniteCache<String, Contact> cache = ignite.getOrCreateCache("com.webapp.model.Contact");
+        ArrayList<ContactDto> cacheDtoArrayList = new ArrayList<>();
+        SqlQuery sql = new SqlQuery(Contact.class, "personId = ?");
+        try (QueryCursor<Cache.Entry> cursor = cache.query(sql.setArgs(id))) {
+            for (Cache.Entry<String, Contact> e : cursor)
+                cacheDtoArrayList.add(new ContactDto(e.getValue()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return cacheDtoArrayList;
+
+    }
+
     private static String getComparator(FilterDto filterDto){
         if(filterDto.getComparator() == null || filterDto.getComparator().equals(""))
             return " = ";
@@ -151,6 +163,7 @@ public class GridUtils {
         System.out.println("Inserting test data");
         IgniteCache<String, Organization> cacheOrganization = ignite.getOrCreateCache("com.webapp.model.Organization");
         IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache("com.webapp.model.Person");
+        IgniteCache<String, Contact> cacheContact = ignite.getOrCreateCache("com.webapp.model.Contact");
         for(int i = 0; i < 50; i++){
             Organization org = new Organization(
                     "Microsoft " + Math.random(),
@@ -162,8 +175,26 @@ public class GridUtils {
             Person person = new Person(org, "Nikita " + Math.random(), "Loshakov " + Math.random(), 3500.90, "Senior Java Developer");
             cachePerson.put(person.getId(),person);
 
+            Contact contact = new Contact(person.getId(), ContactType.ADDRESS, "address " + Math.random(), "desc " + Math.random());
+            cacheContact.put(contact.getContactId(), contact);
+
+            Contact contact1 = new Contact(person.getId(), ContactType.EMAIL, Math.random() + "@gmail.com", "desc " + Math.random());
+            cacheContact.put(contact1.getContactId(), contact1);
+
+            Contact contact2 = new Contact(person.getId(), ContactType.HOME_PHONE, "8-999-" + Math.random(), "desc " + Math.random());
+            cacheContact.put(contact2.getContactId(), contact2);
+
             Person person1 = new Person(org, "Nikita " + Math.random(), "Loshakov " + Math.random(), 3500.90, "Senior Java Developer");
             cachePerson.put(person1.getId(),person1);
+
+            Contact contact3 = new Contact(person1.getId(), ContactType.ADDRESS, "address " + Math.random(), "desc " + Math.random());
+            cacheContact.put(contact3.getContactId(), contact3);
+
+            Contact contact4 = new Contact(person1.getId(), ContactType.EMAIL, Math.random() + "@gmail.com", "desc " + Math.random());
+            cacheContact.put(contact4.getContactId(), contact4);
+
+            Contact contact5 = new Contact(person1.getId(), ContactType.HOME_PHONE, "8-999-" + Math.random(), "desc " + Math.random());
+            cacheContact.put(contact5.getContactId(), contact5);
         }
     }
 

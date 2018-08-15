@@ -6,10 +6,12 @@ import thunkMiddleware from 'redux-thunk';
 import {Router, Route, hashHistory} from 'react-router';
 import {syncHistoryWithStore, routerReducer, routerMiddleware} from 'react-router-redux';
 import universalListReducer from './Common/UniversalListReducers';
+import detailedComponentReducers from './Common/DetailedComponentReducers';
+
 import UniversalListForm from './Pages/UniversalListForm';
 
 const routerMiddlew = routerMiddleware(hashHistory);
-const reducer = combineReducers({universalListReducer, routing: routerReducer});
+const reducer = combineReducers({universalListReducer, detailedComponentReducers,  routing: routerReducer});
 const store = createStore(reducer,
                           compose(applyMiddleware(thunkMiddleware,  routerMiddlew),
                                     window.devToolsExtension ? window.devToolsExtension() : f => f)

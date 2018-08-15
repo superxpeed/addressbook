@@ -2,6 +2,8 @@ package com.webapp.model;
 
 import org.apache.ignite.cache.query.annotations.QuerySqlField;
 
+import java.util.UUID;
+
 public class Contact {
 
     @QuerySqlField(index = true)
@@ -20,11 +22,12 @@ public class Contact {
     private String description;
 
     public Contact() {
+        this.contactId = UUID.randomUUID().toString();
     }
 
-    public Contact(String personId, String contactId, ContactType type, String data, String description) {
+    public Contact(String personId, ContactType type, String data, String description) {
         this.personId = personId;
-        this.contactId = contactId;
+        this.contactId = UUID.randomUUID().toString();
         this.type = type;
         this.data = data;
         this.description = description;

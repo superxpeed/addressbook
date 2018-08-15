@@ -1,8 +1,19 @@
-import {FormControl, FormGroup, ControlLabel, HelpBlock, Button} from 'react-bootstrap'
+import {FormControl, FormGroup, ControlLabel} from 'react-bootstrap'
 import update from 'react-addons-update'
 import React from 'react';
 import {ContactContainer} from './ContactContainer'
+import {bindActionCreators} from 'redux';
+import {connect} from "react-redux";
+import * as DetailedComponentActions from "./DetailedComponentActions";
 
+@connect(
+    state => ({
+        contactList: state.detailedComponentReducers.contactList,
+    }),
+    dispatch => ({
+        getContactList: bindActionCreators(DetailedComponentActions.getContactList, dispatch),
+    })
+)
 export class DetailedComponent extends React.Component {
 
     state = {
@@ -20,6 +31,10 @@ export class DetailedComponent extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.props.getContactList(this.state.person['id']);
+    }
+
     getValidationState(field) {
         const length = this.state.person[field].length;
         if (length > 10) return 'success';
@@ -29,11 +44,6 @@ export class DetailedComponent extends React.Component {
     }
 
     render() {
-
-        let contact1 ='[{"data":"8-915-287-9000","description":"mobile1","type":"1","id":816}, {"data":"","description":"","type":"2","id":3256}, {"data":"","description":"","type":"3","id":2403}]';
-
-        let parsed = JSON.parse(contact1);
-
         return (
             <div>
                 <form>
@@ -120,7 +130,7 @@ export class DetailedComponent extends React.Component {
                         <FormControl.Feedback />
                     </FormGroup>
                 </form>
-                <ContactContainer ref={(input) => { this.container = input; if(input !== null) input.addFullContact(parsed);}}/>
+                <ContactContainer ref={(input) => { this.container = input; if(input !== null) input.addFullContact(this.props.contactList.data);}}/>
             </div>
         );
     }

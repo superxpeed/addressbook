@@ -1,14 +1,16 @@
 package com.webapp.dto;
 
+import com.webapp.model.Contact;
+
 import java.io.Serializable;
 
 public class ContactDto implements Serializable {
 
     private String personId;
 
-    private String contactId;
+    private String id;
 
-    private int type;
+    private String type;
 
     private String data;
 
@@ -22,19 +24,11 @@ public class ContactDto implements Serializable {
         this.personId = personId;
     }
 
-    public String getContactId() {
-        return contactId;
-    }
-
-    public void setContactId(String contactId) {
-        this.contactId = contactId;
-    }
-
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -54,12 +48,28 @@ public class ContactDto implements Serializable {
         this.description = description;
     }
 
-    public ContactDto(String personId, String contactId, int type, String data, String description) {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public ContactDto(String personId, String id, String type, String data, String description) {
         this.personId = personId;
-        this.contactId = contactId;
+        this.id = id;
         this.type = type;
         this.data = data;
         this.description = description;
+    }
+
+    public ContactDto(Contact contact) {
+        this.personId = contact.getPersonId();
+        this.id = contact.getContactId();
+        this.type = contact.getType().ordinal() + "";
+        this.data = contact.getData();
+        this.description = contact.getDescription();
     }
 
     public ContactDto() {
@@ -69,7 +79,7 @@ public class ContactDto implements Serializable {
     public String toString() {
         return "ContactDto{" +
                 "personId=" + personId +
-                ", contactId=" + contactId +
+                ", id=" + id +
                 ", type=" + type +
                 ", data='" + data + '\'' +
                 ", description='" + description + '\'' +

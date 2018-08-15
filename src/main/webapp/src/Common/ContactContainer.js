@@ -10,7 +10,7 @@ export class ContactContainer extends React.Component {
     };
 
     addFullContact =(contacts) => {
-        if(contacts !== undefined){
+        if(contacts !== undefined && contacts.length !== 0){
             let contactsMap = new Map();
             let delFunc = this.deleteContact;
             let conRefsLocal = this.state.conRefs;

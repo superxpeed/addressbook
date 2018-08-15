@@ -2,6 +2,7 @@ package com.webapp.rest;
 
 import com.webapp.GridUtils;
 import com.webapp.UniversalFieldsDescriptor;
+import com.webapp.dto.ContactDto;
 import com.webapp.dto.FilterDto;
 import com.webapp.dto.PageDataDto;
 import com.webapp.dto.TableDataDto;
@@ -33,6 +34,19 @@ public class UniversalController{
         dto.setTitle("Lol kek");
         dto.setBreadcrumbs(new ArrayList<>());
         dto.setFieldDescriptionMap(UniversalFieldsDescriptor.getFieldDescriptionMap(cache));
+        return dto;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/getContactList")
+    public PageDataDto<TableDataDto> getContactList (@RequestParam(value = "personId") String id) {
+
+        System.out.println("Person id: " + id);
+        List<ContactDto> contactDtos = GridUtils.getContactsByPersonId(id);
+        TableDataDto td = new TableDataDto<>(contactDtos, contactDtos.size());
+        PageDataDto<TableDataDto> dto = new PageDataDto<>();
+        dto.setData(td);
         return dto;
     }
 
