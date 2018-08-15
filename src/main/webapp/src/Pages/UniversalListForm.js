@@ -63,6 +63,9 @@ class UniversalListForm extends React.Component {
             converted.push({name: 'orgId', value: nextProps.selectedRowsOrganization[0].id, comparator: '', type: 'TextFilter'});
             this.refreshTable(1,10,'id','desc',converted, Caches.PERSON_CACHE);
             this.setState({selectedRowsOrgId: nextProps.selectedRowsOrganization[0].id});
+            for(let i = 0; i < this.props.selectedRowsPerson.length; i++) {
+                this.props.clearPersonSelection(this.props.selectedRowsPerson[i]);
+            }
         }
 
         if(nextProps.selectedRowsOrganization.length === 0 && this.props.selectedRowsOrganization.length === 1){
@@ -85,8 +88,10 @@ class UniversalListForm extends React.Component {
     };
 
     refreshTable = (start, pageSize, sortName,sortOrder, filterDto, cache) => {
-        if(cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId !== undefined && this.state.selectedRowsOrgId !== null)
+        if(cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId !== undefined && this.state.selectedRowsOrgId !== null) {
+            filterDto = filterDto.filter(x => x.name === "orgId" && x.value === this.state.selectedRowsOrgId );
             filterDto.push({name: 'orgId', value: this.state.selectedRowsOrgId, comparator: '', type: 'TextFilter'});
+        }
         this.props.getList( Url.GET_LIST_4_UNIVERSAL_LIST_FORM + '?start=' + start + '&pageSize=' + pageSize + '&sortName=' + sortName + '&sortOrder=' + sortOrder + '&cache=' + cache, filterDto, cache);
     };
 
