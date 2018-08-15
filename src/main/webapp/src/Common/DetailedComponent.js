@@ -46,6 +46,7 @@ export class DetailedComponent extends React.Component {
     render() {
         return (
             <div>
+                <div style={{width: '50%', display: 'inline-block', verticalAlign: 'top'}}>
                 <form>
                     <FormGroup
                         controlId='formPersonId'
@@ -130,7 +131,10 @@ export class DetailedComponent extends React.Component {
                         <FormControl.Feedback />
                     </FormGroup>
                 </form>
-                <ContactContainer ref={(input) => { this.container = input; if(input !== null) input.addFullContact(this.props.contactList.data);}}/>
+                </div>
+                <div style={{width: 'calc(50% - 10px)', display: 'inline-block', verticalAlign: 'top',marginTop: '35px', marginLeft: '5px', marginRight: '5px'}}>
+                    <ContactContainer ref={(input) => { this.container = input; if(input !== null) input.addFullContact(this.props.contactList.data);}}/>
+                </div>
             </div>
         );
     }

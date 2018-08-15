@@ -33,10 +33,13 @@ export class Contact extends React.Component {
 
         return (
 
-            <Accordion style={{margin: '0px', marginTop: '-40px'}}>
-                <Button style={{width: '40px', marginTop: '10px' , marginBottom: '-5px', position:'relative', right: '-528px', bottom: '-34px', height: '38px', zIndex: 9999}} onClick={this.props.deleteContact.bind(null, { id: this.props.id })}>X</Button>
-                <Panel  header={this.props.data.type === undefined ? 'New contact' : Contact.getEngType(this.props.data.type)} eventKey='1'>
-                    <FormControl style={{marginTop: '5px'}} componentClass='select' placeholder='1' onChange={this.handleChange}>
+            <Panel style={{marginBottom: '5px'}}>
+                <Panel.Heading>
+                    <Panel.Title toggle>{this.props.data.type === undefined ? 'New contact' : Contact.getEngType(this.props.data.type)}</Panel.Title>
+                    <Button style={{width: '40px', marginTop: '9px' , marginBottom: '-5px', marginRight: '-16px', position:'relative', float: 'right', bottom: '40px', height: '40px', zIndex: 9999}} onClick={this.props.deleteContact.bind(null, { id: this.props.id })}>X</Button>
+                </Panel.Heading>
+                <Panel.Body collapsible>
+                    <FormControl style={{marginTop: '5px'}} componentClass='select' value={this.state.type} placeholder='1' onChange={this.handleChange}>
                         <option value='1'>Mobile phone</option>
                         <option value='2'>Home phone</option>
                         <option value='3'>Address</option>
@@ -56,9 +59,8 @@ export class Contact extends React.Component {
                                  id='description'
                                  onChange={this.handleChange}
                     />
-                </Panel>
-            </Accordion>
-
+                </Panel.Body>
+            </Panel>
         );
     }
 
