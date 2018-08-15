@@ -27,7 +27,8 @@ import {GGDialog} from "../Common/GGDialog";
     }),
     dispatch => ({
         getList: bindActionCreators(CommonActions.getList, dispatch),
-        onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch)
+        onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
+        clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch)
     })
 )
 class UniversalListForm extends React.Component {
@@ -63,6 +64,12 @@ class UniversalListForm extends React.Component {
             this.refreshTable(1,10,'id','desc',converted, Caches.PERSON_CACHE);
             this.setState({selectedRowsOrgId: nextProps.selectedRowsOrganization[0].id});
         }
+
+        if(nextProps.selectedRowsOrganization.length === 0 && this.props.selectedRowsOrganization.length === 1){
+            for(let i = 0; i < this.props.selectedRowsPerson.length; i++) {
+                this.props.clearPersonSelection(this.props.selectedRowsPerson[i]);
+            }
+        }
     }
 
     componentDidUpdate() {}
@@ -92,10 +99,8 @@ class UniversalListForm extends React.Component {
     render() {
         console.log('Organizations: ' + this.props.selectedRowsOrganization);
         console.log('Persons: ' + this.props.selectedRowsPerson);
-
-
         let personTable;
-
+        let persons = [];
         if(this.props.selectedRowsOrganization.length === 1){
             personTable = <Tab key={2} eventKey={2} title={this.props.selectedRowsOrganization[0].name}>
                 <Table ref='table2'
@@ -108,32 +113,33 @@ class UniversalListForm extends React.Component {
                        fieldDescriptionMap={this.props.fieldDescriptionMapPerson}
                        parent={this}
                 />
-            </Tab>
+            </Tab>;
+            for(let i = 0; i < this.props.selectedRowsPerson.length; i++){
+                let key = i + 3;
+                let personLocal = this.props.selectedRowsPerson[i];
+                persons.push(
+                    <Tab key={key + 'tab'} eventKey={key} title={
+                        <span> {this.props.selectedRowsPerson[i].firstName}
+                            <Button key={key + 'btn'} style={{height:'20px', width: '20px', padding: '0px', zIndex: 1000}} onClick={(e) => {
+                                e.stopPropagation();
+                                this.props.onSelectRow(personLocal, false, e, Caches.PERSON_CACHE);
+                                this.personTabClosed(key);
+                            }}>
+                                X
+                            </Button>
+                        </span>
+                    }>
+                        <DetailedComponent key={key + 'person'} person={this.props.selectedRowsPerson[i]}/>
+                    </Tab>
+                );
+            }
         }else {
             personTable = <div/>
         }
 
-        let persons = [];
 
-        for(var i = 0; i < this.props.selectedRowsPerson.length; i++){
-            let key = i + 3;
-            let personLocal = this.props.selectedRowsPerson[i];
-            persons.push(
-                <Tab key={key + 'tab'} eventKey={key} title={
-                        <span> {this.props.selectedRowsPerson[i].firstName}
-                            <Button key={key + 'btn'} style={{height:'20px', width: '20px', padding: '0px', zIndex: 1000}} onClick={(e) => {
-                                        e.stopPropagation();
-                                        this.props.onSelectRow(personLocal, false, e, Caches.PERSON_CACHE);
-                                        this.personTabClosed(key);
-                                    }}>
-                                X
-                            </Button>
-                        </span>
-                }>
-                    <DetailedComponent key={key + 'person'} person={this.props.selectedRowsPerson[i]}/>
-                </Tab>
-            );
-        }
+
+
 
         return (
             <div>

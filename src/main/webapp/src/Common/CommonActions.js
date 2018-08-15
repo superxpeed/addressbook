@@ -1,13 +1,24 @@
 import {SUCCESS, FAILED} from './FormConstants';
 import * as url from './Url';
+import * as tableActions from '../Table/TableActions';
+import {Caches} from '../Table/Enums';
 
 export const GET_LIST = 'GET_LIST';
-
 
 export function asyncCommonCatch(action, error, dispatch) {
     console.error(error);
     dispatch({type: action + FAILED});
     const message = {title: 'Произошла ошибка в javascript: ' + error, content: error.stack};
+}
+
+export function clearPersonSelection(rows) {
+    return dispatch => {
+        dispatch({
+            type: tableActions.ON_SELECT_ROW + Caches.PERSON_CACHE,
+            row: rows,
+            isSelected: false
+        })
+    }
 }
 
 export function getList(url, filterDto = null, cacheName) {
