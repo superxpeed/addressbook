@@ -2,10 +2,7 @@ package com.webapp.rest;
 
 import com.webapp.GridUtils;
 import com.webapp.UniversalFieldsDescriptor;
-import com.webapp.dto.ContactDto;
-import com.webapp.dto.FilterDto;
-import com.webapp.dto.PageDataDto;
-import com.webapp.dto.TableDataDto;
+import com.webapp.dto.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +44,15 @@ public class UniversalController{
         TableDataDto td = new TableDataDto<>(contactDtos, contactDtos.size());
         PageDataDto<TableDataDto> dto = new PageDataDto<>();
         dto.setData(td);
+        return dto;
+    }
+
+    @ResponseBody
+    @RequestMapping("/saveOrCreatePerson")
+    public PageDataDto<PersonDto> saveOrCreatePerson (@RequestBody PersonDto personDto) {
+        System.out.println("PersonDto: " + personDto);
+        PageDataDto<PersonDto> dto = new PageDataDto<>();
+        dto.setData(GridUtils.createOrUpdatePerson(personDto));
         return dto;
     }
 

@@ -3,6 +3,7 @@ package com.webapp;
 import com.webapp.dto.ContactDto;
 import com.webapp.dto.FilterDto;
 import com.webapp.dto.OrganizationDto;
+import com.webapp.dto.PersonDto;
 import com.webapp.model.*;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
@@ -23,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @SuppressWarnings("unchecked")
 public class GridUtils {
@@ -62,6 +64,26 @@ public class GridUtils {
             e.printStackTrace();
         }
 
+    }
+
+    public static PersonDto createOrUpdatePerson(PersonDto personDto){
+        Person person;
+        IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache("com.webapp.model.Person");
+        if(personDto.getId() == null){
+            personDto.setId(UUID.randomUUID().toString());
+            person = new Person();
+        }else
+            person = cachePerson.get(personDto.getId());
+        if(person != null) {
+            person.setId(personDto.getId());
+            person.setFirstName(personDto.getFirstName());
+            person.setLastName(personDto.getLastName());
+            person.setOrgId(personDto.getOrgId());
+            person.setSalary(Double.valueOf(personDto.getSalary()));
+            person.setResume(personDto.getResume());
+            cachePerson.put(person.getId(), person);
+        }
+        return personDto;
     }
 
     public static Float takeFullSnapshot(){
