@@ -43,6 +43,13 @@ export class DetailedComponent extends React.Component {
         return null;
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.person !== this.state.person) {
+            this.props.getContactList(nextProps.person['id']);
+            this.setState({ person: nextProps.person });
+        }
+    }
+
     render() {
         return (
             <div>
