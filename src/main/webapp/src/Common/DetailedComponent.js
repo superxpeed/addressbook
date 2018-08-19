@@ -56,34 +56,6 @@ export class DetailedComponent extends React.Component {
                 <div style={{width: '50%', display: 'inline-block', verticalAlign: 'top'}}>
                 <form>
                     <FormGroup
-                        controlId='formPersonId'
-                        validationState={this.getValidationState('id')}>
-                        <ControlLabel>Employee ID</ControlLabel>
-                        <FormControl
-                            type='text'
-                            value={this.state.person['id']}
-                            placeholder='Enter id'
-                            onChange={this.handleChange.bind(this, 'id')}
-                        />
-                        <FormControl.Feedback />
-                    </FormGroup>
-                </form>
-                <form>
-                    <FormGroup
-                        controlId='formPersonOrgId'
-                        validationState={this.getValidationState('orgId')}>
-                        <ControlLabel>Employee organization id</ControlLabel>
-                        <FormControl
-                            type='text'
-                            value={this.state.person['orgId']}
-                            placeholder='Enter organization id'
-                            onChange={this.handleChange.bind(this, 'orgId')}
-                        />
-                        <FormControl.Feedback />
-                    </FormGroup>
-                </form>
-                <form>
-                    <FormGroup
                         controlId='formPersonFirstName'
                         validationState={this.getValidationState('firstName')}>
                         <ControlLabel>Employee first name</ControlLabel>

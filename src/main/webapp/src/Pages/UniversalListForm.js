@@ -17,11 +17,9 @@ import {GGDialog} from "../Common/GGDialog";
         tableDataOrganization: state.universalListReducer.tableDataOrganization,
         fieldDescriptionMapOrganization: state.universalListReducer.fieldDescriptionMapOrganization,
         totalDataSizeOrganization: state.universalListReducer.totalDataSizeOrganization,
-
         tableDataPerson: state.universalListReducer.tableDataPerson,
         fieldDescriptionMapPerson: state.universalListReducer.fieldDescriptionMapPerson,
         totalDataSizePerson: state.universalListReducer.totalDataSizePerson,
-
         selectedRowsPerson: state.universalListReducer.selectedRowsPerson,
         selectedRowsOrganization: state.universalListReducer.selectedRowsOrganization,
     }),
@@ -141,10 +139,6 @@ class UniversalListForm extends React.Component {
         }else {
             personTable = <div/>
         }
-
-
-
-
 
         return (
             <div>
