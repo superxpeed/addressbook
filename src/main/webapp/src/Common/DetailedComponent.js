@@ -2,22 +2,16 @@ import {FormControl, FormGroup, ControlLabel} from 'react-bootstrap'
 import update from 'react-addons-update'
 import React from 'react';
 import {ContactContainer} from './ContactContainer'
-import {bindActionCreators} from 'redux';
-import {connect} from "react-redux";
-import * as DetailedComponentActions from "./DetailedComponentActions";
+import {ifNoAuthorizedRedirect} from "./CommonActions";
+import * as url from "./Url";
 
-@connect(
-    state => ({
-        contactList: state.detailedComponentReducers.contactList,
-    }),
-    dispatch => ({
-        getContactList: bindActionCreators(DetailedComponentActions.getContactList, dispatch),
-    })
-)
 export class DetailedComponent extends React.Component {
 
     state = {
         person: {},
+        contactList: {
+            data: []
+        }
     };
 
     handleChange(e, v) {
@@ -28,14 +22,44 @@ export class DetailedComponent extends React.Component {
         super(props);
         this.state = {
             person: props.person,
+            contactList: {
+                data: []
+            }
         }
     }
 
+    clearContactList = () => {
+        this.setState(update(this.state, {contactList: {data: {$set:undefined}}}));
+    };
+
+    getContactList = (id) => {
+        let isOk = false;
+        let headers = new Headers();
+        headers.append('Accept', 'application/json');
+        headers.append('Content-Type', 'application/json; charset=utf-8');
+        fetch(url.GET_CONTACT_LIST + "?personId=" + id, {
+            method: 'post',
+            headers: headers
+        }).then(response => {
+            ifNoAuthorizedRedirect(response);
+            isOk = response.ok;
+            return response.json()
+        }).then(json => {
+            if (isOk) {
+                this.setState({contactList: json.data});
+            }
+        })
+    };
+
     componentDidMount() {
-        this.props.getContactList(this.state.person['id']);
+        if(this.state.person['id'] !== undefined)
+            this.getContactList(this.state.person['id']);
+        else
+            this.clearContactList();
     }
 
     getValidationState(field) {
+        if(this.state.person[field] === undefined) return 'error';
         const length = this.state.person[field].length;
         if (length > 10) return 'success';
         else if (length > 5) return 'warning';
@@ -45,7 +69,7 @@ export class DetailedComponent extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.person !== this.state.person) {
-            this.props.getContactList(nextProps.person['id']);
+            this.getContactList(nextProps.person['id']);
             this.setState({ person: nextProps.person });
         }
     }
@@ -112,7 +136,7 @@ export class DetailedComponent extends React.Component {
                 </form>
                 </div>
                 <div style={{width: 'calc(50% - 10px)', display: 'inline-block', verticalAlign: 'top',marginTop: '35px', marginLeft: '5px', marginRight: '5px'}}>
-                    <ContactContainer ref={(input) => { this.container = input; if(input !== null) input.addFullContact(this.props.contactList.data);}}/>
+                    <ContactContainer ref={(input) => { this.container = input; if(input !== null) input.addFullContact(this.state.contactList.data);}}/>
                 </div>
             </div>
         );

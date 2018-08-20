@@ -19,6 +19,8 @@ export class ContactContainer extends React.Component {
                 contactsMap.set(newCon.key, newCon);
             });
             this.setState({ contacts: contactsMap, conRefs: conRefsLocal});
+        }else{
+            this.setState({ contacts: new Map(), conRefs: new Map()});
         }
     };
 

@@ -32,7 +32,8 @@ import {GGDialog} from "../Common/GGDialog";
 class UniversalListForm extends React.Component {
 
     state = {
-        ggShow: false
+        ggShow: false,
+        newPerson: undefined
     };
 
     constructor(props, context) {
@@ -103,6 +104,7 @@ class UniversalListForm extends React.Component {
         console.log('Organizations: ' + this.props.selectedRowsOrganization);
         console.log('Persons: ' + this.props.selectedRowsPerson);
         let personTable;
+        let newPersonTab;
         let persons = [];
         if(this.props.selectedRowsOrganization.length === 1){
             personTable = <Tab key={2} eventKey={2} title={this.props.selectedRowsOrganization[0].name}>
@@ -117,8 +119,9 @@ class UniversalListForm extends React.Component {
                        parent={this}
                 />
             </Tab>;
+            let key = 0;
             for(let i = 0; i < this.props.selectedRowsPerson.length; i++){
-                let key = i + 3;
+                key = i + 3;
                 let personLocal = this.props.selectedRowsPerson[i];
                 persons.push(
                     <Tab key={key + 'tab'} eventKey={key} title={
@@ -136,6 +139,26 @@ class UniversalListForm extends React.Component {
                     </Tab>
                 );
             }
+            if(this.state.createNewPerson === true){
+                if(key === 0)
+                    key = 3;
+                else
+                    key ++;
+                newPersonTab = <Tab key={key} eventKey={key} title={
+                                    <span> {'New person'}
+                                        <Button key={'newPersonTabBtn'} style={{height:'20px', width: '20px', padding: '0px', zIndex: 1000}} onClick={(e) => {
+                                            e.stopPropagation();
+                                            this.setState({ createNewPerson: false, newPerson: undefined});
+                                            this.personTabClosed(key);
+                                        }}>X
+                                        </Button>
+                                    </span>
+                                    }>
+                                    <DetailedComponent key={'newPersonKey'} person={this.state.newPerson}/>
+                                </Tab>
+            }else{
+                newPersonTab = <div/>
+            }
         }else {
             personTable = <div/>
         }
@@ -152,6 +175,9 @@ class UniversalListForm extends React.Component {
                             </Breadcrumb>
                         </Nav>
                         <Nav pullRight>
+                            <Button disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {}})}>
+                                Create person
+                            </Button>
                             <Button onClick={() => this.setState({ ggShow: true })}>
                                 GridGain control
                             </Button>
@@ -174,6 +200,7 @@ class UniversalListForm extends React.Component {
                     </Tab>
                     {personTable}
                     {persons}
+                    {newPersonTab}
                 </Tabs>
                 <GGDialog show={this.state.ggShow} handleClose={this.ggClose}/>
             </div>)
