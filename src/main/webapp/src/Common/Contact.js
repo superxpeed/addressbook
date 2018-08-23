@@ -16,7 +16,6 @@ export class Contact extends React.Component {
 
     handleChange = (e) =>{
         this.setState({ [e.target.id] : e.target.value });
-        console.log(e.target.id + ' ' + e.target.value);
     };
 
     toJson(){
@@ -40,7 +39,7 @@ export class Contact extends React.Component {
                     <Button style={{width: '40px', marginTop: '9px' , marginBottom: '-5px', marginRight: '-16px', position:'relative', float: 'right', bottom: '40px', height: '40px', zIndex: 9999}} onClick={this.props.deleteContact.bind(null, { id: this.props.id })}>X</Button>
                 </Panel.Heading>
                 <Panel.Body collapsible>
-                    <FormControl style={{marginTop: '5px'}} componentClass='select' value={this.state.type} placeholder='1' onChange={this.handleChange}>
+                    <FormControl id='type' style={{marginTop: '5px'}} componentClass='select' value={this.state.type} placeholder='1' onChange={this.handleChange}>
                         <option value='1'>Mobile phone</option>
                         <option value='2'>Home phone</option>
                         <option value='3'>Address</option>
