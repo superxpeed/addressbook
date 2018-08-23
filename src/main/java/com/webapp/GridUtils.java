@@ -82,21 +82,17 @@ public class GridUtils {
     }
 
     public static ContactDto createOrUpdateContact(ContactDto contactDto){
-        Contact contact;
+
         IgniteCache<String, Contact> cachePerson = ignite.getOrCreateCache("com.webapp.model.Contact");
-        if(contactDto.getId() == null || contactDto.getId().length() == 4){
-            contactDto.setId(UUID.randomUUID().toString());
+        Contact contact = cachePerson.get(contactDto.getId());
+        if(contact == null)
             contact = new Contact();
-        }else
-            contact = cachePerson.get(contactDto.getId());
-        if(contact != null) {
-            contact.setContactId(contactDto.getId());
-            contact.setData(contactDto.getData());
-            contact.setDescription(contactDto.getDescription());
-            contact.setPersonId(contactDto.getPersonId());
-            contact.setType(ContactType.values()[Integer.valueOf(contactDto.getType()) - 1]);
-            cachePerson.put(contact.getContactId(), contact);
-        }
+        contact.setContactId(contactDto.getId());
+        contact.setData(contactDto.getData());
+        contact.setDescription(contactDto.getDescription());
+        contact.setPersonId(contactDto.getPersonId());
+        contact.setType(ContactType.values()[Integer.valueOf(contactDto.getType()) - 1]);
+        cachePerson.put(contact.getContactId(), contact);
         return contactDto;
     }
 

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+
+<jboss-web>
+    <context-root>webapp</context-root>
+</jboss-web>
