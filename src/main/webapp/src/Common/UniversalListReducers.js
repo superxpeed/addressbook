@@ -72,6 +72,30 @@ export default function universalListReducer(state = initialState, action = {}) 
                     selectedRowsPerson: state.selectedRowsPerson.filter((it => it.id !== action.row.id))
                 });
             }
+
+        case tableActions.UPDATE_ROW_IN_TABLE + Caches.PERSON_CACHE: {
+            let newSelected = state.selectedRowsPerson.filter((it => it.id !== action.row.id));
+            let newTableData = state.tableDataPerson.data.filter((it => it.id !== action.row.id));
+            newSelected.push(action.row);
+            newTableData.push(action.row);
+            return Object.assign({}, state, {
+                tableDataPerson: { data: newTableData, totalDataSize: state.tableDataPerson.totalDataSize},
+                selectedRowsPerson: newSelected
+            });
+        }
+
+        case tableActions.ADD_ROW_TO_TABLE + Caches.PERSON_CACHE: {
+            let newSelected = state.selectedRowsPerson;
+            let prevSize = state.tableDataPerson.totalDataSize;
+            let newTableData = state.tableDataPerson.data;
+            newSelected.push(action.row);
+            newTableData.push(action.row);
+            return Object.assign({}, state, {
+                tableDataPerson: { data: newTableData, totalDataSize: prevSize + 1},
+                selectedRowsPerson: newSelected
+            });
+        }
+
         case tableActions.ON_SELECT_ALL_ROWS_ON_CURRENT_PAGE + Caches.PERSON_CACHE:
             if (action.isSelected) {
                 return Object.assign({}, state, {

@@ -27,7 +27,7 @@ export class ContactContainer extends React.Component {
     addEmptyContact = () =>{
         let contacts = new Map(this.state.contacts);
         let id = ContactContainer.getId();
-        let newCon = <Contact key={id} data={{}} ref={(input) => { this.state.conRefs.set(id, input); }} id={id} deleteContact={this.deleteContact}/>;
+        let newCon = <Contact key={id} data={{personId: this.props.personId}} ref={(input) => { this.state.conRefs.set(id, input); }} id={id} deleteContact={this.deleteContact}/>;
         contacts.set(newCon.key, newCon);
         this.setState({ contacts: contacts });
     };
@@ -38,10 +38,12 @@ export class ContactContainer extends React.Component {
 
     getJson = () =>{
         let contacts = '[';
-        this.state.conRefs.forEach(function(value, key, map){
-            if(value !== null) contacts += value.toJson() + ', ';
-        });
-        contacts = contacts.substring(0, contacts.length - 2);
+        if(this.state.conRefs.size !== 0){
+            this.state.conRefs.forEach(function(value, key, map){
+                if(value !== null) contacts += value.toJson() + ', ';
+            });
+            contacts = contacts.substring(0, contacts.length - 2);
+        }
         contacts +=  ']';
         return contacts;
     };

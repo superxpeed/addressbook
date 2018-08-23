@@ -22,7 +22,7 @@ public class Person implements Serializable {
     private String resume;
 
     @QuerySqlField(index = true)
-    private double salary;
+    private Double salary;
 
     public String getId() {
         return id;
@@ -64,11 +64,11 @@ public class Person implements Serializable {
         this.resume = resume;
     }
 
-    public double getSalary() {
+    public Double getSalary() {
         return salary;
     }
 
-    public void setSalary(double salary) {
+    public void setSalary(Double salary) {
         this.salary = salary;
     }
 
@@ -76,7 +76,7 @@ public class Person implements Serializable {
         // No-op.
     }
 
-    public Person(Organization org, String firstName, String lastName, double salary, String resume) {
+    public Person(Organization org, String firstName, String lastName, Double salary, String resume) {
         id = UUID.randomUUID().toString();
 
         orgId = org.getId();
@@ -87,7 +87,7 @@ public class Person implements Serializable {
         this.resume = resume;
     }
 
-    public Person(String id, String orgId, String firstName, String lastName, double salary, String resume) {
+    public Person(String id, String orgId, String firstName, String lastName, Double salary, String resume) {
         this.id = id;
         this.orgId = orgId;
         this.firstName = firstName;

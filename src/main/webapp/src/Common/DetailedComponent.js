@@ -1,4 +1,4 @@
-import {FormControl, FormGroup, ControlLabel} from 'react-bootstrap'
+import {FormControl, FormGroup, ControlLabel, Button} from 'react-bootstrap'
 import update from 'react-addons-update'
 import React from 'react';
 import {ContactContainer} from './ContactContainer'
@@ -45,8 +45,44 @@ export class DetailedComponent extends React.Component {
             isOk = response.ok;
             return response.json()
         }).then(json => {
-            if (isOk) {
+            if (isOk && this.isMounted) {
                 this.setState({contactList: json.data});
+            }
+        })
+    };
+
+    savePerson = () => {
+        let savedPerson;
+        let isOk = false;
+        let headers = new Headers();
+        headers.append('Accept', 'application/json');
+        headers.append('Content-Type', 'application/json; charset=utf-8');
+        fetch(url.SAVE_PERSON, {
+            method: 'post',
+            headers: headers,
+            body: JSON.stringify(this.state.person)
+        }).then(response => {
+            ifNoAuthorizedRedirect(response);
+            isOk = response.ok;
+            return response.json()
+        }).then(json => {
+            if (isOk) {
+                savedPerson = json.data;
+                fetch(url.SAVE_CONTACT_LIST, {
+                    method: 'post',
+                    headers: headers,
+                    body: this.container.getJson()
+                }).then(response => {
+                    ifNoAuthorizedRedirect(response);
+                    isOk = response.ok;
+                    return response.json()
+                }).then(json => {
+                    if (isOk) {
+                        if(this.props.forUpdate)
+                            this.setState(update(this.state, {person: {$set: savedPerson}, contactList: {data: {$set:json.data}}}));
+                        this.props.onUpdate(savedPerson);
+                    }
+                })
             }
         })
     };
@@ -59,7 +95,7 @@ export class DetailedComponent extends React.Component {
     }
 
     getValidationState(field) {
-        if(this.state.person[field] === undefined) return 'error';
+        if(this.state.person[field] === undefined || this.state.person[field] === null) return 'error';
         const length = this.state.person[field].length;
         if (length > 10) return 'success';
         else if (length > 5) return 'warning';
@@ -134,9 +170,12 @@ export class DetailedComponent extends React.Component {
                         <FormControl.Feedback />
                     </FormGroup>
                 </form>
+                    <Button onClick={this.savePerson}>
+                        Save contacts
+                    </Button>
                 </div>
                 <div style={{width: 'calc(50% - 10px)', display: 'inline-block', verticalAlign: 'top',marginTop: '35px', marginLeft: '5px', marginRight: '5px'}}>
-                    <ContactContainer ref={(input) => { this.container = input; if(input !== null) input.addFullContact(this.state.contactList.data);}}/>
+                    <ContactContainer personId={this.state.person['id']} ref={(input) => { this.container = input; if(input !== null) input.addFullContact(this.state.contactList.data);}}/>
                 </div>
             </div>
         );

@@ -67,24 +67,39 @@ public class GridUtils {
     }
 
     public static PersonDto createOrUpdatePerson(PersonDto personDto){
-        Person person;
         IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache("com.webapp.model.Person");
-        if(personDto.getId() == null){
-            personDto.setId(UUID.randomUUID().toString());
+        Person person = cachePerson.get(personDto.getId());
+        if(person == null)
             person = new Person();
-        }else
-            person = cachePerson.get(personDto.getId());
-        if(person != null) {
-            person.setId(personDto.getId());
-            person.setFirstName(personDto.getFirstName());
-            person.setLastName(personDto.getLastName());
-            person.setOrgId(personDto.getOrgId());
-            person.setSalary(Double.valueOf(personDto.getSalary()));
-            person.setResume(personDto.getResume());
-            cachePerson.put(person.getId(), person);
-        }
+        person.setId(personDto.getId());
+        person.setFirstName(personDto.getFirstName());
+        person.setLastName(personDto.getLastName());
+        person.setOrgId(personDto.getOrgId());
+        person.setSalary(personDto.getSalary() != null ? Double.valueOf(personDto.getSalary()) : 0);
+        person.setResume(personDto.getResume());
+        cachePerson.put(person.getId(), person);
         return personDto;
     }
+
+    public static ContactDto createOrUpdateContact(ContactDto contactDto){
+        Contact contact;
+        IgniteCache<String, Contact> cachePerson = ignite.getOrCreateCache("com.webapp.model.Contact");
+        if(contactDto.getId() == null || contactDto.getId().length() == 4){
+            contactDto.setId(UUID.randomUUID().toString());
+            contact = new Contact();
+        }else
+            contact = cachePerson.get(contactDto.getId());
+        if(contact != null) {
+            contact.setContactId(contactDto.getId());
+            contact.setData(contactDto.getData());
+            contact.setDescription(contactDto.getDescription());
+            contact.setPersonId(contactDto.getPersonId());
+            contact.setType(ContactType.values()[Integer.valueOf(contactDto.getType())]);
+            cachePerson.put(contact.getContactId(), contact);
+        }
+        return contactDto;
+    }
+
 
     public static Float takeFullSnapshot(){
         try{

@@ -4,10 +4,8 @@ import com.webapp.GridUtils;
 import com.webapp.UniversalFieldsDescriptor;
 import com.webapp.dto.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +46,23 @@ public class UniversalController{
     }
 
     @ResponseBody
-    @RequestMapping("/saveOrCreatePerson")
+    @RequestMapping(value = "/saveOrCreatePerson", method = RequestMethod.POST)
     public PageDataDto<PersonDto> saveOrCreatePerson (@RequestBody PersonDto personDto) {
         System.out.println("PersonDto: " + personDto);
         PageDataDto<PersonDto> dto = new PageDataDto<>();
         dto.setData(GridUtils.createOrUpdatePerson(personDto));
+        return dto;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/saveOrCreateContacts", method = RequestMethod.POST)
+    public PageDataDto<List<ContactDto>> saveOrCreateContacts (@RequestBody List<ContactDto> contactDtos) {
+        List<ContactDto> contactDtoList = new ArrayList<>();
+        for(ContactDto contactDto: contactDtos){
+            contactDtoList.add(GridUtils.createOrUpdateContact(contactDto));
+        }
+        PageDataDto<List<ContactDto>> dto = new PageDataDto<>();
+        dto.setData(contactDtoList);
         return dto;
     }
 

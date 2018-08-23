@@ -26,14 +26,15 @@ import {GGDialog} from "../Common/GGDialog";
     dispatch => ({
         getList: bindActionCreators(CommonActions.getList, dispatch),
         onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
+        updateRow: bindActionCreators(TableActions.updateRow, dispatch),
+        addRow: bindActionCreators(TableActions.addRow, dispatch),
         clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch)
     })
 )
 class UniversalListForm extends React.Component {
 
     state = {
-        ggShow: false,
-        newPerson: undefined
+        ggShow: false
     };
 
     constructor(props, context) {
@@ -94,6 +95,24 @@ class UniversalListForm extends React.Component {
         this.props.getList( Url.GET_LIST_4_UNIVERSAL_LIST_FORM + '?start=' + start + '&pageSize=' + pageSize + '&sortName=' + sortName + '&sortOrder=' + sortOrder + '&cache=' + cache, filterDto, cache);
     };
 
+    updateSelectedPerson = (person) => {
+        console.log(person);
+        this.props.updateRow(person, Caches.PERSON_CACHE);
+        this.setState({ createNewPerson: false, newPerson: undefined});
+    };
+
+    createdNewPerson = (person) => {
+        console.log(person);
+        this.props.addRow(person, Caches.PERSON_CACHE);
+        this.setState({ createNewPerson: false, newPerson: undefined});
+    };
+
+    static uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
 
     handleSelect(key){
         console.log(key);
@@ -135,7 +154,7 @@ class UniversalListForm extends React.Component {
                             </Button>
                         </span>
                     }>
-                        <DetailedComponent key={key + 'person'} person={this.props.selectedRowsPerson[i]}/>
+                        <DetailedComponent key={key + 'person'} forUpdate={true} person={this.props.selectedRowsPerson[i]} onUpdate={this.updateSelectedPerson}/>
                     </Tab>
                 );
             }
@@ -154,7 +173,7 @@ class UniversalListForm extends React.Component {
                                         </Button>
                                     </span>
                                     }>
-                                    <DetailedComponent key={'newPersonKey'} person={this.state.newPerson}/>
+                                    <DetailedComponent key={'newPersonKey'} forUpdate={false} person={this.state.newPerson} onUpdate={this.updateSelectedPerson}/>
                                 </Tab>
             }else{
                 newPersonTab = <div/>
@@ -175,7 +194,7 @@ class UniversalListForm extends React.Component {
                             </Breadcrumb>
                         </Nav>
                         <Nav pullRight>
-                            <Button disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {}})}>
+                            <Button disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {id: UniversalListForm.uuidv4(), orgId: this.props.selectedRowsOrganization[0].id}})}>
                                 Create person
                             </Button>
                             <Button onClick={() => this.setState({ ggShow: true })}>

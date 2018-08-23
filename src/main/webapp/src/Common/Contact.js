@@ -6,7 +6,8 @@ export class Contact extends React.Component {
     state = {
         data: this.props.data.data !== undefined ? this.props.data.data : '' ,
         description:this.props.data.description !== undefined ? this.props.data.description : '',
-        type: this.props.data.type !== undefined ? this.props.data.type : '1'
+        type: this.props.data.type !== undefined ? this.props.data.type : '1',
+        personId: this.props.data.personId !== undefined ? this.props.data.personId : ''
     };
 
     constructor(props) {
@@ -19,7 +20,7 @@ export class Contact extends React.Component {
     };
 
     toJson(){
-        return JSON.stringify({ 'data' : this.state.data, 'description' : this.state.description, 'type' : this.state.type, 'id' : this.props.id});
+        return JSON.stringify({ 'data' : this.state.data, 'description' : this.state.description, 'type' : this.state.type, 'id' : this.props.id, 'personId': this.state.personId});
     }
 
     static getEngType = (type) => {
