@@ -116,7 +116,7 @@ export class DetailedComponent extends React.Component {
                 <div style={{width: '50%', display: 'inline-block', verticalAlign: 'top'}}>
                 <form>
                     <FormGroup
-                        controlId='formPersonFirstName'
+                        controlId='firstName'
                         validationState={this.getValidationState('firstName')}>
                         <ControlLabel>Employee first name</ControlLabel>
                         <FormControl
@@ -130,7 +130,7 @@ export class DetailedComponent extends React.Component {
                 </form>
                 <form>
                     <FormGroup
-                        controlId='formPersonLastName'
+                        controlId='lastName'
                         validationState={this.getValidationState('lastName')}>
                         <ControlLabel>Employee last name</ControlLabel>
                         <FormControl
@@ -144,7 +144,7 @@ export class DetailedComponent extends React.Component {
                 </form>
                 <form>
                     <FormGroup
-                        controlId='formPersonResume'
+                        controlId='resume'
                         validationState={this.getValidationState('resume')}>
                         <ControlLabel>Employee resume</ControlLabel>
                         <FormControl
@@ -158,7 +158,7 @@ export class DetailedComponent extends React.Component {
                 </form>
                 <form>
                     <FormGroup
-                        controlId='formPersonSalary'
+                        controlId='salary'
                         validationState={this.getValidationState('salary')}>
                         <ControlLabel>Employee resume</ControlLabel>
                         <FormControl
