@@ -45,7 +45,7 @@ export class DetailedComponent extends React.Component {
             isOk = response.ok;
             return response.json()
         }).then(json => {
-            if (isOk && this.isMounted) {
+            if (isOk) {
                 this.setState({contactList: json.data});
             }
         })
@@ -88,7 +88,7 @@ export class DetailedComponent extends React.Component {
     };
 
     componentDidMount() {
-        if(this.state.person['id'] !== undefined)
+        if(this.state.person['id'] !== undefined && this.props.forUpdate)
             this.getContactList(this.state.person['id']);
         else
             this.clearContactList();

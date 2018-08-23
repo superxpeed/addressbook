@@ -94,7 +94,7 @@ public class GridUtils {
             contact.setData(contactDto.getData());
             contact.setDescription(contactDto.getDescription());
             contact.setPersonId(contactDto.getPersonId());
-            contact.setType(ContactType.values()[Integer.valueOf(contactDto.getType())]);
+            contact.setType(ContactType.values()[Integer.valueOf(contactDto.getType()) - 1]);
             cachePerson.put(contact.getContactId(), contact);
         }
         return contactDto;
