@@ -43,7 +43,7 @@ module.exports = {
                 target: 'http://localhost:8080',
                 secure: false,
                 changeOrigin: true,
-                pathRewrite: {'/rest': '/webapp-1.0-SNAPSHOT/rest'}
+                pathRewrite: {'/rest': '/webapp/rest'}
             }
         }
     },

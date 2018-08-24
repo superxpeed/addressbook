@@ -8,7 +8,6 @@ public class IndexWebController {
 
     @RequestMapping("/")
     public String start() {
-
         return "index.html";
     }
 }

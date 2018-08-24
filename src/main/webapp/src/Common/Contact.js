@@ -6,7 +6,7 @@ export class Contact extends React.Component {
     state = {
         data: this.props.data.data !== undefined ? this.props.data.data : '' ,
         description:this.props.data.description !== undefined ? this.props.data.description : '',
-        type: this.props.data.type !== undefined ? this.props.data.type : '1',
+        type: this.props.data.type !== undefined ? this.props.data.type : '0',
         personId: this.props.data.personId !== undefined ? this.props.data.personId : ''
     };
 
@@ -23,10 +23,10 @@ export class Contact extends React.Component {
     }
 
     static getEngType = (type) => {
-        if(type === '1') return 'Mobile phone';
-        if(type === '2') return 'Home phone';
-        if(type === '3') return 'Address';
-        if(type === '4') return 'E-mail';
+        if(type === '0') return 'Mobile phone';
+        if(type === '1') return 'Home phone';
+        if(type === '2') return 'Address';
+        if(type === '3') return 'E-mail';
     };
 
     render() {
