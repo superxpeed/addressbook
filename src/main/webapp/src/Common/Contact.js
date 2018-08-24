@@ -1,5 +1,5 @@
 import React from 'react';
-import {Accordion, Panel, FormControl, Button} from 'react-bootstrap';
+import {Panel, FormControl, Button} from 'react-bootstrap';
 
 export class Contact extends React.Component {
 

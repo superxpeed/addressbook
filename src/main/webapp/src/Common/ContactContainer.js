@@ -39,7 +39,7 @@ export class ContactContainer extends React.Component {
     getJson = () =>{
         let contacts = '[';
         if(this.state.conRefs.size !== 0){
-            this.state.conRefs.forEach(function(value, key, map){
+            this.state.conRefs.forEach(function(value, key){
                 if(value !== null) contacts += value.toJson() + ', ';
             });
             contacts = contacts.substring(0, contacts.length - 2);

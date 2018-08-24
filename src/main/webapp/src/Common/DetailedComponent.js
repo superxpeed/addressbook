@@ -2,8 +2,8 @@ import {FormControl, FormGroup, ControlLabel, Button} from 'react-bootstrap'
 import update from 'react-addons-update'
 import React from 'react';
 import {ContactContainer} from './ContactContainer'
-import {ifNoAuthorizedRedirect} from "./CommonActions";
-import * as url from "./Url";
+import {ifNoAuthorizedRedirect} from './CommonActions';
+import * as url from './Url';
 
 export class DetailedComponent extends React.Component {
 
@@ -37,7 +37,7 @@ export class DetailedComponent extends React.Component {
         let headers = new Headers();
         headers.append('Accept', 'application/json');
         headers.append('Content-Type', 'application/json; charset=utf-8');
-        fetch(url.GET_CONTACT_LIST + "?personId=" + id, {
+        fetch(url.GET_CONTACT_LIST + '?personId=' + id, {
             method: 'post',
             headers: headers
         }).then(response => {
@@ -136,7 +136,7 @@ export class DetailedComponent extends React.Component {
                         <FormControl
                             type='text'
                             value={this.state.person['lastName']}
-                            placeholder="Enter first name"
+                            placeholder='Enter first name'
                             onChange={this.handleChange.bind(this, 'lastName')}
                         />
                         <FormControl.Feedback />

@@ -1,4 +1,4 @@
-import {DetailedComponent} from "../Common/DetailedComponent";
+import {DetailedComponent} from '../Common/DetailedComponent';
 
 require('../Common/style.css');
 
@@ -9,9 +9,9 @@ import {Table} from '../Table/Table';
 import * as CommonActions from '../Common/CommonActions';
 import * as Url from '../Common/Url';
 import {Caches} from '../Table/Enums';
-import {Tab, Tabs, Navbar, Nav, Button, Breadcrumb, Glyphicon} from 'react-bootstrap'
-import * as TableActions from "../Table/TableActions";
-import {GGDialog} from "../Common/GGDialog";
+import {Tab, Tabs, Navbar, Nav, Button, Breadcrumb} from 'react-bootstrap'
+import * as TableActions from '../Table/TableActions';
+import {GGDialog} from '../Common/GGDialog';
 @connect(
     state => ({
         tableDataOrganization: state.universalListReducer.tableDataOrganization,
@@ -89,7 +89,7 @@ class UniversalListForm extends React.Component {
 
     refreshTable = (start, pageSize, sortName,sortOrder, filterDto, cache) => {
         if(cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId !== undefined && this.state.selectedRowsOrgId !== null) {
-            filterDto = filterDto.filter(x => x.name === "orgId" && x.value === this.state.selectedRowsOrgId );
+            filterDto = filterDto.filter(x => x.name === 'orgId' && x.value === this.state.selectedRowsOrgId );
             filterDto.push({name: 'orgId', value: this.state.selectedRowsOrgId, comparator: '', type: 'TextFilter'});
         }
         this.props.getList( Url.GET_LIST_4_UNIVERSAL_LIST_FORM + '?start=' + start + '&pageSize=' + pageSize + '&sortName=' + sortName + '&sortOrder=' + sortOrder + '&cache=' + cache, filterDto, cache);
@@ -188,8 +188,8 @@ class UniversalListForm extends React.Component {
                     <Navbar.Collapse>
                         <Nav>
                             <Breadcrumb>
-                                <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-                                <Breadcrumb.Item href="http://getbootstrap.com/components/#breadcrumbs">Library</Breadcrumb.Item>
+                                <Breadcrumb.Item href='#'>Home</Breadcrumb.Item>
+                                <Breadcrumb.Item href='http://getbootstrap.com/components/#breadcrumbs'>Library</Breadcrumb.Item>
                                 <Breadcrumb.Item active>Data</Breadcrumb.Item>
                             </Breadcrumb>
                         </Nav>

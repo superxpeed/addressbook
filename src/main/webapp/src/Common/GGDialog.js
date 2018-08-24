@@ -1,5 +1,4 @@
 import {Modal, Button, ControlLabel,FormControl, Form, Col, FormGroup} from 'react-bootstrap'
-import update from 'react-addons-update'
 import React from 'react';
 
 export class GGDialog extends React.Component {
@@ -13,11 +12,11 @@ export class GGDialog extends React.Component {
     }
 
     checkPathReachability = () =>{
-        console.log("Check here");
+        console.log('Check here');
     };
 
     takeSnapshot = () => {
-      console.log("Take snapshot here");
+      console.log('Take snapshot here');
     };
 
     handleChange(e) {
@@ -34,12 +33,12 @@ export class GGDialog extends React.Component {
                         <h4>Take snapshot</h4>
                         <ControlLabel>Snapshot directory</ControlLabel>
                         <Form horizontal>
-                            <FormGroup controlId="snapPathForm">
+                            <FormGroup controlId='snapPathForm'>
                                 <Col sm={8}>
                                     <FormControl
-                                        type="text"
+                                        type='text'
                                         value={this.state.value}
-                                        placeholder="Enter or choose directory for LFS snapshot"
+                                        placeholder='Enter or choose directory for LFS snapshot'
                                         onChange={this.handleChange}
                                     />
                                 </Col>

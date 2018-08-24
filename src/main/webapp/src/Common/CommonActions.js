@@ -9,6 +9,7 @@ export function asyncCommonCatch(action, error, dispatch) {
     console.error(error);
     dispatch({type: action + FAILED});
     const message = {title: 'Произошла ошибка в javascript: ' + error, content: error.stack};
+    console.log(message);
 }
 
 export function clearPersonSelection(rows) {
@@ -54,7 +55,7 @@ export function getList(url, filterDto = null, cacheName) {
 
 export function ifNoAuthorizedRedirect(response) {
     let loginPage = response.headers.get('loginPage');
-    if (response.status == 401 && loginPage) {
+    if (response.status === 401 && loginPage) {
         window.location.href = url.getContextPath() + loginPage;
     }
 }
