@@ -40,10 +40,10 @@ export class Contact extends React.Component {
                 </Panel.Heading>
                 <Panel.Body collapsible>
                     <FormControl id='type' style={{marginTop: '5px'}} componentClass='select' value={this.state.type} placeholder='1' onChange={this.handleChange}>
-                        <option value='1'>Mobile phone</option>
-                        <option value='2'>Home phone</option>
-                        <option value='3'>Address</option>
-                        <option value='4'>E-mail</option>
+                        <option value='0'>Mobile phone</option>
+                        <option value='1'>Home phone</option>
+                        <option value='2'>Address</option>
+                        <option value='3'>E-mail</option>
                     </FormControl>
                     <FormControl style={{marginTop: '5px'}}
                                  type='text'
