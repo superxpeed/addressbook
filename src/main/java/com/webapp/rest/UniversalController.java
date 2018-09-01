@@ -55,6 +55,15 @@ public class UniversalController{
     }
 
     @ResponseBody
+    @RequestMapping(value = "/saveOrCreateOrganization", method = RequestMethod.POST)
+    public PageDataDto<OrganizationDto> saveOrCreateOrganization(@RequestBody OrganizationDto organizationDto) {
+        System.out.println("OrganizationDto: " + organizationDto);
+        PageDataDto<OrganizationDto> dto = new PageDataDto<>();
+        dto.setData(GridUtils.createOrUpdateOrganization(organizationDto));
+        return dto;
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/saveOrCreateContacts", method = RequestMethod.POST)
     public PageDataDto<List<ContactDto>> saveOrCreateContacts (@RequestBody List<ContactDto> contactDtos) {
         List<ContactDto> contactDtoList = new ArrayList<>();

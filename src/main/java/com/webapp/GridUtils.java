@@ -66,12 +66,25 @@ public class GridUtils {
 
     }
 
+    public static OrganizationDto createOrUpdateOrganization(OrganizationDto organizationDto){
+        IgniteCache<String, Organization> cachePerson = ignite.getOrCreateCache("com.webapp.model.Organization");
+        Organization organization = cachePerson.get(organizationDto.getId());
+        if(organization == null)
+            organization = new Organization();
+        organization.setType(OrganizationType.values()[Integer.valueOf(organizationDto.getType())]);
+        organization.setLastUpdated(new Timestamp(System.currentTimeMillis()));
+        organization.setName(organizationDto.getName());
+        organization.setAddr(new Address(organizationDto.getStreet(), Integer.valueOf(organizationDto.getZip())));
+        cachePerson.put(organization.getId(), organization);
+        return organizationDto;
+    }
+
+
     public static PersonDto createOrUpdatePerson(PersonDto personDto){
         IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache("com.webapp.model.Person");
         Person person = cachePerson.get(personDto.getId());
         if(person == null)
             person = new Person();
-        person.setId(personDto.getId());
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
         person.setOrgId(personDto.getOrgId());
@@ -87,7 +100,6 @@ public class GridUtils {
         Contact contact = cachePerson.get(contactDto.getId());
         if(contact == null)
             contact = new Contact();
-        contact.setContactId(contactDto.getId());
         contact.setData(contactDto.getData());
         contact.setDescription(contactDto.getDescription());
         contact.setPersonId(contactDto.getPersonId());
