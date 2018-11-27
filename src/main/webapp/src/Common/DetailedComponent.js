@@ -95,7 +95,7 @@ export class DetailedComponent extends React.Component {
     }
 
     getValidationState(field) {
-        if(this.state.person[field] === undefined || this.state.person[field] === null) return 'error';
+        if(this.state.person[field] === undefined || this.state.person[field] === null || this.state.person[field].length === 0) return 'error';
         const length = this.state.person[field].length;
         if (length > 10) return 'success';
         else if (length > 5) return 'warning';

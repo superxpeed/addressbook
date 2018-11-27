@@ -35,8 +35,8 @@ export class Contact extends React.Component {
 
             <Panel style={{marginBottom: '5px'}}>
                 <Panel.Heading>
-                    <Panel.Title toggle>{this.props.data.type === undefined ? 'New contact' : Contact.getEngType(this.props.data.type)}</Panel.Title>
-                    <Button style={{width: '40px', marginTop: '9px' , marginBottom: '-5px', marginRight: '-16px', position:'relative', float: 'right', bottom: '40px', height: '40px', zIndex: 9999}} onClick={this.props.deleteContact.bind(null, { id: this.props.id })}>X</Button>
+                    <Panel.Title style={{display: 'inline-block', width: 'calc(100% - 25px)'}} toggle>{this.props.data.type === undefined ? 'New contact' : Contact.getEngType(this.props.data.type)}</Panel.Title>
+                    <Button style={{width: '32px', height: '32px', marginTop: '-10px' , marginBottom: '-5px', marginRight: '-10px', position:'relative', padding: '6px'}} onClick={this.props.deleteContact.bind(null, { id: this.props.id })}>X</Button>
                 </Panel.Heading>
                 <Panel.Body collapsible>
                     <FormControl id='type' style={{marginTop: '5px'}} componentClass='select' value={this.state.type} placeholder='1' onChange={this.handleChange}>

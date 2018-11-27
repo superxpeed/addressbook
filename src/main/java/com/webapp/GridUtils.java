@@ -15,8 +15,6 @@ import org.apache.ignite.cache.CacheWriteSynchronizationMode;
 import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.ignite.cache.query.SqlQuery;
 import org.apache.ignite.configuration.CacheConfiguration;
-import org.gridgain.grid.GridGain;
-import org.gridgain.grid.persistentstore.SnapshotFuture;
 import org.springframework.core.io.DefaultResourceLoader;
 import javax.cache.Cache;
 import java.lang.reflect.Constructor;
@@ -108,20 +106,6 @@ public class GridUtils {
         return contactDto;
     }
 
-
-    public static Float takeFullSnapshot(){
-        try{
-            long start = System.currentTimeMillis();
-            GridGain gg = ignite.plugin(GridGain.PLUGIN_NAME);
-            SnapshotFuture backupFuture = gg.snapshot().createFullSnapshot(UniversalFieldsDescriptor.getCacheClasses().keySet(), "Taking full snapshot of all caches");
-            backupFuture.get();
-            long end = System.currentTimeMillis();
-            return ((end - start) / 1000.0f);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     private static StringBuilder getQuerySql(List<FilterDto> filterDto){
         StringBuilder baseSql = new StringBuilder(" ");

@@ -106,39 +106,19 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>org.gridgain</groupId>
-            <artifactId>gridgain-core</artifactId>
-            <version>8.4.2-p10</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/gridgain-core-8.4.2-p10.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>org.apache.ignite</groupId>
             <artifactId>ignite-core</artifactId>
-            <version>2.4.2-p10</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/ignite-core-2.4.2-p10.jar</systemPath>
+            <version>2.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.ignite</groupId>
             <artifactId>ignite-indexing</artifactId>
-            <version>2.4.2-p10</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/ignite-indexing-2.4.2-p10.jar</systemPath>
+            <version>2.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.ignite</groupId>
             <artifactId>ignite-spring</artifactId>
-            <version>2.4.2-p10</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/ignite-spring-2.4.2-p10.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.gridgain</groupId>
-            <artifactId>gridgain-ultimate</artifactId>
-            <version>8.4.2-p10</version>
-            <systemPath>${project.basedir}/gridgain-ultimate-8.4.2-p10.jar</systemPath>
-            <scope>system</scope>
+            <version>2.6.0</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -213,13 +193,6 @@
                     <filtering>true</filtering>
                     <directory>src/main/webapp/WEB-INF</directory>
                     <targetPath>WEB-INF</targetPath>
-                </resource>
-                <resource>
-                    <directory>${project.basedir}</directory>
-                    <targetPath>WEB-INF/lib</targetPath>
-                    <includes>
-                        <include>**/*.jar</include>
-                    </includes>
                 </resource>
             </webResources>
             <warSourceExcludes>

@@ -20,7 +20,8 @@ export class ContactContainer extends React.Component {
             });
             this.setState({ contacts: contactsMap, conRefs: conRefsLocal});
         }else{
-            this.setState({ contacts: new Map(), conRefs: new Map()});
+            if(this.state.contacts === undefined || this.state.contacts.length === 0)
+                this.setState({ contacts: new Map(), conRefs: new Map()});
         }
     };
 

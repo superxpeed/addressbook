@@ -74,12 +74,4 @@ public class UniversalController{
         dto.setData(contactDtoList);
         return dto;
     }
-
-    @ResponseBody
-    @RequestMapping("/takeFullSnapshot")
-    public PageDataDto<Float> takeFullSnapshot(){
-        PageDataDto<Float> dto = new PageDataDto<>();
-        dto.setData(GridUtils.takeFullSnapshot());
-        return dto;
-    }
 }

@@ -11,7 +11,6 @@ import * as Url from '../Common/Url';
 import {Caches} from '../Table/Enums';
 import {Tab, Tabs, Navbar, Nav, Button, Breadcrumb} from 'react-bootstrap'
 import * as TableActions from '../Table/TableActions';
-import {GGDialog} from '../Common/GGDialog';
 @connect(
     state => ({
         tableDataOrganization: state.universalListReducer.tableDataOrganization,
@@ -32,10 +31,6 @@ import {GGDialog} from '../Common/GGDialog';
     })
 )
 class UniversalListForm extends React.Component {
-
-    state = {
-        ggShow: false
-    };
 
     constructor(props, context) {
         super(props, context);
@@ -66,12 +61,14 @@ class UniversalListForm extends React.Component {
             for(let i = 0; i < this.props.selectedRowsPerson.length; i++) {
                 this.props.clearPersonSelection(this.props.selectedRowsPerson[i]);
             }
+            this.setState({ createNewPerson: false, newPerson: undefined});
         }
 
         if(nextProps.selectedRowsOrganization.length === 0 && this.props.selectedRowsOrganization.length === 1){
             for(let i = 0; i < this.props.selectedRowsPerson.length; i++) {
                 this.props.clearPersonSelection(this.props.selectedRowsPerson[i]);
             }
+            this.setState({ createNewPerson: false, newPerson: undefined});
         }
     }
 
@@ -81,10 +78,6 @@ class UniversalListForm extends React.Component {
         if(tab === this.state.activeTab){
             this.setState({ activeTab: (tab - 1) });
         }
-    };
-
-    ggClose = () => {
-        this.setState({ ggShow: false });
     };
 
     refreshTable = (start, pageSize, sortName,sortOrder, filterDto, cache) => {
@@ -197,9 +190,6 @@ class UniversalListForm extends React.Component {
                             <Button disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {id: UniversalListForm.uuidv4(), orgId: this.props.selectedRowsOrganization[0].id}})}>
                                 Create person
                             </Button>
-                            <Button onClick={() => this.setState({ ggShow: true })}>
-                                GridGain control
-                            </Button>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
@@ -221,7 +211,6 @@ class UniversalListForm extends React.Component {
                     {persons}
                     {newPersonTab}
                 </Tabs>
-                <GGDialog show={this.state.ggShow} handleClose={this.ggClose}/>
             </div>)
     }
 }
