@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 @SuppressWarnings("unused")
 public class OrganizationDto implements Serializable {
+
     private String id;
     private String name;
     private String street;
@@ -20,7 +21,7 @@ public class OrganizationDto implements Serializable {
         this.name = organization.getName();
         this.street = organization.getAddr().getStreet();
         this.zip = organization.getAddr().getZip()+"";
-        this.type = organization.getType().name();
+        this.type = organization.getType().getEng();
         this.lastUpdated = organization.getLastUpdated().toString();
     }
 

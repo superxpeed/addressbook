@@ -1,7 +1,6 @@
 import * as types from './FormConstants';
 import * as tableActions from '../Table/TableActions';
-import {Caches} from '../Table/Enums';
-import {OrganizationComponent} from "./OrganizationComponent";
+import {Caches, OrgTypes} from '../Table/Utils';
 
 const initialState = {
     tableDataOrganization: {
@@ -100,7 +99,7 @@ export default function universalListReducer(state = initialState, action = {}) 
         case tableActions.UPDATE_ROW_IN_TABLE + Caches.ORGANIZATION_CACHE: {
             let newTableData = state.tableDataOrganization.data.filter((it => it.id !== action.row.id));
             let org = Object.assign({}, action.row);
-            org['type'] =  OrganizationComponent.getNumType(action.row['type']);
+            org['type'] =  OrgTypes.getNumType(action.row['type']);
             newTableData.push(org);
             return Object.assign({}, state, {
                 tableDataOrganization: { data: newTableData, totalDataSize: state.tableDataOrganization.totalDataSize},
@@ -112,7 +111,7 @@ export default function universalListReducer(state = initialState, action = {}) 
             let prevSize = state.tableDataOrganization.totalDataSize;
             let newTableData = state.tableDataOrganization.data;
             let org = Object.assign({}, action.row);
-            org['type'] =  OrganizationComponent.getNumType(action.row['type']);
+            org['type'] =  OrgTypes.getNumType(action.row['type']);
             newTableData.push(org);
             return Object.assign({}, state, {
                 tableDataOrganization: { data: newTableData, totalDataSize: prevSize + 1},

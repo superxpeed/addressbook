@@ -1,7 +1,7 @@
 import {SUCCESS, FAILED} from './FormConstants';
 import * as url from './Url';
 import * as tableActions from '../Table/TableActions';
-import {Caches} from '../Table/Enums';
+import {Caches} from '../Table/Utils';
 
 export const GET_LIST = 'GET_LIST';
 
@@ -24,7 +24,7 @@ export function clearPersonSelection(rows) {
 
 export function getList(url, filterDto = null, cacheName) {
     let isOk = false;
-    return function (dispatch, getState) {
+    return function (dispatch) {
         let headers = new Headers();
         headers.append('Accept', 'application/json');
         headers.append('Content-Type', 'application/json; charset=utf-8');

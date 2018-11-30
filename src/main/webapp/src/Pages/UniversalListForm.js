@@ -8,10 +8,11 @@ import {bindActionCreators} from 'redux';
 import {Table} from '../Table/Table';
 import * as CommonActions from '../Common/CommonActions';
 import * as Url from '../Common/Url';
-import {Caches} from '../Table/Enums';
+import {Caches, Generator} from '../Table/Utils';
 import {Tab, Tabs, Navbar, Nav, Button, Breadcrumb} from 'react-bootstrap'
 import * as TableActions from '../Table/TableActions';
-import {OrganizationComponent} from "../Common/OrganizationComponent";
+import {OrganizationComponent} from '../Common/OrganizationComponent';
+
 @connect(
     state => ({
         tableDataOrganization: state.universalListReducer.tableDataOrganization,
@@ -31,13 +32,12 @@ import {OrganizationComponent} from "../Common/OrganizationComponent";
         clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch)
     })
 )
-class UniversalListForm extends React.Component {
 
-    constructor(props, context) {
-        super(props, context);
+export default class UniversalListForm extends React.Component {
 
+    constructor(props) {
+        super(props);
         this.handleSelect = this.handleSelect.bind(this);
-
         this.state = {
             activeTab: 1
         };
@@ -50,8 +50,7 @@ class UniversalListForm extends React.Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.selectedRowsOrganization.length === 1
             && (
-                (nextProps.selectedRowsOrganization.length  !== this.props.selectedRowsOrganization.length)
-                ||
+                (nextProps.selectedRowsOrganization.length  !== this.props.selectedRowsOrganization.length) ||
                 (nextProps.selectedRowsOrganization[0].id  !== this.props.selectedRowsOrganization[0].id)
             )
         ) {
@@ -73,8 +72,6 @@ class UniversalListForm extends React.Component {
         }
     }
 
-    componentDidUpdate() {}
-
     personTabClosed = (tab) => {
         if(tab === this.state.activeTab){
             this.setState({ activeTab: (tab - 1) });
@@ -90,26 +87,16 @@ class UniversalListForm extends React.Component {
     };
 
     updateSelectedPerson = (person) => {
-        console.log(person);
         this.props.updateRow(person, Caches.PERSON_CACHE);
         this.setState({ createNewPerson: false, newPerson: undefined});
     };
 
     createdNewPerson = (person) => {
-        console.log(person);
         this.props.addRow(person, Caches.PERSON_CACHE);
         this.setState({ createNewPerson: false, newPerson: undefined});
     };
 
-    static uuidv4() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-
     handleSelect(key){
-        console.log(key);
         this.setState({ activeTab: key });
     }
 
@@ -188,7 +175,7 @@ class UniversalListForm extends React.Component {
                             </Breadcrumb>
                         </Nav>
                         <Nav pullRight>
-                            <Button disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {id: UniversalListForm.uuidv4(), orgId: this.props.selectedRowsOrganization[0].id}})}>
+                            <Button disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {id: Generator.uuidv4(), orgId: this.props.selectedRowsOrganization[0].id}})}>
                                 Create person
                             </Button>
                         </Nav>
@@ -218,5 +205,3 @@ class UniversalListForm extends React.Component {
             </div>)
     }
 }
-
-export default UniversalListForm;

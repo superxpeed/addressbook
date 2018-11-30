@@ -1,5 +1,6 @@
 import React from 'react';
 import {Panel, FormControl, Button} from 'react-bootstrap';
+import {ContactTypes} from '../Table/Utils';
 
 export class Contact extends React.Component {
 
@@ -22,20 +23,21 @@ export class Contact extends React.Component {
         return JSON.stringify({ 'data' : this.state.data, 'description' : this.state.description, 'type' : this.state.type, 'id' : this.props.id, 'personId': this.state.personId});
     }
 
-    static getEngType = (type) => {
-        if(type === '0') return 'Mobile phone';
-        if(type === '1') return 'Home phone';
-        if(type === '2') return 'Address';
-        if(type === '3') return 'E-mail';
-    };
+    getFormControl(field){
+        return <FormControl style={{marginTop: '5px'}}
+                            type='text'
+                            value={this.state[field]}
+                            placeholder={'Enter ' + field}
+                            id={field}
+                            onChange={this.handleChange}
+        />;
+    }
 
     render() {
-
         return (
-
             <Panel style={{marginBottom: '5px'}}>
                 <Panel.Heading>
-                    <Panel.Title style={{display: 'inline-block', width: 'calc(100% - 25px)'}} toggle>{this.props.data.type === undefined ? 'New contact' : Contact.getEngType(this.props.data.type)}</Panel.Title>
+                    <Panel.Title style={{display: 'inline-block', width: 'calc(100% - 25px)'}} toggle>{this.props.data.type === undefined ? 'New contact' : ContactTypes.getEngType(this.props.data.type)}</Panel.Title>
                     <Button style={{width: '32px', height: '32px', marginTop: '-10px' , marginBottom: '-5px', marginRight: '-10px', position:'relative', padding: '6px'}} onClick={this.props.deleteContact.bind(null, { id: this.props.id })}>X</Button>
                 </Panel.Heading>
                 <Panel.Body collapsible>
@@ -45,23 +47,10 @@ export class Contact extends React.Component {
                         <option value='2'>Address</option>
                         <option value='3'>E-mail</option>
                     </FormControl>
-                    <FormControl style={{marginTop: '5px'}}
-                                 type='text'
-                                 value={this.state.data}
-                                 placeholder='Enter data'
-                                 id='data'
-                                 onChange={this.handleChange}
-                    />
-                    <FormControl style={{marginTop: '5px'}}
-                                 type='text'
-                                 value={this.state.description}
-                                 placeholder='Enter description'
-                                 id='description'
-                                 onChange={this.handleChange}
-                    />
+                    {this.getFormControl('data')}
+                    {this.getFormControl('description')}
                 </Panel.Body>
             </Panel>
         );
     }
-
 }

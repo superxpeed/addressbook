@@ -14,7 +14,7 @@ export class ContactContainer extends React.Component {
             let contactsMap = new Map();
             let delFunc = this.deleteContact;
             let conRefsLocal = this.state.conRefs;
-            contacts.forEach(function(element, index, array){
+            contacts.forEach(function(element){
                 let newCon = <Contact key={element.id} data={element} ref={(input) => { conRefsLocal.set(element.id, input); }} id={element.id} deleteContact={delFunc}/>;
                 contactsMap.set(newCon.key, newCon);
             });
@@ -40,7 +40,7 @@ export class ContactContainer extends React.Component {
     getJson = () =>{
         let contacts = '[';
         if(this.state.conRefs.size !== 0){
-            this.state.conRefs.forEach(function(value, key){
+            this.state.conRefs.forEach(function(value){
                 if(value !== null) contacts += value.toJson() + ', ';
             });
             contacts = contacts.substring(0, contacts.length - 2);

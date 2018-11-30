@@ -30,9 +30,7 @@ public class Address implements Binarylizable {
     @QuerySqlField(index = true)
     private int zip;
 
-    public Address() {
-        // No-op.
-    }
+    public Address() { }
 
     public Address(String street, int zip) {
         this.street = street;
@@ -50,7 +48,6 @@ public class Address implements Binarylizable {
     }
 
     @Override public String toString() {
-        return "Address [street=" + street +
-                ", zip=" + zip + ']';
+        return "Address [street=" + street + ", zip=" + zip + ']';
     }
 }

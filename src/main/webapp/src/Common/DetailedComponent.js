@@ -4,6 +4,7 @@ import React from 'react';
 import {ContactContainer} from './ContactContainer'
 import {ifNoAuthorizedRedirect} from './CommonActions';
 import * as url from './Url';
+import {TitleConverter} from '../Table/Utils';
 
 export class DetailedComponent extends React.Component {
 
@@ -121,26 +122,13 @@ export class DetailedComponent extends React.Component {
         }
     }
 
-    static prepareTitle = (field) => {
-        var title = '';
-        var result = field.split(/(?=[A-Z])/);
-        result.forEach(function( value, index){
-            if(index === 0) title += value[0].toUpperCase() + value.substr(1) + ' ';
-            else title += value.toLowerCase() + ' ';
-        });
-        return title;
-    }
-
-    static preparePlaceHolder = (title) => {
-        return title[0].toLowerCase() + title.substr(1);
-    }
-
     getFieldFormControl(field, fieldType){
         if(fieldType === 'textarea'){
             return  <FormControl
                 componentClass='textarea'
+                rows={20}
                 value={this.state.person[field]}
-                placeholder={'Enter ' + DetailedComponent.preparePlaceHolder(DetailedComponent.prepareTitle(field))}
+                placeholder={'Enter ' + TitleConverter.preparePlaceHolder(TitleConverter.prepareTitle(field))}
                 onChange={this.handleChange.bind(this, field)}
             />;
         }
@@ -148,7 +136,7 @@ export class DetailedComponent extends React.Component {
             return  <FormControl
                 type='text'
                 value={this.state.person[field]}
-                placeholder={'Enter ' + DetailedComponent.preparePlaceHolder(DetailedComponent.prepareTitle(field))}
+                placeholder={'Enter ' + TitleConverter.preparePlaceHolder(TitleConverter.prepareTitle(field))}
                 onChange={this.handleChange.bind(this, field)}
             />;
         }
@@ -159,7 +147,7 @@ export class DetailedComponent extends React.Component {
             <FormGroup
                 controlId={field}
                 validationState={this.getValidationState(field)}>
-                <ControlLabel>{DetailedComponent.prepareTitle(field)}</ControlLabel>
+                <ControlLabel>{TitleConverter.prepareTitle(field)}</ControlLabel>
                 {this.getFieldFormControl(field, fieldType)}
                 <FormControl.Feedback />
             </FormGroup>

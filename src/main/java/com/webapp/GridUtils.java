@@ -22,7 +22,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @SuppressWarnings("unchecked")
 public class GridUtils {
@@ -132,7 +131,6 @@ public class GridUtils {
                 if(filterDto.indexOf(filter) != (filterDto.size() - 1)) baseSql.append(" and ");
             }
         }
-        System.out.println(baseSql.toString());
         return baseSql;
     }
 
