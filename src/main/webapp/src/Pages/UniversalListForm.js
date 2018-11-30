@@ -126,7 +126,7 @@ export default class UniversalListForm extends React.Component {
                 persons.push(
                     <Tab key={key + 'tab'} eventKey={key} title={
                         <span> {this.props.selectedRowsPerson[i].firstName}
-                            <Button key={key + 'btn'} style={{height:'20px', width: '20px', padding: '0px', zIndex: 1000}} onClick={(e) => {
+                            <Button key={key + 'btn'} style={{height:'20px', width: '20px', padding: '0px', marginLeft: '5px', zIndex: 1000}} onClick={(e) => {
                                 e.stopPropagation();
                                 this.props.onSelectRow(personLocal, false, e, Caches.PERSON_CACHE);
                                 this.personTabClosed(key);
@@ -146,7 +146,7 @@ export default class UniversalListForm extends React.Component {
                     key ++;
                 newPersonTab = <Tab key={key} eventKey={key} title={
                                     <span> {'New person'}
-                                        <Button key={'newPersonTabBtn'} style={{height:'20px', width: '20px', padding: '0px', zIndex: 1000}} onClick={(e) => {
+                                        <Button key={'newPersonTabBtn'} style={{height:'20px', width: '20px', padding: '0px', marginLeft: '5px', zIndex: 1000}} onClick={(e) => {
                                             e.stopPropagation();
                                             this.setState({ createNewPerson: false, newPerson: undefined});
                                             this.personTabClosed(key);
