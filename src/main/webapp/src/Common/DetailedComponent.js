@@ -5,6 +5,7 @@ import {ContactContainer} from './ContactContainer'
 import {ifNoAuthorizedRedirect} from './CommonActions';
 import * as url from './Url';
 import {TitleConverter} from '../Table/Utils';
+import RichTextEditor from 'react-rte';
 
 export class DetailedComponent extends React.Component {
 
@@ -12,7 +13,8 @@ export class DetailedComponent extends React.Component {
         person: {},
         contactList: {
             data: []
-        }
+        },
+        resume: RichTextEditor.createEmptyValue()
     };
 
     handleChange(e, v) {
@@ -26,12 +28,17 @@ export class DetailedComponent extends React.Component {
             contactList: {
                 data: []
             },
-            invalidFields: new Set()
-        }
+            invalidFields: new Set(),
+            resume: RichTextEditor.createValueFromString(props.person['resume'], 'html')
+        };
     }
 
     clearContactList = () => {
         this.setState(update(this.state, {contactList: {data: {$set:undefined}}}));
+    };
+
+    onChangeResume = (value) => {
+        this.setState(update(this.state, {person: {resume: {$set:value.toString('html')}}, resume: {$set:value}}));
     };
 
     getContactList = (id) => {
@@ -118,20 +125,11 @@ export class DetailedComponent extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.person !== this.state.person) {
             this.getContactList(nextProps.person['id']);
-            this.setState({ person: nextProps.person });
+            this.setState({ person: nextProps.person, resume: RichTextEditor.createValueFromString(nextProps.person['resume'], 'html') });
         }
     }
 
     getFieldFormControl(field, fieldType){
-        if(fieldType === 'textarea'){
-            return  <FormControl
-                componentClass='textarea'
-                rows={20}
-                value={this.state.person[field]}
-                placeholder={'Enter ' + TitleConverter.preparePlaceHolder(TitleConverter.prepareTitle(field))}
-                onChange={this.handleChange.bind(this, field)}
-            />;
-        }
         if(fieldType === 'text'){
             return  <FormControl
                 type='text'
@@ -151,7 +149,7 @@ export class DetailedComponent extends React.Component {
                 {this.getFieldFormControl(field, fieldType)}
                 <FormControl.Feedback />
             </FormGroup>
-        </form>
+        </form>;
     }
 
     render() {
@@ -160,8 +158,13 @@ export class DetailedComponent extends React.Component {
                 <div style={{width: '50%', display: 'inline-block', verticalAlign: 'top'}}>
                     {this.getFieldForm('firstName', 'text')}
                     {this.getFieldForm('lastName', 'text')}
-                    {this.getFieldForm('resume', 'textarea')}
                     {this.getFieldForm('salary', 'text')}
+                    <RichTextEditor
+                        placeholder='Resume'
+                        editorStyle={{minHeight: 220 }}
+                        value={this.state.resume}
+                        onChange={this.onChangeResume}
+                    />
                     <Button onClick={this.savePerson} disabled={this.state.invalidFields.size !== 0}>
                         Save contacts
                     </Button>
