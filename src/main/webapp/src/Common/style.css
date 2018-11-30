@@ -10,3 +10,17 @@
 .navbar-nav {
     margin-top: 8px!important;
 }
+
+.btn-default {
+    background-color: white;
+    background-image: -webkit-linear-gradient(white, white);
+    background-repeat: repeat-y;
+}
+.panel-default>.panel-heading {
+    background-color: white;
+    background-image: -webkit-linear-gradient(white, white);
+    background-repeat: repeat-y;
+}
+.Button__root___1gz0c{
+    background: white!important;
+}

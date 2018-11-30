@@ -155,7 +155,7 @@ export class DetailedComponent extends React.Component {
     render() {
         return (
             <div>
-                <div style={{width: '50%', display: 'inline-block', verticalAlign: 'top'}}>
+                <div style={{width: '50%', display: 'inline-block', verticalAlign: 'top', paddingLeft: '5px'}}>
                     {this.getFieldForm('firstName', 'text')}
                     {this.getFieldForm('lastName', 'text')}
                     {this.getFieldForm('salary', 'text')}
