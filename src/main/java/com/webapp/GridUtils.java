@@ -55,8 +55,6 @@ public class GridUtils {
                     }
                 }
             }
-
-            insertTestData();
         }catch (Exception e){
             System.out.println("Exception during Ignite Client startup: ");
             e.printStackTrace();
@@ -68,7 +66,7 @@ public class GridUtils {
         IgniteCache<String, Organization> cachePerson = ignite.getOrCreateCache("com.webapp.model.Organization");
         Organization organization = cachePerson.get(organizationDto.getId());
         if(organization == null)
-            organization = new Organization();
+            organization = new Organization(organizationDto);
         organization.setType(OrganizationType.values()[Integer.valueOf(organizationDto.getType())]);
         organization.setLastUpdated(new Timestamp(System.currentTimeMillis()));
         organization.setName(organizationDto.getName());
@@ -82,7 +80,7 @@ public class GridUtils {
         IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache("com.webapp.model.Person");
         Person person = cachePerson.get(personDto.getId());
         if(person == null)
-            person = new Person();
+            person = new Person(personDto);
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
         person.setOrgId(personDto.getOrgId());
@@ -186,45 +184,6 @@ public class GridUtils {
             e.printStackTrace();
         }
         return 0;
-    }
-
-    private static void insertTestData(){
-        System.out.println("Inserting test data");
-        IgniteCache<String, Organization> cacheOrganization = ignite.getOrCreateCache("com.webapp.model.Organization");
-        IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache("com.webapp.model.Person");
-        IgniteCache<String, Contact> cacheContact = ignite.getOrCreateCache("com.webapp.model.Contact");
-        for(int i = 0; i < 50; i++){
-            Organization org = new Organization(
-                    "Microsoft " + Math.random(),
-                    new Address("1096 Eddy Street, San Francisco, CA " + Math.random(), (int)(Math.random()*100000)),
-                    OrganizationType.PRIVATE,
-                    new Timestamp(System.currentTimeMillis()));
-            cacheOrganization.put(org.getId(),org);
-
-            Person person = new Person(org, "Nikita " + Math.random(), "Loshakov " + Math.random(), 3500.90, "Senior Java Developer");
-            cachePerson.put(person.getId(),person);
-
-            Contact contact = new Contact(person.getId(), ContactType.ADDRESS, "address " + Math.random(), "desc " + Math.random());
-            cacheContact.put(contact.getContactId(), contact);
-
-            Contact contact1 = new Contact(person.getId(), ContactType.EMAIL, Math.random() + "@gmail.com", "desc " + Math.random());
-            cacheContact.put(contact1.getContactId(), contact1);
-
-            Contact contact2 = new Contact(person.getId(), ContactType.HOME_PHONE, "8-999-" + Math.random(), "desc " + Math.random());
-            cacheContact.put(contact2.getContactId(), contact2);
-
-            Person person1 = new Person(org, "Nikita " + Math.random(), "Loshakov " + Math.random(), 3500.90, "Senior Java Developer");
-            cachePerson.put(person1.getId(),person1);
-
-            Contact contact3 = new Contact(person1.getId(), ContactType.ADDRESS, "address " + Math.random(), "desc " + Math.random());
-            cacheContact.put(contact3.getContactId(), contact3);
-
-            Contact contact4 = new Contact(person1.getId(), ContactType.EMAIL, Math.random() + "@gmail.com", "desc " + Math.random());
-            cacheContact.put(contact4.getContactId(), contact4);
-
-            Contact contact5 = new Contact(person1.getId(), ContactType.HOME_PHONE, "8-999-" + Math.random(), "desc " + Math.random());
-            cacheContact.put(contact5.getContactId(), contact5);
-        }
     }
 
     static void stopClient(){

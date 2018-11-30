@@ -4,5 +4,6 @@ public enum  OrganizationType {
 
     NON_PROFIT,
     PRIVATE,
-    GOVERNMENT
+    GOVERNMENT,
+    PUBLIC
 }

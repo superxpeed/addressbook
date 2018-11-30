@@ -1,5 +1,6 @@
 package com.webapp.model;
 
+import com.webapp.dto.OrganizationDto;
 import org.apache.ignite.cache.query.annotations.QuerySqlField;
 
 import java.sql.Timestamp;
@@ -22,9 +23,11 @@ public class Organization {
     @QuerySqlField(index = true)
     private Timestamp lastUpdated;
 
-    public Organization() {
-
+    public Organization(OrganizationDto organizationDto) {
+        id = organizationDto.getId();
     }
+
+    public Organization() {}
 
     public Organization(String name) {
         id = UUID.randomUUID().toString();

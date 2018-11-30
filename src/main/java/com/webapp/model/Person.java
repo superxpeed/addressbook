@@ -1,5 +1,6 @@
 package com.webapp.model;
 
+import com.webapp.dto.PersonDto;
 import org.apache.ignite.cache.query.annotations.QuerySqlField;
 import java.io.Serializable;
 import java.util.UUID;
@@ -72,9 +73,11 @@ public class Person implements Serializable {
         this.salary = salary;
     }
 
-    public Person() {
-        // No-op.
+    public Person(PersonDto personDto) {
+        id = personDto.getId();
     }
+
+    public Person(){}
 
     public Person(Organization org, String firstName, String lastName, Double salary, String resume) {
         id = UUID.randomUUID().toString();

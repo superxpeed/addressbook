@@ -24,7 +24,8 @@ export class DetailedComponent extends React.Component {
             person: props.person,
             contactList: {
                 data: []
-            }
+            },
+            invalidFields: new Set()
         }
     }
 
@@ -95,11 +96,21 @@ export class DetailedComponent extends React.Component {
     }
 
     getValidationState(field) {
-        if(this.state.person[field] === undefined || this.state.person[field] === null || this.state.person[field].length === 0) return 'error';
+        if(this.state.person[field] === undefined || this.state.person[field] === null) {
+            this.state.invalidFields.add(field);
+            return 'error';
+        }
         const length = this.state.person[field].length;
-        if (length > 10) return 'success';
-        else if (length > 5) return 'warning';
-        else if (length > 0) return 'error';
+        if (length > 10) {
+            this.state.invalidFields.delete(field);
+            return 'success';
+        } else if (length > 5) {
+            this.state.invalidFields.delete(field);
+            return 'warning';
+        } else if (length >= 0) {
+            this.state.invalidFields.add(field);
+            return 'error';
+        }
         return null;
     }
 
@@ -110,67 +121,60 @@ export class DetailedComponent extends React.Component {
         }
     }
 
+    static prepareTitle = (field) => {
+        var title = '';
+        var result = field.split(/(?=[A-Z])/);
+        result.forEach(function( value, index){
+            if(index === 0) title += value[0].toUpperCase() + value.substr(1) + ' ';
+            else title += value.toLowerCase() + ' ';
+        });
+        return title;
+    }
+
+    static preparePlaceHolder = (title) => {
+        return title[0].toLowerCase() + title.substr(1);
+    }
+
+    getFieldFormControl(field, fieldType){
+        if(fieldType === 'textarea'){
+            return  <FormControl
+                componentClass='textarea'
+                value={this.state.person[field]}
+                placeholder={'Enter ' + DetailedComponent.preparePlaceHolder(DetailedComponent.prepareTitle(field))}
+                onChange={this.handleChange.bind(this, field)}
+            />;
+        }
+        if(fieldType === 'text'){
+            return  <FormControl
+                type='text'
+                value={this.state.person[field]}
+                placeholder={'Enter ' + DetailedComponent.preparePlaceHolder(DetailedComponent.prepareTitle(field))}
+                onChange={this.handleChange.bind(this, field)}
+            />;
+        }
+    }
+
+    getFieldForm(field, fieldType){
+        return <form>
+            <FormGroup
+                controlId={field}
+                validationState={this.getValidationState(field)}>
+                <ControlLabel>{DetailedComponent.prepareTitle(field)}</ControlLabel>
+                {this.getFieldFormControl(field, fieldType)}
+                <FormControl.Feedback />
+            </FormGroup>
+        </form>
+    }
+
     render() {
         return (
             <div>
                 <div style={{width: '50%', display: 'inline-block', verticalAlign: 'top'}}>
-                <form>
-                    <FormGroup
-                        controlId='firstName'
-                        validationState={this.getValidationState('firstName')}>
-                        <ControlLabel>Employee first name</ControlLabel>
-                        <FormControl
-                            type='text'
-                            value={this.state.person['firstName']}
-                            placeholder='Enter first name'
-                            onChange={this.handleChange.bind(this, 'firstName')}
-                        />
-                        <FormControl.Feedback />
-                    </FormGroup>
-                </form>
-                <form>
-                    <FormGroup
-                        controlId='lastName'
-                        validationState={this.getValidationState('lastName')}>
-                        <ControlLabel>Employee last name</ControlLabel>
-                        <FormControl
-                            type='text'
-                            value={this.state.person['lastName']}
-                            placeholder='Enter first name'
-                            onChange={this.handleChange.bind(this, 'lastName')}
-                        />
-                        <FormControl.Feedback />
-                    </FormGroup>
-                </form>
-                <form>
-                    <FormGroup
-                        controlId='resume'
-                        validationState={this.getValidationState('resume')}>
-                        <ControlLabel>Employee resume</ControlLabel>
-                        <FormControl
-                            componentClass='textarea'
-                            value={this.state.person['resume']}
-                            placeholder='Enter resume'
-                            onChange={this.handleChange.bind(this, 'resume')}
-                        />
-                        <FormControl.Feedback />
-                    </FormGroup>
-                </form>
-                <form>
-                    <FormGroup
-                        controlId='salary'
-                        validationState={this.getValidationState('salary')}>
-                        <ControlLabel>Employee resume</ControlLabel>
-                        <FormControl
-                            type='text'
-                            value={this.state.person['salary']}
-                            placeholder='Enter salary'
-                            onChange={this.handleChange.bind(this, 'salary')}
-                        />
-                        <FormControl.Feedback />
-                    </FormGroup>
-                </form>
-                    <Button onClick={this.savePerson}>
+                    {this.getFieldForm('firstName', 'text')}
+                    {this.getFieldForm('lastName', 'text')}
+                    {this.getFieldForm('resume', 'textarea')}
+                    {this.getFieldForm('salary', 'text')}
+                    <Button onClick={this.savePerson} disabled={this.state.invalidFields.size !== 0}>
                         Save contacts
                     </Button>
                 </div>

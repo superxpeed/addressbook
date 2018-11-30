@@ -11,6 +11,7 @@ import * as Url from '../Common/Url';
 import {Caches} from '../Table/Enums';
 import {Tab, Tabs, Navbar, Nav, Button, Breadcrumb} from 'react-bootstrap'
 import * as TableActions from '../Table/TableActions';
+import {OrganizationComponent} from "../Common/OrganizationComponent";
 @connect(
     state => ({
         tableDataOrganization: state.universalListReducer.tableDataOrganization,
@@ -81,7 +82,7 @@ class UniversalListForm extends React.Component {
     };
 
     refreshTable = (start, pageSize, sortName,sortOrder, filterDto, cache) => {
-        if(cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId !== undefined && this.state.selectedRowsOrgId !== null) {
+        if(cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId !== undefined && this.state.selectedRowsOrgId !== null && (filterDto === undefined || filterDto === null)) {
             filterDto = filterDto.filter(x => x.name === 'orgId' && x.value === this.state.selectedRowsOrgId );
             filterDto.push({name: 'orgId', value: this.state.selectedRowsOrgId, comparator: '', type: 'TextFilter'});
         }
@@ -196,6 +197,9 @@ class UniversalListForm extends React.Component {
                 <Tabs activeKey={this.state.activeTab}
                       onSelect={this.handleSelect} id='tables'>
                     <Tab key={1} eventKey={1} title='Organizations'>
+                        <div style={{marginBottom: '15px'}}>
+                            <OrganizationComponent organization={this.props.selectedRowsOrganization.length === 1 ? this.props.selectedRowsOrganization[0] : {}}/>
+                        </div>
                         <Table ref='table1'
                                refreshTable={this.refreshTable}
                                cache={Caches.ORGANIZATION_CACHE}
