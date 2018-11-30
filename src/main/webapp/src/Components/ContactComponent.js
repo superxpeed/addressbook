@@ -1,8 +1,8 @@
 import React from 'react';
 import {Panel, FormControl, Button} from 'react-bootstrap';
-import {ContactTypes} from '../Table/Utils';
+import {ContactTypes} from '../Common/Utils';
 
-export class Contact extends React.Component {
+export class ContactComponent extends React.Component {
 
     state = {
         data: this.props.data.data !== undefined ? this.props.data.data : '' ,

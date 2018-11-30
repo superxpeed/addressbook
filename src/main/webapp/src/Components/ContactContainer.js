@@ -1,5 +1,5 @@
 import React from 'react';
-import {Contact} from './Contact';
+import {ContactComponent} from './ContactComponent';
 import {Button} from 'react-bootstrap';
 
 export class ContactContainer extends React.Component {
@@ -15,7 +15,7 @@ export class ContactContainer extends React.Component {
             let delFunc = this.deleteContact;
             let conRefsLocal = this.state.conRefs;
             contacts.forEach(function(element){
-                let newCon = <Contact key={element.id} data={element} ref={(input) => { conRefsLocal.set(element.id, input); }} id={element.id} deleteContact={delFunc}/>;
+                let newCon = <ContactComponent key={element.id} data={element} ref={(input) => { conRefsLocal.set(element.id, input); }} id={element.id} deleteContact={delFunc}/>;
                 contactsMap.set(newCon.key, newCon);
             });
             this.setState({ contacts: contactsMap, conRefs: conRefsLocal});
@@ -28,7 +28,7 @@ export class ContactContainer extends React.Component {
     addEmptyContact = () =>{
         let contacts = new Map(this.state.contacts);
         let id = ContactContainer.getId();
-        let newCon = <Contact key={id} data={{personId: this.props.personId}} ref={(input) => { this.state.conRefs.set(id, input); }} id={id} deleteContact={this.deleteContact}/>;
+        let newCon = <ContactComponent key={id} data={{personId: this.props.personId}} ref={(input) => { this.state.conRefs.set(id, input); }} id={id} deleteContact={this.deleteContact}/>;
         contacts.set(newCon.key, newCon);
         this.setState({ contacts: contacts });
     };

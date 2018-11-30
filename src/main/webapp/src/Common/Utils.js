@@ -1,3 +1,8 @@
+export const REQUEST = '_REQUEST';
+export const SUCCESS = '_SUCCESS';
+export const FAILED = '_FAILED';
+export const GET_LIST = 'GET_LIST';
+
 export var Caches = {
     ORGANIZATION_CACHE: 'com.webapp.model.Organization',
     PERSON_CACHE: 'com.webapp.model.Person',

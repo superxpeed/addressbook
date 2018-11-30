@@ -1,7 +1,7 @@
-import {SUCCESS, FAILED} from './FormConstants';
-import * as url from './Url';
+import {SUCCESS, FAILED} from '../Common/Utils';
+import * as url from '../Common/Url';
 import * as tableActions from '../Table/TableActions';
-import {Caches} from '../Table/Utils';
+import {Caches} from '../Common/Utils';
 
 export const GET_LIST = 'GET_LIST';
 

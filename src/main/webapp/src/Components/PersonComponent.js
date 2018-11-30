@@ -2,12 +2,12 @@ import {FormControl, FormGroup, ControlLabel, Button} from 'react-bootstrap'
 import update from 'react-addons-update'
 import React from 'react';
 import {ContactContainer} from './ContactContainer'
-import {ifNoAuthorizedRedirect} from './CommonActions';
-import * as url from './Url';
-import {TitleConverter} from '../Table/Utils';
+import {ifNoAuthorizedRedirect} from '../Pages/UniversalListActions';
+import * as url from '../Common/Url';
+import {TitleConverter} from '../Common/Utils';
 import RichTextEditor from 'react-rte';
 
-export class DetailedComponent extends React.Component {
+export class PersonComponent extends React.Component {
 
     state = {
         person: {},

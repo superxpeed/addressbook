@@ -1,12 +1,12 @@
 import {FormControl, FormGroup, ControlLabel, Button} from 'react-bootstrap'
 import update from 'react-addons-update'
 import React from 'react';
-import * as url from './Url';
-import {ifNoAuthorizedRedirect} from './CommonActions';
+import * as url from '../Common/Url';
+import {ifNoAuthorizedRedirect} from '../Pages/UniversalListActions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as TableActions from '../Table/TableActions';
-import {Caches, Generator, OrgTypes} from '../Table/Utils';
+import {Caches, Generator, OrgTypes} from '../Common/Utils';
 
 @connect(
     null,

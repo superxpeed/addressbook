@@ -5,7 +5,7 @@ import {Provider} from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import {Router, Route, hashHistory} from 'react-router';
 import {syncHistoryWithStore, routerReducer, routerMiddleware} from 'react-router-redux';
-import universalListReducer from './Common/UniversalListReducers';
+import universalListReducer from './Pages/UniversalListReducers';
 import UniversalListForm from './Pages/UniversalListForm';
 
 const routerMW = routerMiddleware(hashHistory);

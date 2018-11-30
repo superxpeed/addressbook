@@ -1,6 +1,6 @@
-import * as types from './FormConstants';
+import * as types from '../Common/Utils';
 import * as tableActions from '../Table/TableActions';
-import {Caches, OrgTypes} from '../Table/Utils';
+import {Caches, OrgTypes} from '../Common/Utils';
 
 const initialState = {
     tableDataOrganization: {
@@ -13,7 +13,6 @@ const initialState = {
     },
     fieldDescriptionMapPerson: {},
     totalDataSizePerson: 0,
-
     selectedRowsPerson: [],
     selectedRowsOrganization: []
 };

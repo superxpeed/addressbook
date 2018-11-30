@@ -1,17 +1,16 @@
-import {DetailedComponent} from '../Common/DetailedComponent';
-
 require('../Common/style.css');
 
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Table} from '../Table/Table';
-import * as CommonActions from '../Common/CommonActions';
+import * as CommonActions from './UniversalListActions';
 import * as Url from '../Common/Url';
-import {Caches, Generator} from '../Table/Utils';
+import {Caches, Generator} from '../Common/Utils';
 import {Tab, Tabs, Navbar, Nav, Button, Breadcrumb} from 'react-bootstrap'
 import * as TableActions from '../Table/TableActions';
-import {OrganizationComponent} from '../Common/OrganizationComponent';
+import {OrganizationComponent} from '../Components/OrganizationComponent';
+import {PersonComponent} from '../Components/PersonComponent';
 
 @connect(
     state => ({
@@ -133,7 +132,7 @@ export default class UniversalListForm extends React.Component {
                             </Button>
                         </span>
                     }>
-                        <DetailedComponent key={key + 'person'} forUpdate={true} person={this.props.selectedRowsPerson[i]} onUpdate={this.updateSelectedPerson}/>
+                        <PersonComponent key={key + 'person'} forUpdate={true} person={this.props.selectedRowsPerson[i]} onUpdate={this.updateSelectedPerson}/>
                     </Tab>
                 );
             }
@@ -152,7 +151,7 @@ export default class UniversalListForm extends React.Component {
                                         </Button>
                                     </span>
                                     }>
-                                    <DetailedComponent key={'newPersonKey'} forUpdate={false} person={this.state.newPerson} onUpdate={this.updateSelectedPerson}/>
+                                    <PersonComponent key={'newPersonKey'} forUpdate={false} person={this.state.newPerson} onUpdate={this.updateSelectedPerson}/>
                                 </Tab>
             }else{
                 newPersonTab = <div/>
