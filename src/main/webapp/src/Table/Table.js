@@ -1,4 +1,3 @@
-import {HotKeys} from 'react-hotkeys';
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -11,9 +10,7 @@ import * as TableActions from './TableActions';
 export const FILTER_REF = 'filter_';
 
 @connect(
-    state => ({
-
-    }),
+    null,
     dispatch => ({
         onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
         onSelectAllRowsOnCurrentPage: bindActionCreators(TableActions.onSelectAllRowsOnCurrentPage, dispatch)
@@ -31,18 +28,6 @@ export class Table extends React.Component {
         filterObj: {}
     };
 
-    trClassFormat = (row) => {
-
-    };
-
-    static sameTitleFormatter(cell) {
-        return <div title={cell}>{cell}</div>
-    }
-
-    static errorCodeTitleFormatter(cell, row) {
-        return <div title={row.errorName}>{cell}</div>
-    }
-
     onSortChange = (sortName, sortOrder) => {
         if(this.state.sortName !== sortName || this.state.sortOrder !== sortOrder){
             this.setState({
@@ -51,6 +36,20 @@ export class Table extends React.Component {
             });
             this.props.refreshTable(this.state.page, this.state.sizePerPage, sortName, sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
         }
+    };
+
+    static html2text = (html) => {
+        var tag = document.createElement('div');
+        tag.innerHTML = html;
+        return tag.innerText;
+    };
+
+    static sameCellFormatter = (cell) => {
+        return <div title={cell}>{cell}</div>
+    };
+
+    static resumeCellFormatter = (cell, row) => {
+        return <div title={Table.html2text(cell)}>{Table.html2text(cell)}</div>
     };
 
     convertFilterObj = (filterObj) => {
@@ -141,7 +140,7 @@ export class Table extends React.Component {
             sizePerPageList: [ 10, 25, 50 ],
             sizePerPage: this.state.sizePerPage,
             paginationShowsTotal: renderShowsTotal,
-            noDataText: 'Нет ошибок для отображения',
+            noDataText: 'No data to display',
             sortName: this.state.sortName,
             sortOrder: this.state.sortOrder,
             onSortChange: this.onSortChange,
@@ -178,7 +177,7 @@ export class Table extends React.Component {
                            dataField={this.props.fieldDescriptionMap[key].name}
                            key={this.props.fieldDescriptionMap[key].name}
                            isKey={this.props.fieldDescriptionMap[key].name === 'id'}
-                           dataFormat={this.props.fieldDescriptionMap[key].name === 'errorCode' ? Table.errorCodeTitleFormatter : Table.sameTitleFormatter}
+                           dataFormat={this.props.fieldDescriptionMap[key].name === 'resume' ? Table.resumeCellFormatter : Table.sameCellFormatter}
                            hidden={this.props.fieldDescriptionMap[key].hidden}>{this.props.fieldDescriptionMap[key].rusName}</TableHeaderColumn>
             )
         }
@@ -198,9 +197,9 @@ export class Table extends React.Component {
             bootstrapTable = <div/>
         }
         return (
-            <HotKeys handlers={this.props.handlers} >
+            <div>
                 {bootstrapTable}
-            </HotKeys>
+            </div>
         )
     }
 }

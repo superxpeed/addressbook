@@ -101,8 +101,6 @@ export default class UniversalListForm extends React.Component {
     }
 
     render() {
-        console.log('Organizations: ' + this.props.selectedRowsOrganization);
-        console.log('Persons: ' + this.props.selectedRowsPerson);
         let personTable;
         let newPersonTab;
         let persons = [];
