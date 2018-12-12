@@ -47,9 +47,7 @@ public class GridUtils {
                 try (IgniteCache createdCache = ignite.getOrCreateCache(cfg)) {
                     if (ignite.cluster().forDataNodes(createdCache.getName()).nodes().isEmpty()) {
                         System.out.println();
-                        System.out.println(">>> This example requires remote cache node nodes to be started.");
                         System.out.println(">>> Please start at least 1 remote cache node.");
-                        System.out.println(">>> Refer to example's javadoc for details on configuration.");
                         System.out.println();
                     }
                 }
@@ -137,7 +135,12 @@ public class GridUtils {
     public static List<?> selectCachePage(int page, int pageSize, String sortName, String sortOrder, List<FilterDto> filterDto, String cacheName){
         IgniteCache cache = ignite.getOrCreateCache(cacheName);
         ArrayList cacheDtoArrayList = new ArrayList<>();
-        SqlQuery sql = new SqlQuery(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto).append(" order by " + sortName + " " + sortOrder + " limit ? offset ?").toString());
+        SqlQuery sql = new SqlQuery(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
+                                                                                        .append(" order by ")
+                                                                                        .append(sortName).append(" ")
+                                                                                        .append(sortOrder)
+                                                                                        .append(" limit ? offset ?")
+                                                                                        .toString());
         try (QueryCursor<Cache.Entry> cursor = cache.query(sql.setArgs(pageSize, (page - 1) * pageSize))) {
             Constructor dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName).getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName));
             for (Cache.Entry e : cursor)
