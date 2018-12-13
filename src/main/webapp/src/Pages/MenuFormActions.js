@@ -1,6 +1,6 @@
-import {FAILED, SUCCESS, GET_BREADCRUMBS, GET_MENU} from "../Common/Utils";
-import {asyncCommonCatch, ifNoAuthorizedRedirect} from "./UniversalListActions";
-import * as url from "../Common/Url";
+import {FAILED, SUCCESS, GET_BREADCRUMBS, GET_MENU} from '../Common/Utils';
+import {asyncCommonCatch, ifNoAuthorizedRedirect} from './UniversalListActions';
+import * as url from '../Common/Url';
 
 export function getNextLevelMenus(currentUrl) {
     let isOk = false;
