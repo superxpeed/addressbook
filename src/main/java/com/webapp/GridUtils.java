@@ -1,9 +1,6 @@
 package com.webapp;
 
-import com.webapp.dto.ContactDto;
-import com.webapp.dto.FilterDto;
-import com.webapp.dto.OrganizationDto;
-import com.webapp.dto.PersonDto;
+import com.webapp.dto.*;
 import com.webapp.model.*;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
@@ -23,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings("all")
 public class GridUtils {
 
     private static Ignite ignite ;
@@ -34,16 +31,13 @@ public class GridUtils {
             final DefaultResourceLoader loader = new DefaultResourceLoader();
             ignite = Ignition.start(loader.getResource("classpath:example-default.xml").getFile().getAbsolutePath());
             ignite.active(true);
-
             for(Map.Entry<String, Class> cache : UniversalFieldsDescriptor.getCacheClasses().entrySet()){
                 CacheConfiguration cfg = new CacheConfiguration<>();
-
                 cfg.setCacheMode(CacheMode.PARTITIONED);
                 cfg.setName(cache.getKey());
                 cfg.setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL);
                 cfg.setWriteSynchronizationMode(CacheWriteSynchronizationMode.FULL_SYNC);
                 cfg.setIndexedTypes(String.class, cache.getValue());
-
                 try (IgniteCache createdCache = ignite.getOrCreateCache(cfg)) {
                     if (ignite.cluster().forDataNodes(createdCache.getName()).nodes().isEmpty()) {
                         System.out.println();
@@ -52,18 +46,17 @@ public class GridUtils {
                     }
                 }
             }
+            MenuCreator.initMenu();
         }catch (Exception e){
             System.out.println("Exception during Ignite Client startup: ");
             e.printStackTrace();
         }
-
     }
 
     public static OrganizationDto createOrUpdateOrganization(OrganizationDto organizationDto){
-        IgniteCache<String, Organization> cachePerson = ignite.getOrCreateCache("com.webapp.model.Organization");
+        IgniteCache<String, Organization> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE);
         Organization organization = cachePerson.get(organizationDto.getId());
-        if(organization == null)
-            organization = new Organization(organizationDto);
+        if(organization == null) organization = new Organization(organizationDto);
         organization.setType(OrganizationType.values()[Integer.valueOf(organizationDto.getType())]);
         organization.setLastUpdated(new Timestamp(System.currentTimeMillis()));
         organization.setName(organizationDto.getName());
@@ -72,12 +65,10 @@ public class GridUtils {
         return organizationDto;
     }
 
-
     public static PersonDto createOrUpdatePerson(PersonDto personDto){
-        IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache("com.webapp.model.Person");
+        IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE);
         Person person = cachePerson.get(personDto.getId());
-        if(person == null)
-            person = new Person(personDto);
+        if(person == null) person = new Person(personDto);
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
         person.setOrgId(personDto.getOrgId());
@@ -88,11 +79,9 @@ public class GridUtils {
     }
 
     public static ContactDto createOrUpdateContact(ContactDto contactDto){
-
-        IgniteCache<String, Contact> cachePerson = ignite.getOrCreateCache("com.webapp.model.Contact");
+        IgniteCache<String, Contact> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
         Contact contact = cachePerson.get(contactDto.getId());
-        if(contact == null)
-            contact = new Contact();
+        if(contact == null) contact = new Contact();
         contact.setData(contactDto.getData());
         contact.setDescription(contactDto.getDescription());
         contact.setPersonId(contactDto.getPersonId());
@@ -101,6 +90,49 @@ public class GridUtils {
         return contactDto;
     }
 
+    public static MenuEntryDto createOrUpdateMenuEntry(MenuEntryDto menuEntryDto, MenuEntryDto parentEntryDto){
+        IgniteCache<String, MenuEntry> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
+        MenuEntry menuEntry;
+        if(menuEntryDto.getId() != null) menuEntry = cachePerson.get(menuEntryDto.getId());
+        else menuEntry = new MenuEntry();
+        menuEntry.setName(menuEntryDto.getName());
+        menuEntry.setUrl(menuEntryDto.getUrl());
+        if(parentEntryDto != null) menuEntry.setParentId(parentEntryDto.getId());
+        menuEntryDto.setId(menuEntry.getId());
+        cachePerson.put(menuEntry.getId(), menuEntry);
+        return menuEntryDto;
+    }
+
+    public static List<MenuEntryDto> readNextLevel(String url){
+        IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
+        MenuEntry menuEntry = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll().get(0).getValue();
+        SqlQuery<String, MenuEntry> sql = new SqlQuery<>(MenuEntry.class, "parentId = ?");
+        List<MenuEntryDto> menuEntryDtos = new ArrayList<>();
+        try (QueryCursor<Cache.Entry<String, MenuEntry>> cursor = cache.query(sql.setArgs(menuEntry.getId()))) {
+            for (Cache.Entry<String, MenuEntry> e : cursor)
+                menuEntryDtos.add(new MenuEntryDto(e.getValue()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return menuEntryDtos;
+    }
+
+    public static List<Breadcrumb> readBreadcrumbs(String url){
+        IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
+        MenuEntry menuEntry = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll().get(0).getValue();
+        List<Cache.Entry<String, MenuEntry>> menuEntries;
+        List<Breadcrumb> breadcrumbs = new ArrayList<>();
+        if(menuEntry.getParentId() == null) return breadcrumbs;
+        SqlQuery<String, MenuEntry> sql = new SqlQuery<>(MenuEntry.class, "id = ?");
+        while (true){
+            menuEntries = cache.query(sql.setArgs(menuEntry.getParentId())).getAll();
+            if(!menuEntries.isEmpty()){
+                menuEntry = menuEntries.get(0).getValue();
+                breadcrumbs.add(0, new Breadcrumb(menuEntry.getName(), menuEntry.getUrl()));
+            }else break;
+        }
+        return breadcrumbs;
+    }
 
     private static StringBuilder getQuerySql(List<FilterDto> filterDto){
         StringBuilder baseSql = new StringBuilder(" ");
@@ -134,7 +166,7 @@ public class GridUtils {
 
     public static List<?> selectCachePage(int page, int pageSize, String sortName, String sortOrder, List<FilterDto> filterDto, String cacheName){
         IgniteCache cache = ignite.getOrCreateCache(cacheName);
-        ArrayList cacheDtoArrayList = new ArrayList<>();
+        List cacheDtoArrayList = new ArrayList<>();
         SqlQuery sql = new SqlQuery(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
                                                                                         .append(" order by ")
                                                                                         .append(sortName).append(" ")
@@ -152,8 +184,8 @@ public class GridUtils {
     }
 
     public static List<ContactDto> getContactsByPersonId(String id){
-        IgniteCache<String, Contact> cache = ignite.getOrCreateCache("com.webapp.model.Contact");
-        ArrayList<ContactDto> cacheDtoArrayList = new ArrayList<>();
+        IgniteCache<String, Contact> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
+        List<ContactDto> cacheDtoArrayList = new ArrayList<>();
         SqlQuery sql = new SqlQuery(Contact.class, "personId = ?");
         try (QueryCursor<Cache.Entry> cursor = cache.query(sql.setArgs(id))) {
             for (Cache.Entry<String, Contact> e : cursor)
@@ -168,8 +200,7 @@ public class GridUtils {
     private static String getComparator(FilterDto filterDto){
         if(filterDto.getComparator() == null || filterDto.getComparator().equals(""))
             return " = ";
-        else
-            return " " + filterDto.getComparator() + " ";
+        else return " " + filterDto.getComparator() + " ";
     }
 
     public static Integer getTotalDataSize(String cacheName, List<FilterDto> filterDto){

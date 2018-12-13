@@ -3,10 +3,7 @@ package com.webapp;
 import com.webapp.dto.ContactDto;
 import com.webapp.dto.OrganizationDto;
 import com.webapp.dto.PersonDto;
-import com.webapp.model.Contact;
-import com.webapp.model.FieldDescription;
-import com.webapp.model.Organization;
-import com.webapp.model.Person;
+import com.webapp.model.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,6 +13,7 @@ public class UniversalFieldsDescriptor {
     public static final String ORGANIZATION_CACHE = "com.webapp.model.Organization";
     public static final String PERSON_CACHE = "com.webapp.model.Person";
     public static final String CONTACT_CACHE = "com.webapp.model.Contact";
+    public static final String MENU_CACHE = "com.webapp.model.MenuEntry";
 
     private static Map<String, FieldDescription> fieldDescriptionMapOrganization = new LinkedHashMap<>();
     private static Map<String, FieldDescription> fieldDescriptionMapPerson = new LinkedHashMap<>();
@@ -44,6 +42,7 @@ public class UniversalFieldsDescriptor {
         cacheClasses.put(ORGANIZATION_CACHE, Organization.class);
         cacheClasses.put(PERSON_CACHE, Person.class);
         cacheClasses.put(CONTACT_CACHE, Contact.class);
+        cacheClasses.put(MENU_CACHE, MenuEntry.class);
 
         dtoClasses.put(ORGANIZATION_CACHE, OrganizationDto.class);
         dtoClasses.put(PERSON_CACHE, PersonDto.class);

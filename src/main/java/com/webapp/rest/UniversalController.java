@@ -3,6 +3,7 @@ package com.webapp.rest;
 import com.webapp.GridUtils;
 import com.webapp.UniversalFieldsDescriptor;
 import com.webapp.dto.*;
+import com.webapp.model.Breadcrumb;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,6 @@ public class UniversalController{
         return dto;
     }
 
-
     @ResponseBody
     @RequestMapping("/getContactList")
     public PageDataDto<TableDataDto> getContactList (@RequestParam(value = "personId") String id) {
@@ -54,6 +54,22 @@ public class UniversalController{
     public PageDataDto<OrganizationDto> saveOrCreateOrganization(@RequestBody OrganizationDto organizationDto) {
         PageDataDto<OrganizationDto> dto = new PageDataDto<>();
         dto.setData(GridUtils.createOrUpdateOrganization(organizationDto));
+        return dto;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getBreadcrumbs", method = RequestMethod.GET)
+    public PageDataDto<List<Breadcrumb>> getBreadcrumbs(@RequestParam(value = "currentUrl") String url) {
+        PageDataDto<List<Breadcrumb>> dto = new PageDataDto<>();
+        dto.setData(GridUtils.readBreadcrumbs(url));
+        return dto;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getNextLevelMenus", method = RequestMethod.GET)
+    public PageDataDto<List<MenuEntryDto>> getNextLevelMenus(@RequestParam(value = "currentUrl") String url) {
+        PageDataDto<List<MenuEntryDto>> dto = new PageDataDto<>();
+        dto.setData(GridUtils.readNextLevel(url));
         return dto;
     }
 

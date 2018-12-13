@@ -8,12 +8,11 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-
     <context:annotation-config/>
     <context:component-scan base-package="com.webapp"/>
     <task:annotation-driven/>
 
-    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
-    <bean class="com.webapp.GridStarter"/>
-    <bean class="com.webapp.GridStopper"/>
+    <bean id="jackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+    <bean id="gridStarter" class="com.webapp.GridStarter"/>
+    <bean id="gridStopper" class="com.webapp.GridStopper"/>
 </beans>
