@@ -3,15 +3,16 @@ import ReactDOM from 'react-dom';
 import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import {Provider} from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
-import {Router, Route, hashHistory} from 'react-router';
-import {syncHistoryWithStore, routerReducer, routerMiddleware} from 'react-router-redux';
+import { Route, Switch} from 'react-router';
+import { HashRouter } from 'react-router-dom';
+import {routerReducer} from 'react-router-redux';
 import universalListReducer from './Pages/UniversalListReducers';
+import menuReducer from './Pages/MenuFormReducers';
 import UniversalListForm from './Pages/UniversalListForm';
+import MenuForm from './Pages/MenuForm'
 
-const routerMW = routerMiddleware(hashHistory);
-const reducer = combineReducers({universalListReducer,  routing: routerReducer});
-const store = createStore(reducer, compose(applyMiddleware(thunkMiddleware,  routerMW), window.devToolsExtension ? window.devToolsExtension() : f => f));
-const history = syncHistoryWithStore(hashHistory, store);
+const reducer = combineReducers({universalListReducer,  menuReducer,  routing: routerReducer});
+const store = createStore(reducer, compose(applyMiddleware(thunkMiddleware), window.devToolsExtension ? window.devToolsExtension() : f => f));
 
 export default class Index extends React.Component {
     constructor(props) {
@@ -21,9 +22,17 @@ export default class Index extends React.Component {
     render() {
         return (
             <Provider store={store}>
-                <Router history={history}>
-                    <Route path='/' component={UniversalListForm}/>
-                </Router>
+                <HashRouter>
+
+                    <Route path='/'>
+                        <div>
+                            <Switch>
+                                <Route path='/lastLevel'   component={UniversalListForm}       exact   />
+                                <Route path='/'        component={MenuForm}           />
+                            </Switch>
+                        </div>
+                    </Route>
+                </HashRouter>
             </Provider>
         )
     }

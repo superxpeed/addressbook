@@ -2,6 +2,8 @@ export const REQUEST = '_REQUEST';
 export const SUCCESS = '_SUCCESS';
 export const FAILED = '_FAILED';
 export const GET_LIST = 'GET_LIST';
+export const GET_MENU = 'GET_MENU';
+export const GET_BREADCRUMBS = 'GET_BREADCRUMBS';
 
 export var Caches = {
     ORGANIZATION_CACHE: 'com.webapp.model.Organization',

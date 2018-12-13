@@ -1,3 +1,5 @@
+import * as MenuActions from "./MenuFormActions";
+
 require('../Common/style.css');
 
 import React from 'react';
@@ -22,12 +24,14 @@ import {PersonComponent} from '../Components/PersonComponent';
         totalDataSizePerson: state.universalListReducer.totalDataSizePerson,
         selectedRowsPerson: state.universalListReducer.selectedRowsPerson,
         selectedRowsOrganization: state.universalListReducer.selectedRowsOrganization,
+        breadcrumbs: state.menuReducer.breadcrumbs,
     }),
     dispatch => ({
         getList: bindActionCreators(CommonActions.getList, dispatch),
         onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
         updateRow: bindActionCreators(TableActions.updateRow, dispatch),
         addRow: bindActionCreators(TableActions.addRow, dispatch),
+        getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
         clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch)
     })
 )
@@ -43,8 +47,15 @@ export default class UniversalListForm extends React.Component {
     }
 
     componentDidMount() {
+        let currentUrl = window.location.hash;
         this.refreshTable(1,10,'id','desc',[], Caches.ORGANIZATION_CACHE);
+        this.props.getBreadcrumbs(this.cleanHash(currentUrl));
     }
+
+    cleanHash = (hash) => {
+        if(hash === '/root') return hash;
+        if(hash.startsWith('#')) return hash.substring(1);
+    };
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.selectedRowsOrganization.length === 1
@@ -103,6 +114,11 @@ export default class UniversalListForm extends React.Component {
         let personTable;
         let newPersonTab;
         let persons = [];
+        let breads = [];
+        this.props.breadcrumbs.forEach(function(element){
+            breads.push(<Breadcrumb.Item href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
+        });
+
         if(this.props.selectedRowsOrganization.length === 1){
             personTable = <Tab key={2} eventKey={2} title={this.props.selectedRowsOrganization[0].name}>
                 <Table ref='table2'
@@ -166,9 +182,7 @@ export default class UniversalListForm extends React.Component {
                     <Navbar.Collapse>
                         <Nav>
                             <Breadcrumb>
-                                <Breadcrumb.Item href='#'>Home</Breadcrumb.Item>
-                                <Breadcrumb.Item href='http://getbootstrap.com/components/#breadcrumbs'>Library</Breadcrumb.Item>
-                                <Breadcrumb.Item active>Data</Breadcrumb.Item>
+                                {breads}
                             </Breadcrumb>
                         </Nav>
                         <Nav pullRight>

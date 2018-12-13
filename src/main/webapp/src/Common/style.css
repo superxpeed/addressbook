@@ -24,3 +24,15 @@
 .Button__root___1gz0c{
     background: white!important;
 }
+
+a {
+    color: black!important;
+}
+
+.navbar-collapse {
+    padding-left: 0!important;
+}
+
+.container {
+    padding-left: 0!important;
+}
