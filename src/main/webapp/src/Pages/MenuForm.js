@@ -30,9 +30,7 @@ export default class MenuForm extends React.Component {
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
-        console.log('newProps');
         let currentUrl = window.location.hash;
-        console.log(currentUrl);
         if(currentUrl === '#/') currentUrl = '/root';
         if(this.state.currentUrl !== this.cleanHash(currentUrl)){
             this.setState({currentUrl: this.cleanHash(currentUrl)});
@@ -40,7 +38,6 @@ export default class MenuForm extends React.Component {
             this.props.getNextLevelMenus(this.cleanHash(currentUrl));
         }
     }
-
 
     componentDidMount() {
         console.log('newProps');
