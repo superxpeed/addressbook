@@ -1,5 +1,3 @@
-import * as MenuActions from "./MenuFormActions";
-
 require('../Common/style.css');
 
 import React from 'react';
@@ -8,9 +6,10 @@ import {bindActionCreators} from 'redux';
 import {Table} from '../Table/Table';
 import * as CommonActions from './UniversalListActions';
 import * as Url from '../Common/Url';
-import {Caches, Generator} from '../Common/Utils';
+import {Caches, Generator, HashUtils} from '../Common/Utils';
 import {Tab, Tabs, Navbar, Nav, Button, Breadcrumb} from 'react-bootstrap'
 import * as TableActions from '../Table/TableActions';
+import * as MenuActions from './MenuFormActions';
 import {OrganizationComponent} from '../Components/OrganizationComponent';
 import {PersonComponent} from '../Components/PersonComponent';
 
@@ -49,13 +48,8 @@ export default class UniversalListForm extends React.Component {
     componentDidMount() {
         let currentUrl = window.location.hash;
         this.refreshTable(1,10,'id','desc',[], Caches.ORGANIZATION_CACHE);
-        this.props.getBreadcrumbs(this.cleanHash(currentUrl));
+        this.props.getBreadcrumbs(HashUtils.cleanHash(currentUrl));
     }
-
-    cleanHash = (hash) => {
-        if(hash === '/root') return hash;
-        if(hash.startsWith('#')) return hash.substring(1);
-    };
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.selectedRowsOrganization.length === 1
@@ -115,8 +109,9 @@ export default class UniversalListForm extends React.Component {
         let newPersonTab;
         let persons = [];
         let breads = [];
-        this.props.breadcrumbs.forEach(function(element){
-            breads.push(<Breadcrumb.Item href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
+        let breadcrumbsCount = this.props.breadcrumbs.length;
+        this.props.breadcrumbs.forEach(function(element, index){
+            breads.push(<Breadcrumb.Item style={{fontWeight: index === breadcrumbsCount - 1 ? 'bold' : 'normal'}} key={element.url} href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
         });
 
         if(this.props.selectedRowsOrganization.length === 1){

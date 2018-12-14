@@ -10,6 +10,7 @@ import universalListReducer from './Pages/UniversalListReducers';
 import menuReducer from './Pages/MenuFormReducers';
 import UniversalListForm from './Pages/UniversalListForm';
 import MenuForm from './Pages/MenuForm'
+import EmptyPageForm from './Pages/EmptyPageForm'
 
 const reducer = combineReducers({universalListReducer,  menuReducer,  routing: routerReducer});
 const store = createStore(reducer, compose(applyMiddleware(thunkMiddleware), window.devToolsExtension ? window.devToolsExtension() : f => f));
@@ -27,8 +28,9 @@ export default class Index extends React.Component {
                     <Route path='/'>
                         <div>
                             <Switch>
-                                <Route path='/lastLevel'   component={UniversalListForm}       exact   />
-                                <Route path='/'        component={MenuForm}           />
+                                <Route path='/emptyPage'    component={EmptyPageForm}       exact   />
+                                <Route path='/lastLevel'    component={UniversalListForm}   exact   />
+                                <Route path='/'             component={MenuForm}                    />
                             </Switch>
                         </div>
                     </Route>

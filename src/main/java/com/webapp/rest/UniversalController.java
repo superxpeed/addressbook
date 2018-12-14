@@ -25,8 +25,6 @@ public class UniversalController{
         TableDataDto td = new TableDataDto<>(GridUtils.selectCachePage(start,pageSize, sortName, sortOrder, filterDto, cache), GridUtils.getTotalDataSize(cache, filterDto));
         PageDataDto<TableDataDto> dto = new PageDataDto<>();
         dto.setData(td);
-        dto.setTitle("Lol kek");
-        dto.setBreadcrumbs(new ArrayList<>());
         dto.setFieldDescriptionMap(UniversalFieldsDescriptor.getFieldDescriptionMap(cache));
         return dto;
     }

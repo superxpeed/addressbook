@@ -90,6 +90,10 @@ public class GridUtils {
         return contactDto;
     }
 
+    public static void clearMenus(){
+        ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE).clear();
+    }
+
     public static MenuEntryDto createOrUpdateMenuEntry(MenuEntryDto menuEntryDto, MenuEntryDto parentEntryDto){
         IgniteCache<String, MenuEntry> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
         MenuEntry menuEntry;
@@ -119,7 +123,8 @@ public class GridUtils {
 
     public static List<Breadcrumb> readBreadcrumbs(String url){
         IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
-        MenuEntry menuEntry = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll().get(0).getValue();
+        MenuEntry original = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll().get(0).getValue();;
+        MenuEntry menuEntry = original;
         List<Cache.Entry<String, MenuEntry>> menuEntries;
         List<Breadcrumb> breadcrumbs = new ArrayList<>();
         if(menuEntry.getParentId() == null) return breadcrumbs;
@@ -131,6 +136,7 @@ public class GridUtils {
                 breadcrumbs.add(0, new Breadcrumb(menuEntry.getName(), menuEntry.getUrl()));
             }else break;
         }
+        breadcrumbs.add(new Breadcrumb(original.getName(), original.getUrl()));
         return breadcrumbs;
     }
 

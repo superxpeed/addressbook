@@ -34,6 +34,13 @@ export class ContactTypes {
     };
 }
 
+export class HashUtils {
+    static cleanHash = (hash) => {
+        if(hash === '/root') return hash;
+        if(hash.startsWith('#')) return hash.substring(1);
+    };
+}
+
 export class TitleConverter {
     static prepareTitle = (field) => {
         let title = '';
