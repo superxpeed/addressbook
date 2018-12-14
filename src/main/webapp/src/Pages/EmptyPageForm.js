@@ -19,11 +19,6 @@ export default class EmptyPageForm extends React.Component {
         super(props);
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        let currentUrl = window.location.hash;
-        this.props.getBreadcrumbs(HashUtils.cleanHash(currentUrl));
-    }
-
     componentDidMount() {
         let currentUrl = window.location.hash;
         this.props.getBreadcrumbs(HashUtils.cleanHash(currentUrl));
