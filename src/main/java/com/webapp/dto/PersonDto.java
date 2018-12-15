@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @ToString
+@SuppressWarnings("unused")
 public class PersonDto implements Serializable {
 
     private String id;
