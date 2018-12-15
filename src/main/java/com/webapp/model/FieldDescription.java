@@ -12,7 +12,7 @@ import lombok.ToString;
 public class FieldDescription {
 
     private String name;
-    private String rusName;
+    private String displayName;
     private String width;
     private String type;
     private boolean isHidden;

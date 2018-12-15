@@ -165,7 +165,7 @@ export class Table extends React.Component {
                            key={this.props.fieldDescriptionMap[key].name}
                            isKey={this.props.fieldDescriptionMap[key].name === 'id'}
                            dataFormat={this.props.fieldDescriptionMap[key].name === 'resume' ? Table.resumeCellFormatter : Table.sameCellFormatter}
-                           hidden={this.props.fieldDescriptionMap[key].hidden}>{this.props.fieldDescriptionMap[key].rusName}</TableHeaderColumn>
+                           hidden={this.props.fieldDescriptionMap[key].hidden}>{this.props.fieldDescriptionMap[key].displayName}</TableHeaderColumn>
             )
         }
         let bootstrapTable;
@@ -174,7 +174,6 @@ export class Table extends React.Component {
                                              ref='bootstrap_table'
                                              fetchInfo={ { dataTotalSize: this.props.totalDataSize } }
                                              remote={ true }
-                                             trClassName={this.trClassFormat}
                                              tableHeaderClass='list-form-table-header'
                                              selectRow={selectRowProp}
                                              options={options}>
