@@ -1,10 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {
-    BootstrapTable,
-    TableHeaderColumn
-} from 'react-bootstrap-table';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import * as TableActions from './TableActions';
 
 export const FILTER_REF = 'filter_';
@@ -30,16 +27,13 @@ export class Table extends React.Component {
 
     onSortChange = (sortName, sortOrder) => {
         if(this.state.sortName !== sortName || this.state.sortOrder !== sortOrder){
-            this.setState({
-                sortName,
-                sortOrder
-            });
+            this.setState({ sortName, sortOrder });
             this.props.refreshTable(this.state.page, this.state.sizePerPage, sortName, sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
         }
     };
 
     static html2text = (html) => {
-        var tag = document.createElement('div');
+        let tag = document.createElement('div');
         tag.innerHTML = html;
         return tag.innerText;
     };
@@ -56,7 +50,6 @@ export class Table extends React.Component {
         let converted = [];
         for (const key of Object.keys(filterObj)) {
             if(filterObj.hasOwnProperty(key)){
-                console.info(key + ' ' + filterObj[key]);
                 if(filterObj[key].type === 'DateFilter'){
                     converted.push({name: key, value: filterObj[key].value.date, comparator: filterObj[key].value.comparator, type: filterObj[key].type});
                 }
@@ -72,26 +65,20 @@ export class Table extends React.Component {
     };
 
     onFilterChange = (filterObj) => {
-        this.setState({
-            filterObj
-        });
+        this.setState({ filterObj });
         this.props.refreshTable(this.state.page, this.state.sizePerPage, this.state.sortName, this.state.sortOrder, this.convertFilterObj(filterObj), this.props.cache);
     };
 
     onSizePerPageList = (sizePerPage) => {
         if(this.state.sizePerPage !== sizePerPage){
-            this.setState({
-                sizePerPage
-            });
+            this.setState({ sizePerPage });
             this.props.refreshTable(this.state.page, sizePerPage, this.state.sortName, this.state.sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
         }
     };
 
     onPageChange = (page, sizePerPage) => {
         if(this.state.page !== page){
-            this.setState({
-                page
-            });
+            this.setState({ page });
             this.props.refreshTable(page, this.state.sizePerPage, this.state.sortName, this.state.sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
         }
     };
@@ -103,8 +90,8 @@ export class Table extends React.Component {
     onSelectTableAllRowsOnCurrentPage = (isSelected, rows) => {
         this.props.onSelectAllRowsOnCurrentPage(isSelected, rows, this.props.cache);
     };
-    render() {
 
+    render() {
         const renderShowsTotal = (start, to, total) => {
             return (
                 <p style={{position: 'relative',
