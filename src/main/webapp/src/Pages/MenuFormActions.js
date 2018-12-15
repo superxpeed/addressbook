@@ -10,6 +10,7 @@ export function getNextLevelMenus(currentUrl) {
         headers.append('Content-Type', 'application/json; charset=utf-8');
         fetch(url.GET_NEXT_LEVEL_MENUS + '?currentUrl=' + currentUrl, {
             method: 'get',
+            credentials: 'include',
             headers: headers
         }).then(response => {
             ifNoAuthorizedRedirect(response);
@@ -38,6 +39,7 @@ export function getBreadcrumbs(currentUrl) {
         headers.append('Content-Type', 'application/json; charset=utf-8');
         fetch(url.GET_BREADCRUMBS + '?currentUrl=' + currentUrl, {
             method: 'get',
+            credentials: 'include',
             headers: headers
         }).then(response => {
             ifNoAuthorizedRedirect(response);

@@ -32,6 +32,7 @@ export function getList(url, filterDto = null, cacheName) {
         fetch(url, {
             method: 'post',
             headers: headers,
+            credentials: 'include',
             body: JSON.stringify(filterDto),
         }).then(response => {
             ifNoAuthorizedRedirect(response);
@@ -54,8 +55,7 @@ export function getList(url, filterDto = null, cacheName) {
 }
 
 export function ifNoAuthorizedRedirect(response) {
-    let loginPage = response.headers.get('loginPage');
-    if (response.status === 401 && loginPage) {
-        window.location.href = url.getContextPath() + loginPage;
+    if (response.status === 401) {
+        window.location.hash = '#/login';
     }
 }

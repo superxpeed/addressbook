@@ -33,8 +33,6 @@ export class OrganizationComponent extends React.Component {
         }
     }
 
-
-
     getValidationState(field) {
         if(this.state.organization[field] === undefined || this.state.organization[field] === null) return 'error';
         const length = this.state.organization[field].length;
@@ -64,6 +62,7 @@ export class OrganizationComponent extends React.Component {
         fetch(url.SAVE_ORGANIZATION, {
             method: 'post',
             headers: headers,
+            credentials: 'include',
             body: JSON.stringify(this.state.organization)
         }).then(response => {
             ifNoAuthorizedRedirect(response);

@@ -48,6 +48,7 @@ export class PersonComponent extends React.Component {
         headers.append('Content-Type', 'application/json; charset=utf-8');
         fetch(url.GET_CONTACT_LIST + '?personId=' + id, {
             method: 'post',
+            credentials: 'include',
             headers: headers
         }).then(response => {
             ifNoAuthorizedRedirect(response);
@@ -68,6 +69,7 @@ export class PersonComponent extends React.Component {
         headers.append('Content-Type', 'application/json; charset=utf-8');
         fetch(url.SAVE_PERSON, {
             method: 'post',
+            credentials: 'include',
             headers: headers,
             body: JSON.stringify(this.state.person)
         }).then(response => {
@@ -79,6 +81,7 @@ export class PersonComponent extends React.Component {
                 savedPerson = json.data;
                 fetch(url.SAVE_CONTACT_LIST, {
                     method: 'post',
+                    credentials: 'include',
                     headers: headers,
                     body: this.container.getJson()
                 }).then(response => {
