@@ -1,17 +1,21 @@
 package com.webapp.dto;
 
 import com.webapp.model.MenuEntry;
-
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import java.io.Serializable;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class MenuEntryDto implements Serializable {
 
     private String id;
-
     private String parentId;
-
     private String url;
-
     private String name;
 
     public MenuEntryDto(MenuEntry menuEntry) {
@@ -23,40 +27,6 @@ public class MenuEntryDto implements Serializable {
 
     public MenuEntryDto(String url, String name) {
         this.url = url;
-        this.name = name;
-    }
-
-    public MenuEntryDto() { }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
     }
 }

@@ -1,9 +1,14 @@
 package com.webapp.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.ignite.cache.query.annotations.QuerySqlField;
-
 import java.util.UUID;
 
+@Getter
+@Setter
+@ToString
 public class Contact {
 
     @QuerySqlField(index = true)
@@ -31,56 +36,5 @@ public class Contact {
         this.type = type;
         this.data = data;
         this.description = description;
-    }
-
-    public String getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(String personId) {
-        this.personId = personId;
-    }
-
-    public String getContactId() {
-        return contactId;
-    }
-
-    public void setContactId(String contactId) {
-        this.contactId = contactId;
-    }
-
-    public ContactType getType() {
-        return type;
-    }
-
-    public void setType(ContactType type) {
-        this.type = type;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "personId='" + personId + '\'' +
-                ", contactId='" + contactId + '\'' +
-                ", type=" + type +
-                ", data='" + data + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

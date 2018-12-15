@@ -1,36 +1,17 @@
 package com.webapp.model;
 
-public class Breadcrumb {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-    public Breadcrumb(String name, String url) {
-        this.name = name;
-        this.url = url;
-    }
+@Setter
+@Getter
+@AllArgsConstructor
+@ToString
+public class Breadcrumb {
 
     private String name;
     private String url;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    @Override
-    public String toString() {
-        return "Breadcrumb{" +
-                "name='" + name + '\'' +
-                ", url='" + url + '\'' +
-                '}';
-    }
 }
