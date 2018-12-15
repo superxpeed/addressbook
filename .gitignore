@@ -1,6 +1,5 @@
 *.iml
 **/target/
-**/.idea/*
 npm-debug.log
 src/main/webapp/node_modules/
 src/main/webapp/dist/bundle.js
