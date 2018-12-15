@@ -9,6 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
+@SuppressWarnings("unused")
 public class Contact {
 
     @QuerySqlField(index = true)
