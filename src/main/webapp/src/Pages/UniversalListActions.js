@@ -1,5 +1,4 @@
 import {SUCCESS, FAILED} from '../Common/Utils';
-import * as url from '../Common/Url';
 import * as tableActions from '../Table/TableActions';
 import {Caches} from '../Common/Utils';
 
