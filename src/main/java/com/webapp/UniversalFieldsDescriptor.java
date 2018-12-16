@@ -8,6 +8,7 @@ import com.webapp.model.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@SuppressWarnings("WeakerAccess")
 public class UniversalFieldsDescriptor {
 
     public static final String ORGANIZATION_CACHE = "com.webapp.model.Organization";
