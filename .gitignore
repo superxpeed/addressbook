@@ -3,4 +3,5 @@
 npm-debug.log
 src/main/react/node_modules/
 src/main/react/dist/bundle.js
+src/main/react/package-lock.json
 src/main/react/dist/bundle.js.map
