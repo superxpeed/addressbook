@@ -6,7 +6,7 @@ module.exports = {
         './src/index.js'
     ],
     output: {
-        filename: './dist/bundle.js',
+        filename: '../resources/static/bundle.js',
     },
     module: {
         loaders: [
