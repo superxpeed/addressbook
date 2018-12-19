@@ -1,5 +1,7 @@
-package com.webapp;
+package com.webapp.ignite;
 
+import com.webapp.MenuCreator;
+import com.webapp.UniversalFieldsDescriptor;
 import com.webapp.dto.*;
 import com.webapp.model.*;
 import org.apache.ignite.Ignite;
@@ -12,11 +14,16 @@ import org.apache.ignite.cache.CacheWriteSynchronizationMode;
 import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.ignite.cache.query.SqlQuery;
 import org.apache.ignite.configuration.CacheConfiguration;
+import org.apache.ignite.configuration.IgniteConfiguration;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
+import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import javax.cache.Cache;
 import java.lang.reflect.Constructor;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +35,27 @@ public class GridUtils {
     static void startClient(){
         if(ignite != null) return;
         try{
-            final DefaultResourceLoader loader = new DefaultResourceLoader();
-            ignite = Ignition.start(loader.getResource("classpath:example-default.xml").getFile().getAbsolutePath());
+
+            IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
+            igniteConfiguration.setPeerClassLoadingEnabled(true);
+            igniteConfiguration.setClientMode(true);
+            igniteConfiguration.setIncludeEventTypes(   org.apache.ignite.events.EventType.EVT_TASK_STARTED,
+                                                        org.apache.ignite.events.EventType.EVT_TASK_FINISHED,
+                                                        org.apache.ignite.events.EventType.EVT_TASK_FAILED,
+                                                        org.apache.ignite.events.EventType.EVT_TASK_TIMEDOUT,
+                                                        org.apache.ignite.events.EventType.EVT_TASK_SESSION_ATTR_SET,
+                                                        org.apache.ignite.events.EventType.EVT_TASK_REDUCED,
+                                                        org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_PUT,
+                                                        org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_READ,
+                                                        org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_REMOVED);
+
+            TcpDiscoverySpi tcpDiscoverySpi = new TcpDiscoverySpi();
+            TcpDiscoveryMulticastIpFinder tcpDiscoveryMulticastIpFinder = new TcpDiscoveryMulticastIpFinder();
+            tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("127.0.0.1:47500..47509"));
+            tcpDiscoverySpi.setIpFinder(tcpDiscoveryMulticastIpFinder);
+            igniteConfiguration.setDiscoverySpi(tcpDiscoverySpi);
+
+            ignite = Ignition.start(igniteConfiguration);
             ignite.active(true);
             for(Map.Entry<String, Class> cache : UniversalFieldsDescriptor.getCacheClasses().entrySet()){
                 CacheConfiguration cfg = new CacheConfiguration<>();

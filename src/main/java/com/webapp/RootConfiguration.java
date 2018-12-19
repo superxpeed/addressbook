@@ -1,12 +1,12 @@
 package com.webapp;
 
+import com.webapp.ignite.GridStarter;
+import com.webapp.ignite.GridStopper;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 @Configuration
-@ComponentScan("com.webapp")
 public class RootConfiguration {
 
     @Bean

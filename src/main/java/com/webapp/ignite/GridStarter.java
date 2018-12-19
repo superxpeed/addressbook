@@ -1,4 +1,4 @@
-package com.webapp;
+package com.webapp.ignite;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

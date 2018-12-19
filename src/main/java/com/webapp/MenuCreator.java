@@ -1,6 +1,7 @@
 package com.webapp;
 
 import com.webapp.dto.MenuEntryDto;
+import com.webapp.ignite.GridUtils;
 
 @SuppressWarnings("all")
 public class MenuCreator {
