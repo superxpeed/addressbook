@@ -181,7 +181,7 @@
                         <goal>exec</goal>
                     </goals>
                     <configuration>
-                        <workingDirectory>./src/main/webapp</workingDirectory>
+                        <workingDirectory>src/main/react</workingDirectory>
                         <executable>${npm.executable}</executable>
                         <arguments>
                             <argument>install</argument>
@@ -196,7 +196,7 @@
                         <goal>exec</goal>
                     </goals>
                     <configuration>
-                        <workingDirectory>${basedir}/src/main/webapp</workingDirectory>
+                        <workingDirectory>src/main/react</workingDirectory>
                         <executable>${npm.executable}</executable>
                         <arguments>
                             <argument>run</argument>
@@ -327,7 +327,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <workingDirectory>./src/main/webapp</workingDirectory>
+                                    <workingDirectory>src/main/react</workingDirectory>
                                     <executable>${npm.executable}</executable>
                                     <arguments>
                                         <argument>install</argument>
@@ -342,7 +342,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <workingDirectory>${basedir}/src/main/webapp</workingDirectory>
+                                    <workingDirectory>src/main/react</workingDirectory>
                                     <executable>${npm.executable}</executable>
                                     <arguments>
                                         <argument>run</argument>

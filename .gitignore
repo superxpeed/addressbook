@@ -1,6 +1,6 @@
 *.iml
 **/target/
 npm-debug.log
-src/main/webapp/node_modules/
-src/main/webapp/dist/bundle.js
-src/main/webapp/dist/bundle.js.map
+src/main/react/node_modules/
+src/main/react/dist/bundle.js
+src/main/react/dist/bundle.js.map
