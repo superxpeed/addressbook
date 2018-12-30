@@ -36,3 +36,12 @@ a {
 .container {
     padding-left: 0!important;
 }
+
+#adminContainer {
+    width: 50%;
+    margin-left: 10px;
+}
+
+#adminContainer td {
+    width: 50%;
+}
