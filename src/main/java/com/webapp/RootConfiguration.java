@@ -2,9 +2,12 @@ package com.webapp;
 
 import com.webapp.ignite.GridStarter;
 import com.webapp.ignite.GridStopper;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+
+import javax.servlet.http.HttpSessionListener;
 
 @Configuration
 public class RootConfiguration {
@@ -22,5 +25,10 @@ public class RootConfiguration {
     @Bean
     GridStopper gridStopper(){
         return new GridStopper();
+    }
+
+    @Bean
+    public ServletListenerRegistrationBean<HttpSessionListener> sessionListener() {
+        return new ServletListenerRegistrationBean<>(new SessionListener());
     }
 }
