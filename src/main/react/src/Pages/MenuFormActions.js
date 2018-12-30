@@ -59,3 +59,23 @@ export function getBreadcrumbs(currentUrl) {
         });
     }
 }
+
+export function logout() {
+    let isOk = false;
+    return function () {
+        let headers = new Headers();
+        fetch(url.LOGOUT, {
+            method: 'get',
+            credentials: 'include',
+            headers: headers
+        }).then(response => {
+            isOk = response.ok;
+            if (isOk) {
+                window.location.hash = '#/login';
+            }
+        });
+    }
+}
+
+
+

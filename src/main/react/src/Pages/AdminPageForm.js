@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as MenuActions from './MenuFormActions';
-import {Navbar, Nav, Breadcrumb} from 'react-bootstrap'
+import {Navbar, Nav, Breadcrumb, Button} from 'react-bootstrap'
 import {HashUtils} from '../Common/Utils';
 
 @connect(
@@ -11,9 +11,10 @@ import {HashUtils} from '../Common/Utils';
     }),
     dispatch => ({
         getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
+        logout: bindActionCreators(MenuActions.logout, dispatch)
     })
 )
-export default class EmptyPageForm extends React.Component {
+export default class AdminPageForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -39,8 +40,14 @@ export default class EmptyPageForm extends React.Component {
                                 {breads}
                             </Breadcrumb>
                         </Nav>
+                        <Nav pullRight>
+                            <Button onClick={() => this.props.logout()}>
+                                Logout
+                            </Button>
+                        </Nav>
                     </Navbar.Collapse>
                 </Navbar>
+                <div> ADMIN PAGE FORM</div>
             </div>
         )
     }

@@ -7,6 +7,6 @@ public class GridStopper implements ApplicationListener<ContextClosedEvent> {
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
         System.out.println("--------------- Context Closed -----------------");
-        GridUtils.stopClient();
+        GridDAO.stopClient();
     }
 }

@@ -7,6 +7,6 @@ public class GridStarter implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         System.out.println("--------------- Context Refreshed -----------------");
-        GridUtils.startClient();
+        GridDAO.startClient();
     }
 }

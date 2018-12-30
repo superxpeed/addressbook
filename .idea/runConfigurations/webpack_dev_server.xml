@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="webpack-dev-server" type="js.build_tools.npm" nameIsGenerated="true">
-    <package-json value="$PROJECT_DIR$/src/main/webapp/package.json" />
+    <package-json value="$PROJECT_DIR$/src/main/react/package.json" />
     <command value="run" />
     <scripts>
       <script value="webpack-dev-server" />

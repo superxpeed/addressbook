@@ -7,6 +7,7 @@ export const SAVE_PERSON = cp + 'rest/saveOrCreatePerson';
 export const SAVE_ORGANIZATION = cp + 'rest/saveOrCreateOrganization';
 export const GET_NEXT_LEVEL_MENUS = cp + 'rest/getNextLevelMenus';
 export const GET_BREADCRUMBS = cp + 'rest/getBreadcrumbs';
+export const LOGOUT = cp + 'rest/logout';
 export const LOGIN = cp + 'login';
 
 export function getContextPath() {

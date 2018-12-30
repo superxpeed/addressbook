@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
@@ -23,19 +23,14 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private RequestAwareAuthenticationSuccessHandler mySuccessHandler;
 
+    @Autowired
+    private IgniteAuthenticationProvider igniteAuthenticationProvider;
+
     private SimpleUrlAuthenticationFailureHandler myFailureHandler = new SimpleUrlAuthenticationFailureHandler();
 
     @Override
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin").password(encoder().encode("adminPass")).roles("ADMIN")
-                .and()
-                .withUser("user").password(encoder().encode("userPass")).roles("USER");
-    }
-
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
+    protected void configure(final AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(igniteAuthenticationProvider);
     }
 
     @Override

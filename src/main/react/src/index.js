@@ -10,7 +10,7 @@ import universalListReducer from './Pages/UniversalListReducers';
 import menuReducer from './Pages/MenuFormReducers';
 import UniversalListForm from './Pages/UniversalListForm';
 import MenuForm from './Pages/MenuForm'
-import EmptyPageForm from './Pages/EmptyPageForm'
+import AdminPageForm from './Pages/AdminPageForm'
 import LoginForm from './Pages/LoginForm'
 
 
@@ -29,7 +29,7 @@ export default class Index extends React.Component {
                     <Route path='/'>
                         <div>
                             <Switch>
-                                <Route path='/emptyPage'    component={EmptyPageForm}       exact   />
+                                <Route path='/adminPage'    component={AdminPageForm}       exact   />
                                 <Route path='/lastLevel'    component={UniversalListForm}   exact   />
                                 <Route path='/login'        component={LoginForm}           exact   />
                                 <Route path='/'             component={MenuForm}                    />

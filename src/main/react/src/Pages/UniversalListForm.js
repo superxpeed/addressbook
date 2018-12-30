@@ -31,7 +31,8 @@ import {PersonComponent} from '../Components/PersonComponent';
         updateRow: bindActionCreators(TableActions.updateRow, dispatch),
         addRow: bindActionCreators(TableActions.addRow, dispatch),
         getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
-        clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch)
+        clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch),
+        logout: bindActionCreators(MenuActions.logout, dispatch)
     })
 )
 
@@ -183,6 +184,9 @@ export default class UniversalListForm extends React.Component {
                         <Nav pullRight>
                             <Button disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {id: Generator.uuidv4(), orgId: this.props.selectedRowsOrganization[0].id}})}>
                                 Create person
+                            </Button>
+                            <Button onClick={() => this.props.logout()}>
+                                Logout
                             </Button>
                         </Nav>
                     </Navbar.Collapse>

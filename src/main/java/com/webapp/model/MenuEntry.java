@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.ignite.cache.query.annotations.QuerySqlField;
+
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -22,6 +24,8 @@ public class MenuEntry {
 
     @QuerySqlField(index = true)
     private String name;
+
+    private List<String> roles;
     
     public MenuEntry() {
         this.id = UUID.randomUUID().toString();

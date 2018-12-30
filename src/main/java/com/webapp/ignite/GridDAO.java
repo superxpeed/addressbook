@@ -1,9 +1,9 @@
 package com.webapp.ignite;
 
-import com.webapp.MenuCreator;
 import com.webapp.UniversalFieldsDescriptor;
 import com.webapp.dto.*;
 import com.webapp.model.*;
+import javafx.print.Collation;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.Ignition;
@@ -17,18 +17,15 @@ import org.apache.ignite.configuration.CacheConfiguration;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.cache.Cache;
 import java.lang.reflect.Constructor;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("all")
-public class GridUtils {
+public class GridDAO {
 
     private static Ignite ignite ;
 
@@ -73,6 +70,7 @@ public class GridUtils {
                 }
             }
             MenuCreator.initMenu();
+            UserCreator.initUsers();
         }catch (Exception e){
             System.out.println("Exception during Ignite Client startup: ");
             e.printStackTrace();
@@ -116,6 +114,22 @@ public class GridUtils {
         return contactDto;
     }
 
+    public static User createOrUpdateUser(User newUser){
+        IgniteCache<String, User> cacheUser = ignite.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE);
+        User user = cacheUser.get(newUser.getLogin());
+        if(user != null){
+            user.setPassword(newUser.getPassword());
+            user.setRoles(newUser.getRoles());
+        }else user = newUser;
+        cacheUser.put(user.getLogin(), user);
+        return user;
+    }
+
+    public static User getUserByLogin(String login){
+        IgniteCache<String, User> cacheUser = ignite.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE);
+        return cacheUser.get(login);
+    }
+
     public static void clearMenus(){
         ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE).clear();
     }
@@ -127,20 +141,27 @@ public class GridUtils {
         else menuEntry = new MenuEntry();
         menuEntry.setName(menuEntryDto.getName());
         menuEntry.setUrl(menuEntryDto.getUrl());
+        menuEntry.setRoles(menuEntryDto.getRoles());
         if(parentEntryDto != null) menuEntry.setParentId(parentEntryDto.getId());
         menuEntryDto.setId(menuEntry.getId());
         cachePerson.put(menuEntry.getId(), menuEntry);
         return menuEntryDto;
     }
 
-    public static List<MenuEntryDto> readNextLevel(String url){
+    public static List<MenuEntryDto> readNextLevel(String url, Collection<? extends GrantedAuthority> authorities){
         IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
         MenuEntry menuEntry = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll().get(0).getValue();
         SqlQuery<String, MenuEntry> sql = new SqlQuery<>(MenuEntry.class, "parentId = ?");
         List<MenuEntryDto> menuEntryDtos = new ArrayList<>();
         try (QueryCursor<Cache.Entry<String, MenuEntry>> cursor = cache.query(sql.setArgs(menuEntry.getId()))) {
-            for (Cache.Entry<String, MenuEntry> e : cursor)
-                menuEntryDtos.add(new MenuEntryDto(e.getValue()));
+            for (Cache.Entry<String, MenuEntry> e : cursor){
+                for(GrantedAuthority authority: authorities){
+                    if(e.getValue().getRoles() != null && e.getValue().getRoles().contains(authority.getAuthority().replace("ROLE_",""))){
+                        menuEntryDtos.add(new MenuEntryDto(e.getValue()));
+                        break;
+                    }
+                }
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

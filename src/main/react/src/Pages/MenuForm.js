@@ -13,6 +13,7 @@ import {HashUtils} from '../Common/Utils';
     dispatch => ({
         getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
         getNextLevelMenus: bindActionCreators(MenuActions.getNextLevelMenus, dispatch),
+        logout: bindActionCreators(MenuActions.logout, dispatch)
     })
 )
 export default class MenuForm extends React.Component {
@@ -63,6 +64,11 @@ export default class MenuForm extends React.Component {
                             <Breadcrumb>
                                 {breads}
                             </Breadcrumb>
+                        </Nav>
+                        <Nav pullRight>
+                            <Button onClick={() => this.props.logout()}>
+                                Logout
+                            </Button>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>

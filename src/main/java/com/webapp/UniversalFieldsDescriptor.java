@@ -8,13 +8,13 @@ import com.webapp.model.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@SuppressWarnings("WeakerAccess")
 public class UniversalFieldsDescriptor {
 
-    public static final String ORGANIZATION_CACHE = "com.webapp.model.Organization";
-    public static final String PERSON_CACHE = "com.webapp.model.Person";
-    public static final String CONTACT_CACHE = "com.webapp.model.Contact";
-    public static final String MENU_CACHE = "com.webapp.model.MenuEntry";
+    public static final String ORGANIZATION_CACHE   = "com.webapp.model.Organization";
+    public static final String PERSON_CACHE         = "com.webapp.model.Person";
+    public static final String CONTACT_CACHE        = "com.webapp.model.Contact";
+    public static final String MENU_CACHE           = "com.webapp.model.MenuEntry";
+    public static final String USER_CACHE           = "com.webapp.model.User";
 
     private static Map<String, FieldDescription> fieldDescriptionMapOrganization = new LinkedHashMap<>();
     private static Map<String, FieldDescription> fieldDescriptionMapPerson = new LinkedHashMap<>();
@@ -40,14 +40,15 @@ public class UniversalFieldsDescriptor {
         fieldDescriptionMaps.put(ORGANIZATION_CACHE, fieldDescriptionMapOrganization);
         fieldDescriptionMaps.put(PERSON_CACHE, fieldDescriptionMapPerson);
 
-        cacheClasses.put(ORGANIZATION_CACHE, Organization.class);
-        cacheClasses.put(PERSON_CACHE, Person.class);
-        cacheClasses.put(CONTACT_CACHE, Contact.class);
-        cacheClasses.put(MENU_CACHE, MenuEntry.class);
+        cacheClasses.put(ORGANIZATION_CACHE,    Organization.class);
+        cacheClasses.put(PERSON_CACHE,          Person.class);
+        cacheClasses.put(CONTACT_CACHE,         Contact.class);
+        cacheClasses.put(MENU_CACHE,            MenuEntry.class);
+        cacheClasses.put(USER_CACHE,            User.class);
 
-        dtoClasses.put(ORGANIZATION_CACHE, OrganizationDto.class);
-        dtoClasses.put(PERSON_CACHE, PersonDto.class);
-        dtoClasses.put(CONTACT_CACHE, ContactDto.class);
+        dtoClasses.put(ORGANIZATION_CACHE,      OrganizationDto.class);
+        dtoClasses.put(PERSON_CACHE,            PersonDto.class);
+        dtoClasses.put(CONTACT_CACHE,           ContactDto.class);
 
     }
     public static Map<String, FieldDescription> getFieldDescriptionMap(String cache){ return fieldDescriptionMaps.get(cache); }
