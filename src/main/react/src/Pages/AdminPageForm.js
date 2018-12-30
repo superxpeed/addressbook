@@ -17,24 +17,44 @@ import {HashUtils} from '../Common/Utils';
 export default class AdminPageForm extends React.Component {
 
     state = {
-        jvmstate: {}
+        jvmstate: {},
+        ignitestate: {
+            igniteCacheMetricsMap: {}
+        }
     };
 
     onOpen = () =>  {
-        console.log('Connection opened');
+        console.log('Connection opened for JVM state');
     };
 
-    onerror = () => {
+    onIgniteOpen = () =>  {
+        console.log('Connection opened for Ignite state');
+    };
+
+    onError = () => {
         if (this.state.eventSource.readyState === EventSource.CONNECTING) {
-            console.log('Reconnecting');
+            console.log('Reconnecting to JVM event source');
         } else {
             console.log('Error: ' + this.state.eventSource.readyState);
+        }
+    };
+
+    onIgniteError = () => {
+        if (this.state.igniteEventSource.readyState === EventSource.CONNECTING) {
+            console.log('Reconnecting to Ignite event source');
+        } else {
+            console.log('Error: ' + this.state.igniteEventSource.readyState);
         }
     };
 
     onMessage = (e) => {
         let result = JSON.parse(e.data);
         this.setState({jvmstate: result});
+    };
+
+    onIgniteMessage = (e) => {
+        let result = JSON.parse(e.data);
+        this.setState({ignitestate: result});
     };
 
     constructor(props) {
@@ -44,13 +64,82 @@ export default class AdminPageForm extends React.Component {
     componentDidMount() {
         let currentUrl = window.location.hash;
         this.props.getBreadcrumbs(HashUtils.cleanHash(currentUrl));
+
         let newEventSource = new EventSource('/rest/admin/jvmstate');
         newEventSource.onopen = this.onOpen;
         newEventSource.onmessage = this.onMessage;
-        this.setState({eventSource: newEventSource});
+        newEventSource.onerror = this.onError;
+
+        let newIgniteEventSource = new EventSource('/rest/admin/ignitestate');
+        newIgniteEventSource.onopen = this.onIgniteOpen;
+        newIgniteEventSource.onmessage = this.onIgniteMessage;
+        newIgniteEventSource.onerror = this.onIgniteError;
+
+        this.setState({eventSource: newEventSource, igniteEventSource: newIgniteEventSource});
+    }
+
+    componentWillUnmount() {
+        this.state.eventSource.close();
+        this.state.igniteEventSource.close();
     }
 
     render() {
+
+        let igniteMetrics = [];
+        let allMetrics = this.state.ignitestate.igniteCacheMetricsMap;
+        for (const key of Object.keys(allMetrics)) {
+            const cache = allMetrics[key];
+            igniteMetrics.push(<div>
+                <h4><Label bsStyle='danger'>{key}</Label></h4>
+                <Table striped bordered condensed hover>
+                    <tr>
+                        <td>Cache gets</td>
+                        <td>{cache.cacheGets}</td>
+                    </tr>
+                    <tr>
+                        <td>Cache puts</td>
+                        <td>{cache.cachePuts}</td>
+                    </tr>
+                    <tr>
+                        <td>Cache removals</td>
+                        <td>{cache.cacheRemovals}</td>
+                    </tr>
+                    <tr>
+                        <td>Average get time</td>
+                        <td>{cache.averageGetTime}</td>
+                    </tr>
+                    <tr>
+                        <td>Average put time</td>
+                        <td>{cache.averagePutTime}</td>
+                    </tr>
+                    <tr>
+                        <td>Average remove time</td>
+                        <td>{cache.averageRemoveTime}</td>
+                    </tr>
+                    <tr>
+                        <td>Off-heap gets</td>
+                        <td>{cache.offHeapGets}</td>
+                    </tr>
+                    <tr>
+                        <td>Off-heap puts</td>
+                        <td>{cache.offHeapPuts}</td>
+                    </tr>
+                    <tr>
+                        <td>Off-heap removals</td>
+                        <td>{cache.offHeapRemovals}</td>
+                    </tr>
+                    <tr>
+                        <td>Heap entries count</td>
+                        <td>{cache.heapEntriesCount}</td>
+                    </tr>
+                    <tr>
+                        <td>Off-heap entries count</td>
+                        <td>{cache.offHeapEntriesCount}</td>
+                    </tr>
+                </Table>
+            </div>);
+        }
+
         let breads = [];
         let breadcrumbsCount = this.props.breadcrumbs.length;
         this.props.breadcrumbs.forEach(function(element, index){
@@ -72,8 +161,8 @@ export default class AdminPageForm extends React.Component {
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
-                <div id="adminContainer">
-                    <h4><Label bsStyle="danger">Runtime</Label></h4>
+                <div id='adminContainer'>
+                    <h4><Label bsStyle='danger'>Runtime</Label></h4>
                     <Table striped bordered condensed hover>
                         <tr>
                             <td>Total memory</td>
@@ -88,7 +177,7 @@ export default class AdminPageForm extends React.Component {
                             <td>{this.state.jvmstate.runtimeMaxMemory}</td>
                         </tr>
                     </Table>
-                    <h4><Label bsStyle="danger">System</Label></h4>
+                    <h4><Label bsStyle='danger'>System</Label></h4>
                     <Table striped bordered condensed hover>
                         <tr>
                             <td>Available processors</td>
@@ -127,7 +216,7 @@ export default class AdminPageForm extends React.Component {
                             <td>{this.state.jvmstate.user}</td>
                         </tr>
                     </Table>
-                    <h4><Label bsStyle="danger">Heap</Label></h4>
+                    <h4><Label bsStyle='danger'>Heap</Label></h4>
                     <Table striped bordered condensed hover>
                         <tr>
                             <td>Used</td>
@@ -146,7 +235,7 @@ export default class AdminPageForm extends React.Component {
                             <td>{this.state.jvmstate.heapMemoryMax}</td>
                         </tr>
                     </Table>
-                    <h4><Label bsStyle="danger">Non-heap</Label></h4>
+                    <h4><Label bsStyle='danger'>Non-heap</Label></h4>
                     <Table striped bordered condensed hover>
                         <tr>
                             <td>Used</td>
@@ -165,7 +254,7 @@ export default class AdminPageForm extends React.Component {
                             <td>{this.state.jvmstate.nonHeapMemoryMax}</td>
                         </tr>
                     </Table>
-                    <h4><Label bsStyle="danger">Threads</Label></h4>
+                    <h4><Label bsStyle='danger'>Threads</Label></h4>
                     <Table striped bordered condensed hover>
                         <tr>
                             <td>Current thread count</td>
@@ -180,6 +269,9 @@ export default class AdminPageForm extends React.Component {
                             <td>{this.state.jvmstate.peakThreadCount}</td>
                         </tr>
                     </Table>
+                </div>
+                <div id='adminIgniteContainer'>
+                    {igniteMetrics}
                 </div>
             </div>
         )

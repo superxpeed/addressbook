@@ -1,10 +1,16 @@
 package com.webapp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+@SuppressWarnings("WeakerAccess")
 public class SessionListener implements HttpSessionListener {
+
+    private static Logger logger = LoggerFactory.getLogger(SessionListener.class);
 
     private final AtomicInteger activeSessions;
 
@@ -14,13 +20,13 @@ public class SessionListener implements HttpSessionListener {
 
     public void sessionCreated(final HttpSessionEvent event) {
         activeSessions.incrementAndGet();
-        System.out.println("HttpSession created: " + event.getSession().getId());
-        System.out.println("Total sessions: " + activeSessions.get());
+        logger.info("HttpSession created: " + event.getSession().getId());
+        logger.info("Total sessions: " + activeSessions.get());
     }
     public void sessionDestroyed(final HttpSessionEvent event) {
         activeSessions.decrementAndGet();
-        System.out.println("HttpSession destroyed: " + event.getSession().getId());
-        System.out.println("Total sessions: " + activeSessions.get());
+        logger.info("HttpSession destroyed: " + event.getSession().getId());
+        logger.info("Total sessions: " + activeSessions.get());
     }
 }
 

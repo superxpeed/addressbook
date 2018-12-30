@@ -1,4 +1,4 @@
-package com.webapp;
+package com.webapp.model;
 
 import lombok.*;
 
@@ -10,7 +10,6 @@ import java.text.DecimalFormat;
 @ToString
 @Getter
 @Setter
-@SuppressWarnings("WeakerAccess")
 public class JVMState implements Serializable {
 
     private String runtimeTotalMemory;

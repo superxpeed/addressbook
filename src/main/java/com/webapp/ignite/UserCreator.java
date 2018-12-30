@@ -14,9 +14,9 @@ public class UserCreator {
         List<String> adminRoles = new ArrayList<>();
         adminRoles.add("USER");
         adminRoles.add("ADMIN");
-        User admin = new User("admin", encoder.encode("adminPass"), adminRoles);
+        User admin  = new User("admin", encoder.encode("adminPass"), adminRoles);
         GridDAO.createOrUpdateUser(admin);
-        User user = new User("user", encoder.encode("userPass"), Collections.singletonList("USER"));
+        User user   = new User("user",  encoder.encode("userPass"), Collections.singletonList("USER"));
         GridDAO.createOrUpdateUser(user);
     }
 }

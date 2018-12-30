@@ -3,20 +3,18 @@ package com.webapp.ignite;
 import com.webapp.UniversalFieldsDescriptor;
 import com.webapp.dto.*;
 import com.webapp.model.*;
-import javafx.print.Collation;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.Ignition;
-import org.apache.ignite.cache.CacheAtomicityMode;
-import org.apache.ignite.cache.CacheMode;
-import org.apache.ignite.cache.CachePeekMode;
-import org.apache.ignite.cache.CacheWriteSynchronizationMode;
+import org.apache.ignite.cache.*;
 import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.ignite.cache.query.SqlQuery;
 import org.apache.ignite.configuration.CacheConfiguration;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.cache.Cache;
@@ -26,6 +24,8 @@ import java.util.*;
 
 @SuppressWarnings("all")
 public class GridDAO {
+
+    private static Logger logger = LoggerFactory.getLogger(GridDAO.class);
 
     private static Ignite ignite ;
 
@@ -51,7 +51,6 @@ public class GridDAO {
             tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("127.0.0.1:47500..47509"));
             tcpDiscoverySpi.setIpFinder(tcpDiscoveryMulticastIpFinder);
             igniteConfiguration.setDiscoverySpi(tcpDiscoverySpi);
-
             ignite = Ignition.start(igniteConfiguration);
             ignite.active(true);
             for(Map.Entry<String, Class> cache : UniversalFieldsDescriptor.getCacheClasses().entrySet()){
@@ -59,21 +58,21 @@ public class GridDAO {
                 cfg.setCacheMode(CacheMode.PARTITIONED);
                 cfg.setName(cache.getKey());
                 cfg.setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL);
+                cfg.setStatisticsEnabled(true);
                 cfg.setWriteSynchronizationMode(CacheWriteSynchronizationMode.FULL_SYNC);
                 cfg.setIndexedTypes(String.class, cache.getValue());
                 try (IgniteCache createdCache = ignite.getOrCreateCache(cfg)) {
                     if (ignite.cluster().forDataNodes(createdCache.getName()).nodes().isEmpty()) {
-                        System.out.println();
-                        System.out.println(">>> Please start at least 1 remote cache node.");
-                        System.out.println();
+                        logger.info("");
+                        logger.info(">>> Please start at least 1 remote cache node.");
+                        logger.info("");
                     }
                 }
             }
             MenuCreator.initMenu();
             UserCreator.initUsers();
         }catch (Exception e){
-            System.out.println("Exception during Ignite Client startup: ");
-            e.printStackTrace();
+            logger.error("Exception during Ignite Client startup: ", e);
         }
     }
 
@@ -163,7 +162,7 @@ public class GridDAO {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Error while reading next menu level:", e);
         }
         return menuEntryDtos;
     }
@@ -198,7 +197,7 @@ public class GridDAO {
                     try {
                         query = Integer.valueOf(filter.getValue());
                     }catch (NumberFormatException e){
-                        System.out.println("Invalid filter argument: " + filter.getValue());
+                        logger.info("Invalid filter argument: " + filter.getValue());
                         continue;
                     }
                     addSql = filter.getName() + getComparator(filter) + query;
@@ -231,7 +230,7 @@ public class GridDAO {
             for (Cache.Entry e : cursor)
                 cacheDtoArrayList.add(dtoConstructor.newInstance(e.getValue()));
         }catch (Exception e){
-            e.printStackTrace();
+           logger.error("Error while selecting data for next page in table:", e);
         }
         return cacheDtoArrayList;
     }
@@ -244,7 +243,7 @@ public class GridDAO {
             for (Cache.Entry<String, Contact> e : cursor)
                 cacheDtoArrayList.add(new ContactDto(e.getValue()));
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Error while retrieving contacts for person:", e);
         }
         return cacheDtoArrayList;
 
@@ -266,7 +265,7 @@ public class GridDAO {
         try (QueryCursor<Cache.Entry> cursor = cache.query(sql)) {
             return cursor.getAll().size();
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Error while retrieving total data size for table:", e);
         }
         return 0;
     }
@@ -276,8 +275,16 @@ public class GridDAO {
             try{
                 ignite.close();
             }catch (Exception e){
-                e.printStackTrace();
+                logger.error("Error during Ignite client stopping:", e);
             }
         }
+    }
+
+    public static Map<String, CacheMetrics> getCacheMetrics(){
+        Map<String, CacheMetrics> cacheMetricsMap = new HashMap<>();
+        for(String cacheName : UniversalFieldsDescriptor.getCacheClasses().keySet()){
+            cacheMetricsMap.put(cacheName, ignite.getOrCreateCache(cacheName).metrics());
+        }
+        return cacheMetricsMap;
     }
 }

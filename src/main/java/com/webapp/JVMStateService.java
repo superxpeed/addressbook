@@ -1,5 +1,6 @@
 package com.webapp;
 
+import com.webapp.model.JVMState;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.util.function.Tuple2;

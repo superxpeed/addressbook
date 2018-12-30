@@ -39,9 +39,19 @@ a {
 
 #adminContainer {
     width: 50%;
-    margin-left: 10px;
+    display: inline-block;
+}
+
+#adminIgniteContainer {
+    width: 50%;
+    display: inline-block;
+    vertical-align: top;
 }
 
 #adminContainer td {
+    width: 50%;
+}
+
+#adminIgniteContainer td {
     width: 50%;
 }
