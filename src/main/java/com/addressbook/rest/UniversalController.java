@@ -98,6 +98,10 @@ public class UniversalController{
     @ExceptionHandler(Throwable.class)
     public void handleError(HttpServletResponse response, Exception ex) throws Exception{
         response.setStatus(500);
-        ex.printStackTrace(response.getWriter());
+        if(ex.getClass().equals(IllegalArgumentException.class)){
+            response.getWriter().println(ex.getMessage());
+        }else{
+            ex.printStackTrace(response.getWriter());
+        }
     }
 }

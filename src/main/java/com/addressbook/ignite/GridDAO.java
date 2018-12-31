@@ -149,7 +149,9 @@ public class GridDAO {
 
     public static List<MenuEntryDto> readNextLevel(String url, Collection<? extends GrantedAuthority> authorities){
         IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
-        MenuEntry menuEntry = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll().get(0).getValue();
+        List<Cache.Entry<String, MenuEntry>> entries = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll();
+        if(entries.isEmpty()) throw new IllegalArgumentException("Menu with url: " + url +  " doesn't exist");
+        MenuEntry menuEntry = entries.get(0).getValue();
         SqlQuery<String, MenuEntry> sql = new SqlQuery<>(MenuEntry.class, "parentId = ?");
         List<MenuEntryDto> menuEntryDtos = new ArrayList<>();
         try (QueryCursor<Cache.Entry<String, MenuEntry>> cursor = cache.query(sql.setArgs(menuEntry.getId()))) {
@@ -169,7 +171,9 @@ public class GridDAO {
 
     public static List<Breadcrumb> readBreadcrumbs(String url){
         IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
-        MenuEntry original = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll().get(0).getValue();;
+        List<Cache.Entry<String, MenuEntry>> entries = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll();
+        if(entries.isEmpty()) throw new IllegalArgumentException("Menu with url: " + url +  " doesn't exist");
+        MenuEntry original = entries.get(0).getValue();;
         MenuEntry menuEntry = original;
         List<Cache.Entry<String, MenuEntry>> menuEntries;
         List<Breadcrumb> breadcrumbs = new ArrayList<>();
