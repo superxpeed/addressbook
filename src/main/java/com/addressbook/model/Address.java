@@ -18,15 +18,15 @@ public class Address implements Binarylizable {
     private String street;
 
     @QuerySqlField(index = true)
-    private int zip;
+    private String zip;
 
     @Override public void writeBinary(BinaryWriter writer) throws BinaryObjectException {
         writer.writeString("street", street);
-        writer.writeInt("zip", zip);
+        writer.writeString("zip", zip);
     }
 
     @Override public void readBinary(BinaryReader reader) throws BinaryObjectException {
         street = reader.readString("street");
-        zip = reader.readInt("zip");
+        zip = reader.readString("zip");
     }
 }

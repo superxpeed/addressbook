@@ -83,7 +83,7 @@ public class GridDAO {
         organization.setType(OrganizationType.values()[Integer.valueOf(organizationDto.getType())]);
         organization.setLastUpdated(new Timestamp(System.currentTimeMillis()));
         organization.setName(organizationDto.getName());
-        organization.setAddr(new Address(organizationDto.getStreet(), Integer.valueOf(organizationDto.getZip())));
+        organization.setAddr(new Address(organizationDto.getStreet(), organizationDto.getZip()));
         cachePerson.put(organization.getId(), organization);
         return organizationDto;
     }

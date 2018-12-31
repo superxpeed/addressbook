@@ -199,7 +199,7 @@ export default class UniversalListForm extends React.Component {
                             </Breadcrumb>
                         </Nav>
                         <Nav pullRight>
-                            <Button disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {id: Generator.uuidv4(), orgId: this.props.selectedRowsOrganization[0].id}})}>
+                            <Button style={{marginRight: '5px'}} disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {id: Generator.uuidv4(), orgId: this.props.selectedRowsOrganization[0].id}})}>
                                 Create person
                             </Button>
                             <Button onClick={() => this.props.logout()}>
