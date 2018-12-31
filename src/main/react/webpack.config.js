@@ -39,13 +39,15 @@ module.exports = {
     devServer: {
         port: 7070,
         proxy: {
-            '/rest/**': {
+            '**': {
                 target: 'http://localhost:8080',
                 secure: false,
-                changeOrigin: true,
-                pathRewrite: {'/rest': '/webapp/rest'}
+                changeOrigin: true
             }
-        }
+        },
+        publicPath: "/",
+        contentBase: "../resources/static",
+        hot: true
     },
     plugins: []
 };
