@@ -32,13 +32,14 @@ export class PersonComponent extends React.Component {
 
     constructor(props) {
         super(props);
+        let resume = props.person['resume'] === undefined ? '' : props.person['resume'];
         this.state = {
             person: props.person,
             contactList: {
                 data: []
             },
             invalidFields: new Set(),
-            resume: RichTextEditor.createValueFromString(props.person['resume'], 'html')
+            resume: RichTextEditor.createValueFromString(resume, 'html')
         };
     }
 

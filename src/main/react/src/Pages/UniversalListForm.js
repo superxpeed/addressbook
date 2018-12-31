@@ -145,6 +145,7 @@ export default class UniversalListForm extends React.Component {
                         <span> {this.props.selectedRowsPerson[i].firstName}
                             <Button key={key + 'btn'} style={{height:'20px', width: '20px', padding: '0px', marginLeft: '5px', zIndex: 1000}} onClick={(e) => {
                                 e.stopPropagation();
+                                e.preventDefault();
                                 this.props.onSelectRow(personLocal, false, e, Caches.PERSON_CACHE);
                                 this.personTabClosed(key);
                             }}>
@@ -165,6 +166,7 @@ export default class UniversalListForm extends React.Component {
                                     <span> {'New person'}
                                         <Button key={'newPersonTabBtn'} style={{height:'20px', width: '20px', padding: '0px', marginLeft: '5px', zIndex: 1000}} onClick={(e) => {
                                             e.stopPropagation();
+                                            e.preventDefault();
                                             this.setState({ createNewPerson: false, newPerson: undefined});
                                             this.personTabClosed(key);
                                         }}>X
