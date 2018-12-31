@@ -6,7 +6,16 @@ import {ifNoAuthorizedRedirect} from '../Pages/UniversalListActions';
 import * as url from '../Common/Url';
 import {TitleConverter} from '../Common/Utils';
 import RichTextEditor from 'react-rte';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as MenuActions from '../Pages/MenuFormActions';
 
+@connect(
+    null,
+    dispatch => ({
+        showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
+    })
+)
 export class PersonComponent extends React.Component {
 
     state = {
@@ -53,10 +62,12 @@ export class PersonComponent extends React.Component {
         }).then(response => {
             ifNoAuthorizedRedirect(response);
             isOk = response.ok;
-            return response.json()
-        }).then(json => {
+            return response.text()
+        }).then(text => {
             if (isOk) {
-                this.setState({contactList: json.data});
+                this.setState({contactList: JSON.parse(text).data});
+            }else {
+                this.props.showCommonErrorAlert(text);
             }
         })
     };
@@ -75,10 +86,10 @@ export class PersonComponent extends React.Component {
         }).then(response => {
             ifNoAuthorizedRedirect(response);
             isOk = response.ok;
-            return response.json()
-        }).then(json => {
+            return response.text()
+        }).then(text => {
             if (isOk) {
-                savedPerson = json.data;
+                savedPerson = JSON.parse(text).data;
                 fetch(url.SAVE_CONTACT_LIST, {
                     method: 'post',
                     credentials: 'include',
@@ -87,14 +98,18 @@ export class PersonComponent extends React.Component {
                 }).then(response => {
                     ifNoAuthorizedRedirect(response);
                     isOk = response.ok;
-                    return response.json()
-                }).then(json => {
+                    return response.text()
+                }).then(text => {
                     if (isOk) {
                         if(this.props.forUpdate)
-                            this.setState(update(this.state, {person: {$set: savedPerson}, contactList: {data: {$set:json.data}}}));
+                            this.setState(update(this.state, {person: {$set: savedPerson}, contactList: {data: {$set:JSON.parse(text).data}}}));
                         this.props.onUpdate(savedPerson);
+                    }else {
+                        this.props.showCommonErrorAlert(text);
                     }
                 })
+            }else {
+                this.props.showCommonErrorAlert(text);
             }
         })
     };

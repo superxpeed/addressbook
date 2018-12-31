@@ -1,4 +1,4 @@
-import {FAILED, SUCCESS, GET_BREADCRUMBS, GET_MENU} from '../Common/Utils';
+import {SUCCESS, GET_BREADCRUMBS, GET_MENU, DISMISS_ALERT, COMMON_ERROR} from '../Common/Utils';
 import {asyncCommonCatch, ifNoAuthorizedRedirect} from './UniversalListActions';
 import * as url from '../Common/Url';
 
@@ -15,19 +15,31 @@ export function getNextLevelMenus(currentUrl) {
         }).then(response => {
             ifNoAuthorizedRedirect(response);
             isOk = response.ok;
-            return response.json()
-        }).then(json => {
+            return response.text()
+        }).then(text => {
             if (isOk) {
                 dispatch({
                     type: GET_MENU + SUCCESS,
-                    data: json.data
+                    data: JSON.parse(text).data
                 });
-            } else {
-                dispatch({type: GET_MENU + FAILED});
+            }else {
+                dispatch({
+                    type: COMMON_ERROR,
+                    alert: text
+                });
             }
         }).catch(error => {
             asyncCommonCatch(GET_MENU, error, dispatch)
         });
+    }
+}
+
+export function showCommonErrorAlert(text){
+    return dispatch => {
+        dispatch({
+            type: COMMON_ERROR,
+            alert: text
+        })
     }
 }
 
@@ -44,15 +56,18 @@ export function getBreadcrumbs(currentUrl) {
         }).then(response => {
             ifNoAuthorizedRedirect(response);
             isOk = response.ok;
-            return response.json()
-        }).then(json => {
+            return response.text()
+        }).then(text => {
             if (isOk) {
                 dispatch({
                     type: GET_BREADCRUMBS + SUCCESS,
-                    data: json.data
+                    data: JSON.parse(text).data
                 });
-            } else {
-                dispatch({type: GET_BREADCRUMBS + FAILED});
+            }else {
+                dispatch({
+                    type: COMMON_ERROR,
+                    alert: text
+                });
             }
         }).catch(error => {
             asyncCommonCatch(GET_BREADCRUMBS, error, dispatch)
@@ -74,6 +89,15 @@ export function logout() {
                 window.location.hash = '#/login';
             }
         });
+    }
+}
+
+export function dismissAlert(alert) {
+    return dispatch => {
+        dispatch({
+            type: DISMISS_ALERT,
+            alert: alert
+        })
     }
 }
 

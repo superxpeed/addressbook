@@ -3,17 +3,20 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as MenuActions from './MenuFormActions';
 import {Navbar, Nav, Button, Breadcrumb} from 'react-bootstrap'
+import {AlertList} from 'react-bs-notifier';
 import {HashUtils} from '../Common/Utils';
 
 @connect(
     state => ({
         breadcrumbs: state.menuReducer.breadcrumbs,
         menus: state.menuReducer.menus,
+        alerts: state.menuReducer.alerts
     }),
     dispatch => ({
         getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
         getNextLevelMenus: bindActionCreators(MenuActions.getNextLevelMenus, dispatch),
-        logout: bindActionCreators(MenuActions.logout, dispatch)
+        logout: bindActionCreators(MenuActions.logout, dispatch),
+        dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch)
     })
 )
 export default class MenuForm extends React.Component {
@@ -37,6 +40,10 @@ export default class MenuForm extends React.Component {
         }
     };
 
+    onAlertDismissed(alert) {
+        this.props.dismissAlert(alert);
+    }
+
     componentWillReceiveProps(nextProps, nextContext) {
         this.updateAll();
     }
@@ -56,8 +63,16 @@ export default class MenuForm extends React.Component {
             breads.push(<Breadcrumb.Item style={{fontWeight: index === breadcrumbsCount - 1 ? 'bold' : 'normal'}} key={element.url} href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
         });
         if(this.props.breadcrumbs.length === 0) breads.push(<Breadcrumb.Item key={'/root'} href={'#/'}>Home</Breadcrumb.Item>);
+        let allAlerts = this.props.alerts;
         return (
             <div>
+                <AlertList
+                    position={'top-right'}
+                    alerts={allAlerts}
+                    timeout={10000}
+                    dismissTitle='Begone!'
+                    onDismiss={this.onAlertDismissed.bind(this)}
+                />
                 <Navbar>
                     <Navbar.Collapse>
                         <Nav>

@@ -55,3 +55,12 @@ a {
 #adminIgniteContainer td {
     width: 50%;
 }
+
+.alert-dismissable {
+    overflow-x: hidden;
+    max-height: 150px;
+    overflow-y: scroll;
+    font-size: 12px;
+    padding: 5px;
+}
+

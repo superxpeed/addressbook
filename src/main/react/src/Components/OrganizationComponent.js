@@ -7,12 +7,14 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as TableActions from '../Table/TableActions';
 import {Caches, Generator, OrgTypes} from '../Common/Utils';
+import * as MenuActions from '../Pages/MenuFormActions';
 
 @connect(
     null,
     dispatch => ({
         updateRow: bindActionCreators(TableActions.updateRow, dispatch),
         addRow: bindActionCreators(TableActions.addRow, dispatch),
+        showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch)
     })
 )
 export class OrganizationComponent extends React.Component {
@@ -67,10 +69,12 @@ export class OrganizationComponent extends React.Component {
         }).then(response => {
             ifNoAuthorizedRedirect(response);
             isOk = response.ok;
-            return response.json()
-        }).then(json => {
+            return response.text()
+        }).then(text => {
             if (isOk) {
                 this.props.updateRow(this.state.organization, Caches.ORGANIZATION_CACHE);
+            }else {
+                this.props.showCommonErrorAlert(text);
             }
         });
     };

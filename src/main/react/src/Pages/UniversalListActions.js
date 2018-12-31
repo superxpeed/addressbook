@@ -1,14 +1,14 @@
-import {SUCCESS, FAILED} from '../Common/Utils';
+import {SUCCESS, COMMON_ERROR} from '../Common/Utils';
 import * as tableActions from '../Table/TableActions';
 import {Caches} from '../Common/Utils';
-
 export const GET_LIST = 'GET_LIST';
 
 export function asyncCommonCatch(action, error, dispatch) {
-    console.error(error);
-    dispatch({type: action + FAILED});
-    const message = {title: 'Произошла ошибка в javascript: ' + error, content: error.stack};
-    console.log(message);
+    dispatch({
+        type: COMMON_ERROR,
+        alert: error.message
+    });
+    console.log(error);
 }
 
 export function clearPersonSelection(rows) {
@@ -36,16 +36,20 @@ export function getList(url, filterDto = null, cacheName) {
         }).then(response => {
             ifNoAuthorizedRedirect(response);
             isOk = response.ok;
-            return response.json()
-        }).then(json => {
+            return response.text()
+        }).then(text => {
             if (isOk) {
+                let json = JSON.parse(text);
                 dispatch({
                     type: GET_LIST + cacheName + SUCCESS,
                     data: json.data,
                     fieldDescriptionMap: json.fieldDescriptionMap,
                 });
-            } else {
-                dispatch({type: GET_LIST + FAILED});
+            }else {
+                dispatch({
+                    type: COMMON_ERROR,
+                    alert: text
+                });
             }
         }).catch(error => {
             asyncCommonCatch(GET_LIST, error, dispatch)

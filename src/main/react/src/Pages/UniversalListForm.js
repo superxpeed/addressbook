@@ -4,6 +4,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Table} from '../Table/Table';
+import {AlertList} from 'react-bs-notifier';
 import * as CommonActions from './UniversalListActions';
 import * as Url from '../Common/Url';
 import {Caches, Generator, HashUtils} from '../Common/Utils';
@@ -24,6 +25,7 @@ import {PersonComponent} from '../Components/PersonComponent';
         selectedRowsPerson: state.universalListReducer.selectedRowsPerson,
         selectedRowsOrganization: state.universalListReducer.selectedRowsOrganization,
         breadcrumbs: state.menuReducer.breadcrumbs,
+        alerts: state.menuReducer.alerts
     }),
     dispatch => ({
         getList: bindActionCreators(CommonActions.getList, dispatch),
@@ -32,7 +34,8 @@ import {PersonComponent} from '../Components/PersonComponent';
         addRow: bindActionCreators(TableActions.addRow, dispatch),
         getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
         clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch),
-        logout: bindActionCreators(MenuActions.logout, dispatch)
+        logout: bindActionCreators(MenuActions.logout, dispatch),
+        dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch)
     })
 )
 
@@ -44,6 +47,10 @@ export default class UniversalListForm extends React.Component {
         this.state = {
             activeTab: 1
         };
+    }
+
+    onAlertDismissed(alert) {
+        this.props.dismissAlert(alert);
     }
 
     componentDidMount() {
@@ -111,6 +118,7 @@ export default class UniversalListForm extends React.Component {
         let persons = [];
         let breads = [];
         let breadcrumbsCount = this.props.breadcrumbs.length;
+        let allAlerts = this.props.alerts;
         this.props.breadcrumbs.forEach(function(element, index){
             breads.push(<Breadcrumb.Item style={{fontWeight: index === breadcrumbsCount - 1 ? 'bold' : 'normal'}} key={element.url} href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
         });
@@ -174,6 +182,13 @@ export default class UniversalListForm extends React.Component {
 
         return (
             <div>
+                <AlertList
+                    position={'top-right'}
+                    alerts={allAlerts}
+                    timeout={10000}
+                    dismissTitle='Begone!'
+                    onDismiss={this.onAlertDismissed.bind(this)}
+                />
                 <Navbar>
                     <Navbar.Collapse>
                         <Nav>

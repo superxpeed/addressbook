@@ -94,4 +94,10 @@ public class UniversalController{
         }
         return "redirect:/#/login";
     }
+
+    @ExceptionHandler(Throwable.class)
+    public void handleError(HttpServletResponse response, Exception ex) throws Exception{
+        response.setStatus(500);
+        ex.printStackTrace(response.getWriter());
+    }
 }
