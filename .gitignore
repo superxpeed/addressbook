@@ -1,5 +1,6 @@
 *.iml
 **/target/
+.idea/workspace.xml
 npm-debug.log
 src/main/react/node_modules/
 src/main/react/dist/bundle.js
