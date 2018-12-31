@@ -7,8 +7,8 @@ export const COMMON_ERROR = 'COMMON_ERROR';
 export const DISMISS_ALERT = 'DISMISS_ALERT';
 
 export var Caches = {
-    ORGANIZATION_CACHE: 'com.webapp.model.Organization',
-    PERSON_CACHE: 'com.webapp.model.Person',
+    ORGANIZATION_CACHE: 'com.addressbook.model.Organization',
+    PERSON_CACHE: 'com.addressbook.model.Person',
 };
 
 export class OrgTypes {
