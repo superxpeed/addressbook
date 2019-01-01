@@ -1,7 +1,16 @@
 import React from 'react';
 import * as url from '../Common/Url';
 import {Button, FormControl, Label, Panel} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as MenuActions from './MenuFormActions';
 
+@connect(
+    null,
+    dispatch => ({
+        clearAlerts: bindActionCreators(MenuActions.clearAlerts, dispatch),
+    })
+)
 export default class LoginForm extends React.Component {
 
     state = {
@@ -9,6 +18,12 @@ export default class LoginForm extends React.Component {
         password: '',
         invalidLoginPassword: false
     };
+
+    componentDidMount(){
+        setTimeout(function() {
+            this.props.clearAlerts();
+        }.bind(this), 500);
+    }
 
     handleChange = (e) =>{
         this.setState({ [e.target.id] : e.target.value });

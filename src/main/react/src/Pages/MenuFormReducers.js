@@ -1,6 +1,5 @@
 import * as types from '../Common/Utils';
-import {COMMON_ERROR} from '../Common/Utils';
-import {DISMISS_ALERT} from '../Common/Utils';
+import {COMMON_ERROR, DISMISS_ALERT, CLEAR_ALERTS} from '../Common/Utils';
 
 const initialState = {
     breadcrumbs: [],
@@ -32,6 +31,11 @@ export default function menuReducer(state = initialState, action = {}) {
         case DISMISS_ALERT: {
             return Object.assign({}, state, {
                 alerts: state.alerts.filter((it => it.id !== action.alert.id))
+            });
+        }
+        case CLEAR_ALERTS: {
+            return Object.assign({}, state, {
+                alerts: []
             });
         }
         default:

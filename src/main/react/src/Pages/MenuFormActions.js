@@ -1,4 +1,4 @@
-import {SUCCESS, GET_BREADCRUMBS, GET_MENU, DISMISS_ALERT, COMMON_ERROR} from '../Common/Utils';
+import {SUCCESS, GET_BREADCRUMBS, GET_MENU, DISMISS_ALERT, COMMON_ERROR, CLEAR_ALERTS} from '../Common/Utils';
 import {asyncCommonCatch, ifNoAuthorizedRedirect} from './UniversalListActions';
 import * as url from '../Common/Url';
 
@@ -97,6 +97,14 @@ export function dismissAlert(alert) {
         dispatch({
             type: DISMISS_ALERT,
             alert: alert
+        })
+    }
+}
+
+export function clearAlerts() {
+    return dispatch => {
+        dispatch({
+            type: CLEAR_ALERTS
         })
     }
 }

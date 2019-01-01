@@ -5,6 +5,7 @@ export const GET_MENU = 'GET_MENU';
 export const GET_BREADCRUMBS = 'GET_BREADCRUMBS';
 export const COMMON_ERROR = 'COMMON_ERROR';
 export const DISMISS_ALERT = 'DISMISS_ALERT';
+export const CLEAR_ALERTS = 'CLEAR_ALERTS';
 
 export var Caches = {
     ORGANIZATION_CACHE: 'com.addressbook.model.Organization',
