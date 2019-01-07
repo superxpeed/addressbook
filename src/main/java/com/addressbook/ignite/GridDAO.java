@@ -124,6 +124,12 @@ public class GridDAO {
         return user;
     }
 
+    public static boolean lockUnlockRecord(String key, String user, boolean lock){
+        IgniteCache<String, String> cacheLocks = ignite.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE);
+        if(lock) return cacheLocks.putIfAbsent(key, user);
+        else return cacheLocks.remove(key, user);
+    }
+
     public static User getUserByLogin(String login){
         IgniteCache<String, User> cacheUser = ignite.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE);
         return cacheUser.get(login);

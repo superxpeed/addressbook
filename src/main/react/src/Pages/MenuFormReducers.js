@@ -1,5 +1,5 @@
 import * as types from '../Common/Utils';
-import {COMMON_ERROR, DISMISS_ALERT, CLEAR_ALERTS} from '../Common/Utils';
+import {ADD_ALERT, DISMISS_ALERT, CLEAR_ALERTS} from '../Common/Utils';
 
 const initialState = {
     breadcrumbs: [],
@@ -17,12 +17,12 @@ export default function menuReducer(state = initialState, action = {}) {
             return Object.assign({}, state, {
                 breadcrumbs: action.data
             });
-        case COMMON_ERROR: {
+        case ADD_ALERT: {
             const newAlert = {
                 id: (new Date()).getTime(),
-                type: 'danger',
-                headline: 'Error occurred!',
-                message: action.alert
+                type: action.alert.type,
+                headline: action.alert.headline,
+                message: action.alert.message
             };
             return Object.assign({}, state, {
                 alerts: [...state.alerts, newAlert]

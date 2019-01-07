@@ -3,7 +3,7 @@ export const SUCCESS = '_SUCCESS';
 export const GET_LIST = 'GET_LIST';
 export const GET_MENU = 'GET_MENU';
 export const GET_BREADCRUMBS = 'GET_BREADCRUMBS';
-export const COMMON_ERROR = 'COMMON_ERROR';
+export const ADD_ALERT = 'ADD_ALERT';
 export const DISMISS_ALERT = 'DISMISS_ALERT';
 export const CLEAR_ALERTS = 'CLEAR_ALERTS';
 

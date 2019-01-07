@@ -1,4 +1,11 @@
-import {SUCCESS, GET_BREADCRUMBS, GET_MENU, DISMISS_ALERT, COMMON_ERROR, CLEAR_ALERTS} from '../Common/Utils';
+import {
+    SUCCESS,
+    GET_BREADCRUMBS,
+    GET_MENU,
+    DISMISS_ALERT,
+    ADD_ALERT,
+    CLEAR_ALERTS
+} from '../Common/Utils';
 import {asyncCommonCatch, ifNoAuthorizedRedirect} from './UniversalListActions';
 import * as url from '../Common/Url';
 
@@ -24,8 +31,8 @@ export function getNextLevelMenus(currentUrl) {
                 });
             }else {
                 dispatch({
-                    type: COMMON_ERROR,
-                    alert: text
+                    type: ADD_ALERT,
+                    alert: JSON.parse(text)
                 });
             }
         }).catch(error => {
@@ -37,8 +44,8 @@ export function getNextLevelMenus(currentUrl) {
 export function showCommonErrorAlert(text){
     return dispatch => {
         dispatch({
-            type: COMMON_ERROR,
-            alert: text
+            type: ADD_ALERT,
+            alert: JSON.parse(text)
         })
     }
 }
@@ -65,8 +72,45 @@ export function getBreadcrumbs(currentUrl) {
                 });
             }else {
                 dispatch({
-                    type: COMMON_ERROR,
-                    alert: text
+                    type: ADD_ALERT,
+                    alert: JSON.parse(text)
+                });
+            }
+        }).catch(error => {
+            asyncCommonCatch(GET_BREADCRUMBS, error, dispatch)
+        });
+    }
+}
+
+export function lockUnlockRecord(type, id, action, callback) {
+    let targetUrl = '';
+    let isOk = false;
+    if(action === 'lock') {
+        targetUrl = url.LOCK_RECORD;
+    } else if(action === 'unlock'){
+        targetUrl = url.UNLOCK_RECORD;
+    }
+    return function (dispatch) {
+        let headers = new Headers();
+        fetch(targetUrl + '?type=' + type + '&id='  + id, {
+            method: 'get',
+            credentials: 'include',
+            headers: headers
+        }).then(response => {
+            ifNoAuthorizedRedirect(response);
+            isOk = response.ok;
+            return response.text()
+        }).then(text => {
+            if(isOk){
+                dispatch({
+                    type: ADD_ALERT,
+                    alert: JSON.parse(text).data
+                });
+                if(callback) callback(JSON.parse(text).data.type)
+            }else{
+                dispatch({
+                    type: ADD_ALERT,
+                    alert: JSON.parse(text)
                 });
             }
         }).catch(error => {

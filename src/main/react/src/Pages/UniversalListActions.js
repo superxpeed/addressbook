@@ -1,14 +1,19 @@
-import {SUCCESS, COMMON_ERROR} from '../Common/Utils';
+import {SUCCESS, ADD_ALERT} from '../Common/Utils';
 import * as tableActions from '../Table/TableActions';
 import {Caches} from '../Common/Utils';
 export const GET_LIST = 'GET_LIST';
 
 export function asyncCommonCatch(action, error, dispatch) {
+    const newAlert = {
+        id: (new Date()).getTime(),
+        type: 'danger',
+        headline: 'Error occurred!',
+        message: error.message
+    };
     dispatch({
-        type: COMMON_ERROR,
-        alert: error.message
+        type: ADD_ALERT,
+        alert: newAlert
     });
-    console.log(error);
 }
 
 export function clearPersonSelection(rows) {
@@ -47,8 +52,8 @@ export function getList(url, filterDto = null, cacheName) {
                 });
             }else {
                 dispatch({
-                    type: COMMON_ERROR,
-                    alert: text
+                    type: ADD_ALERT,
+                    alert: JSON.parse(text)
                 });
             }
         }).catch(error => {

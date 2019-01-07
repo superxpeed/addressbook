@@ -14,14 +14,16 @@ import * as MenuActions from '../Pages/MenuFormActions';
     dispatch => ({
         updateRow: bindActionCreators(TableActions.updateRow, dispatch),
         addRow: bindActionCreators(TableActions.addRow, dispatch),
-        showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch)
+        showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
+        lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch)
     })
 )
 export class OrganizationComponent extends React.Component {
 
     state = {
         organization: {},
-        create: false
+        create: false,
+        locked: true
     };
 
     handleChange(e, v) {
@@ -44,11 +46,23 @@ export class OrganizationComponent extends React.Component {
         return null;
     }
 
+    lockCallback = (result) => {
+        if(result === 'success'){
+            this.setState({locked: true});
+        }else if(result === 'warning'){
+            this.setState({locked: false});
+        }
+    };
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.organization !== this.state.organization) {
+            if(this.state.organization['id'] !== undefined && this.state.create === false){
+                this.props.lockUnlockRecord(Caches.ORGANIZATION_CACHE, this.state.organization['id'], 'unlock');
+            }
             if(nextProps.organization['id'] === undefined){
-                this.setState({ organization: {name: '', street: '', id: Generator.uuidv4(), zip: '', type: '2'}, create: true });
+                this.setState({ organization: {name: '', street: '', id: Generator.uuidv4(), zip: '', type: '2'}, create: true, locked: true });
             }else{
+                this.props.lockUnlockRecord(Caches.ORGANIZATION_CACHE, nextProps.organization['id'], 'lock', this.lockCallback);
                 let org = Object.assign({}, nextProps.organization);
                 org['type'] =  OrgTypes.getEngType(nextProps.organization['type']);
                 this.setState({ organization: org, create: false });
@@ -89,7 +103,7 @@ export class OrganizationComponent extends React.Component {
                 Create organization
             </Button>;
         }else{
-            return <Button style={{width: '100%'}} onClick={this.saveOrganization}>
+            return <Button style={{width: '100%'}} onClick={this.saveOrganization} disabled={!this.state.locked}>
                 Save organization
             </Button>;
         }

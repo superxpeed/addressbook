@@ -15,6 +15,7 @@ public class UniversalFieldsDescriptor {
     public static final String CONTACT_CACHE        = "com.addressbook.model.Contact";
     public static final String MENU_CACHE           = "com.addressbook.model.MenuEntry";
     public static final String USER_CACHE           = "com.addressbook.model.User";
+    public static final String LOCK_RECORD_CACHE    = "java.lang.String";
 
     private static Map<String, FieldDescription> fieldDescriptionMapOrganization = new LinkedHashMap<>();
     private static Map<String, FieldDescription> fieldDescriptionMapPerson = new LinkedHashMap<>();
@@ -45,6 +46,7 @@ public class UniversalFieldsDescriptor {
         cacheClasses.put(CONTACT_CACHE,         Contact.class);
         cacheClasses.put(MENU_CACHE,            MenuEntry.class);
         cacheClasses.put(USER_CACHE,            User.class);
+        cacheClasses.put(LOCK_RECORD_CACHE,     String.class);
 
         dtoClasses.put(ORGANIZATION_CACHE,      OrganizationDto.class);
         dtoClasses.put(PERSON_CACHE,            PersonDto.class);

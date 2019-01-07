@@ -3,8 +3,10 @@ package com.addressbook.rest;
 import com.addressbook.ignite.GridDAO;
 import com.addressbook.UniversalFieldsDescriptor;
 import com.addressbook.dto.*;
+import com.addressbook.model.Alert;
 import com.addressbook.model.Breadcrumb;
 import com.addressbook.security.CurrentUser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +90,43 @@ public class UniversalController{
         return dto;
     }
 
+    @RequestMapping(value = "/lockRecord", method = RequestMethod.GET)
+    public PageDataDto<Alert> lockRecord (@RequestParam(value = "type") String type, @RequestParam(value = "id") String id) {
+        System.out.println("Locking record " + type + " id " + id);
+        boolean locked = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser().getName(), true);
+        Alert alert = new Alert();
+        alert.setType(locked ? "success" : "warning");
+        if(locked){
+            alert.setHeadline("Record locked!");
+            alert.setMessage("Record id " + id + " locked!");
+        }else{
+            alert.setHeadline("Record was not locked!");
+            alert.setMessage("Record id " + id + " was already locked!");
+        }
+        PageDataDto<Alert> dto = new PageDataDto<>();
+        dto.setData(alert);
+        return dto;
+    }
+
+    @RequestMapping(value = "/unlockRecord", method = RequestMethod.GET)
+    public PageDataDto<Alert> unlockRecord (@RequestParam(value = "type") String type, @RequestParam(value = "id") String id) {
+        System.out.println("Unlocking record " + type + " id " + id);
+        boolean unlocked = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser().getName(), false);
+        Alert alert = new Alert();
+        alert.setType(unlocked ? "success" : "warning");
+        if(unlocked){
+            alert.setHeadline("Record unlocked!");
+            alert.setMessage("Record id " + id + " unlocked!");
+        }else{
+            alert.setHeadline("Record was not unlocked!");
+            alert.setMessage("Record id " + id + " was not locked by you!");
+        }
+
+        PageDataDto<Alert> dto = new PageDataDto<>();
+        dto.setData(alert);
+        return dto;
+    }
+
     @RequestMapping(value="/logout", method = RequestMethod.GET)
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -98,10 +139,17 @@ public class UniversalController{
     @ExceptionHandler(Throwable.class)
     public void handleError(HttpServletResponse response, Exception ex) throws Exception{
         response.setStatus(500);
+        Alert alert = new Alert();
+        alert.setType("danger");
+        alert.setHeadline("Error occurred!");
         if(ex.getClass().equals(IllegalArgumentException.class)){
-            response.getWriter().println(ex.getMessage());
+            alert.setMessage(ex.getMessage());
         }else{
-            ex.printStackTrace(response.getWriter());
+            StringWriter errors = new StringWriter();
+            ex.printStackTrace(new PrintWriter(errors));
+            alert.setMessage(errors.toString());
         }
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getWriter(), alert);
     }
 }
