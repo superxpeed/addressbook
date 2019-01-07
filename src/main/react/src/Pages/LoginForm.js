@@ -23,6 +23,13 @@ export default class LoginForm extends React.Component {
         setTimeout(function() {
             this.props.clearAlerts();
         }.bind(this), 500);
+        let parent = this;
+        document.addEventListener("keydown", function keyDownTextField(e) {
+            let keyCode = e.keyCode;
+            if(keyCode === 13) {
+                parent.login();
+            }
+        }, false);
     }
 
     handleChange = (e) =>{
