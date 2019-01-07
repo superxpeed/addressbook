@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -81,28 +80,17 @@ public class UniversalController{
 
     @RequestMapping(value = "/saveOrCreateContacts", method = RequestMethod.POST)
     public PageDataDto<List<ContactDto>> saveOrCreateContacts (@RequestBody List<ContactDto> contactDtos) {
-        List<ContactDto> contactDtoList = new ArrayList<>();
-        for(ContactDto contactDto: contactDtos){
-            contactDtoList.add(GridDAO.createOrUpdateContact(contactDto));
-        }
         PageDataDto<List<ContactDto>> dto = new PageDataDto<>();
-        dto.setData(contactDtoList);
+        dto.setData(GridDAO.createOrUpdateContacts(contactDtos));
         return dto;
     }
 
     @RequestMapping(value = "/lockRecord", method = RequestMethod.GET)
     public PageDataDto<Alert> lockRecord (@RequestParam(value = "type") String type, @RequestParam(value = "id") String id) {
-        System.out.println("Locking record " + type + " id " + id);
         boolean locked = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser().getName(), true);
-        Alert alert = new Alert();
-        alert.setType(locked ? "success" : "warning");
-        if(locked){
-            alert.setHeadline("Record locked!");
-            alert.setMessage("Record id " + id + " locked!");
-        }else{
-            alert.setHeadline("Record was not locked!");
-            alert.setMessage("Record id " + id + " was already locked!");
-        }
+        Alert alert;
+        if(locked) alert = new Alert("Record locked!",          "success", "Record id " + id + " locked!");
+        else       alert = new Alert("Record was not locked!",  "warning", "Record id " + id + " was already locked!");
         PageDataDto<Alert> dto = new PageDataDto<>();
         dto.setData(alert);
         return dto;
@@ -110,18 +98,10 @@ public class UniversalController{
 
     @RequestMapping(value = "/unlockRecord", method = RequestMethod.GET)
     public PageDataDto<Alert> unlockRecord (@RequestParam(value = "type") String type, @RequestParam(value = "id") String id) {
-        System.out.println("Unlocking record " + type + " id " + id);
         boolean unlocked = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser().getName(), false);
-        Alert alert = new Alert();
-        alert.setType(unlocked ? "success" : "warning");
-        if(unlocked){
-            alert.setHeadline("Record unlocked!");
-            alert.setMessage("Record id " + id + " unlocked!");
-        }else{
-            alert.setHeadline("Record was not unlocked!");
-            alert.setMessage("Record id " + id + " was not locked by you!");
-        }
-
+        Alert alert;
+        if(unlocked) alert = new Alert("Record unlocked!",          "success", "Record id " + id + " unlocked!");
+        else         alert = new Alert("Record was not unlocked!",  "warning", "Record id " + id + " was not locked by you!");
         PageDataDto<Alert> dto = new PageDataDto<>();
         dto.setData(alert);
         return dto;
@@ -131,6 +111,7 @@ public class UniversalController{
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){
+            GridDAO.unlockAllRecordsForUser(auth.getName());
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return "redirect:/#/login";

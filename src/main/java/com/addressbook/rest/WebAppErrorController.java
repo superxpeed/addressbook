@@ -1,5 +1,7 @@
 package com.addressbook.rest;
 
+import com.addressbook.model.Alert;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -17,7 +19,10 @@ public class WebAppErrorController implements ErrorController {
         if (status != null) {
             int statusCode = Integer.valueOf(status.toString());
             if(statusCode == HttpStatus.NOT_FOUND.value()) return "404.html";
-            if(statusCode == HttpStatus.UNAUTHORIZED.value()) response.getWriter().println("You are not authorized to see that content!");
+            if(statusCode == HttpStatus.UNAUTHORIZED.value()){
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.writeValue(response.getWriter(), new Alert("Error occurred!", "danger", "You are not authorized to see that content!"));
+            }
         }
         return null;
     }

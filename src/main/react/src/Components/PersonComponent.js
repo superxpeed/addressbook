@@ -4,7 +4,7 @@ import React from 'react';
 import {ContactContainer} from './ContactContainer'
 import {ifNoAuthorizedRedirect} from '../Pages/UniversalListActions';
 import * as url from '../Common/Url';
-import {TitleConverter} from '../Common/Utils';
+import {Caches, TitleConverter} from '../Common/Utils';
 import RichTextEditor from 'react-rte';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -14,6 +14,7 @@ import * as MenuActions from '../Pages/MenuFormActions';
     null,
     dispatch => ({
         showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
+        lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch)
     })
 )
 export class PersonComponent extends React.Component {
@@ -23,7 +24,8 @@ export class PersonComponent extends React.Component {
         contactList: {
             data: []
         },
-        resume: RichTextEditor.createEmptyValue()
+        resume: RichTextEditor.createEmptyValue(),
+        locked: true
     };
 
     handleChange(e, v) {
@@ -115,11 +117,24 @@ export class PersonComponent extends React.Component {
         })
     };
 
+    lockCallback = (result) => {
+        if(result === 'success'){
+            this.setState({locked: true});
+        }else if(result === 'warning'){
+            this.setState({locked: false});
+        }
+    };
+
     componentDidMount() {
-        if(this.state.person['id'] !== undefined && this.props.forUpdate)
+        if(this.state.person['id'] !== undefined && this.props.forUpdate) {
             this.getContactList(this.state.person['id']);
-        else
+            this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person['id'], 'lock', this.lockCallback);
+        }else
             this.clearContactList();
+    }
+
+    componentWillUnmount() {
+        this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person['id'], 'unlock');
     }
 
     getValidationState(field) {
@@ -184,7 +199,7 @@ export class PersonComponent extends React.Component {
                         value={this.state.resume}
                         onChange={this.onChangeResume}
                     />
-                    <Button onClick={this.savePerson} disabled={this.state.invalidFields.size !== 0}>
+                    <Button onClick={this.savePerson} disabled={this.state.invalidFields.size !== 0 || !this.state.locked}>
                         Save contacts
                     </Button>
                 </div>

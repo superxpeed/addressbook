@@ -5,14 +5,17 @@ import com.addressbook.dto.*;
 import com.addressbook.model.*;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
+import org.apache.ignite.IgniteTransactions;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.cache.*;
 import org.apache.ignite.cache.query.QueryCursor;
+import org.apache.ignite.cache.query.ScanQuery;
 import org.apache.ignite.cache.query.SqlQuery;
 import org.apache.ignite.configuration.CacheConfiguration;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder;
+import org.apache.ignite.transactions.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -101,16 +104,22 @@ public class GridDAO {
         return personDto;
     }
 
-    public static ContactDto createOrUpdateContact(ContactDto contactDto){
+    public static List<ContactDto> createOrUpdateContacts(List<ContactDto> contactDtos){
         IgniteCache<String, Contact> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
-        Contact contact = cachePerson.get(contactDto.getId());
-        if(contact == null) contact = new Contact();
-        contact.setData(contactDto.getData());
-        contact.setDescription(contactDto.getDescription());
-        contact.setPersonId(contactDto.getPersonId());
-        contact.setType(ContactType.values()[Integer.valueOf(contactDto.getType())]);
-        cachePerson.put(contact.getContactId(), contact);
-        return contactDto;
+        IgniteTransactions transactions = ignite.transactions();
+        try (Transaction tx = transactions.txStart()) {
+            for(ContactDto contactDto: contactDtos){
+                Contact contact = cachePerson.get(contactDto.getId());
+                if(contact == null) contact = new Contact();
+                contact.setData(contactDto.getData());
+                contact.setDescription(contactDto.getDescription());
+                contact.setPersonId(contactDto.getPersonId());
+                contact.setType(ContactType.values()[Integer.valueOf(contactDto.getType())]);
+                cachePerson.put(contact.getContactId(), contact);
+            }
+            tx.commit();
+        }
+        return contactDtos;
     }
 
     public static User createOrUpdateUser(User newUser){
@@ -128,6 +137,11 @@ public class GridDAO {
         IgniteCache<String, String> cacheLocks = ignite.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE);
         if(lock) return cacheLocks.putIfAbsent(key, user);
         else return cacheLocks.remove(key, user);
+    }
+
+    public static void unlockAllRecordsForUser(String user){
+        IgniteCache<String, String> cacheLocks = ignite.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE);
+        cacheLocks.removeAll(new HashSet<>(cacheLocks.query(new ScanQuery<String, String>((k, v) -> v.equals(user)), Cache.Entry::getKey).getAll()));
     }
 
     public static User getUserByLogin(String login){
