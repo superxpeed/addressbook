@@ -7,6 +7,7 @@
     -   Maven dependencies
     -   Fat-jar assembly (with React static)
     -   Setting http-session duration
+    -   Static resource handler
 2.  Spring Security:
     -   Custom AuthenticationProvider
     -   Custom UrlAuthenticationSuccessHandler for REST API
@@ -17,7 +18,7 @@
     (using ErrorController, ExceptionHandler and HttpSessionListener)
     -   Automatic Jackson marshalling
 4.  Spring Flux for reactive updates on front-end
-5.  Ignite client configuration, start/stop at Spring context start/closing, SQL queries, transactions, 
+5.  Apache Ignite client configuration, start/stop at Spring context start/closing, SQL queries, transactions, 
 monitoring, binary marshalling
 
 ####Front-end:
