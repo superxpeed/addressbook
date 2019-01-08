@@ -9,6 +9,7 @@ export const GET_NEXT_LEVEL_MENUS = cp + 'rest/getNextLevelMenus';
 export const GET_BREADCRUMBS = cp + 'rest/getBreadcrumbs';
 export const LOCK_RECORD = cp + 'rest/lockRecord';
 export const UNLOCK_RECORD = cp + 'rest/unlockRecord';
+export const GET_USER_INFO = cp + 'rest/getUserInfo';
 export const LOGOUT = cp + 'rest/logout';
 export const LOGIN = cp + 'login';
 

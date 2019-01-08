@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import * as MenuActions from './MenuFormActions';
 import {Navbar, Nav, Breadcrumb, Button, Table, Label} from 'react-bootstrap'
 import {HashUtils} from '../Common/Utils';
+import {UserComponent} from '../Components/UserComponent';
 
 @connect(
     state => ({
@@ -155,6 +156,7 @@ export default class AdminPageForm extends React.Component {
                             </Breadcrumb>
                         </Nav>
                         <Nav pullRight>
+                            <UserComponent/>
                             <Button onClick={() => this.props.logout()}>
                                 Logout
                             </Button>

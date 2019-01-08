@@ -13,6 +13,7 @@ import * as TableActions from '../Table/TableActions';
 import * as MenuActions from './MenuFormActions';
 import {OrganizationComponent} from '../Components/OrganizationComponent';
 import {PersonComponent} from '../Components/PersonComponent';
+import {UserComponent} from '../Components/UserComponent';
 
 @connect(
     state => ({
@@ -202,6 +203,7 @@ export default class UniversalListForm extends React.Component {
                             <Button style={{marginRight: '5px'}} disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {id: Generator.uuidv4(), orgId: this.props.selectedRowsOrganization[0].id}})}>
                                 Create person
                             </Button>
+                            <UserComponent/>
                             <Button onClick={() => this.props.logout()}>
                                 Logout
                             </Button>

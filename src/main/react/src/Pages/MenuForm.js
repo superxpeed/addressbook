@@ -5,6 +5,7 @@ import * as MenuActions from './MenuFormActions';
 import {Navbar, Nav, Button, Breadcrumb} from 'react-bootstrap'
 import {AlertList} from 'react-bs-notifier';
 import {HashUtils} from '../Common/Utils';
+import {UserComponent} from '../Components/UserComponent';
 
 @connect(
     state => ({
@@ -81,6 +82,7 @@ export default class MenuForm extends React.Component {
                             </Breadcrumb>
                         </Nav>
                         <Nav pullRight>
+                            <UserComponent/>
                             <Button onClick={() => this.props.logout()}>
                                 Logout
                             </Button>

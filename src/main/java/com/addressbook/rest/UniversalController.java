@@ -5,6 +5,7 @@ import com.addressbook.UniversalFieldsDescriptor;
 import com.addressbook.dto.*;
 import com.addressbook.model.Alert;
 import com.addressbook.model.Breadcrumb;
+import com.addressbook.model.User;
 import com.addressbook.security.CurrentUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,5 +133,12 @@ public class UniversalController{
         }
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getWriter(), alert);
+    }
+
+    @RequestMapping("/getUserInfo")
+    public User getUserInfo() {
+        User user = GridDAO.getUserByLogin(currentUser.getCurrentUser().getName());
+        user.setPassword(null);
+        return user;
     }
 }
