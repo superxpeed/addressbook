@@ -1,7 +1,7 @@
 # Address Book (Skeleton Spring MVC application)
 
 #### Contains following useful snippets:
-####Back-end:
+#### Back-end:
 1. Spring Boot: 
     -   Java Configuration
     -   Maven dependencies
@@ -21,7 +21,7 @@
 5.  Apache Ignite client configuration, start/stop at Spring context start/closing, SQL queries, transactions, 
 monitoring, binary marshalling
 
-####Front-end:
+#### Front-end:
 1.  complicated user interface with multiple dynamically added tables/tabs/custom forms, user-input validation and more
 2.  react, redux, react-router, component lifecycle, fetch, custom headers, credentials (JSESSIONID) for REST-API
 3.  react-bootstrap-table & react-bootstrap components
