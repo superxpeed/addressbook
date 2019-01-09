@@ -1,7 +1,7 @@
 {
-  "name": "testapp",
+  "name": "addressbook",
   "version": "1.0.0",
-  "description": "Test application",
+  "description": "Address Book",
   "main": "index.js",
   "scripts": {
     "webpack-dev-server": "node_modules/.bin/webpack-dev-server --colors --config ./webpack.config.js --port 7070",
