@@ -2,7 +2,7 @@
   <configuration default="false" name="WebApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="addressbook" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.AddressBookApplication" />
-    <option name="VM_PARAMETERS" value="-Xms2048m -Xmx4096m" />
+    <option name="VM_PARAMETERS" value="-Xms2048m -Xmx4096m -XX:+UnlockCommercialFeatures -XX:+FlightRecorder" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <method v="2" />
   </configuration>

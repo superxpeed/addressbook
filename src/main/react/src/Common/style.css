@@ -70,6 +70,11 @@ a {
 }
 
 #pageDropDown {
+    display: inline-block!important;
+}
+
+.react-bs-table-sizePerPage-dropdown {
+    display: inline-block!important;
     float: left;
 }
 

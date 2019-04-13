@@ -204,7 +204,7 @@ export default class UniversalListForm extends React.Component {
                 <AlertList
                     position={'top-right'}
                     alerts={allAlerts}
-                    timeout={10000}
+                    timeout={1000}
                     dismissTitle='Begone!'
                     onDismiss={this.onAlertDismissed.bind(this)}
                 />

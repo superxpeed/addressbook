@@ -30,7 +30,7 @@ export class PersonComponent extends React.Component {
 
     constructor(props) {
         super(props);
-        let resume = props.person['resume'] === undefined ? '' : props.person['resume'];
+        let resume = props.person['resume'] == null ? '' : props.person['resume'];
         this.state = {
             person: props.person,
             contactList: {
@@ -139,7 +139,8 @@ export class PersonComponent extends React.Component {
     }
 
     componentWillUnmount() {
-        this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person['id'], 'unlock');
+        if(this.props.forUpdate)
+            this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person['id'], 'unlock');
     }
 
     getValidationState(field) {
@@ -163,11 +164,16 @@ export class PersonComponent extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.person !== this.state.person) {
+            if(this.state.person !== undefined) {
+                this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person['id'], 'unlock');
+            }
+            let newResume = nextProps.person['resume'] == null ? '' : nextProps.person['resume'];
             this.getContactList(nextProps.person['id']);
             this.setState({
                 person: nextProps.person,
-                resume: RichTextEditor.createValueFromString(nextProps.person['resume'], 'html')
+                resume: RichTextEditor.createValueFromString(newResume, 'html')
             });
+            this.props.lockUnlockRecord(Caches.PERSON_CACHE, nextProps.person['id'], 'lock', this.lockCallback);
         }
     }
 

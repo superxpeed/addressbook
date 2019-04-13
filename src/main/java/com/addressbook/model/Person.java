@@ -30,13 +30,13 @@ public class Person implements Serializable {
     private String resume;
 
     @QuerySqlField(index = true)
-    private Double salary;
+    private String salary;
 
     public Person(PersonDto personDto) {
         id = personDto.getId();
     }
 
-    public Person(Organization org, String firstName, String lastName, Double salary, String resume) {
+    public Person(Organization org, String firstName, String lastName, String salary, String resume) {
         this.id = UUID.randomUUID().toString();
         this.orgId = org.getId();
         this.firstName = firstName;

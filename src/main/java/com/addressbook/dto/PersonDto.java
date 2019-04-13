@@ -28,6 +28,6 @@ public class PersonDto implements Serializable {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.resume = person.getResume();
-        this.salary = String.valueOf(person.getSalary());
+        this.salary = person.getSalary();
     }
 }

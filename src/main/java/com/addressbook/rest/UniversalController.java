@@ -78,7 +78,7 @@ public class UniversalController {
     @RequestMapping(value = "/getNextLevelMenus", method = RequestMethod.GET)
     public PageDataDto<List<MenuEntryDto>> getNextLevelMenus(@RequestParam(value = "currentUrl") String url) {
         PageDataDto<List<MenuEntryDto>> dto = new PageDataDto<>();
-        dto.setData(GridDAO.readNextLevel(url, currentUser.getCurrentUser().getAuthorities()));
+        dto.setData(GridDAO.readNextLevel(url, currentUser.getAuthorities()));
         return dto;
     }
 
@@ -96,7 +96,7 @@ public class UniversalController {
         // basically just puts in Ignite cache key/value pair, key is name of the cache and key of the record to be locked and value is username
         // returns true if current user successfully obtained lock on required record, otherwise it means
         // record was already locked by other user (I've decided not to return login of the user by whom this record was locked_
-        boolean locked = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser().getName(), true);
+        boolean locked = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser(), true);
         Alert alert;
         if (locked) alert = new Alert("Record locked!", "success", "Record id " + id + " locked!");
         else alert = new Alert("Record was not locked!", "warning", "Record id " + id + " was already locked!");
@@ -108,7 +108,7 @@ public class UniversalController {
     // Pretty much the same as lockRecord, difference in alerts messages
     @RequestMapping(value = "/unlockRecord", method = RequestMethod.GET)
     public PageDataDto<Alert> unlockRecord(@RequestParam(value = "type") String type, @RequestParam(value = "id") String id) {
-        boolean unlocked = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser().getName(), false);
+        boolean unlocked = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser(), false);
         Alert alert;
         if (unlocked) alert = new Alert("Record unlocked!", "success", "Record id " + id + " unlocked!");
         else alert = new Alert("Record was not unlocked!", "warning", "Record id " + id + " was not locked by you!");
@@ -164,7 +164,7 @@ public class UniversalController {
     @RequestMapping("/getUserInfo")
     public User getUserInfo() {
         // I could fill object from currentUser.getCurrentUser(), but it's easier to just read it
-        User user = GridDAO.getUserByLogin(currentUser.getCurrentUser().getName());
+        User user = GridDAO.getUserByLogin(currentUser.getCurrentUser());
         // because object in DB contains password's hash and I don't want to return it to user
         user.setPassword(null);
         return user;

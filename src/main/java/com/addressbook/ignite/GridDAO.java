@@ -100,7 +100,7 @@ public class GridDAO {
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
         person.setOrgId(personDto.getOrgId());
-        person.setSalary(personDto.getSalary() != null ? Double.valueOf(personDto.getSalary()) : 0);
+        person.setSalary(personDto.getSalary());
         person.setResume(personDto.getResume());
         cachePerson.put(person.getId(), person);
         return personDto;
