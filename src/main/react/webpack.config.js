@@ -1,4 +1,4 @@
-var webpack = require('webpack')
+var webpack = require('webpack');
 
 module.exports = {
     devtool: 'source-map',
@@ -19,20 +19,20 @@ module.exports = {
             {
                 test: /\.less$/,
                 include: /(src)/,
-                loader: "style-loader!css-loader!autoprefixer-loader!less-loader"
+                loader: 'style-loader!css-loader!autoprefixer-loader!less-loader'
             },
             {
                 test: /\.css$/,
                 include: /(src)/,
-                loader: "style-loader!css-loader"
+                loader: 'style-loader!css-loader'
             },
             {
                 test: /\.png$/,
-                loader: "url-loader"
+                loader: 'url-loader'
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|gif)$/,
-                loader: "url-loader"
+                loader: 'url-loader'
             }
         ]
     },
@@ -45,8 +45,8 @@ module.exports = {
                 changeOrigin: true
             }
         },
-        publicPath: "/",
-        contentBase: "../resources/static",
+        publicPath: '/',
+        contentBase: '../resources/static',
         hot: true
     },
     plugins: []

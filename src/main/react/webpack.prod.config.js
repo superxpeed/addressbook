@@ -1,7 +1,7 @@
 var webpack = require('webpack');
 
 var webpackConfig = require('./webpack.config.js');
-var CompressionPlugin = require("compression-webpack-plugin");
+var CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = Object.assign({}, webpackConfig, {
     plugins: webpackConfig.plugins.concat([
