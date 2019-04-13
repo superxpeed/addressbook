@@ -11,7 +11,7 @@ public class GridStarter implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        logger.info("--------------- Context Refreshed -----------------");
+        logger.info("--------------- Ignite client node startup -----------------");
         GridDAO.startClient();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("--------------- Ignite client node shutdown -----------------");
