@@ -1,7 +1,6 @@
 package com.addressbook;
 
 import com.addressbook.ignite.GridStarter;
-import com.addressbook.ignite.GridStopper;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +19,6 @@ public class RootConfiguration {
     @Bean
     GridStarter gridStarter() {
         return new GridStarter();
-    }
-
-    @Bean
-    GridStopper gridStopper() {
-        return new GridStopper();
     }
 
     @Bean
