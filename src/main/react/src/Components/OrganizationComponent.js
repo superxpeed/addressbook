@@ -1,4 +1,4 @@
-import {FormControl, FormGroup, ControlLabel, Button} from 'react-bootstrap'
+import {Button, ControlLabel, FormControl, FormGroup} from 'react-bootstrap'
 import update from 'react-addons-update'
 import React from 'react';
 import * as url from '../Common/Url';
@@ -26,10 +26,6 @@ export class OrganizationComponent extends React.Component {
         locked: true
     };
 
-    handleChange(e, v) {
-        this.setState(update(this.state, {organization: {[e]: {$set:v.currentTarget.value}}}));
-    }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -37,8 +33,12 @@ export class OrganizationComponent extends React.Component {
         }
     }
 
+    handleChange(e, v) {
+        this.setState(update(this.state, {organization: {[e]: {$set: v.currentTarget.value}}}));
+    }
+
     getValidationState(field) {
-        if(this.state.organization[field] === undefined || this.state.organization[field] === null) return 'error';
+        if (this.state.organization[field] === undefined || this.state.organization[field] === null) return 'error';
         const length = this.state.organization[field].length;
         if (length > 10) return 'success';
         else if (length > 5) return 'warning';
@@ -47,25 +47,29 @@ export class OrganizationComponent extends React.Component {
     }
 
     lockCallback = (result) => {
-        if(result === 'success'){
+        if (result === 'success') {
             this.setState({locked: true});
-        }else if(result === 'warning'){
+        } else if (result === 'warning') {
             this.setState({locked: false});
         }
     };
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.organization !== this.state.organization) {
-            if(this.state.organization['id'] !== undefined && this.state.create === false){
+            if (this.state.organization['id'] !== undefined && this.state.create === false) {
                 this.props.lockUnlockRecord(Caches.ORGANIZATION_CACHE, this.state.organization['id'], 'unlock');
             }
-            if(nextProps.organization['id'] === undefined){
-                this.setState({ organization: {name: '', street: '', id: Generator.uuidv4(), zip: '', type: '2'}, create: true, locked: true });
-            }else{
+            if (nextProps.organization['id'] === undefined) {
+                this.setState({
+                    organization: {name: '', street: '', id: Generator.uuidv4(), zip: '', type: '2'},
+                    create: true,
+                    locked: true
+                });
+            } else {
                 this.props.lockUnlockRecord(Caches.ORGANIZATION_CACHE, nextProps.organization['id'], 'lock', this.lockCallback);
                 let org = Object.assign({}, nextProps.organization);
-                org['type'] =  OrgTypes.getEngType(nextProps.organization['type']);
-                this.setState({ organization: org, create: false });
+                org['type'] = OrgTypes.getEngType(nextProps.organization['type']);
+                this.setState({organization: org, create: false});
             }
         }
     }
@@ -87,22 +91,22 @@ export class OrganizationComponent extends React.Component {
         }).then(text => {
             if (isOk) {
                 this.props.updateRow(this.state.organization, Caches.ORGANIZATION_CACHE);
-            }else {
+            } else {
                 this.props.showCommonErrorAlert(text);
             }
         });
     };
 
-    handleTypeChange = (e) =>{
-        this.setState(update(this.state, {organization: {[e.target.id]: {$set:e.target.value}}}));
+    handleTypeChange = (e) => {
+        this.setState(update(this.state, {organization: {[e.target.id]: {$set: e.target.value}}}));
     };
 
-    getButton(){
-        if(this.state.create){
+    getButton() {
+        if (this.state.create) {
             return <Button style={{width: '100%'}} onClick={this.saveOrganization}>
                 Create organization
             </Button>;
-        }else{
+        } else {
             return <Button style={{width: '100%'}} onClick={this.saveOrganization} disabled={!this.state.locked}>
                 Save organization
             </Button>;
@@ -124,7 +128,7 @@ export class OrganizationComponent extends React.Component {
                                 placeholder='Enter name'
                                 onChange={this.handleChange.bind(this, 'name')}
                             />
-                            <FormControl.Feedback />
+                            <FormControl.Feedback/>
                         </FormGroup>
                     </form>
                     <form>
@@ -138,7 +142,7 @@ export class OrganizationComponent extends React.Component {
                                 placeholder='Enter address steet'
                                 onChange={this.handleChange.bind(this, 'street')}
                             />
-                            <FormControl.Feedback />
+                            <FormControl.Feedback/>
                         </FormGroup>
                     </form>
                 </div>
@@ -154,13 +158,14 @@ export class OrganizationComponent extends React.Component {
                                 placeholder='Enter address zip'
                                 onChange={this.handleChange.bind(this, 'zip')}
                             />
-                            <FormControl.Feedback />
+                            <FormControl.Feedback/>
                         </FormGroup>
                     </form>
                     <form>
                         <FormGroup>
                             <ControlLabel>Type</ControlLabel>
-                            <FormControl id='type' componentClass='select' value={this.state.organization['type']} onChange={this.handleTypeChange}>
+                            <FormControl id='type' componentClass='select' value={this.state.organization['type']}
+                                         onChange={this.handleTypeChange}>
                                 <option value='0'>Non profit</option>
                                 <option value='1'>Private</option>
                                 <option value='2'>Government</option>

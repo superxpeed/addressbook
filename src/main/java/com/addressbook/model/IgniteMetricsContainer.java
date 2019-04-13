@@ -17,9 +17,9 @@ public class IgniteMetricsContainer implements Serializable {
 
     private Map<String, IgniteCacheMetrics> igniteCacheMetricsMap;
 
-    public IgniteMetricsContainer(){
+    public IgniteMetricsContainer() {
         igniteCacheMetricsMap = new HashMap<>();
-        for(Map.Entry<String, CacheMetrics> metricsEntry:  GridDAO.getCacheMetrics().entrySet()){
+        for (Map.Entry<String, CacheMetrics> metricsEntry : GridDAO.getCacheMetrics().entrySet()) {
             igniteCacheMetricsMap.put(metricsEntry.getKey(), new IgniteCacheMetrics(metricsEntry.getValue()));
         }
     }

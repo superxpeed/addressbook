@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Modal, Label} from 'react-bootstrap';
+import {Button, Label, Modal} from 'react-bootstrap';
 import * as url from '../Common/Url';
 import {ifNoAuthorizedRedirect} from '../Pages/UniversalListActions';
 import {connect} from 'react-redux';
@@ -20,17 +20,17 @@ export class UserComponent extends React.Component {
         show: false
     };
 
-    handleClose = () => {
-        this.setState({ show: false });
-    };
-
-    handleShow = () => {
-        this.setState({ show: true });
-    };
-
     constructor(props) {
         super(props);
     }
+
+    handleClose = () => {
+        this.setState({show: false});
+    };
+
+    handleShow = () => {
+        this.setState({show: true});
+    };
 
     updatePersonInfo = () => {
         let isOk = false;
@@ -49,7 +49,7 @@ export class UserComponent extends React.Component {
             if (isOk) {
                 let currentUser = JSON.parse(text);
                 this.setState({username: currentUser.login, roles: currentUser.roles});
-            }else {
+            } else {
                 this.props.showCommonErrorAlert(text);
             }
         })
@@ -62,15 +62,16 @@ export class UserComponent extends React.Component {
     getRoles = () => {
         let allRoles = [];
         this.state.roles.forEach(value => {
-            allRoles.push(<Label bsStyle="primary" style={{marginRight: '5px'}} key={value}>{value}</Label>);
+            allRoles.push(<Label bsStyle='primary' style={{marginRight: '5px'}} key={value}>{value}</Label>);
         });
         return allRoles;
     };
 
     render() {
         return (
-            <div style={{ display: 'inline-block'}}>
-                <Button style={{maxWidth: '100px', overflowX: 'hidden', marginRight: '5px'}} onClick={this.handleShow}>{this.state.username}</Button>
+            <div style={{display: 'inline-block'}}>
+                <Button style={{maxWidth: '100px', overflowX: 'hidden', marginRight: '5px'}}
+                        onClick={this.handleShow}>{this.state.username}</Button>
                 <Modal show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Roles for {this.state.username}</Modal.Title>

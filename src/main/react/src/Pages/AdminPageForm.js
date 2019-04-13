@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as MenuActions from './MenuFormActions';
-import {Navbar, Nav, Breadcrumb, Button, Table, Label} from 'react-bootstrap'
+import {Breadcrumb, Button, Label, Nav, Navbar, Table} from 'react-bootstrap'
 import {HashUtils} from '../Common/Utils';
 import {UserComponent} from '../Components/UserComponent';
 
@@ -24,11 +24,15 @@ export default class AdminPageForm extends React.Component {
         }
     };
 
-    onOpen = () =>  {
+    constructor(props) {
+        super(props);
+    }
+
+    onOpen = () => {
         console.log('Connection opened for JVM state');
     };
 
-    onIgniteOpen = () =>  {
+    onIgniteOpen = () => {
         console.log('Connection opened for Ignite state');
     };
 
@@ -57,10 +61,6 @@ export default class AdminPageForm extends React.Component {
         let result = JSON.parse(e.data);
         this.setState({ignitestate: result});
     };
-
-    constructor(props) {
-        super(props);
-    }
 
     componentDidMount() {
         let currentUrl = window.location.hash;
@@ -143,8 +143,9 @@ export default class AdminPageForm extends React.Component {
 
         let breads = [];
         let breadcrumbsCount = this.props.breadcrumbs.length;
-        this.props.breadcrumbs.forEach(function(element, index){
-            breads.push(<Breadcrumb.Item style={{fontWeight: index === breadcrumbsCount - 1 ? 'bold' : 'normal'}} key={element.url} href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
+        this.props.breadcrumbs.forEach(function (element, index) {
+            breads.push(<Breadcrumb.Item style={{fontWeight: index === breadcrumbsCount - 1 ? 'bold' : 'normal'}}
+                                         key={element.url} href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
         });
         return (
             <div>

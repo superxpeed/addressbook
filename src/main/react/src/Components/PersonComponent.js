@@ -1,4 +1,4 @@
-import {FormControl, FormGroup, ControlLabel, Button} from 'react-bootstrap'
+import {Button, ControlLabel, FormControl, FormGroup} from 'react-bootstrap'
 import update from 'react-addons-update'
 import React from 'react';
 import {ContactContainer} from './ContactContainer'
@@ -28,10 +28,6 @@ export class PersonComponent extends React.Component {
         locked: true
     };
 
-    handleChange(e, v) {
-        this.setState(update(this.state, {person: {[e]: {$set:v.currentTarget.value}}}));
-    }
-
     constructor(props) {
         super(props);
         let resume = props.person['resume'] === undefined ? '' : props.person['resume'];
@@ -45,12 +41,16 @@ export class PersonComponent extends React.Component {
         };
     }
 
+    handleChange(e, v) {
+        this.setState(update(this.state, {person: {[e]: {$set: v.currentTarget.value}}}));
+    }
+
     clearContactList = () => {
-        this.setState(update(this.state, {contactList: {data: {$set:undefined}}}));
+        this.setState(update(this.state, {contactList: {data: {$set: undefined}}}));
     };
 
     onChangeResume = (value) => {
-        this.setState(update(this.state, {person: {resume: {$set:value.toString('html')}}, resume: {$set:value}}));
+        this.setState(update(this.state, {person: {resume: {$set: value.toString('html')}}, resume: {$set: value}}));
     };
 
     getContactList = (id) => {
@@ -69,7 +69,7 @@ export class PersonComponent extends React.Component {
         }).then(text => {
             if (isOk) {
                 this.setState({contactList: JSON.parse(text).data});
-            }else {
+            } else {
                 this.props.showCommonErrorAlert(text);
             }
         })
@@ -104,33 +104,38 @@ export class PersonComponent extends React.Component {
                     return response.text()
                 }).then(text => {
                     if (isOk) {
-                        if(this.props.forUpdate)
-                            this.setState(update(this.state, {person: {$set: savedPerson}, contactList: {data: {$set:JSON.parse(text).data}}}));
+                        if (this.props.forUpdate)
+                            this.setState(update(this.state, {
+                                person: {$set: savedPerson},
+                                contactList: {data: {$set: JSON.parse(text).data}}
+                            }));
                         this.props.onUpdate(savedPerson);
-                    }else {
+                    } else {
                         this.props.showCommonErrorAlert(text);
                     }
                 })
-            }else {
+            } else {
                 this.props.showCommonErrorAlert(text);
             }
         })
     };
 
     lockCallback = (result) => {
-        if(result === 'success'){
+        if (result === 'success') {
             this.setState({locked: true});
-        }else if(result === 'warning'){
+        } else if (result === 'warning') {
             this.setState({locked: false});
         }
     };
 
     componentDidMount() {
-        if(this.state.person['id'] !== undefined && this.props.forUpdate) {
+        if (this.state.person['id'] !== undefined && this.props.forUpdate) {
             this.getContactList(this.state.person['id']);
             this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person['id'], 'lock', this.lockCallback);
-        }else
+        } else {
             this.clearContactList();
+            this.setState({locked: true});
+        }
     }
 
     componentWillUnmount() {
@@ -138,7 +143,7 @@ export class PersonComponent extends React.Component {
     }
 
     getValidationState(field) {
-        if(this.state.person[field] === undefined || this.state.person[field] === null) {
+        if (this.state.person[field] === undefined || this.state.person[field] === null) {
             this.state.invalidFields.add(field);
             return 'error';
         }
@@ -159,13 +164,16 @@ export class PersonComponent extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.person !== this.state.person) {
             this.getContactList(nextProps.person['id']);
-            this.setState({ person: nextProps.person, resume: RichTextEditor.createValueFromString(nextProps.person['resume'], 'html') });
+            this.setState({
+                person: nextProps.person,
+                resume: RichTextEditor.createValueFromString(nextProps.person['resume'], 'html')
+            });
         }
     }
 
-    getFieldFormControl(field, fieldType){
-        if(fieldType === 'text'){
-            return  <FormControl
+    getFieldFormControl(field, fieldType) {
+        if (fieldType === 'text') {
+            return <FormControl
                 type='text'
                 value={this.state.person[field]}
                 placeholder={'Enter ' + TitleConverter.preparePlaceHolder(TitleConverter.prepareTitle(field))}
@@ -174,14 +182,14 @@ export class PersonComponent extends React.Component {
         }
     }
 
-    getFieldForm(field, fieldType){
+    getFieldForm(field, fieldType) {
         return <form>
             <FormGroup
                 controlId={field}
                 validationState={this.getValidationState(field)}>
                 <ControlLabel>{TitleConverter.prepareTitle(field)}</ControlLabel>
                 {this.getFieldFormControl(field, fieldType)}
-                <FormControl.Feedback />
+                <FormControl.Feedback/>
             </FormGroup>
         </form>;
     }
@@ -195,16 +203,27 @@ export class PersonComponent extends React.Component {
                     {this.getFieldForm('salary', 'text')}
                     <RichTextEditor
                         placeholder='Resume'
-                        editorStyle={{minHeight: 220 }}
+                        editorStyle={{minHeight: 220}}
                         value={this.state.resume}
                         onChange={this.onChangeResume}
                     />
-                    <Button onClick={this.savePerson} disabled={this.state.invalidFields.size !== 0 || !this.state.locked}>
+                    <Button onClick={this.savePerson}
+                            disabled={this.state.invalidFields.size !== 0 || !this.state.locked}>
                         Save contacts
                     </Button>
                 </div>
-                <div style={{width: 'calc(50% - 10px)', display: 'inline-block', verticalAlign: 'top',marginTop: '35px', marginLeft: '5px', marginRight: '5px'}}>
-                    <ContactContainer personId={this.state.person['id']} ref={(input) => { this.container = input; if(input !== null) input.addFullContact(this.state.contactList.data);}}/>
+                <div style={{
+                    width: 'calc(50% - 10px)',
+                    display: 'inline-block',
+                    verticalAlign: 'top',
+                    marginTop: '35px',
+                    marginLeft: '5px',
+                    marginRight: '5px'
+                }}>
+                    <ContactContainer personId={this.state.person['id']} ref={(input) => {
+                        this.container = input;
+                        if (input !== null) input.addFullContact(this.state.contactList.data);
+                    }}/>
                 </div>
             </div>
         );

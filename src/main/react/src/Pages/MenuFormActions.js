@@ -1,11 +1,4 @@
-import {
-    SUCCESS,
-    GET_BREADCRUMBS,
-    GET_MENU,
-    DISMISS_ALERT,
-    ADD_ALERT,
-    CLEAR_ALERTS
-} from '../Common/Utils';
+import {ADD_ALERT, CLEAR_ALERTS, DISMISS_ALERT, GET_BREADCRUMBS, GET_MENU, SUCCESS} from '../Common/Utils';
 import {asyncCommonCatch, ifNoAuthorizedRedirect} from './UniversalListActions';
 import * as url from '../Common/Url';
 
@@ -29,7 +22,7 @@ export function getNextLevelMenus(currentUrl) {
                     type: GET_MENU + SUCCESS,
                     data: JSON.parse(text).data
                 });
-            }else {
+            } else {
                 dispatch({
                     type: ADD_ALERT,
                     alert: JSON.parse(text)
@@ -41,7 +34,7 @@ export function getNextLevelMenus(currentUrl) {
     }
 }
 
-export function showCommonErrorAlert(text){
+export function showCommonErrorAlert(text) {
     return dispatch => {
         dispatch({
             type: ADD_ALERT,
@@ -70,7 +63,7 @@ export function getBreadcrumbs(currentUrl) {
                     type: GET_BREADCRUMBS + SUCCESS,
                     data: JSON.parse(text).data
                 });
-            }else {
+            } else {
                 dispatch({
                     type: ADD_ALERT,
                     alert: JSON.parse(text)
@@ -85,14 +78,14 @@ export function getBreadcrumbs(currentUrl) {
 export function lockUnlockRecord(type, id, action, callback) {
     let targetUrl = '';
     let isOk = false;
-    if(action === 'lock') {
+    if (action === 'lock') {
         targetUrl = url.LOCK_RECORD;
-    } else if(action === 'unlock'){
+    } else if (action === 'unlock') {
         targetUrl = url.UNLOCK_RECORD;
     }
     return function (dispatch) {
         let headers = new Headers();
-        fetch(targetUrl + '?type=' + type + '&id='  + id, {
+        fetch(targetUrl + '?type=' + type + '&id=' + id, {
             method: 'get',
             credentials: 'include',
             headers: headers
@@ -101,13 +94,13 @@ export function lockUnlockRecord(type, id, action, callback) {
             isOk = response.ok;
             return response.text()
         }).then(text => {
-            if(isOk){
+            if (isOk) {
                 dispatch({
                     type: ADD_ALERT,
                     alert: JSON.parse(text).data
                 });
-                if(callback) callback(JSON.parse(text).data.type)
-            }else{
+                if (callback) callback(JSON.parse(text).data.type)
+            } else {
                 dispatch({
                     type: ADD_ALERT,
                     alert: JSON.parse(text)

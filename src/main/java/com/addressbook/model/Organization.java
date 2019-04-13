@@ -1,8 +1,12 @@
 package com.addressbook.model;
 
 import com.addressbook.dto.OrganizationDto;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.ignite.cache.query.annotations.QuerySqlField;
+
 import java.sql.Timestamp;
 import java.util.UUID;
 

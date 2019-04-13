@@ -1,6 +1,8 @@
 package com.addressbook.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.File;
 import java.io.Serializable;
@@ -59,7 +61,7 @@ public class JVMState implements Serializable {
         nonHeapMemoryInit = df.format(ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage().getInit() / byteToMb) + " Mb";
         nonHeapMemoryCommitted = df.format(ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage().getCommitted() / byteToMb) + " Mb";
         nonHeapMemoryMax = df.format(ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage().getMax()) + " Mb";
-        if(nonHeapMemoryMax.equals("-1 Mb")) nonHeapMemoryMax = "Not limited";
+        if (nonHeapMemoryMax.equals("-1 Mb")) nonHeapMemoryMax = "Not limited";
 
         threadCount = String.valueOf(ManagementFactory.getThreadMXBean().getThreadCount());
         totalStartedThreadCount = String.valueOf(ManagementFactory.getThreadMXBean().getTotalStartedThreadCount());
@@ -70,7 +72,7 @@ public class JVMState implements Serializable {
         version = String.valueOf(ManagementFactory.getOperatingSystemMXBean().getVersion());
 
         totalPhysicalMemory = df.format(((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize() / byteToMb) + " Mb";
-        totalCpuLoad =  df.format(((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getSystemCpuLoad() * 100.0) + "%";
+        totalCpuLoad = df.format(((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getSystemCpuLoad() * 100.0) + "%";
         diskSize = df.format(new File("/").getTotalSpace() / (1000.0 * 1000.0 * 1000.0)) + " Gb";
         user = System.getProperty("user.name");
     }

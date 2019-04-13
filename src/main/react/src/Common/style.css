@@ -1,14 +1,17 @@
 .container {
-    width: 100%!important;
+    width: 100% !important;
 }
+
 .breadcrumb {
-    margin-bottom: 0px!important;
+    margin-bottom: 0px !important;
 }
+
 .navbar-default {
-    margin-bottom: 0px!important;
+    margin-bottom: 0px !important;
 }
+
 .navbar-nav {
-    margin-top: 8px!important;
+    margin-top: 8px !important;
 }
 
 .btn-default {
@@ -16,25 +19,27 @@
     background-image: -webkit-linear-gradient(white, white);
     background-repeat: repeat-y;
 }
-.panel-default>.panel-heading {
+
+.panel-default > .panel-heading {
     background-color: white;
     background-image: -webkit-linear-gradient(white, white);
     background-repeat: repeat-y;
 }
-.Button__root___1gz0c{
-    background: white!important;
+
+.Button__root___1gz0c {
+    background: white !important;
 }
 
 a {
-    color: black!important;
+    color: black !important;
 }
 
 .navbar-collapse {
-    padding-left: 0!important;
+    padding-left: 0 !important;
 }
 
 .container {
-    padding-left: 0!important;
+    padding-left: 0 !important;
 }
 
 #adminContainer {
@@ -62,5 +67,9 @@ a {
     overflow-y: scroll;
     font-size: 12px;
     padding: 5px;
+}
+
+#pageDropDown {
+    float: left;
 }
 

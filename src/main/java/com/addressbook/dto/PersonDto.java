@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 import java.io.Serializable;
 
 @Getter
@@ -21,7 +22,7 @@ public class PersonDto implements Serializable {
     private String resume;
     private String salary;
 
-    public PersonDto(Person person){
+    public PersonDto(Person person) {
         this.id = person.getId();
         this.orgId = person.getOrgId();
         this.firstName = person.getFirstName();

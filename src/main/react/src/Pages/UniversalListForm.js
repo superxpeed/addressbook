@@ -8,7 +8,7 @@ import {AlertList} from 'react-bs-notifier';
 import * as CommonActions from './UniversalListActions';
 import * as Url from '../Common/Url';
 import {Caches, Generator, HashUtils} from '../Common/Utils';
-import {Tab, Tabs, Navbar, Nav, Button, Breadcrumb} from 'react-bootstrap'
+import {Breadcrumb, Button, Nav, Navbar, Tab, Tabs} from 'react-bootstrap'
 import * as TableActions from '../Table/TableActions';
 import * as MenuActions from './MenuFormActions';
 import {OrganizationComponent} from '../Components/OrganizationComponent';
@@ -56,61 +56,66 @@ export default class UniversalListForm extends React.Component {
 
     componentDidMount() {
         let currentUrl = window.location.hash;
-        this.refreshTable(1,10,'id','desc',[], Caches.ORGANIZATION_CACHE);
+        this.refreshTable(1, 10, 'id', 'desc', [], Caches.ORGANIZATION_CACHE);
         this.props.getBreadcrumbs(HashUtils.cleanHash(currentUrl));
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.selectedRowsOrganization.length === 1
+        if (nextProps.selectedRowsOrganization.length === 1
             && (
-                (nextProps.selectedRowsOrganization.length  !== this.props.selectedRowsOrganization.length) ||
-                (nextProps.selectedRowsOrganization[0].id  !== this.props.selectedRowsOrganization[0].id)
+                (nextProps.selectedRowsOrganization.length !== this.props.selectedRowsOrganization.length) ||
+                (nextProps.selectedRowsOrganization[0].id !== this.props.selectedRowsOrganization[0].id)
             )
         ) {
             let converted = [];
-            converted.push({name: 'orgId', value: nextProps.selectedRowsOrganization[0].id, comparator: '', type: 'TextFilter'});
-            this.refreshTable(1,10,'id','desc',converted, Caches.PERSON_CACHE);
+            converted.push({
+                name: 'orgId',
+                value: nextProps.selectedRowsOrganization[0].id,
+                comparator: '',
+                type: 'TextFilter'
+            });
+            this.refreshTable(1, 10, 'id', 'desc', converted, Caches.PERSON_CACHE);
             this.setState({selectedRowsOrgId: nextProps.selectedRowsOrganization[0].id});
-            for(let i = 0; i < this.props.selectedRowsPerson.length; i++) {
+            for (let i = 0; i < this.props.selectedRowsPerson.length; i++) {
                 this.props.clearPersonSelection(this.props.selectedRowsPerson[i]);
             }
-            this.setState({ createNewPerson: false, newPerson: undefined});
+            this.setState({createNewPerson: false, newPerson: undefined});
         }
 
-        if(nextProps.selectedRowsOrganization.length === 0 && this.props.selectedRowsOrganization.length === 1){
-            for(let i = 0; i < this.props.selectedRowsPerson.length; i++) {
+        if (nextProps.selectedRowsOrganization.length === 0 && this.props.selectedRowsOrganization.length === 1) {
+            for (let i = 0; i < this.props.selectedRowsPerson.length; i++) {
                 this.props.clearPersonSelection(this.props.selectedRowsPerson[i]);
             }
-            this.setState({ createNewPerson: false, newPerson: undefined});
+            this.setState({createNewPerson: false, newPerson: undefined});
         }
     }
 
     personTabClosed = (tab) => {
-        if(tab === this.state.activeTab){
-            this.setState({ activeTab: (tab - 1) });
+        if (tab === this.state.activeTab) {
+            this.setState({activeTab: (tab - 1)});
         }
     };
 
-    refreshTable = (start, pageSize, sortName,sortOrder, filterDto, cache) => {
-        if(cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId !== undefined && this.state.selectedRowsOrgId !== null && (filterDto === undefined || filterDto === null)) {
-            filterDto = filterDto.filter(x => x.name === 'orgId' && x.value === this.state.selectedRowsOrgId );
+    refreshTable = (start, pageSize, sortName, sortOrder, filterDto, cache) => {
+        if (cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId !== undefined && this.state.selectedRowsOrgId !== null && (filterDto === undefined || filterDto === null)) {
+            filterDto = filterDto.filter(x => x.name === 'orgId' && x.value === this.state.selectedRowsOrgId);
             filterDto.push({name: 'orgId', value: this.state.selectedRowsOrgId, comparator: '', type: 'TextFilter'});
         }
-        this.props.getList( Url.GET_LIST_4_UNIVERSAL_LIST_FORM + '?start=' + start + '&pageSize=' + pageSize + '&sortName=' + sortName + '&sortOrder=' + sortOrder + '&cache=' + cache, filterDto, cache);
+        this.props.getList(Url.GET_LIST_4_UNIVERSAL_LIST_FORM + '?start=' + start + '&pageSize=' + pageSize + '&sortName=' + sortName + '&sortOrder=' + sortOrder + '&cache=' + cache, filterDto, cache);
     };
 
     updateSelectedPerson = (person) => {
         this.props.updateRow(person, Caches.PERSON_CACHE);
-        this.setState({ createNewPerson: false, newPerson: undefined});
+        this.setState({createNewPerson: false, newPerson: undefined});
     };
 
     createdNewPerson = (person) => {
         this.props.addRow(person, Caches.PERSON_CACHE);
-        this.setState({ createNewPerson: false, newPerson: undefined});
+        this.setState({createNewPerson: false, newPerson: undefined});
     };
 
-    handleSelect(key){
-        this.setState({ activeTab: key });
+    handleSelect(key) {
+        this.setState({activeTab: key});
     }
 
     render() {
@@ -120,11 +125,12 @@ export default class UniversalListForm extends React.Component {
         let breads = [];
         let breadcrumbsCount = this.props.breadcrumbs.length;
         let allAlerts = this.props.alerts;
-        this.props.breadcrumbs.forEach(function(element, index){
-            breads.push(<Breadcrumb.Item style={{fontWeight: index === breadcrumbsCount - 1 ? 'bold' : 'normal'}} key={element.url} href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
+        this.props.breadcrumbs.forEach(function (element, index) {
+            breads.push(<Breadcrumb.Item style={{fontWeight: index === breadcrumbsCount - 1 ? 'bold' : 'normal'}}
+                                         key={element.url} href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
         });
 
-        if(this.props.selectedRowsOrganization.length === 1){
+        if (this.props.selectedRowsOrganization.length === 1) {
             personTable = <Tab key={2} eventKey={2} title={this.props.selectedRowsOrganization[0].name}>
                 <Table ref='table2'
                        selectMode='multi'
@@ -138,13 +144,19 @@ export default class UniversalListForm extends React.Component {
                 />
             </Tab>;
             let key = 0;
-            for(let i = 0; i < this.props.selectedRowsPerson.length; i++){
+            for (let i = 0; i < this.props.selectedRowsPerson.length; i++) {
                 key = i + 3;
                 let personLocal = this.props.selectedRowsPerson[i];
                 persons.push(
                     <Tab key={key + 'tab'} eventKey={key} title={
                         <span> {this.props.selectedRowsPerson[i].firstName}
-                            <Button key={key + 'btn'} style={{height:'20px', width: '20px', padding: '0px', marginLeft: '5px', zIndex: 1000}} onClick={(e) => {
+                            <Button key={key + 'btn'} style={{
+                                height: '20px',
+                                width: '20px',
+                                padding: '0px',
+                                marginLeft: '5px',
+                                zIndex: 1000
+                            }} onClick={(e) => {
                                 e.stopPropagation();
                                 e.preventDefault();
                                 this.props.onSelectRow(personLocal, false, e, Caches.PERSON_CACHE);
@@ -154,32 +166,36 @@ export default class UniversalListForm extends React.Component {
                             </Button>
                         </span>
                     }>
-                        <PersonComponent key={key + 'person'} forUpdate={true} person={this.props.selectedRowsPerson[i]} onUpdate={this.updateSelectedPerson}/>
+                        <PersonComponent key={key + 'person'} forUpdate={true} person={this.props.selectedRowsPerson[i]}
+                                         onUpdate={this.updateSelectedPerson}/>
                     </Tab>
                 );
             }
-            if(this.state.createNewPerson === true){
-                if(key === 0)
+            if (this.state.createNewPerson === true) {
+                if (key === 0)
                     key = 3;
                 else
-                    key ++;
+                    key++;
                 newPersonTab = <Tab key={key} eventKey={key} title={
-                                    <span> {'New person'}
-                                        <Button key={'newPersonTabBtn'} style={{height:'20px', width: '20px', padding: '0px', marginLeft: '5px', zIndex: 1000}} onClick={(e) => {
-                                            e.stopPropagation();
-                                            e.preventDefault();
-                                            this.setState({ createNewPerson: false, newPerson: undefined});
-                                            this.personTabClosed(key);
-                                        }}>X
+                    <span> {'New person'}
+                        <Button key={'newPersonTabBtn'}
+                                style={{height: '20px', width: '20px', padding: '0px', marginLeft: '5px', zIndex: 1000}}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    this.setState({createNewPerson: false, newPerson: undefined});
+                                    this.personTabClosed(key);
+                                }}>X
                                         </Button>
                                     </span>
-                                    }>
-                                    <PersonComponent key={'newPersonKey'} forUpdate={false} person={this.state.newPerson} onUpdate={this.updateSelectedPerson}/>
-                                </Tab>
-            }else{
+                }>
+                    <PersonComponent key={'newPersonKey'} forUpdate={false} person={this.state.newPerson}
+                                     onUpdate={this.updateSelectedPerson}/>
+                </Tab>
+            } else {
                 newPersonTab = <div/>
             }
-        }else {
+        } else {
             personTable = <div/>
         }
 
@@ -200,7 +216,15 @@ export default class UniversalListForm extends React.Component {
                             </Breadcrumb>
                         </Nav>
                         <Nav pullRight>
-                            <Button style={{marginRight: '5px'}} disabled={this.props.selectedRowsOrganization.length !== 1} onClick={() => this.setState({ createNewPerson: true, newPerson: {id: Generator.uuidv4(), orgId: this.props.selectedRowsOrganization[0].id}})}>
+                            <Button style={{marginRight: '5px'}}
+                                    disabled={this.props.selectedRowsOrganization.length !== 1}
+                                    onClick={() => this.setState({
+                                        createNewPerson: true,
+                                        newPerson: {
+                                            id: Generator.uuidv4(),
+                                            orgId: this.props.selectedRowsOrganization[0].id
+                                        }
+                                    })}>
                                 Create person
                             </Button>
                             <UserComponent/>
@@ -214,7 +238,8 @@ export default class UniversalListForm extends React.Component {
                       onSelect={this.handleSelect} id='tables'>
                     <Tab key={1} eventKey={1} title='Organizations'>
                         <div style={{marginBottom: '15px'}}>
-                            <OrganizationComponent organization={this.props.selectedRowsOrganization.length === 1 ? this.props.selectedRowsOrganization[0] : {}}/>
+                            <OrganizationComponent
+                                organization={this.props.selectedRowsOrganization.length === 1 ? this.props.selectedRowsOrganization[0] : {}}/>
                         </div>
                         <Table ref='table1'
                                refreshTable={this.refreshTable}

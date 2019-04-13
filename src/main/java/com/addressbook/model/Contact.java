@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.ignite.cache.query.annotations.QuerySqlField;
+
 import java.util.UUID;
 
 @Getter

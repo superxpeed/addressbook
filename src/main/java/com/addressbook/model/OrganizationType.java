@@ -1,6 +1,6 @@
 package com.addressbook.model;
 
-public enum  OrganizationType {
+public enum OrganizationType {
 
     NON_PROFIT("Non profit"),
     PRIVATE("Private"),
@@ -8,6 +8,12 @@ public enum  OrganizationType {
     PUBLIC("Public");
 
     private String eng;
-    OrganizationType(String eng){ this.eng = eng; }
-    public String getEng(){ return eng; }
+
+    OrganizationType(String eng) {
+        this.eng = eng;
+    }
+
+    public String getEng() {
+        return eng;
+    }
 }

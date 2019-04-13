@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 import java.io.Serializable;
 
 @Getter
@@ -21,7 +22,7 @@ public class OrganizationDto implements Serializable {
     private String type;
     private String lastUpdated;
 
-    public OrganizationDto(Organization organization){
+    public OrganizationDto(Organization organization) {
         this.id = organization.getId();
         this.name = organization.getName();
         this.street = organization.getAddr().getStreet();

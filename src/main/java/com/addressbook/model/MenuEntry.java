@@ -26,7 +26,7 @@ public class MenuEntry {
     private String name;
 
     private List<String> roles;
-    
+
     public MenuEntry() {
         this.id = UUID.randomUUID().toString();
     }

@@ -13,17 +13,17 @@ import javax.servlet.http.HttpSessionListener;
 public class RootConfiguration {
 
     @Bean
-    MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
+    MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         return new MappingJackson2HttpMessageConverter();
     }
 
     @Bean
-    GridStarter gridStarter(){
+    GridStarter gridStarter() {
         return new GridStarter();
     }
 
     @Bean
-    GridStopper gridStopper(){
+    GridStopper gridStopper() {
         return new GridStopper();
     }
 

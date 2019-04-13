@@ -1,9 +1,9 @@
 package com.addressbook.rest;
 
 import com.addressbook.IgniteStateService;
+import com.addressbook.JVMStateService;
 import com.addressbook.model.IgniteMetricsContainer;
 import com.addressbook.model.JVMState;
-import com.addressbook.JVMStateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -24,13 +24,13 @@ public class AdminController {
 
     @GetMapping(value = "/jvmstate", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
-    public Flux<JVMState> jvmStateEvents(){
+    public Flux<JVMState> jvmStateEvents() {
         return jvmStateService.getJVMState();
     }
 
     @GetMapping(value = "/ignitestate", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
-    public Flux<IgniteMetricsContainer> igniteMetricEvents(){
+    public Flux<IgniteMetricsContainer> igniteMetricEvents() {
         return igniteStateService.getIgniteState();
     }
 }

@@ -3,6 +3,7 @@ package com.addressbook.model;
 import com.addressbook.dto.PersonDto;
 import lombok.*;
 import org.apache.ignite.cache.query.annotations.QuerySqlField;
+
 import java.io.Serializable;
 import java.util.UUID;
 

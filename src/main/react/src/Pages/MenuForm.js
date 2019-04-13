@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as MenuActions from './MenuFormActions';
-import {Navbar, Nav, Button, Breadcrumb} from 'react-bootstrap'
+import {Breadcrumb, Button, Nav, Navbar} from 'react-bootstrap'
 import {AlertList} from 'react-bs-notifier';
 import {HashUtils} from '../Common/Utils';
 import {UserComponent} from '../Components/UserComponent';
@@ -32,9 +32,9 @@ export default class MenuForm extends React.Component {
 
     updateAll = () => {
         let currentUrl = window.location.hash;
-        if(currentUrl === '#/') currentUrl = '/root';
+        if (currentUrl === '#/') currentUrl = '/root';
         currentUrl = HashUtils.cleanHash(currentUrl);
-        if(this.state.currentUrl !== currentUrl){
+        if (this.state.currentUrl !== currentUrl) {
             this.setState({currentUrl: currentUrl});
             this.props.getBreadcrumbs(currentUrl);
             this.props.getNextLevelMenus(currentUrl);
@@ -55,15 +55,23 @@ export default class MenuForm extends React.Component {
 
     render() {
         let allMenus = [];
-        this.props.menus.forEach(function(element){
-            allMenus.push(<Button key={'btn_' + element.url} style={{height: '200px', width: '200px', margin: '10px', lineHeight: '200px', fontSize: 'x-large'}} href={'#' + element.url}> {element.name} </Button>)
+        this.props.menus.forEach(function (element) {
+            allMenus.push(<Button key={'btn_' + element.url} style={{
+                height: '200px',
+                width: '200px',
+                margin: '10px',
+                lineHeight: '200px',
+                fontSize: 'x-large'
+            }} href={'#' + element.url}> {element.name} </Button>)
         });
         let breads = [];
         let breadcrumbsCount = this.props.breadcrumbs.length;
-        this.props.breadcrumbs.forEach(function(element, index){
-            breads.push(<Breadcrumb.Item style={{fontWeight: index === breadcrumbsCount - 1 ? 'bold' : 'normal'}} key={element.url} href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
+        this.props.breadcrumbs.forEach(function (element, index) {
+            breads.push(<Breadcrumb.Item style={{fontWeight: index === breadcrumbsCount - 1 ? 'bold' : 'normal'}}
+                                         key={element.url} href={'#' + element.url}> {element.name} </Breadcrumb.Item>)
         });
-        if(this.props.breadcrumbs.length === 0) breads.push(<Breadcrumb.Item key={'/root'} href={'#/'}>Home</Breadcrumb.Item>);
+        if (this.props.breadcrumbs.length === 0) breads.push(<Breadcrumb.Item key={'/root'}
+                                                                              href={'#/'}>Home</Breadcrumb.Item>);
         let allAlerts = this.props.alerts;
         return (
             <div>

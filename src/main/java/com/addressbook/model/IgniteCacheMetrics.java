@@ -24,18 +24,18 @@ public class IgniteCacheMetrics implements Serializable {
     private long heapEntriesCount;
     private long offHeapEntriesCount;
 
-    public IgniteCacheMetrics(CacheMetrics cacheMetrics){
+    public IgniteCacheMetrics(CacheMetrics cacheMetrics) {
         this.cacheGets = cacheMetrics.getCacheGets();
-        this.cachePuts =  cacheMetrics.getCachePuts();
+        this.cachePuts = cacheMetrics.getCachePuts();
         this.cacheRemovals = cacheMetrics.getCacheRemovals();
 
-        this.averageGetTime =  cacheMetrics.getAverageGetTime();
-        this.averagePutTime =  cacheMetrics.getAveragePutTime();
-        this.averageRemoveTime =  cacheMetrics.getAverageRemoveTime();
+        this.averageGetTime = cacheMetrics.getAverageGetTime();
+        this.averagePutTime = cacheMetrics.getAveragePutTime();
+        this.averageRemoveTime = cacheMetrics.getAverageRemoveTime();
 
-        this.offHeapGets =  cacheMetrics.getOffHeapGets();
-        this.offHeapPuts =  cacheMetrics.getOffHeapPuts();
-        this.offHeapRemovals =  cacheMetrics.getOffHeapRemovals();
+        this.offHeapGets = cacheMetrics.getOffHeapGets();
+        this.offHeapPuts = cacheMetrics.getOffHeapPuts();
+        this.offHeapRemovals = cacheMetrics.getOffHeapRemovals();
 
         this.heapEntriesCount = cacheMetrics.getHeapEntriesCount();
         this.offHeapEntriesCount = cacheMetrics.getOffHeapEntriesCount();

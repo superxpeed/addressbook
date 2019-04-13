@@ -9,14 +9,14 @@ import java.util.List;
 
 @SuppressWarnings("all")
 public class UserCreator {
-    public static void initUsers(){
+    public static void initUsers() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         List<String> adminRoles = new ArrayList<>();
         adminRoles.add("USER");
         adminRoles.add("ADMIN");
-        User admin  = new User("admin", encoder.encode("adminPass"), adminRoles);
+        User admin = new User("admin", encoder.encode("adminPass"), adminRoles);
         GridDAO.createOrUpdateUser(admin);
-        User user   = new User("user",  encoder.encode("userPass"), Collections.singletonList("USER"));
+        User user = new User("user", encoder.encode("userPass"), Collections.singletonList("USER"));
         GridDAO.createOrUpdateUser(user);
     }
 }

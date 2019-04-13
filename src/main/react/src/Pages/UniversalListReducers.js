@@ -1,6 +1,6 @@
 import * as types from '../Common/Utils';
-import * as tableActions from '../Table/TableActions';
 import {Caches, OrgTypes} from '../Common/Utils';
+import * as tableActions from '../Table/TableActions';
 
 const initialState = {
     tableDataOrganization: {
@@ -24,7 +24,7 @@ export default function universalListReducer(state = initialState, action = {}) 
                 tableDataOrganization: action.data,
                 fieldDescriptionMapOrganization: action.fieldDescriptionMap,
                 totalDataSizeOrganization: action.data.totalDataSize
-        });
+            });
         case types.GET_LIST + Caches.PERSON_CACHE + types.SUCCESS:
             return Object.assign({}, state, {
                 tableDataPerson: action.data,
@@ -78,7 +78,7 @@ export default function universalListReducer(state = initialState, action = {}) 
             newSelected.push(action.row);
             newTableData.push(action.row);
             return Object.assign({}, state, {
-                tableDataPerson: { data: newTableData, totalDataSize: state.tableDataPerson.totalDataSize},
+                tableDataPerson: {data: newTableData, totalDataSize: state.tableDataPerson.totalDataSize},
                 selectedRowsPerson: newSelected
             });
         }
@@ -90,7 +90,7 @@ export default function universalListReducer(state = initialState, action = {}) 
             newSelected.push(action.row);
             newTableData.push(action.row);
             return Object.assign({}, state, {
-                tableDataPerson: { data: newTableData, totalDataSize: prevSize + 1},
+                tableDataPerson: {data: newTableData, totalDataSize: prevSize + 1},
                 selectedRowsPerson: newSelected
             });
         }
@@ -98,10 +98,10 @@ export default function universalListReducer(state = initialState, action = {}) 
         case tableActions.UPDATE_ROW_IN_TABLE + Caches.ORGANIZATION_CACHE: {
             let newTableData = state.tableDataOrganization.data.filter((it => it.id !== action.row.id));
             let org = Object.assign({}, action.row);
-            org['type'] =  OrgTypes.getNumType(action.row['type']);
+            org['type'] = OrgTypes.getNumType(action.row['type']);
             newTableData.push(org);
             return Object.assign({}, state, {
-                tableDataOrganization: { data: newTableData, totalDataSize: state.tableDataOrganization.totalDataSize},
+                tableDataOrganization: {data: newTableData, totalDataSize: state.tableDataOrganization.totalDataSize},
                 selectedRowsOrganization: [org]
             });
         }
@@ -110,10 +110,10 @@ export default function universalListReducer(state = initialState, action = {}) 
             let prevSize = state.tableDataOrganization.totalDataSize;
             let newTableData = state.tableDataOrganization.data;
             let org = Object.assign({}, action.row);
-            org['type'] =  OrgTypes.getNumType(action.row['type']);
+            org['type'] = OrgTypes.getNumType(action.row['type']);
             newTableData.push(org);
             return Object.assign({}, state, {
-                tableDataOrganization: { data: newTableData, totalDataSize: prevSize + 1},
+                tableDataOrganization: {data: newTableData, totalDataSize: prevSize + 1},
                 selectedRowsOrganization: [org]
             });
         }

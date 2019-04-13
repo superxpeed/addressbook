@@ -31,25 +31,25 @@ public class GridDAO {
     private static Logger logger = LoggerFactory.getLogger(GridDAO.class);
 
     // Ignite client, obviously singleton
-    private static Ignite ignite ;
+    private static Ignite ignite;
 
-    static void startClient(){
-        if(ignite != null) return;
-        try{
+    static void startClient() {
+        if (ignite != null) return;
+        try {
 
             IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
             igniteConfiguration.setPeerClassLoadingEnabled(true);
             igniteConfiguration.setClientMode(true);
             // Possibly I'll use events in future to make user interface completely reactive
-            igniteConfiguration.setIncludeEventTypes(   org.apache.ignite.events.EventType.EVT_TASK_STARTED,
-                                                        org.apache.ignite.events.EventType.EVT_TASK_FINISHED,
-                                                        org.apache.ignite.events.EventType.EVT_TASK_FAILED,
-                                                        org.apache.ignite.events.EventType.EVT_TASK_TIMEDOUT,
-                                                        org.apache.ignite.events.EventType.EVT_TASK_SESSION_ATTR_SET,
-                                                        org.apache.ignite.events.EventType.EVT_TASK_REDUCED,
-                                                        org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_PUT,
-                                                        org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_READ,
-                                                        org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_REMOVED);
+            igniteConfiguration.setIncludeEventTypes(org.apache.ignite.events.EventType.EVT_TASK_STARTED,
+                    org.apache.ignite.events.EventType.EVT_TASK_FINISHED,
+                    org.apache.ignite.events.EventType.EVT_TASK_FAILED,
+                    org.apache.ignite.events.EventType.EVT_TASK_TIMEDOUT,
+                    org.apache.ignite.events.EventType.EVT_TASK_SESSION_ATTR_SET,
+                    org.apache.ignite.events.EventType.EVT_TASK_REDUCED,
+                    org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_PUT,
+                    org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_READ,
+                    org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_REMOVED);
 
             TcpDiscoverySpi tcpDiscoverySpi = new TcpDiscoverySpi();
             TcpDiscoveryMulticastIpFinder tcpDiscoveryMulticastIpFinder = new TcpDiscoveryMulticastIpFinder();
@@ -58,7 +58,7 @@ public class GridDAO {
             igniteConfiguration.setDiscoverySpi(tcpDiscoverySpi);
             ignite = Ignition.start(igniteConfiguration);
             ignite.active(true);
-            for(Map.Entry<String, Class> cache : UniversalFieldsDescriptor.getCacheClasses().entrySet()){
+            for (Map.Entry<String, Class> cache : UniversalFieldsDescriptor.getCacheClasses().entrySet()) {
                 CacheConfiguration cfg = new CacheConfiguration<>();
                 cfg.setCacheMode(CacheMode.PARTITIONED);
                 cfg.setName(cache.getKey());
@@ -76,15 +76,15 @@ public class GridDAO {
             }
             MenuCreator.initMenu();
             UserCreator.initUsers();
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("Exception during Ignite Client startup: ", e);
         }
     }
 
-    public static OrganizationDto createOrUpdateOrganization(OrganizationDto organizationDto){
+    public static OrganizationDto createOrUpdateOrganization(OrganizationDto organizationDto) {
         IgniteCache<String, Organization> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE);
         Organization organization = cachePerson.get(organizationDto.getId());
-        if(organization == null) organization = new Organization(organizationDto);
+        if (organization == null) organization = new Organization(organizationDto);
         organization.setType(OrganizationType.values()[Integer.valueOf(organizationDto.getType())]);
         organization.setLastUpdated(new Timestamp(System.currentTimeMillis()));
         organization.setName(organizationDto.getName());
@@ -93,10 +93,10 @@ public class GridDAO {
         return organizationDto;
     }
 
-    public static PersonDto createOrUpdatePerson(PersonDto personDto){
+    public static PersonDto createOrUpdatePerson(PersonDto personDto) {
         IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE);
         Person person = cachePerson.get(personDto.getId());
-        if(person == null) person = new Person(personDto);
+        if (person == null) person = new Person(personDto);
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
         person.setOrgId(personDto.getOrgId());
@@ -106,13 +106,13 @@ public class GridDAO {
         return personDto;
     }
 
-    public static List<ContactDto> createOrUpdateContacts(List<ContactDto> contactDtos){
+    public static List<ContactDto> createOrUpdateContacts(List<ContactDto> contactDtos) {
         IgniteCache<String, Contact> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
         IgniteTransactions transactions = ignite.transactions();
         try (Transaction tx = transactions.txStart()) {
-            for(ContactDto contactDto: contactDtos){
+            for (ContactDto contactDto : contactDtos) {
                 Contact contact = cachePerson.get(contactDto.getId());
-                if(contact == null) contact = new Contact();
+                if (contact == null) contact = new Contact();
                 contact.setData(contactDto.getData());
                 contact.setDescription(contactDto.getDescription());
                 contact.setPersonId(contactDto.getPersonId());
@@ -124,92 +124,93 @@ public class GridDAO {
         return contactDtos;
     }
 
-    public static User createOrUpdateUser(User newUser){
+    public static User createOrUpdateUser(User newUser) {
         IgniteCache<String, User> cacheUser = ignite.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE);
         User user = cacheUser.get(newUser.getLogin());
-        if(user != null){
+        if (user != null) {
             user.setPassword(newUser.getPassword());
             user.setRoles(newUser.getRoles());
-        }else user = newUser;
+        } else user = newUser;
         cacheUser.put(user.getLogin(), user);
         return user;
     }
 
-    public static boolean lockUnlockRecord(String key, String user, boolean lock){
+    public static boolean lockUnlockRecord(String key, String user, boolean lock) {
         IgniteCache<String, String> cacheLocks = ignite.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE);
-        if(lock) return cacheLocks.putIfAbsent(key, user);
+        if (lock) return cacheLocks.putIfAbsent(key, user);
         else return cacheLocks.remove(key, user);
     }
 
-    public static void unlockAllRecordsForUser(String user){
+    public static void unlockAllRecordsForUser(String user) {
         IgniteCache<String, String> cacheLocks = ignite.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE);
         cacheLocks.removeAll(new HashSet<>(cacheLocks.query(new ScanQuery<String, String>((k, v) -> v.equals(user)), Cache.Entry::getKey).getAll()));
     }
 
-    public static User getUserByLogin(String login){
+    public static User getUserByLogin(String login) {
         IgniteCache<String, User> cacheUser = ignite.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE);
         return cacheUser.get(login);
     }
 
-    public static void clearMenus(){
+    public static void clearMenus() {
         ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE).clear();
     }
 
-    public static MenuEntryDto createOrUpdateMenuEntry(MenuEntryDto menuEntryDto, MenuEntryDto parentEntryDto){
+    public static MenuEntryDto createOrUpdateMenuEntry(MenuEntryDto menuEntryDto, MenuEntryDto parentEntryDto) {
         IgniteCache<String, MenuEntry> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
         MenuEntry menuEntry;
-        if(menuEntryDto.getId() != null) menuEntry = cachePerson.get(menuEntryDto.getId());
+        if (menuEntryDto.getId() != null) menuEntry = cachePerson.get(menuEntryDto.getId());
         else menuEntry = new MenuEntry();
         menuEntry.setName(menuEntryDto.getName());
         menuEntry.setUrl(menuEntryDto.getUrl());
         menuEntry.setRoles(menuEntryDto.getRoles());
-        if(parentEntryDto != null) menuEntry.setParentId(parentEntryDto.getId());
+        if (parentEntryDto != null) menuEntry.setParentId(parentEntryDto.getId());
         menuEntryDto.setId(menuEntry.getId());
         cachePerson.put(menuEntry.getId(), menuEntry);
         return menuEntryDto;
     }
 
     // Hierarchical menu is just a tree, so this method returns all children of a given element (filtered according to user's roles)
-    public static List<MenuEntryDto> readNextLevel(String url, Collection<? extends GrantedAuthority> authorities){
+    public static List<MenuEntryDto> readNextLevel(String url, Collection<? extends GrantedAuthority> authorities) {
         IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
         List<Cache.Entry<String, MenuEntry>> entries = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll();
-        if(entries.isEmpty()) throw new IllegalArgumentException("Menu with url: " + url +  " doesn't exist");
+        if (entries.isEmpty()) throw new IllegalArgumentException("Menu with url: " + url + " doesn't exist");
         MenuEntry menuEntry = entries.get(0).getValue();
         SqlQuery<String, MenuEntry> sql = new SqlQuery<>(MenuEntry.class, "parentId = ?");
         List<MenuEntryDto> menuEntryDtos = new ArrayList<>();
         try (QueryCursor<Cache.Entry<String, MenuEntry>> cursor = cache.query(sql.setArgs(menuEntry.getId()))) {
-            for (Cache.Entry<String, MenuEntry> e : cursor){
-                for(GrantedAuthority authority: authorities){
+            for (Cache.Entry<String, MenuEntry> e : cursor) {
+                for (GrantedAuthority authority : authorities) {
                     // Note: In Spring, default prefix for roles is ROLE_ so I need to clear it
-                    if(e.getValue().getRoles() != null && e.getValue().getRoles().contains(authority.getAuthority().replace("ROLE_",""))){
+                    if (e.getValue().getRoles() != null && e.getValue().getRoles().contains(authority.getAuthority().replace("ROLE_", ""))) {
                         menuEntryDtos.add(new MenuEntryDto(e.getValue()));
                         break;
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("Error while reading next menu level:", e);
         }
         return menuEntryDtos;
     }
 
     // Here I simply read full path from given url to root menu, reading parent nodes one by one
-    public static List<Breadcrumb> readBreadcrumbs(String url){
+    public static List<Breadcrumb> readBreadcrumbs(String url) {
         IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
         List<Cache.Entry<String, MenuEntry>> entries = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll();
-        if(entries.isEmpty()) throw new IllegalArgumentException("Menu with url: " + url +  " doesn't exist");
-        MenuEntry original = entries.get(0).getValue();;
+        if (entries.isEmpty()) throw new IllegalArgumentException("Menu with url: " + url + " doesn't exist");
+        MenuEntry original = entries.get(0).getValue();
+        ;
         MenuEntry menuEntry = original;
         List<Cache.Entry<String, MenuEntry>> menuEntries;
         List<Breadcrumb> breadcrumbs = new ArrayList<>();
-        if(menuEntry.getParentId() == null) return breadcrumbs;
+        if (menuEntry.getParentId() == null) return breadcrumbs;
         SqlQuery<String, MenuEntry> sql = new SqlQuery<>(MenuEntry.class, "id = ?");
-        while (true){
+        while (true) {
             menuEntries = cache.query(sql.setArgs(menuEntry.getParentId())).getAll();
-            if(!menuEntries.isEmpty()){
+            if (!menuEntries.isEmpty()) {
                 menuEntry = menuEntries.get(0).getValue();
                 breadcrumbs.add(0, new Breadcrumb(menuEntry.getName(), menuEntry.getUrl()));
-            }else break;
+            } else break;
         }
         breadcrumbs.add(new Breadcrumb(original.getName(), original.getUrl()));
         return breadcrumbs;
@@ -217,81 +218,81 @@ public class GridDAO {
 
     // Here I assemble SQL query for Ignite H2 DB
     // All user filters for datatable arrive here from front-end as JSON array of FilterDto
-    private static StringBuilder getQuerySql(List<FilterDto> filterDto){
+    private static StringBuilder getQuerySql(List<FilterDto> filterDto) {
         StringBuilder baseSql = new StringBuilder(" ");
-        if(filterDto.size() != 0){
-            for(FilterDto filter : filterDto){
+        if (filterDto.size() != 0) {
+            for (FilterDto filter : filterDto) {
                 String type = filter.getType();
                 String addSql = "";
-                if(type.equals("NumberFilter")){
+                if (type.equals("NumberFilter")) {
                     Integer query;
                     try {
                         query = Integer.valueOf(filter.getValue());
-                    }catch (NumberFormatException e){
+                    } catch (NumberFormatException e) {
                         logger.info("Invalid filter argument: " + filter.getValue());
                         continue;
                     }
                     addSql = filter.getName() + getComparator(filter) + query;
                 }
-                if(type.equals("TextFilter")){
-                    addSql = filter.getName() + " like '%" + filter.getValue().replaceAll("'","''") + "%'";
+                if (type.equals("TextFilter")) {
+                    addSql = filter.getName() + " like '%" + filter.getValue().replaceAll("'", "''") + "%'";
                 }
-                if(type.equals("DateFilter")){
+                if (type.equals("DateFilter")) {
                     addSql = filter.getName() + getComparator(filter) + "'" + filter.getValue() + "'";
                 }
-                if(filterDto.indexOf(filter) == 0) baseSql.append(" where ");
+                if (filterDto.indexOf(filter) == 0) baseSql.append(" where ");
                 baseSql.append(addSql);
-                if(filterDto.indexOf(filter) != (filterDto.size() - 1)) baseSql.append(" and ");
+                if (filterDto.indexOf(filter) != (filterDto.size() - 1)) baseSql.append(" and ");
             }
         }
         return baseSql;
     }
 
     // Returns data for given cache, page number, page size, filtered and sorted
-    public static List<?> selectCachePage(int page, int pageSize, String sortName, String sortOrder, List<FilterDto> filterDto, String cacheName){
+    public static List<?> selectCachePage(int page, int pageSize, String sortName, String sortOrder, List<FilterDto> filterDto, String cacheName) {
         // Front-end aware about all caches that used for displaying datatables data
         IgniteCache cache = ignite.getOrCreateCache(cacheName);
         List cacheDtoArrayList = new ArrayList<>();
         SqlQuery sql = new SqlQuery(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
-                                                                                        .append(" order by ")
-                                                                                        .append(sortName).append(" ")
-                                                                                        .append(sortOrder)
-                                                                                        .append(" limit ? offset ?")
-                                                                                        .toString());
+                .append(" order by ")
+                .append(sortName).append(" ")
+                .append(sortOrder)
+                .append(" limit ? offset ?")
+                .toString());
         // Constructing target DTO objects from caches's object
         // All DTO classes have constructor that receives Ignite class object
         try (QueryCursor<Cache.Entry> cursor = cache.query(sql.setArgs(pageSize, (page - 1) * pageSize))) {
             Constructor dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName).getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName));
             for (Cache.Entry e : cursor)
                 cacheDtoArrayList.add(dtoConstructor.newInstance(e.getValue()));
-        }catch (Exception e){
-           logger.error("Error while selecting data for next page in table:", e);
+        } catch (Exception e) {
+            logger.error("Error while selecting data for next page in table:", e);
         }
         return cacheDtoArrayList;
     }
 
-    public static List<ContactDto> getContactsByPersonId(String id){
+    public static List<ContactDto> getContactsByPersonId(String id) {
         IgniteCache<String, Contact> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
         List<ContactDto> cacheDtoArrayList = new ArrayList<>();
         SqlQuery sql = new SqlQuery(Contact.class, "personId = ?");
         try (QueryCursor<Cache.Entry> cursor = cache.query(sql.setArgs(id))) {
             for (Cache.Entry<String, Contact> e : cursor)
                 cacheDtoArrayList.add(new ContactDto(e.getValue()));
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("Error while retrieving contacts for person:", e);
         }
         return cacheDtoArrayList;
 
     }
 
-    private static String getComparator(FilterDto filterDto){
-        if(filterDto.getComparator() == null || filterDto.getComparator().equals(""))
+    private static String getComparator(FilterDto filterDto) {
+        if (filterDto.getComparator() == null || filterDto.getComparator().equals(""))
             return " = ";
         else return " " + filterDto.getComparator() + " ";
     }
 
-    public static Integer getTotalDataSize(String cacheName, List<FilterDto> filterDto){
-        if(filterDto.size() == 0){
+    public static Integer getTotalDataSize(String cacheName, List<FilterDto> filterDto) {
+        if (filterDto.size() == 0) {
             IgniteCache cache = ignite.getOrCreateCache(cacheName);
             return cache.size(CachePeekMode.ALL);
         }
@@ -299,25 +300,25 @@ public class GridDAO {
         SqlQuery sql = new SqlQuery(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto).toString());
         try (QueryCursor<Cache.Entry> cursor = cache.query(sql)) {
             return cursor.getAll().size();
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("Error while retrieving total data size for table:", e);
         }
         return 0;
     }
 
-    static void stopClient(){
-        if(ignite != null){
-            try{
+    static void stopClient() {
+        if (ignite != null) {
+            try {
                 ignite.close();
-            }catch (Exception e){
+            } catch (Exception e) {
                 logger.error("Error during Ignite client stopping:", e);
             }
         }
     }
 
-    public static Map<String, CacheMetrics> getCacheMetrics(){
+    public static Map<String, CacheMetrics> getCacheMetrics() {
         Map<String, CacheMetrics> cacheMetricsMap = new HashMap<>();
-        for(String cacheName : UniversalFieldsDescriptor.getCacheClasses().keySet()){
+        for (String cacheName : UniversalFieldsDescriptor.getCacheClasses().keySet()) {
             cacheMetricsMap.put(cacheName, ignite.getOrCreateCache(cacheName).metrics());
         }
         return cacheMetricsMap;

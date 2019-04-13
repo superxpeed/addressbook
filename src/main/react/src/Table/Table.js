@@ -25,13 +25,6 @@ export class Table extends React.Component {
         filterObj: {}
     };
 
-    onSortChange = (sortName, sortOrder) => {
-        if(this.state.sortName !== sortName || this.state.sortOrder !== sortOrder){
-            this.setState({ sortName, sortOrder });
-            this.props.refreshTable(this.state.page, this.state.sizePerPage, sortName, sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
-        }
-    };
-
     static html2text = (html) => {
         let tag = document.createElement('div');
         tag.innerHTML = html;
@@ -46,17 +39,34 @@ export class Table extends React.Component {
         return <div title={Table.html2text(cell)}>{Table.html2text(cell)}</div>
     };
 
+    onSortChange = (sortName, sortOrder) => {
+        if (this.state.sortName !== sortName || this.state.sortOrder !== sortOrder) {
+            this.setState({sortName, sortOrder});
+            this.props.refreshTable(this.state.page, this.state.sizePerPage, sortName, sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
+        }
+    };
+
     convertFilterObj = (filterObj) => {
         let converted = [];
         for (const key of Object.keys(filterObj)) {
-            if(filterObj.hasOwnProperty(key)){
-                if(filterObj[key].type === 'DateFilter'){
-                    converted.push({name: key, value: filterObj[key].value.date, comparator: filterObj[key].value.comparator, type: filterObj[key].type});
+            if (filterObj.hasOwnProperty(key)) {
+                if (filterObj[key].type === 'DateFilter') {
+                    converted.push({
+                        name: key,
+                        value: filterObj[key].value.date,
+                        comparator: filterObj[key].value.comparator,
+                        type: filterObj[key].type
+                    });
                 }
-                if(filterObj[key].type === 'NumberFilter'){
-                    converted.push({name: key, value: filterObj[key].value.number, comparator: filterObj[key].value.comparator, type: filterObj[key].type});
+                if (filterObj[key].type === 'NumberFilter') {
+                    converted.push({
+                        name: key,
+                        value: filterObj[key].value.number,
+                        comparator: filterObj[key].value.comparator,
+                        type: filterObj[key].type
+                    });
                 }
-                if(filterObj[key].type === 'TextFilter'){
+                if (filterObj[key].type === 'TextFilter') {
                     converted.push({name: key, value: filterObj[key].value, comparator: '', type: filterObj[key].type});
                 }
             }
@@ -65,20 +75,20 @@ export class Table extends React.Component {
     };
 
     onFilterChange = (filterObj) => {
-        this.setState({ filterObj });
+        this.setState({filterObj});
         this.props.refreshTable(this.state.page, this.state.sizePerPage, this.state.sortName, this.state.sortOrder, this.convertFilterObj(filterObj), this.props.cache);
     };
 
     onSizePerPageList = (sizePerPage) => {
-        if(this.state.sizePerPage !== sizePerPage){
-            this.setState({ sizePerPage });
+        if (this.state.sizePerPage !== sizePerPage) {
+            this.setState({sizePerPage});
             this.props.refreshTable(this.state.page, sizePerPage, this.state.sortName, this.state.sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
         }
     };
 
     onPageChange = (page, sizePerPage) => {
-        if(this.state.page !== page){
-            this.setState({ page });
+        if (this.state.page !== page) {
+            this.setState({page});
             this.props.refreshTable(page, this.state.sizePerPage, this.state.sortName, this.state.sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
         }
     };
@@ -94,14 +104,16 @@ export class Table extends React.Component {
     render() {
         const renderShowsTotal = (start, to, total) => {
             return (
-                <p style={{position: 'relative',
+                <p style={{
+                    position: 'relative',
                     left: '90%',
-                    display: 'inline-block'}}> С {start} по {to} из {total}</p>
+                    display: 'inline-block'
+                }}> С {start} по {to} из {total}</p>
             );
         };
 
         let selectRowProp;
-        if(this.props.selectMode === 'multi'){
+        if (this.props.selectMode === 'multi') {
             selectRowProp = {
                 mode: 'checkbox',
                 bgColor: '#98CAF1',
@@ -112,7 +124,7 @@ export class Table extends React.Component {
                 onlyUnselectVisible: true
             };
         }
-        if(this.props.selectMode === 'single'){
+        if (this.props.selectMode === 'single') {
             selectRowProp = {
                 mode: 'radio',
                 bgColor: '#98CAF1',
@@ -124,7 +136,7 @@ export class Table extends React.Component {
         }
 
         const options = {
-            sizePerPageList: [ 10, 25, 50 ],
+            sizePerPageList: [10, 25, 50],
             sizePerPage: this.state.sizePerPage,
             paginationShowsTotal: renderShowsTotal,
             noDataText: 'No data to display',
@@ -138,16 +150,16 @@ export class Table extends React.Component {
         };
 
         const getFilterByType = (info) => {
-            if(info.type === 'java.lang.String') return {
+            if (info.type === 'java.lang.String') return {
                 type: 'TextFilter',
                 delay: 1000
             };
-            if(info.type === 'java.lang.Long') return  {
+            if (info.type === 'java.lang.Long') return {
                 type: 'NumberFilter',
                 delay: 1000,
-                numberComparators: [ '=', '>', '<=' ]
+                numberComparators: ['=', '>', '<=']
             };
-            if(info.type === 'java.util.Date') return {
+            if (info.type === 'java.util.Date') return {
                 type: 'DateFilter'
             };
         };
@@ -157,28 +169,28 @@ export class Table extends React.Component {
         if (this.props.fieldDescriptionMap !== null && this.props.fieldDescriptionMap !== undefined && Object.keys(this.props.fieldDescriptionMap).length !== 0 || this.props.fieldDescriptionMap.constructor !== Object) {
             columns = Object.keys(this.props.fieldDescriptionMap).map((key) =>
                 <TableHeaderColumn
-                           ref={FILTER_REF + key}
-                           dataSort={ true }
-                           filter={ getFilterByType(this.props.fieldDescriptionMap[key])}
-                           width={this.props.fieldDescriptionMap[key].width}
-                           dataField={this.props.fieldDescriptionMap[key].name}
-                           key={this.props.fieldDescriptionMap[key].name}
-                           isKey={this.props.fieldDescriptionMap[key].name === 'id'}
-                           dataFormat={this.props.fieldDescriptionMap[key].name === 'resume' ? Table.resumeCellFormatter : Table.sameCellFormatter}
-                           hidden={this.props.fieldDescriptionMap[key].hidden}>{this.props.fieldDescriptionMap[key].displayName}</TableHeaderColumn>
+                    ref={FILTER_REF + key}
+                    dataSort={true}
+                    filter={getFilterByType(this.props.fieldDescriptionMap[key])}
+                    width={this.props.fieldDescriptionMap[key].width}
+                    dataField={this.props.fieldDescriptionMap[key].name}
+                    key={this.props.fieldDescriptionMap[key].name}
+                    isKey={this.props.fieldDescriptionMap[key].name === 'id'}
+                    dataFormat={this.props.fieldDescriptionMap[key].name === 'resume' ? Table.resumeCellFormatter : Table.sameCellFormatter}
+                    hidden={this.props.fieldDescriptionMap[key].hidden}>{this.props.fieldDescriptionMap[key].displayName}</TableHeaderColumn>
             )
         }
         let bootstrapTable;
         if (columns != null) {
             bootstrapTable = <BootstrapTable data={this.props.data} hover pagination condensed
                                              ref='bootstrap_table'
-                                             fetchInfo={ { dataTotalSize: this.props.totalDataSize } }
-                                             remote={ true }
+                                             fetchInfo={{dataTotalSize: this.props.totalDataSize}}
+                                             remote={true}
                                              tableHeaderClass='list-form-table-header'
                                              selectRow={selectRowProp}
                                              options={options}>
-                                {columns}
-                            </BootstrapTable>
+                {columns}
+            </BootstrapTable>
         } else {
             bootstrapTable = <div/>
         }

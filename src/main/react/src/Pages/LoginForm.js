@@ -19,26 +19,26 @@ export default class LoginForm extends React.Component {
         invalidLoginPassword: false
     };
 
-    componentDidMount(){
-        setTimeout(function() {
+    constructor(props) {
+        super(props);
+    }
+
+    componentDidMount() {
+        setTimeout(function () {
             this.props.clearAlerts();
         }.bind(this), 500);
         let parent = this;
-        document.addEventListener("keydown", function keyDownTextField(e) {
+        document.addEventListener('keydown', function keyDownTextField(e) {
             let keyCode = e.keyCode;
-            if(keyCode === 13) {
+            if (keyCode === 13) {
                 parent.login();
             }
         }, false);
     }
 
-    handleChange = (e) =>{
-        this.setState({ [e.target.id] : e.target.value });
+    handleChange = (e) => {
+        this.setState({[e.target.id]: e.target.value});
     };
-
-    constructor(props) {
-        super(props);
-    }
 
     login = () => {
         console.log('Login' + this.state.login);
@@ -52,19 +52,25 @@ export default class LoginForm extends React.Component {
             body: 'username=' + this.state.login + '&password=' + this.state.password
         }).then(response => {
             status = response.status;
-            if(status === 401){
+            if (status === 401) {
                 this.setState({invalidLoginPassword: true});
             }
-            if(status === 200){
+            if (status === 200) {
                 window.location.hash = '#/';
             }
         });
     };
 
     getWarning = () => {
-        if(this.state.invalidLoginPassword){
-            return <Label style={{width: '500px', display: 'inline-block', position: 'absolute', left: 'calc(50% - 250px)', top: 'calc(50% - 120px)'}} bsStyle='danger'>Invalid login or password</Label>
-        }else
+        if (this.state.invalidLoginPassword) {
+            return <Label style={{
+                width: '500px',
+                display: 'inline-block',
+                position: 'absolute',
+                left: 'calc(50% - 250px)',
+                top: 'calc(50% - 120px)'
+            }} bsStyle='danger'>Invalid login or password</Label>
+        } else
             return <div/>
     };
 
@@ -72,7 +78,13 @@ export default class LoginForm extends React.Component {
         return (
             <div>
                 {this.getWarning()}
-                <Panel style={{width: '500px', height: '200px', position: 'absolute', left: 'calc(50% - 250px)', top: 'calc(50% - 100px)' }}>
+                <Panel style={{
+                    width: '500px',
+                    height: '200px',
+                    position: 'absolute',
+                    left: 'calc(50% - 250px)',
+                    top: 'calc(50% - 100px)'
+                }}>
                     <Panel.Heading>
                         <Panel.Title>Please login</Panel.Title>
                     </Panel.Heading>
@@ -83,14 +95,14 @@ export default class LoginForm extends React.Component {
                             value={this.state.login}
                             placeholder={'Enter login'}
                             id='login'
-                            onChange={this.handleChange} />
+                            onChange={this.handleChange}/>
                         <FormControl
                             style={{marginTop: '5px'}}
                             type='text'
                             value={this.state.password}
                             placeholder={'Enter password'}
                             id='password'
-                            onChange={this.handleChange} />
+                            onChange={this.handleChange}/>
                         <Button style={{marginTop: '5px', width: '100%'}} onClick={this.login}>Login</Button>
                     </Panel.Body>
                 </Panel>

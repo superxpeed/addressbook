@@ -20,12 +20,14 @@ public class Address implements Binarylizable {
     @QuerySqlField(index = true)
     private String zip;
 
-    @Override public void writeBinary(BinaryWriter writer) throws BinaryObjectException {
+    @Override
+    public void writeBinary(BinaryWriter writer) throws BinaryObjectException {
         writer.writeString("street", street);
         writer.writeString("zip", zip);
     }
 
-    @Override public void readBinary(BinaryReader reader) throws BinaryObjectException {
+    @Override
+    public void readBinary(BinaryReader reader) throws BinaryObjectException {
         street = reader.readString("street");
         zip = reader.readString("zip");
     }

@@ -1,6 +1,6 @@
-import {SUCCESS, ADD_ALERT} from '../Common/Utils';
+import {ADD_ALERT, Caches, SUCCESS} from '../Common/Utils';
 import * as tableActions from '../Table/TableActions';
-import {Caches} from '../Common/Utils';
+
 export const GET_LIST = 'GET_LIST';
 
 export function asyncCommonCatch(action, error, dispatch) {
@@ -50,7 +50,7 @@ export function getList(url, filterDto = null, cacheName) {
                     data: json.data,
                     fieldDescriptionMap: json.fieldDescriptionMap,
                 });
-            }else {
+            } else {
                 dispatch({
                     type: ADD_ALERT,
                     alert: JSON.parse(text)
