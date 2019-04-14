@@ -1,5 +1,6 @@
 package com.addressbook.rest;
 
+import com.addressbook.LockRecordException;
 import com.addressbook.UniversalFieldsDescriptor;
 import com.addressbook.dto.*;
 import com.addressbook.ignite.GridDAO;
@@ -57,14 +58,14 @@ public class UniversalController {
     @RequestMapping(value = "/saveOrCreatePerson", method = RequestMethod.POST)
     public PageDataDto<PersonDto> saveOrCreatePerson(@RequestBody PersonDto personDto) {
         PageDataDto<PersonDto> dto = new PageDataDto<>();
-        dto.setData(GridDAO.createOrUpdatePerson(personDto));
+        dto.setData(GridDAO.createOrUpdatePerson(personDto, currentUser.getCurrentUser()));
         return dto;
     }
 
     @RequestMapping(value = "/saveOrCreateOrganization", method = RequestMethod.POST)
     public PageDataDto<OrganizationDto> saveOrCreateOrganization(@RequestBody OrganizationDto organizationDto) {
         PageDataDto<OrganizationDto> dto = new PageDataDto<>();
-        dto.setData(GridDAO.createOrUpdateOrganization(organizationDto));
+        dto.setData(GridDAO.createOrUpdateOrganization(organizationDto, currentUser.getCurrentUser()));
         return dto;
     }
 
@@ -85,7 +86,7 @@ public class UniversalController {
     @RequestMapping(value = "/saveOrCreateContacts", method = RequestMethod.POST)
     public PageDataDto<List<ContactDto>> saveOrCreateContacts(@RequestBody List<ContactDto> contactDtos) {
         PageDataDto<List<ContactDto>> dto = new PageDataDto<>();
-        dto.setData(GridDAO.createOrUpdateContacts(contactDtos));
+        dto.setData(GridDAO.createOrUpdateContacts(contactDtos, currentUser.getCurrentUser()));
         return dto;
     }
 
@@ -132,7 +133,7 @@ public class UniversalController {
 
     // Handles all (really all, bc Throwable) exceptions inside UniversalController
     @ExceptionHandler(Throwable.class)
-    public void handleError(HttpServletResponse response, Exception ex) throws Exception {
+    public void handleError(HttpServletResponse response, Throwable ex) throws Exception {
         // Let's mark all server-side exceptions with 500 status
         response.setStatus(500);
         // Basically all exceptions on server-side must be transformed to JSON, because
@@ -145,7 +146,7 @@ public class UniversalController {
 
         // IllegalArgumentException in my code could only be thrown from  getBreadcrumbs
         // or getNextLevelMenus because such url doesn't exist
-        if (ex.getClass().equals(IllegalArgumentException.class)) {
+        if (ex.getClass().equals(IllegalArgumentException.class) || ex.getClass().equals(LockRecordException.class)) {
             // So here I just write exception's message as descriptions
             // Something like "Menu with url: " + url +  " doesn't exist"
             alert.setMessage(ex.getMessage());

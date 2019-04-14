@@ -1,5 +1,6 @@
 package com.addressbook.ignite;
 
+import com.addressbook.LockRecordException;
 import com.addressbook.UniversalFieldsDescriptor;
 import com.addressbook.dto.*;
 import com.addressbook.model.*;
@@ -81,10 +82,15 @@ public class GridDAO {
         }
     }
 
-    public static OrganizationDto createOrUpdateOrganization(OrganizationDto organizationDto) {
+    public static OrganizationDto createOrUpdateOrganization(OrganizationDto organizationDto, String user) {
         IgniteCache<String, Organization> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE);
         Organization organization = cachePerson.get(organizationDto.getId());
-        if (organization == null) organization = new Organization(organizationDto);
+        if (organization == null) {
+            organization = new Organization(organizationDto);
+        } else {
+            if (!isLockedByUser(organization.getId(), user))
+                throw new LockRecordException("Record was not locked by " + user);
+        }
         organization.setType(OrganizationType.values()[Integer.valueOf(organizationDto.getType())]);
         organization.setLastUpdated(new Timestamp(System.currentTimeMillis()));
         organization.setName(organizationDto.getName());
@@ -93,10 +99,15 @@ public class GridDAO {
         return organizationDto;
     }
 
-    public static PersonDto createOrUpdatePerson(PersonDto personDto) {
+    public static PersonDto createOrUpdatePerson(PersonDto personDto, String user) {
         IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE);
         Person person = cachePerson.get(personDto.getId());
-        if (person == null) person = new Person(personDto);
+        if (person == null) {
+            person = new Person(personDto);
+        } else {
+            if (!isLockedByUser(person.getId(), user))
+                throw new LockRecordException("Record was not locked by " + user);
+        }
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
         person.setOrgId(personDto.getOrgId());
@@ -106,18 +117,27 @@ public class GridDAO {
         return personDto;
     }
 
-    public static List<ContactDto> createOrUpdateContacts(List<ContactDto> contactDtos) {
-        IgniteCache<String, Contact> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
+    public static List<ContactDto> createOrUpdateContacts(List<ContactDto> contactDtos, String user) {
+        if (contactDtos.isEmpty() || user == null) return contactDtos;
+        IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE);
+        Person person = cachePerson.get(contactDtos.get(0).getPersonId());
+        if (person == null) {
+            throw new IllegalArgumentException("Parent person with id " + contactDtos.get(0).getPersonId() + " doesn't exist");
+        } else {
+            if (!isLockedByUser(person.getId(), user))
+                throw new LockRecordException("Record was not locked by " + user);
+        }
+        IgniteCache<String, Contact> cacheContacts = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
         IgniteTransactions transactions = ignite.transactions();
         try (Transaction tx = transactions.txStart()) {
             for (ContactDto contactDto : contactDtos) {
-                Contact contact = cachePerson.get(contactDto.getId());
+                Contact contact = cacheContacts.get(contactDto.getId());
                 if (contact == null) contact = new Contact();
                 contact.setData(contactDto.getData());
                 contact.setDescription(contactDto.getDescription());
                 contact.setPersonId(contactDto.getPersonId());
                 contact.setType(ContactType.values()[Integer.valueOf(contactDto.getType())]);
-                cachePerson.put(contact.getContactId(), contact);
+                cacheContacts.put(contact.getContactId(), contact);
             }
             tx.commit();
         }
@@ -133,6 +153,13 @@ public class GridDAO {
         } else user = newUser;
         cacheUser.put(user.getLogin(), user);
         return user;
+    }
+
+    public static boolean isLockedByUser(String key, String user) {
+        if (user == null) return false;
+        IgniteCache<String, String> cacheLocks = ignite.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE);
+        String userLocked = cacheLocks.get(key);
+        return user.equals(userLocked);
     }
 
     public static boolean lockUnlockRecord(String key, String user, boolean lock) {
