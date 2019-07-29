@@ -31,3 +31,6 @@ monitoring, binary marshalling
 7.  hierarchical menu with breadcrumbs and role-dependent availability
 8.  locking table records for user editing with notifications
 9.  working with refs of dynamically added/removed children components
+
+
+#### Tested by JUnit & Selenium (Chrome)

@@ -23,17 +23,23 @@ export default class LoginForm extends React.Component {
         super(props);
     }
 
+    keyDownTextField = (e) => {
+        let parent = this;
+        let keyCode = e.keyCode;
+        if (keyCode === 13) {
+            parent.login();
+        }
+    };
+
     componentDidMount() {
         setTimeout(function () {
             this.props.clearAlerts();
         }.bind(this), 500);
-        let parent = this;
-        document.addEventListener('keydown', function keyDownTextField(e) {
-            let keyCode = e.keyCode;
-            if (keyCode === 13) {
-                parent.login();
-            }
-        }, false);
+        document.addEventListener('keydown', this.keyDownTextField, false);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.keyDownTextField, false);
     }
 
     handleChange = (e) => {

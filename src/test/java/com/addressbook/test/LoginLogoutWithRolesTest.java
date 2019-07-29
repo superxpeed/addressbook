@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class LoginLogoutWithRolesTest {
 
     @Test
-    public void testLoginLogoutWithRoles() throws InterruptedException{
+    public void stage1_loginLogoutWithRoles() throws InterruptedException {
         // Set Chrome driver location
         System.setProperty("webdriver.chrome.driver", LoginLogoutWithRolesTest.class.getClassLoader().getResource("chromedriver").getPath());
         // Initialize Selenium driver
