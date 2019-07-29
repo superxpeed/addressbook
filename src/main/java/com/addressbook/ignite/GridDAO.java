@@ -55,9 +55,9 @@ public class GridDAO {
             tcpDiscoverySpi.setIpFinder(tcpDiscoveryMulticastIpFinder);
             igniteConfiguration.setDiscoverySpi(tcpDiscoverySpi);
             ignite = Ignition.start(igniteConfiguration);
-            ignite.active(true);
-            for (Map.Entry<String, Class> cache : UniversalFieldsDescriptor.getCacheClasses().entrySet()) {
-                CacheConfiguration cfg = new CacheConfiguration<>();
+            ignite.cluster().active(true);
+            for (Map.Entry<String, Class<?>> cache : UniversalFieldsDescriptor.getCacheClasses().entrySet()) {
+                CacheConfiguration<String, ?> cfg = new CacheConfiguration<>();
                 cfg.setCacheMode(CacheMode.PARTITIONED);
                 cfg.setName(cache.getKey());
                 cfg.setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL);
@@ -85,7 +85,7 @@ public class GridDAO {
         if (organization == null) {
             organization = new Organization(organizationDto);
         } else {
-            if (!isLockedByUser(organization.getId(), user))
+            if (notLockedByUser(organization.getId(), user))
                 throw new LockRecordException("Record was not locked by " + user);
         }
         organization.setType(OrganizationType.values()[Integer.valueOf(organizationDto.getType())]);
@@ -102,7 +102,7 @@ public class GridDAO {
         if (person == null) {
             person = new Person(personDto);
         } else {
-            if (!isLockedByUser(person.getId(), user))
+            if (notLockedByUser(person.getId(), user))
                 throw new LockRecordException("Record was not locked by " + user);
         }
         person.setFirstName(personDto.getFirstName());
@@ -121,7 +121,7 @@ public class GridDAO {
         if (person == null) {
             throw new IllegalArgumentException("Parent person with id " + contactDtos.get(0).getPersonId() + " doesn't exist");
         } else {
-            if (!isLockedByUser(person.getId(), user))
+            if (notLockedByUser(person.getId(), user))
                 throw new LockRecordException("Record was not locked by " + user);
         }
         IgniteCache<String, Contact> cacheContacts = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
@@ -141,7 +141,7 @@ public class GridDAO {
         return contactDtos;
     }
 
-    public static User createOrUpdateUser(User newUser) {
+    static void createOrUpdateUser(User newUser) {
         IgniteCache<String, User> cacheUser = ignite.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE);
         User user = cacheUser.get(newUser.getLogin());
         if (user != null) {
@@ -149,14 +149,13 @@ public class GridDAO {
             user.setRoles(newUser.getRoles());
         } else user = newUser;
         cacheUser.put(user.getLogin(), user);
-        return user;
     }
 
-    public static boolean isLockedByUser(String key, String user) {
+    private static boolean notLockedByUser(String key, String user) {
         if (user == null) return false;
         IgniteCache<String, String> cacheLocks = ignite.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE);
         String userLocked = cacheLocks.get(key);
-        return user.equals(userLocked);
+        return !user.equals(userLocked);
     }
 
     public static boolean lockUnlockRecord(String key, String user, boolean lock) {
@@ -175,11 +174,11 @@ public class GridDAO {
         return cacheUser.get(login);
     }
 
-    public static void clearMenus() {
+    static void clearMenus() {
         ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE).clear();
     }
 
-    public static MenuEntryDto createOrUpdateMenuEntry(MenuEntryDto menuEntryDto, MenuEntryDto parentEntryDto) {
+    static MenuEntryDto createOrUpdateMenuEntry(MenuEntryDto menuEntryDto, MenuEntryDto parentEntryDto) {
         IgniteCache<String, MenuEntry> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
         MenuEntry menuEntry;
         if (menuEntryDto.getId() != null) menuEntry = cachePerson.get(menuEntryDto.getId());
@@ -193,17 +192,21 @@ public class GridDAO {
         return menuEntryDto;
     }
 
+    private static List<Cache.Entry<String, MenuEntry>> checkIfMenuExists(IgniteCache<String, MenuEntry>  menuCache, String url){
+        List<Cache.Entry<String, MenuEntry>> entries = menuCache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll();
+        if (entries.isEmpty()) throw new IllegalArgumentException("Menu with url: " + url + " doesn't exist");
+        return entries;
+    }
+
     public static List<MenuEntryDto> readNextLevel(String url, Collection<? extends GrantedAuthority> authorities) {
         IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
-        List<Cache.Entry<String, MenuEntry>> entries = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll();
-        if (entries.isEmpty()) throw new IllegalArgumentException("Menu with url: " + url + " doesn't exist");
+        List<Cache.Entry<String, MenuEntry>> entries = checkIfMenuExists(cache, url);
         MenuEntry menuEntry = entries.get(0).getValue();
         SqlQuery<String, MenuEntry> sql = new SqlQuery<>(MenuEntry.class, "parentId = ?");
         List<MenuEntryDto> menuEntryDtos = new ArrayList<>();
         try (QueryCursor<Cache.Entry<String, MenuEntry>> cursor = cache.query(sql.setArgs(menuEntry.getId()))) {
             for (Cache.Entry<String, MenuEntry> e : cursor) {
                 for (GrantedAuthority authority : authorities) {
-                    // Note: In Spring, default prefix for roles is ROLE_ so I need to clear it
                     if (e.getValue().getRoles() != null && e.getValue().getRoles().contains(authority.getAuthority().replace("ROLE_", ""))) {
                         menuEntryDtos.add(new MenuEntryDto(e.getValue()));
                         break;
@@ -218,10 +221,8 @@ public class GridDAO {
 
     public static List<Breadcrumb> readBreadcrumbs(String url) {
         IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
-        List<Cache.Entry<String, MenuEntry>> entries = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll();
-        if (entries.isEmpty()) throw new IllegalArgumentException("Menu with url: " + url + " doesn't exist");
+        List<Cache.Entry<String, MenuEntry>> entries = checkIfMenuExists(cache, url);
         MenuEntry original = entries.get(0).getValue();
-        ;
         MenuEntry menuEntry = original;
         List<Cache.Entry<String, MenuEntry>> menuEntries;
         List<Breadcrumb> breadcrumbs = new ArrayList<>();
@@ -269,15 +270,15 @@ public class GridDAO {
     }
 
     public static List<?> selectCachePage(int page, int pageSize, String sortName, String sortOrder, List<FilterDto> filterDto, String cacheName) {
-        IgniteCache cache = ignite.getOrCreateCache(cacheName);
-        List cacheDtoArrayList = new ArrayList<>();
-        SqlQuery sql = new SqlQuery(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
+        IgniteCache<String, Object> cache = ignite.getOrCreateCache(cacheName);
+        List<Object> cacheDtoArrayList = new ArrayList<>();
+        SqlQuery<String, Object> sql = new SqlQuery<>(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
                 .append(" order by ")
                 .append(sortName).append(" ")
                 .append(sortOrder)
                 .append(" limit ? offset ?")
                 .toString());
-        try (QueryCursor<Cache.Entry> cursor = cache.query(sql.setArgs(pageSize, (page - 1) * pageSize))) {
+        try (QueryCursor<Cache.Entry<String, Object>> cursor = cache.query(sql.setArgs(pageSize, (page - 1) * pageSize))) {
             Constructor dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName).getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName));
             for (Cache.Entry e : cursor)
                 cacheDtoArrayList.add(dtoConstructor.newInstance(e.getValue()));
@@ -290,8 +291,8 @@ public class GridDAO {
     public static List<ContactDto> getContactsByPersonId(String id) {
         IgniteCache<String, Contact> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
         List<ContactDto> cacheDtoArrayList = new ArrayList<>();
-        SqlQuery sql = new SqlQuery(Contact.class, "personId = ?");
-        try (QueryCursor<Cache.Entry> cursor = cache.query(sql.setArgs(id))) {
+        SqlQuery<String, Contact> sql = new SqlQuery<>(Contact.class, "personId = ?");
+        try (QueryCursor<Cache.Entry<String, Contact>> cursor = cache.query(sql.setArgs(id))) {
             for (Cache.Entry<String, Contact> e : cursor)
                 cacheDtoArrayList.add(new ContactDto(e.getValue()));
         } catch (Exception e) {
@@ -312,9 +313,9 @@ public class GridDAO {
             IgniteCache cache = ignite.getOrCreateCache(cacheName);
             return cache.size(CachePeekMode.ALL);
         }
-        IgniteCache cache = ignite.getOrCreateCache(cacheName);
-        SqlQuery sql = new SqlQuery(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto).toString());
-        try (QueryCursor<Cache.Entry> cursor = cache.query(sql)) {
+        IgniteCache<String, Object> cache = ignite.getOrCreateCache(cacheName);
+        SqlQuery<String, Object> sql = new SqlQuery<>(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto).toString());
+        try (QueryCursor<Cache.Entry<String, Object>> cursor = cache.query(sql)) {
             return cursor.getAll().size();
         } catch (Exception e) {
             logger.error("Error while retrieving total data size for table:", e);

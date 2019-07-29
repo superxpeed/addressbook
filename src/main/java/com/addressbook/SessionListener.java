@@ -13,7 +13,7 @@ public class SessionListener implements HttpSessionListener {
 
     private final AtomicInteger activeSessions;
 
-    public SessionListener() {
+    SessionListener() {
         activeSessions = new AtomicInteger();
     }
 

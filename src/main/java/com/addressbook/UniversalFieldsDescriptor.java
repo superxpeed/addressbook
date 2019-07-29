@@ -20,8 +20,8 @@ public class UniversalFieldsDescriptor {
     private static Map<String, FieldDescription> fieldDescriptionMapOrganization = new LinkedHashMap<>();
     private static Map<String, FieldDescription> fieldDescriptionMapPerson = new LinkedHashMap<>();
     private static Map<String, Map<String, FieldDescription>> fieldDescriptionMaps = new LinkedHashMap<>();
-    private static Map<String, Class> cacheClasses = new LinkedHashMap<>();
-    private static Map<String, Class> dtoClasses = new LinkedHashMap<>();
+    private static Map<String, Class<?>> cacheClasses = new LinkedHashMap<>();
+    private static Map<String, Class<?>> dtoClasses = new LinkedHashMap<>();
 
     static {
         fieldDescriptionMapOrganization.put("id",           new FieldDescription("id",          "ID",           "java.lang.String", "170px", false, false));
@@ -58,15 +58,15 @@ public class UniversalFieldsDescriptor {
         return fieldDescriptionMaps.get(cache);
     }
 
-    public static Class getCacheClass(String cache) {
+    public static Class<?> getCacheClass(String cache) {
         return cacheClasses.get(cache);
     }
 
-    public static Map<String, Class> getCacheClasses() {
+    public static Map<String, Class<?>> getCacheClasses() {
         return cacheClasses;
     }
 
-    public static Class getDtoClass(String cache) {
+    public static Class<?> getDtoClass(String cache) {
         return dtoClasses.get(cache);
     }
 }
