@@ -12,7 +12,6 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @ToString
-@SuppressWarnings("unused")
 public class OrganizationDto implements Serializable {
 
     private String id;

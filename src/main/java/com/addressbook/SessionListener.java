@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@SuppressWarnings("WeakerAccess")
 public class SessionListener implements HttpSessionListener {
 
     private static Logger logger = LoggerFactory.getLogger(SessionListener.class);

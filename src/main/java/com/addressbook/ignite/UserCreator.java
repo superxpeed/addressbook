@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings("all")
-public class UserCreator {
-    public static void initUsers() {
+class UserCreator {
+    static void initUsers() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         List<String> adminRoles = new ArrayList<>();
         adminRoles.add("USER");

@@ -10,7 +10,6 @@ import java.io.Serializable;
 @ToString
 @Getter
 @Setter
-@SuppressWarnings("WeakerAccess")
 public class IgniteCacheMetrics implements Serializable {
     private long cacheGets;
     private long cachePuts;

@@ -26,12 +26,10 @@ import java.lang.reflect.Constructor;
 import java.sql.Timestamp;
 import java.util.*;
 
-@SuppressWarnings("all")
 public class GridDAO {
 
     private static Logger logger = LoggerFactory.getLogger(GridDAO.class);
 
-    // Ignite client, obviously singleton
     private static Ignite ignite;
 
     static void startClient() {
@@ -41,7 +39,6 @@ public class GridDAO {
             IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
             igniteConfiguration.setPeerClassLoadingEnabled(true);
             igniteConfiguration.setClientMode(true);
-            // Possibly I'll use events in future to make user interface completely reactive
             igniteConfiguration.setIncludeEventTypes(org.apache.ignite.events.EventType.EVT_TASK_STARTED,
                     org.apache.ignite.events.EventType.EVT_TASK_FINISHED,
                     org.apache.ignite.events.EventType.EVT_TASK_FAILED,
@@ -196,7 +193,6 @@ public class GridDAO {
         return menuEntryDto;
     }
 
-    // Hierarchical menu is just a tree, so this method returns all children of a given element (filtered according to user's roles)
     public static List<MenuEntryDto> readNextLevel(String url, Collection<? extends GrantedAuthority> authorities) {
         IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
         List<Cache.Entry<String, MenuEntry>> entries = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll();
@@ -220,7 +216,6 @@ public class GridDAO {
         return menuEntryDtos;
     }
 
-    // Here I simply read full path from given url to root menu, reading parent nodes one by one
     public static List<Breadcrumb> readBreadcrumbs(String url) {
         IgniteCache<String, MenuEntry> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
         List<Cache.Entry<String, MenuEntry>> entries = cache.query(new SqlQuery<String, MenuEntry>(MenuEntry.class, "url = ?").setArgs(url)).getAll();
@@ -243,8 +238,6 @@ public class GridDAO {
         return breadcrumbs;
     }
 
-    // Here I assemble SQL query for Ignite H2 DB
-    // All user filters for datatable arrive here from front-end as JSON array of FilterDto
     private static StringBuilder getQuerySql(List<FilterDto> filterDto) {
         StringBuilder baseSql = new StringBuilder(" ");
         if (filterDto.size() != 0) {
@@ -275,9 +268,7 @@ public class GridDAO {
         return baseSql;
     }
 
-    // Returns data for given cache, page number, page size, filtered and sorted
     public static List<?> selectCachePage(int page, int pageSize, String sortName, String sortOrder, List<FilterDto> filterDto, String cacheName) {
-        // Front-end aware about all caches that used for displaying datatables data
         IgniteCache cache = ignite.getOrCreateCache(cacheName);
         List cacheDtoArrayList = new ArrayList<>();
         SqlQuery sql = new SqlQuery(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
@@ -286,8 +277,6 @@ public class GridDAO {
                 .append(sortOrder)
                 .append(" limit ? offset ?")
                 .toString());
-        // Constructing target DTO objects from caches's object
-        // All DTO classes have constructor that receives Ignite class object
         try (QueryCursor<Cache.Entry> cursor = cache.query(sql.setArgs(pageSize, (page - 1) * pageSize))) {
             Constructor dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName).getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName));
             for (Cache.Entry e : cursor)
