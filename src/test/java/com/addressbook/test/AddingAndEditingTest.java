@@ -10,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
@@ -233,9 +234,8 @@ public class AddingAndEditingTest {
         WebElement secondContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[2]/div[2]/div"));
         Thread.sleep(300);
         // org.openqa.selenium.ElementNotInteractableException: element not interactable
-        secondContactParentBody.findElement(By.xpath("//*[@class=\"form-control\"]")).click();
-        Thread.sleep(300);
-        secondContactParentBody.findElement(By.xpath("//*[@class=\"form-control\"]/option[2]")).click();
+        Select role = new Select(secondContactParentBody.findElement(By.xpath("//*[@id=\"type\"]")));
+        role.selectByValue("3");
         Thread.sleep(300);
         secondContactParentBody.findElement(By.xpath("//*[@id=\"data\"]")).sendKeys("8-888-888-88-88");
         Thread.sleep(300);
