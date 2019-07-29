@@ -174,9 +174,7 @@ public class GridDAO {
         return cacheUser.get(login);
     }
 
-    static void clearMenus() {
-        ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE).clear();
-    }
+    static void clearMenus() { ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE).clear(); }
 
     static MenuEntryDto createOrUpdateMenuEntry(MenuEntryDto menuEntryDto, MenuEntryDto parentEntryDto) {
         IgniteCache<String, MenuEntry> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE);
