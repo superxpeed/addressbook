@@ -85,7 +85,7 @@ public class GridDAO {
         if (organization == null) {
             organization = new Organization(organizationDto);
         } else {
-            if (notLockedByUser(organization.getId(), user))
+            if (notLockedByUser(Organization.class.getName() + organization.getId(), user))
                 throw new LockRecordException("Record was not locked by " + user);
         }
         organization.setType(OrganizationType.values()[Integer.valueOf(organizationDto.getType())]);
@@ -102,7 +102,7 @@ public class GridDAO {
         if (person == null) {
             person = new Person(personDto);
         } else {
-            if (notLockedByUser(person.getId(), user))
+            if (notLockedByUser(Person.class.getName() + person.getId(), user))
                 throw new LockRecordException("Record was not locked by " + user);
         }
         person.setFirstName(personDto.getFirstName());
@@ -121,7 +121,7 @@ public class GridDAO {
         if (person == null) {
             throw new IllegalArgumentException("Parent person with id " + contactDtos.get(0).getPersonId() + " doesn't exist");
         } else {
-            if (notLockedByUser(person.getId(), user))
+            if (notLockedByUser(Person.class.getName() + person.getId(), user))
                 throw new LockRecordException("Record was not locked by " + user);
         }
         IgniteCache<String, Contact> cacheContacts = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
