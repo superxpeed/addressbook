@@ -98,7 +98,7 @@ export class OrganizationComponent extends React.Component {
     };
 
     handleTypeChange = (e) => {
-        this.setState(update(this.state, {organization: {[e.target.id]: {$set: e.target.value}}}));
+        this.setState(update(this.state, {organization: {[e.target.name]: {$set: e.target.value}}}));
     };
 
     getButton() {
@@ -164,7 +164,9 @@ export class OrganizationComponent extends React.Component {
                     <form>
                         <FormGroup>
                             <ControlLabel>Type</ControlLabel>
-                            <FormControl id='type' componentClass='select' value={this.state.organization['type']}
+                            <FormControl id='organizationType' name='type'
+                                         componentClass='select'
+                                         value={this.state.organization['type']}
                                          onChange={this.handleTypeChange}>
                                 <option value='0'>Non profit</option>
                                 <option value='1'>Private</option>

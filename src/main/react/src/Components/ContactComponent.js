@@ -44,7 +44,8 @@ export class ContactComponent extends React.Component {
             <Panel style={{marginBottom: '5px'}}>
                 <Panel.Heading>
                     <Panel.Title style={{display: 'inline-block', width: 'calc(100% - 25px)'}}
-                                 toggle>{this.props.data.type === undefined ? 'New contact' : ContactTypes.getEngType(this.props.data.type)}</Panel.Title>
+                                 toggle>{this.props.data.type === undefined ? 'New contact' : ContactTypes.getEngType(this.props.data.type)}
+                    </Panel.Title>
                     <Button style={{
                         width: '32px',
                         height: '32px',

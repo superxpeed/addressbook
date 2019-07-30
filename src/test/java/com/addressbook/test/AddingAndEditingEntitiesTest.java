@@ -16,7 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class AddingAndEditingTest {
+public class AddingAndEditingEntitiesTest {
 
     @Test
     public void stage1_addAndEditOrganization() throws InterruptedException {
@@ -61,8 +61,8 @@ public class AddingAndEditingTest {
         driver.findElement(By.xpath("//*[@id=\"street\"]")).sendKeys("Test street");
         driver.findElement(By.xpath("//*[@id=\"zip\"]")).sendKeys("Test zip");
         // Choose Private type of organization
-        driver.findElement(By.xpath("//*[@id=\"type\"]")).click();
-        driver.findElement(By.xpath("//*[@id=\"type\"]/option[2]")).click();
+        driver.findElement(By.xpath("//*[@id=\"organizationType\"]")).click();
+        driver.findElement(By.xpath("//*[@id=\"organizationType\"]/option[2]")).click();
         // Click Create organization button
         driver.findElement(By.xpath("//*[@id=\"tables-pane-1\"]/div[1]/div/button")).click();
         // Wait until it is saved
@@ -78,6 +78,7 @@ public class AddingAndEditingTest {
                 // Clear selection to unlock this new record
                 tr.click();
                 foundBeforeUpdate = true;
+                break;
             }
         }
         // Check if it was found
@@ -96,6 +97,7 @@ public class AddingAndEditingTest {
                 // select row
                 tr.click();
                 foundBeforeUpdateAfterRefresh = true;
+                break;
             }
         }
         Assert.assertTrue(foundBeforeUpdateAfterRefresh);
@@ -120,6 +122,7 @@ public class AddingAndEditingTest {
                 // clear selection
                 tr.click();
                 foundAfterUpdate = true;
+                break;
             }
         }
         Assert.assertTrue(foundAfterUpdate);
@@ -136,6 +139,7 @@ public class AddingAndEditingTest {
             if (tr.findElements(By.xpath("./td")).get(2).getText().equals(name)) {
                 tr.click();
                 foundAfterUpdateAfterRefresh = true;
+                break;
             }
         }
         // Check if updated record was found
@@ -184,6 +188,7 @@ public class AddingAndEditingTest {
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click();
         // Last level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click();
+
         // Click first tab - Organizations
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables-tab-1\"]"))).click();
         // Find table
@@ -218,12 +223,10 @@ public class AddingAndEditingTest {
 
         //Enter mobile phone
         WebElement firstContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[1]/div[2]/div"));
-        firstContactParentBody.findElement(By.xpath("//*[@id=\"data\"]")).sendKeys("8-999-999-99-99");
+        firstContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).sendKeys("8-999-999-99-99");
         Thread.sleep(300);
-        firstContactParentBody.findElement(By.xpath("//*[@id=\"description\"]")).sendKeys("Mobile phone");
+        firstContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).sendKeys("Mobile phone");
         Thread.sleep(300);
-
-
 
         // Add contact
         driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/button")).click();
@@ -233,13 +236,13 @@ public class AddingAndEditingTest {
 
         WebElement secondContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[2]/div[2]/div"));
         Thread.sleep(300);
-        // org.openqa.selenium.ElementNotInteractableException: element not interactable
-        Select role = new Select(secondContactParentBody.findElement(By.xpath("//*[@id=\"type\"]")));
-        role.selectByValue("3");
+
+        Select role = new Select(secondContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]")));
+        role.selectByValue("1");
         Thread.sleep(300);
-        secondContactParentBody.findElement(By.xpath("//*[@id=\"data\"]")).sendKeys("8-888-888-88-88");
+        secondContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).sendKeys("8-888-888-88-88");
         Thread.sleep(300);
-        secondContactParentBody.findElement(By.xpath("//*[@id=\"description\"]")).sendKeys("Home phone");
+        secondContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).sendKeys("Home phone");
         Thread.sleep(300);
 
         // Add contact
@@ -250,20 +253,103 @@ public class AddingAndEditingTest {
 
         WebElement thirdContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[3]/div[2]/div"));
         Thread.sleep(300);
-        thirdContactParentBody.findElement(By.xpath("//*[@id=\"type\"]/option[3]")).click();
+        role = new Select(thirdContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]")));
+        role.selectByValue("2");
         Thread.sleep(300);
-        thirdContactParentBody.findElement(By.xpath("//*[@id=\"data\"]")).sendKeys("NY, Fifth avenue");
+        thirdContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).sendKeys("NY, Fifth avenue");
         Thread.sleep(300);
-        thirdContactParentBody.findElement(By.xpath("//*[@id=\"description\"]")).sendKeys("Home address");
+        thirdContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).sendKeys("Home address");
         Thread.sleep(300);
 
-//        // Wait until all notifications disappear
-//        Thread.sleep(30_000);
-//
-//        // Click logout button
-//        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/button[2]"))).click();
-//        Thread.sleep(300);
-//        driver.quit();
+        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/button")).click();
+        Thread.sleep(2_000);
+
+        driver.navigate().refresh();
+
+        Thread.sleep(2_000);
+        // Find table
+        tbody = driver.findElement(By.xpath("//*[@id=\"tables-pane-1\"]/div[2]/div/div[1]/div[2]/table/tbody"));
+        // Select topmost record in the table
+        tbody.findElements(By.xpath("./tr")).get(0).findElements(By.xpath("./td")).get(2).click();
+        // Click second tab - Persons
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables-tab-2\"]"))).click();
+
+        tbody = driver.findElement(By.xpath("//*[@id=\"tables-pane-2\"]/div/div/div[1]/div[2]/table/tbody"));
+        List<WebElement> trs = tbody.findElements(By.xpath("./tr"));
+        Thread.sleep(300);
+        WebElement targetTr = null;
+        boolean foundNewRecord = false;
+        for (WebElement tr : trs) {
+            if (trs.get(0).findElements(By.xpath("./td")).get(3).findElement(By.xpath("./div")).getText().equals("First name")) {
+                tr.click();
+                Thread.sleep(300);
+                targetTr = tr;
+                foundNewRecord = true;
+                break;
+            }
+        }
+
+        Assert.assertTrue(foundNewRecord);
+        List<WebElement> targetTds = targetTr.findElements(By.xpath("./td"));
+        Assert.assertEquals(targetTds.get(3).findElement(By.xpath("./div")).getText(), "First name");
+        Assert.assertEquals(targetTds.get(4).findElement(By.xpath("./div")).getText(), "Last name");
+        Assert.assertEquals(targetTds.get(5).findElement(By.xpath("./div")).getText(), "First point Second point");
+        Assert.assertEquals(targetTds.get(6).findElement(By.xpath("./div")).getText(), "10000$/m");
+
+        driver.findElement(By.xpath("//*[@id=\"tables-tab-3\"]")).click();
+
+        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"firstName\"]")).getAttribute("value"), "First name");
+        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"lastName\"]")).getAttribute("value"), "Last name");
+        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"salary\"]")).getAttribute("value"), "10000$/m");
+        Thread.sleep(300);
+        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[2]/div/div/div/div/ul/li[1]/div/span/span")).getText(), "First point");
+        Thread.sleep(300);
+        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[2]/div/div/div/div/ul/li[2]/div/span/span")).getText(), "Second point");
+        Thread.sleep(300);
+
+        // Click contact header to expand
+        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[1]/div[1]/div/a")).click();
+        Thread.sleep(300);
+
+        firstContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[1]/div[2]/div"));
+        Assert.assertEquals("8-999-999-99-99", firstContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).getAttribute("value"));
+        Thread.sleep(300);
+        Assert.assertEquals("Mobile phone", firstContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).getAttribute("value"));
+        Thread.sleep(300);
+        Assert.assertEquals("Mobile phone", new Select(firstContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]"))).getFirstSelectedOption().getText());
+
+
+        // Click contact header to expand
+        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[2]/div[1]/div/a")).click();
+        Thread.sleep(300);
+
+        secondContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[2]/div[2]/div"));
+        Assert.assertEquals("8-888-888-88-88", secondContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).getAttribute("value"));
+        Thread.sleep(300);
+        Assert.assertEquals("Home phone", secondContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).getAttribute("value"));
+        Thread.sleep(300);
+        Assert.assertEquals("Home phone", new Select(secondContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]"))).getFirstSelectedOption().getText());
+
+        // Click contact header to expand
+        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[3]/div[1]/div/a")).click();
+        Thread.sleep(300);
+
+        thirdContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[3]/div[2]/div"));
+        Assert.assertEquals("NY, Fifth avenue", thirdContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).getAttribute("value"));
+        Thread.sleep(300);
+        Assert.assertEquals("Home address", thirdContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).getAttribute("value"));
+        Thread.sleep(300);
+        Assert.assertEquals("Address", new Select(thirdContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]"))).getFirstSelectedOption().getText());
+
+
+
+        // Wait until all notifications disappear
+        Thread.sleep(30_000);
+
+        // Click logout button
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/button[2]"))).click();
+        Thread.sleep(300);
+        driver.quit();
     }
 
 }

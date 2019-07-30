@@ -116,14 +116,6 @@ public class GridDAO {
 
     public static List<ContactDto> createOrUpdateContacts(List<ContactDto> contactDtos, String user) {
         if (contactDtos.isEmpty() || user == null) return contactDtos;
-        IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE);
-        Person person = cachePerson.get(contactDtos.get(0).getPersonId());
-        if (person == null) {
-            throw new IllegalArgumentException("Parent person with id " + contactDtos.get(0).getPersonId() + " doesn't exist");
-        } else {
-            if (notLockedByUser(Person.class.getName() + person.getId(), user))
-                throw new LockRecordException("Record was not locked by " + user);
-        }
         IgniteCache<String, Contact> cacheContacts = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
         IgniteTransactions transactions = ignite.transactions();
         try (Transaction tx = transactions.txStart()) {
@@ -289,7 +281,7 @@ public class GridDAO {
     public static List<ContactDto> getContactsByPersonId(String id) {
         IgniteCache<String, Contact> cache = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
         List<ContactDto> cacheDtoArrayList = new ArrayList<>();
-        SqlQuery<String, Contact> sql = new SqlQuery<>(Contact.class, "personId = ?");
+        SqlQuery<String, Contact> sql = new SqlQuery<>(Contact.class, "personId = ? order by type");
         try (QueryCursor<Cache.Entry<String, Contact>> cursor = cache.query(sql.setArgs(id))) {
             for (Cache.Entry<String, Contact> e : cursor)
                 cacheDtoArrayList.add(new ContactDto(e.getValue()));
