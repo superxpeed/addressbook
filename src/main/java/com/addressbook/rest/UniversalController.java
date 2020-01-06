@@ -11,6 +11,7 @@ import com.addressbook.security.CurrentUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping(path = "/rest")
@@ -29,85 +32,66 @@ public class UniversalController {
     private CurrentUser currentUser;
 
     @RequestMapping("/getList4UniversalListForm")
-    public PageDataDto<TableDataDto> getList(@RequestParam(value = "start") int start,
-                                             @RequestParam(value = "pageSize") int pageSize,
-                                             @RequestParam(value = "sortName") String sortName,
-                                             @RequestParam(value = "sortOrder") String sortOrder,
-                                             @RequestParam(value = "cache") String cache,
-                                             @RequestBody List<FilterDto> filterDto) {
-
-        TableDataDto td = new TableDataDto<>(GridDAO.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), GridDAO.getTotalDataSize(cache, filterDto));
-        PageDataDto<TableDataDto> dto = new PageDataDto<>();
-        dto.setData(td);
-        dto.setFieldDescriptionMap(UniversalFieldsDescriptor.getFieldDescriptionMap(cache));
-        return dto;
+    public CompletableFuture<PageDataDto<TableDataDto>> getList(@RequestParam(value = "start") int start,
+                                                                @RequestParam(value = "pageSize") int pageSize,
+                                                                @RequestParam(value = "sortName") String sortName,
+                                                                @RequestParam(value = "sortOrder") String sortOrder,
+                                                                @RequestParam(value = "cache") String cache,
+                                                                @RequestBody List<FilterDto> filterDto) {
+        return CompletableFuture.supplyAsync(() ->
+                PageDataDto.<TableDataDto>builder()
+                        .data(new TableDataDto<>(GridDAO.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), GridDAO.getTotalDataSize(cache, filterDto)))
+                        .fieldDescriptionMap(UniversalFieldsDescriptor.getFieldDescriptionMap(cache)).build());
     }
 
-
     @RequestMapping("/getContactList")
-    public PageDataDto<TableDataDto> getContactList(@RequestParam(value = "personId") String id) {
-        List<ContactDto> contactDtos = GridDAO.getContactsByPersonId(id);
-        PageDataDto<TableDataDto> dto = new PageDataDto<>();
-        dto.setData(new TableDataDto<>(contactDtos, contactDtos.size()));
-        return dto;
+    public CompletableFuture<PageDataDto<TableDataDto>> getContactList(@RequestParam(value = "personId") String id) {
+        return CompletableFuture.supplyAsync(() -> PageDataDto.<TableDataDto>builder().data(new TableDataDto<>(GridDAO.getContactsByPersonId(id))).build());
     }
 
     @RequestMapping(value = "/saveOrCreatePerson", method = RequestMethod.POST)
-    public PageDataDto<PersonDto> saveOrCreatePerson(@RequestBody PersonDto personDto) {
-        PageDataDto<PersonDto> dto = new PageDataDto<>();
-        dto.setData(GridDAO.createOrUpdatePerson(personDto, currentUser.getCurrentUser()));
-        return dto;
+    public CompletableFuture<PageDataDto<PersonDto>> saveOrCreatePerson(@RequestBody PersonDto personDto) {
+        String login = currentUser.getCurrentUser();
+        return CompletableFuture.supplyAsync(() -> PageDataDto.<PersonDto>builder().data(GridDAO.createOrUpdatePerson(personDto, login)).build());
     }
 
     @RequestMapping(value = "/saveOrCreateOrganization", method = RequestMethod.POST)
-    public PageDataDto<OrganizationDto> saveOrCreateOrganization(@RequestBody OrganizationDto organizationDto) {
-        PageDataDto<OrganizationDto> dto = new PageDataDto<>();
-        dto.setData(GridDAO.createOrUpdateOrganization(organizationDto, currentUser.getCurrentUser()));
-        return dto;
+    public CompletableFuture<PageDataDto<OrganizationDto>> saveOrCreateOrganization(@RequestBody OrganizationDto organizationDto) {
+        String login = currentUser.getCurrentUser();
+        return CompletableFuture.supplyAsync(() -> PageDataDto.<OrganizationDto>builder().data(GridDAO.createOrUpdateOrganization(organizationDto, login)).build());
     }
 
     @RequestMapping(value = "/getBreadcrumbs", method = RequestMethod.GET)
-    public PageDataDto<List<Breadcrumb>> getBreadcrumbs(@RequestParam(value = "currentUrl") String url) {
-        PageDataDto<List<Breadcrumb>> dto = new PageDataDto<>();
-        dto.setData(GridDAO.readBreadcrumbs(url));
-        return dto;
+    public CompletableFuture<PageDataDto<List<Breadcrumb>>> getBreadcrumbs(@RequestParam(value = "currentUrl") String url) {
+        return CompletableFuture.supplyAsync(() -> PageDataDto.<List<Breadcrumb>>builder().data(GridDAO.readBreadcrumbs(url)).build());
     }
 
     @RequestMapping(value = "/getNextLevelMenus", method = RequestMethod.GET)
-    public PageDataDto<List<MenuEntryDto>> getNextLevelMenus(@RequestParam(value = "currentUrl") String url) {
-        PageDataDto<List<MenuEntryDto>> dto = new PageDataDto<>();
-        dto.setData(GridDAO.readNextLevel(url, currentUser.getAuthorities()));
-        return dto;
+    public CompletableFuture<PageDataDto<List<MenuEntryDto>>> getNextLevelMenus(@RequestParam(value = "currentUrl") String url) {
+        Collection<? extends GrantedAuthority> authorities = currentUser.getAuthorities();
+        return CompletableFuture.supplyAsync(() -> PageDataDto.<List<MenuEntryDto>>builder().data(GridDAO.readNextLevel(url, authorities)).build());
     }
 
     @RequestMapping(value = "/saveOrCreateContacts", method = RequestMethod.POST)
-    public PageDataDto<List<ContactDto>> saveOrCreateContacts(@RequestBody List<ContactDto> contactDtos) {
-        PageDataDto<List<ContactDto>> dto = new PageDataDto<>();
-        dto.setData(GridDAO.createOrUpdateContacts(contactDtos, currentUser.getCurrentUser()));
-        return dto;
+    public CompletableFuture<PageDataDto<List<ContactDto>>> saveOrCreateContacts(@RequestBody List<ContactDto> contactDto) {
+        String login = currentUser.getCurrentUser();
+        return CompletableFuture.supplyAsync(() -> PageDataDto.<List<ContactDto>>builder().data(GridDAO.createOrUpdateContacts(contactDto, login)).build());
     }
-
 
     @RequestMapping(value = "/lockRecord", method = RequestMethod.GET)
     public PageDataDto<Alert> lockRecord(@RequestParam(value = "type") String type, @RequestParam(value = "id") String id) {
-        boolean locked = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser(), true);
-        Alert alert;
-        if (locked) alert = new Alert("Record locked!", "success", "Record id " + id + " locked!");
-        else alert = new Alert("Record was not locked!", "warning", "Record id " + id + " was already locked!");
-        PageDataDto<Alert> dto = new PageDataDto<>();
-        dto.setData(alert);
-        return dto;
+        Alert alert = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser(), true)
+                ? Alert.builder().headline("Record locked!").type(Alert.SUCCESS).message("Record id " + id + " locked!").build()
+                : Alert.builder().headline("Record was not locked!").type(Alert.WARNING).message("Record id " + id + " was already locked!").build();
+        return PageDataDto.<Alert>builder().data(alert).build();
     }
 
     @RequestMapping(value = "/unlockRecord", method = RequestMethod.GET)
     public PageDataDto<Alert> unlockRecord(@RequestParam(value = "type") String type, @RequestParam(value = "id") String id) {
-        boolean unlocked = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser(), false);
-        Alert alert;
-        if (unlocked) alert = new Alert("Record unlocked!", "success", "Record id " + id + " unlocked!");
-        else alert = new Alert("Record was not unlocked!", "warning", "Record id " + id + " was not locked by you!");
-        PageDataDto<Alert> dto = new PageDataDto<>();
-        dto.setData(alert);
-        return dto;
+        Alert alert = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser(), false)
+                ? Alert.builder().headline("Record unlocked!").type(Alert.SUCCESS).message("Record id " + id + " unlocked!").build()
+                : Alert.builder().headline("Record was not unlocked!").type(Alert.WARNING).message("Record id " + id + " was not locked by you!").build();
+        return PageDataDto.<Alert>builder().data(alert).build();
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -123,10 +107,7 @@ public class UniversalController {
     @ExceptionHandler(Throwable.class)
     public void handleError(HttpServletResponse response, Throwable ex) throws Exception {
         response.setStatus(500);
-        Alert alert = new Alert();
-        alert.setType("danger");
-        alert.setHeadline("Error occurred!");
-
+        Alert alert = Alert.builder().type(Alert.DANGER).headline("Error occurred!").build();
         if (ex.getClass().equals(IllegalArgumentException.class) || ex.getClass().equals(LockRecordException.class)) {
             alert.setMessage(ex.getMessage());
         } else {

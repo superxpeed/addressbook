@@ -14,6 +14,11 @@ public class TableDataDto<T> {
     private List<T> data;
     private Integer totalDataSize;
 
+    public TableDataDto(List<T> data) {
+        this.data = data;
+        this.totalDataSize = data != null ? data.size() : null;
+    }
+
     public TableDataDto(List<T> data, Integer totalDataSize) {
         this.data = data;
         this.totalDataSize = totalDataSize;

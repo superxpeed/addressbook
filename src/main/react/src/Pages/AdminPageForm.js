@@ -18,8 +18,8 @@ import {UserComponent} from '../Components/UserComponent';
 export default class AdminPageForm extends React.Component {
 
     state = {
-        jvmstate: {},
-        ignitestate: {
+        jvmState: {},
+        igniteState: {
             igniteCacheMetricsMap: {}
         }
     };
@@ -54,24 +54,24 @@ export default class AdminPageForm extends React.Component {
 
     onMessage = (e) => {
         let result = JSON.parse(e.data);
-        this.setState({jvmstate: result});
+        this.setState({jvmState: result});
     };
 
     onIgniteMessage = (e) => {
         let result = JSON.parse(e.data);
-        this.setState({ignitestate: result});
+        this.setState({igniteState: result});
     };
 
     componentDidMount() {
         let currentUrl = window.location.hash;
         this.props.getBreadcrumbs(HashUtils.cleanHash(currentUrl));
 
-        let newEventSource = new EventSource('/rest/admin/jvmstate');
+        let newEventSource = new EventSource('/rest/admin/jvmState');
         newEventSource.onopen = this.onOpen;
         newEventSource.onmessage = this.onMessage;
         newEventSource.onerror = this.onError;
 
-        let newIgniteEventSource = new EventSource('/rest/admin/ignitestate');
+        let newIgniteEventSource = new EventSource('/rest/admin/igniteState');
         newIgniteEventSource.onopen = this.onIgniteOpen;
         newIgniteEventSource.onmessage = this.onIgniteMessage;
         newIgniteEventSource.onerror = this.onIgniteError;
@@ -87,7 +87,7 @@ export default class AdminPageForm extends React.Component {
     render() {
 
         let igniteMetrics = [];
-        let allMetrics = this.state.ignitestate.igniteCacheMetricsMap;
+        let allMetrics = this.state.igniteState.igniteCacheMetricsMap;
         for (const key of Object.keys(allMetrics)) {
             const cache = allMetrics[key];
             igniteMetrics.push(<div>
@@ -169,107 +169,107 @@ export default class AdminPageForm extends React.Component {
                     <Table striped bordered condensed hover>
                         <tr>
                             <td>Total memory</td>
-                            <td>{this.state.jvmstate.runtimeTotalMemory}</td>
+                            <td>{this.state.jvmState.runtimeTotalMemory}</td>
                         </tr>
                         <tr>
                             <td>Free memory</td>
-                            <td>{this.state.jvmstate.runtimeFreeMemory}</td>
+                            <td>{this.state.jvmState.runtimeFreeMemory}</td>
                         </tr>
                         <tr>
                             <td>Max memory</td>
-                            <td>{this.state.jvmstate.runtimeMaxMemory}</td>
+                            <td>{this.state.jvmState.runtimeMaxMemory}</td>
                         </tr>
                     </Table>
                     <h4><Label bsStyle='danger'>System</Label></h4>
                     <Table striped bordered condensed hover>
                         <tr>
                             <td>Available processors</td>
-                            <td>{this.state.jvmstate.availableProcessors}</td>
+                            <td>{this.state.jvmState.availableProcessors}</td>
                         </tr>
                         <tr>
                             <td>Load average</td>
-                            <td>{this.state.jvmstate.systemLoadAverage}</td>
+                            <td>{this.state.jvmState.systemLoadAverage}</td>
                         </tr>
                         <tr>
                             <td>Architecture</td>
-                            <td>{this.state.jvmstate.arch}</td>
+                            <td>{this.state.jvmState.arch}</td>
                         </tr>
                         <tr>
                             <td>Operating system</td>
-                            <td>{this.state.jvmstate.name}</td>
+                            <td>{this.state.jvmState.name}</td>
                         </tr>
                         <tr>
                             <td>Operating system version</td>
-                            <td>{this.state.jvmstate.version}</td>
+                            <td>{this.state.jvmState.version}</td>
                         </tr>
                         <tr>
                             <td>Total physical memory</td>
-                            <td>{this.state.jvmstate.totalPhysicalMemory}</td>
+                            <td>{this.state.jvmState.totalPhysicalMemory}</td>
                         </tr>
                         <tr>
                             <td>Total cpu load</td>
-                            <td>{this.state.jvmstate.totalCpuLoad}</td>
+                            <td>{this.state.jvmState.totalCpuLoad}</td>
                         </tr>
                         <tr>
                             <td>Disk size</td>
-                            <td>{this.state.jvmstate.diskSize}</td>
+                            <td>{this.state.jvmState.diskSize}</td>
                         </tr>
                         <tr>
                             <td>OS user</td>
-                            <td>{this.state.jvmstate.user}</td>
+                            <td>{this.state.jvmState.user}</td>
                         </tr>
                     </Table>
                     <h4><Label bsStyle='danger'>Heap</Label></h4>
                     <Table striped bordered condensed hover>
                         <tr>
                             <td>Used</td>
-                            <td>{this.state.jvmstate.heapMemoryUsed}</td>
+                            <td>{this.state.jvmState.heapMemoryUsed}</td>
                         </tr>
                         <tr>
                             <td>Initial</td>
-                            <td>{this.state.jvmstate.heapMemoryInit}</td>
+                            <td>{this.state.jvmState.heapMemoryInit}</td>
                         </tr>
                         <tr>
                             <td>Committed</td>
-                            <td>{this.state.jvmstate.heapMemoryCommitted}</td>
+                            <td>{this.state.jvmState.heapMemoryCommitted}</td>
                         </tr>
                         <tr>
                             <td>Max</td>
-                            <td>{this.state.jvmstate.heapMemoryMax}</td>
+                            <td>{this.state.jvmState.heapMemoryMax}</td>
                         </tr>
                     </Table>
                     <h4><Label bsStyle='danger'>Non-heap</Label></h4>
                     <Table striped bordered condensed hover>
                         <tr>
                             <td>Used</td>
-                            <td>{this.state.jvmstate.nonHeapMemoryUsed}</td>
+                            <td>{this.state.jvmState.nonHeapMemoryUsed}</td>
                         </tr>
                         <tr>
                             <td>Initial</td>
-                            <td>{this.state.jvmstate.nonHeapMemoryInit}</td>
+                            <td>{this.state.jvmState.nonHeapMemoryInit}</td>
                         </tr>
                         <tr>
                             <td>Committed</td>
-                            <td>{this.state.jvmstate.nonHeapMemoryCommitted}</td>
+                            <td>{this.state.jvmState.nonHeapMemoryCommitted}</td>
                         </tr>
                         <tr>
                             <td>Max</td>
-                            <td>{this.state.jvmstate.nonHeapMemoryMax}</td>
+                            <td>{this.state.jvmState.nonHeapMemoryMax}</td>
                         </tr>
                     </Table>
                     <h4><Label bsStyle='danger'>Threads</Label></h4>
                     <Table striped bordered condensed hover>
                         <tr>
                             <td>Current thread count</td>
-                            <td>{this.state.jvmstate.threadCount}</td>
+                            <td>{this.state.jvmState.threadCount}</td>
                         </tr>
                         <tr>
                             <td>Total started thread count</td>
-                            <td>{this.state.jvmstate.totalStartedThreadCount}</td>
+                            <td>{this.state.jvmState.totalStartedThreadCount}</td>
                         </tr>
                         <tr>
                             <td>Peak thread count</td>
-                            <td>{this.state.jvmstate.peakThreadCount}</td>
+                            <td>{this.state.jvmState.peakThreadCount}</td>
                         </tr>
                     </Table>
                 </div>

@@ -10,11 +10,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.io.Serializable;
 import java.util.Collection;
 
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class CurrentUser {
+public class CurrentUser implements Serializable {
 
     private String userName;
     private Collection<? extends GrantedAuthority> authorities;

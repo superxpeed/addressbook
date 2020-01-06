@@ -18,18 +18,16 @@ public class WebAppErrorController implements ErrorController {
     public String handleError(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         if (status != null) {
-            int statusCode = Integer.valueOf(status.toString());
+            int statusCode = Integer.parseInt(status.toString());
             if (statusCode == HttpStatus.NOT_FOUND.value()) return "404.html";
             if (statusCode == HttpStatus.UNAUTHORIZED.value()) {
                 ObjectMapper objectMapper = new ObjectMapper();
-                objectMapper.writeValue(response.getWriter(), new Alert("Error occurred!", "danger", "You are not authorized to see that content!"));
+                objectMapper.writeValue(response.getWriter(), Alert.builder().headline("Error occurred!").type(Alert.DANGER).message("You are not authorized to see that content!").build());
             }
         }
         return null;
     }
 
     @Override
-    public String getErrorPath() {
-        return "/error";
-    }
+    public String getErrorPath() { return "/error"; }
 }

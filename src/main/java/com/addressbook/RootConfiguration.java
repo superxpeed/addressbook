@@ -17,9 +17,7 @@ public class RootConfiguration {
     }
 
     @Bean
-    GridStarter gridStarter() {
-        return new GridStarter();
-    }
+    GridStarter gridStarter() { return new GridStarter(); }
 
     @Bean
     public ServletListenerRegistrationBean<HttpSessionListener> sessionListener() {

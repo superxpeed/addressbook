@@ -17,20 +17,16 @@ import reactor.core.publisher.Flux;
 public class AdminController {
 
     @Autowired
-    JVMStateService jvmStateService;
+    private JVMStateService jvmStateService;
 
     @Autowired
-    IgniteStateService igniteStateService;
+    private IgniteStateService igniteStateService;
 
-    @GetMapping(value = "/jvmstate", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/jvmState", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
-    public Flux<JVMState> jvmStateEvents() {
-        return jvmStateService.getJVMState();
-    }
+    public Flux<JVMState> jvmStateEvents() { return jvmStateService.getJVMState(); }
 
-    @GetMapping(value = "/ignitestate", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/igniteState", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
-    public Flux<IgniteMetricsContainer> igniteMetricEvents() {
-        return igniteStateService.getIgniteState();
-    }
+    public Flux<IgniteMetricsContainer> igniteMetricEvents() { return igniteStateService.getIgniteState(); }
 }
