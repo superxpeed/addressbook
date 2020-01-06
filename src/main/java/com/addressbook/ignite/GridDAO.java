@@ -88,7 +88,7 @@ public class GridDAO {
             if (notLockedByUser(Organization.class.getName() + organization.getId(), user))
                 throw new LockRecordException("Record was not locked by " + user);
         }
-        organization.setType(OrganizationType.values()[Integer.valueOf(organizationDto.getType())]);
+        organization.setType(OrganizationType.values()[Integer.parseInt(organizationDto.getType())]);
         organization.setLastUpdated(new Timestamp(System.currentTimeMillis()));
         organization.setName(organizationDto.getName());
         organization.setAddr(new Address(organizationDto.getStreet(), organizationDto.getZip()));
@@ -125,7 +125,7 @@ public class GridDAO {
                 contact.setData(contactDto.getData());
                 contact.setDescription(contactDto.getDescription());
                 contact.setPersonId(contactDto.getPersonId());
-                contact.setType(ContactType.values()[Integer.valueOf(contactDto.getType())]);
+                contact.setType(ContactType.values()[Integer.parseInt(contactDto.getType())]);
                 cacheContacts.put(contact.getContactId(), contact);
             }
             tx.commit();

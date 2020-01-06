@@ -24,19 +24,19 @@ public class UniversalFieldsDescriptor {
     private static Map<String, Class<?>> dtoClasses = new LinkedHashMap<>();
 
     static {
-        fieldDescriptionMapOrganization.put("id",           new FieldDescription("id",          "ID",           "java.lang.String", "170px", false, false));
-        fieldDescriptionMapOrganization.put("name",         new FieldDescription("name",        "Name",         "java.lang.String", "170px", false, false));
-        fieldDescriptionMapOrganization.put("street",       new FieldDescription("street",      "Street",       "java.lang.String", "170px", false, false));
-        fieldDescriptionMapOrganization.put("zip",          new FieldDescription("zip",         "Zip",          "java.lang.Long",   "170px", false, false));
-        fieldDescriptionMapOrganization.put("type",         new FieldDescription("type",        "Type",         "java.lang.String", "170px", false, false));
-        fieldDescriptionMapOrganization.put("lastUpdated",  new FieldDescription("lastUpdated", "Last updated", "java.util.Date",   "170px", false, false));
+        fieldDescriptionMapOrganization.put("id",           new FieldDescription("id",          "ID",           "java.lang.String", "170px"));
+        fieldDescriptionMapOrganization.put("name",         new FieldDescription("name",        "Name",         "java.lang.String", "170px"));
+        fieldDescriptionMapOrganization.put("street",       new FieldDescription("street",      "Street",       "java.lang.String", "170px"));
+        fieldDescriptionMapOrganization.put("zip",          new FieldDescription("zip",         "Zip",          "java.lang.Long",   "170px"));
+        fieldDescriptionMapOrganization.put("type",         new FieldDescription("type",        "Type",         "java.lang.String", "170px"));
+        fieldDescriptionMapOrganization.put("lastUpdated",  new FieldDescription("lastUpdated", "Last updated", "java.util.Date",   "170px"));
 
-        fieldDescriptionMapPerson.put("id",         new FieldDescription("id",          "ID",           "java.lang.String", "170px", false, false));
-        fieldDescriptionMapPerson.put("orgId",      new FieldDescription("orgId",       "Organization", "java.lang.String", "170px", true,  false));
-        fieldDescriptionMapPerson.put("firstName",  new FieldDescription("firstName",   "First name",   "java.lang.String", "170px", false, false));
-        fieldDescriptionMapPerson.put("lastName",   new FieldDescription("lastName",    "Last name",    "java.lang.String", "170px", false, false));
-        fieldDescriptionMapPerson.put("resume",     new FieldDescription("resume",      "Resume",       "java.lang.String", "170px", false, false));
-        fieldDescriptionMapPerson.put("salary",     new FieldDescription("salary",      "Salary",       "java.lang.String", "170px", false, false));
+        fieldDescriptionMapPerson.put("id",         new FieldDescription("id",          "ID",           "java.lang.String", "170px"));
+        fieldDescriptionMapPerson.put("orgId",      new FieldDescription("orgId",       "Organization", "java.lang.String", "170px"));
+        fieldDescriptionMapPerson.put("firstName",  new FieldDescription("firstName",   "First name",   "java.lang.String", "170px"));
+        fieldDescriptionMapPerson.put("lastName",   new FieldDescription("lastName",    "Last name",    "java.lang.String", "170px"));
+        fieldDescriptionMapPerson.put("resume",     new FieldDescription("resume",      "Resume",       "java.lang.String", "170px"));
+        fieldDescriptionMapPerson.put("salary",     new FieldDescription("salary",      "Salary",       "java.lang.String", "170px"));
 
         fieldDescriptionMaps.put(ORGANIZATION_CACHE, fieldDescriptionMapOrganization);
         fieldDescriptionMaps.put(PERSON_CACHE, fieldDescriptionMapPerson);

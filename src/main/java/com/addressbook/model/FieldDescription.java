@@ -15,7 +15,5 @@ public class FieldDescription {
     private String displayName;
     private String width;
     private String type;
-    private boolean isHidden;
-    private boolean isTechnical;
 
 }

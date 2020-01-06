@@ -24,9 +24,13 @@ public class AdminController {
 
     @GetMapping(value = "/jvmState", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
-    public Flux<JVMState> jvmStateEvents() { return jvmStateService.getJVMState(); }
+    public Flux<JVMState> jvmStateEvents() {
+        return jvmStateService.getJVMState();
+    }
 
     @GetMapping(value = "/igniteState", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
-    public Flux<IgniteMetricsContainer> igniteMetricEvents() { return igniteStateService.getIgniteState(); }
+    public Flux<IgniteMetricsContainer> igniteMetricEvents() {
+        return igniteStateService.getIgniteState();
+    }
 }
