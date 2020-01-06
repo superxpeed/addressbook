@@ -221,7 +221,6 @@ export default class UniversalListForm extends React.Component {
                                     onClick={() => this.setState({
                                         createNewPerson: true,
                                         newPerson: {
-                                            id: Generator.uuidv4(),
                                             orgId: this.props.selectedRowsOrganization[0].id
                                         }
                                     })}>

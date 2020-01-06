@@ -79,6 +79,12 @@ public class GridDAO {
         }
     }
 
+    /**
+     *
+     * @param organizationDto contains all data related to existing or new organization entity
+     * @param user current user (will be used for locking existing entity)
+     * @return updated or created organization entity
+     */
     public static OrganizationDto createOrUpdateOrganization(OrganizationDto organizationDto, String user) {
         IgniteCache<String, Organization> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE);
         Organization organization = cachePerson.get(organizationDto.getId());
@@ -96,11 +102,18 @@ public class GridDAO {
         return organizationDto;
     }
 
+    /**
+     *
+     * @param personDto contains all data related to existing or new person entity
+     * @param user current user (will be used for locking existing entity)
+     * @return updated or created person entity
+     */
     public static PersonDto createOrUpdatePerson(PersonDto personDto, String user) {
         IgniteCache<String, Person> cachePerson = ignite.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE);
-        Person person = cachePerson.get(personDto.getId());
+        Person person = personDto.getId() != null ? cachePerson.get(personDto.getId()) : null;
         if (person == null) {
-            person = new Person(personDto);
+            person = new Person();
+            personDto.setId(person.getId());
         } else {
             if (notLockedByUser(Person.class.getName() + person.getId(), user))
                 throw new LockRecordException("Record was not locked by " + user);
@@ -114,12 +127,21 @@ public class GridDAO {
         return personDto;
     }
 
-    public static List<ContactDto> createOrUpdateContacts(List<ContactDto> contactDtos, String user) {
+    /**
+     *
+     * @param contactDtos contains all data related to existing or new contact entities
+     * @param user current user (was used for locking existing parent person entity)
+     * @return updated or created contact entities
+     */
+    public static List<ContactDto> createOrUpdateContacts(List<ContactDto> contactDtos, String user, String personId) {
         if (contactDtos.isEmpty() || user == null) return contactDtos;
+        if (notLockedByUser(Person.class.getName() + personId, user))
+            throw new LockRecordException("Parent record was not locked by " + user);
         IgniteCache<String, Contact> cacheContacts = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
         IgniteTransactions transactions = ignite.transactions();
         try (Transaction tx = transactions.txStart()) {
             for (ContactDto contactDto : contactDtos) {
+                contactDto.setPersonId(personId);
                 Contact contact = cacheContacts.get(contactDto.getId());
                 if (contact == null) contact = new Contact();
                 contact.setData(contactDto.getData());
@@ -245,12 +267,8 @@ public class GridDAO {
                     }
                     addSql = filter.getName() + getComparator(filter) + query;
                 }
-                if (type.equals("TextFilter")) {
-                    addSql = filter.getName() + " like '%" + filter.getValue().replaceAll("'", "''") + "%'";
-                }
-                if (type.equals("DateFilter")) {
-                    addSql = filter.getName() + getComparator(filter) + "'" + filter.getValue() + "'";
-                }
+                if (type.equals("TextFilter")) addSql = filter.getName() + " like '%" + filter.getValue().replaceAll("'", "''") + "%'";
+                if (type.equals("DateFilter")) addSql = filter.getName() + getComparator(filter) + "'" + filter.getValue() + "'";
                 if (filterDto.indexOf(filter) == 0) baseSql.append(" where ");
                 baseSql.append(addSql);
                 if (filterDto.indexOf(filter) != (filterDto.size() - 1)) baseSql.append(" and ");

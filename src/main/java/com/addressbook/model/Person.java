@@ -1,6 +1,5 @@
 package com.addressbook.model;
 
-import com.addressbook.dto.PersonDto;
 import lombok.*;
 import org.apache.ignite.cache.query.annotations.QuerySqlField;
 
@@ -9,7 +8,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class Person implements Serializable {
@@ -32,8 +30,8 @@ public class Person implements Serializable {
     @QuerySqlField(index = true)
     private String salary;
 
-    public Person(PersonDto personDto) {
-        id = personDto.getId();
+    public Person() {
+        id = UUID.randomUUID().toString();
     }
 
     public Person(Organization org, String firstName, String lastName, String salary, String resume) {

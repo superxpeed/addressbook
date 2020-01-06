@@ -77,6 +77,7 @@ export class PersonComponent extends React.Component {
 
     savePerson = () => {
         let savedPerson;
+        let creation = this.state.person.id === undefined;
         let isOk = false;
         let headers = new Headers();
         headers.append('Accept', 'application/json');
@@ -93,27 +94,40 @@ export class PersonComponent extends React.Component {
         }).then(text => {
             if (isOk) {
                 savedPerson = JSON.parse(text).data;
-                fetch(url.SAVE_CONTACT_LIST, {
-                    method: 'post',
-                    credentials: 'include',
-                    headers: headers,
-                    body: this.container.getJson()
-                }).then(response => {
-                    ifNoAuthorizedRedirect(response);
-                    isOk = response.ok;
-                    return response.text()
-                }).then(text => {
-                    if (isOk) {
-                        if (this.props.forUpdate)
-                            this.setState(update(this.state, {
-                                person: {$set: savedPerson},
-                                contactList: {data: {$set: JSON.parse(text).data}}
-                            }));
-                        this.props.onUpdate(savedPerson);
-                    } else {
-                        this.props.showCommonErrorAlert(text);
-                    }
-                })
+                let personId = creation ? savedPerson.id : this.state.person.id;
+                if(creation){
+                    this.props.lockUnlockRecord(Caches.PERSON_CACHE, personId, 'lock', (result) => {
+                        if (result === 'success') {
+                            this.setState({locked: true});
+                            fetch(url.SAVE_CONTACT_LIST + '?personId=' + personId, {
+                                method: 'post',
+                                credentials: 'include',
+                                headers: headers,
+                                body: this.container.getJson()
+                            }).then(response => {
+                                ifNoAuthorizedRedirect(response);
+                                isOk = response.ok;
+                                return response.text()
+                            }).then(text => {
+                                if (isOk) {
+                                    if (this.props.forUpdate)
+                                        this.setState(update(this.state, {
+                                            person: {$set: savedPerson},
+                                            contactList: {data: {$set: JSON.parse(text).data}}
+                                        }));
+                                    if(creation){
+                                        this.props.lockUnlockRecord(Caches.PERSON_CACHE, savedPerson.id, 'unlock');
+                                    }
+                                    this.props.onUpdate(savedPerson);
+                                } else {
+                                    this.props.showCommonErrorAlert(text);
+                                }
+                            })
+                        } else if (result === 'warning') {
+                            this.setState({locked: false});
+                        }
+                    });
+                }
             } else {
                 this.props.showCommonErrorAlert(text);
             }

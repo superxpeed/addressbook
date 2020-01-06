@@ -73,9 +73,9 @@ public class UniversalController {
     }
 
     @RequestMapping(value = "/saveOrCreateContacts", method = RequestMethod.POST)
-    public CompletableFuture<PageDataDto<List<ContactDto>>> saveOrCreateContacts(@RequestBody List<ContactDto> contactDto) {
+    public CompletableFuture<PageDataDto<List<ContactDto>>> saveOrCreateContacts(@RequestBody List<ContactDto> contactDto, @RequestParam(value = "personId") String personId) {
         String login = currentUser.getCurrentUser();
-        return CompletableFuture.supplyAsync(() -> PageDataDto.<List<ContactDto>>builder().data(GridDAO.createOrUpdateContacts(contactDto, login)).build());
+        return CompletableFuture.supplyAsync(() -> PageDataDto.<List<ContactDto>>builder().data(GridDAO.createOrUpdateContacts(contactDto, login, personId)).build());
     }
 
     @RequestMapping(value = "/lockRecord", method = RequestMethod.GET)
