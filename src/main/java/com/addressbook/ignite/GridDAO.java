@@ -51,7 +51,7 @@ public class GridDAO {
 
             TcpDiscoverySpi tcpDiscoverySpi = new TcpDiscoverySpi();
             TcpDiscoveryMulticastIpFinder tcpDiscoveryMulticastIpFinder = new TcpDiscoveryMulticastIpFinder();
-            tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("127.0.0.1:47500..47509"));
+            tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton(System.getenv("IGNITE_SERVER")));
             tcpDiscoverySpi.setIpFinder(tcpDiscoveryMulticastIpFinder);
             igniteConfiguration.setDiscoverySpi(tcpDiscoverySpi);
             ignite = Ignition.start(igniteConfiguration);
@@ -64,7 +64,7 @@ public class GridDAO {
                 cfg.setStatisticsEnabled(true);
                 cfg.setWriteSynchronizationMode(CacheWriteSynchronizationMode.FULL_SYNC);
                 cfg.setIndexedTypes(String.class, cache.getValue());
-                try (IgniteCache createdCache = ignite.getOrCreateCache(cfg)) {
+                try (IgniteCache<String, ?> createdCache = ignite.getOrCreateCache(cfg)) {
                     if (ignite.cluster().forDataNodes(createdCache.getName()).nodes().isEmpty()) {
                         logger.info("");
                         logger.info(">>> Please start at least 1 remote cache node.");
@@ -253,16 +253,16 @@ public class GridDAO {
 
     private static StringBuilder getQuerySql(List<FilterDto> filterDto) {
         StringBuilder baseSql = new StringBuilder(" ");
-        if (filterDto.size() != 0) {
+        if (!filterDto.isEmpty()) {
             for (FilterDto filter : filterDto) {
                 String type = filter.getType();
                 String addSql = "";
                 if (type.equals("NumberFilter")) {
-                    Integer query;
+                    int query;
                     try {
-                        query = Integer.valueOf(filter.getValue());
+                        query = Integer.parseInt(filter.getValue());
                     } catch (NumberFormatException e) {
-                        logger.info("Invalid filter argument: " + filter.getValue());
+                        logger.info("Invalid filter argument: {}", filter.getValue());
                         continue;
                     }
                     addSql = filter.getName() + getComparator(filter) + query;
@@ -287,8 +287,8 @@ public class GridDAO {
                 .append(" limit ? offset ?")
                 .toString());
         try (QueryCursor<Cache.Entry<String, Object>> cursor = cache.query(sql.setArgs(pageSize, (page - 1) * pageSize))) {
-            Constructor dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName).getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName));
-            for (Cache.Entry e : cursor)
+            Constructor<?> dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName).getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName));
+            for (Cache.Entry<String, ?> e : cursor)
                 cacheDtoArrayList.add(dtoConstructor.newInstance(e.getValue()));
         } catch (Exception e) {
             logger.error("Error while selecting data for next page in table:", e);
@@ -317,8 +317,8 @@ public class GridDAO {
     }
 
     public static Integer getTotalDataSize(String cacheName, List<FilterDto> filterDto) {
-        if (filterDto.size() == 0) {
-            IgniteCache cache = ignite.getOrCreateCache(cacheName);
+        if (filterDto.isEmpty()) {
+            IgniteCache<Object, Object> cache = ignite.getOrCreateCache(cacheName);
             return cache.size(CachePeekMode.ALL);
         }
         IgniteCache<String, Object> cache = ignite.getOrCreateCache(cacheName);

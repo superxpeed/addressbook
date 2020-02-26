@@ -17,16 +17,18 @@ public class SessionListener implements HttpSessionListener {
         activeSessions = new AtomicInteger();
     }
 
+    @Override
     public void sessionCreated(final HttpSessionEvent event) {
         activeSessions.incrementAndGet();
-        logger.info("HttpSession created: " + event.getSession().getId());
-        logger.info("Total sessions: " + activeSessions.get());
+        logger.info("HttpSession created: {}", event.getSession().getId());
+        logger.info("Total sessions: {}", activeSessions.get());
     }
 
+    @Override
     public void sessionDestroyed(final HttpSessionEvent event) {
         activeSessions.decrementAndGet();
-        logger.info("HttpSession destroyed: " + event.getSession().getId());
-        logger.info("Total sessions: " + activeSessions.get());
+        logger.info("HttpSession destroyed: {}", event.getSession().getId());
+        logger.info("Total sessions: {}", activeSessions.get());
     }
 }
 

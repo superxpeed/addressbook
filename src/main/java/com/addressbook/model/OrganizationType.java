@@ -9,11 +9,7 @@ public enum OrganizationType {
 
     private String eng;
 
-    OrganizationType(String eng) {
-        this.eng = eng;
-    }
+    OrganizationType(String eng) { this.eng = eng; }
 
-    public String getEng() {
-        return eng;
-    }
+    public String getEng() { return eng; }
 }

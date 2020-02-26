@@ -20,7 +20,7 @@ import java.util.List;
 public class IgniteAuthenticationProvider implements AuthenticationProvider {
 
     @Override
-    public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(final Authentication authentication) {
         // Here I receive login and password (plaintext) from UI
         String login = authentication.getName();
         String password = authentication.getCredentials().toString();

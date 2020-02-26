@@ -21,13 +21,13 @@ public class Address implements Binarylizable {
     private String zip;
 
     @Override
-    public void writeBinary(BinaryWriter writer) throws BinaryObjectException {
+    public void writeBinary(BinaryWriter writer) {
         writer.writeString("street", street);
         writer.writeString("zip", zip);
     }
 
     @Override
-    public void readBinary(BinaryReader reader) throws BinaryObjectException {
+    public void readBinary(BinaryReader reader) {
         street = reader.readString("street");
         zip = reader.readString("zip");
     }
