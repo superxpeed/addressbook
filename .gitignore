@@ -1,7 +1,11 @@
 **/target/
 .idea/workspace.xml
+.idea/libraries/
+.idea/sonarlint/
+.idea/inspectionProfiles/
 npm-debug.log
-src/main/react/node_modules/
-src/main/react/dist/bundle.js
-src/main/react/package-lock.json
-src/main/react/dist/bundle.js.map
+*.iml
+addressbook-main/src/main/react/node_modules/
+addressbook-main/src/main/react/dist/bundle.js
+addressbook-main/src/main/react/package-lock.json
+addressbook-main/src/main/react/dist/bundle.js.map

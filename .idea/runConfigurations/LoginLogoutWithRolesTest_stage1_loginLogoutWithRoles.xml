@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="LoginLogoutWithRolesTest.stage1_loginLogoutWithRoles" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
-    <module name="addressbook" />
+    <module name="addressbook-main" />
     <useClassPathOnly />
     <extension name="coverage">
       <pattern>
