@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Addressbook-image-deploy" type="docker-deploy" factoryName="docker-image" server-name="Docker">
+  <configuration default="false" name="web-image-deploy" type="docker-deploy" factoryName="docker-image" server-name="Docker">
     <deployment type="docker-image">
       <settings>
         <option name="command" value="" />

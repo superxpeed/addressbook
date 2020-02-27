@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Addressbook-image-biild" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+  <configuration default="false" name="web-image-biild" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
     <deployment type="dockerfile">
       <settings>
         <option name="buildCliOptions" value="" />
@@ -7,7 +7,7 @@
         <option name="command" value="" />
         <option name="containerName" value="" />
         <option name="entrypoint" value="" />
-        <option name="imageTag" value="addressbook" />
+        <option name="imageTag" value="addressbook_web" />
         <option name="commandLineOptions" value="" />
         <option name="sourceFilePath" value="addressbook-main/Dockerfile" />
       </settings>
