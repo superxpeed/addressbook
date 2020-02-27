@@ -1,7 +1,6 @@
 package com.addressbook.model;
 
 import lombok.*;
-import org.apache.ignite.binary.BinaryObjectException;
 import org.apache.ignite.binary.BinaryReader;
 import org.apache.ignite.binary.BinaryWriter;
 import org.apache.ignite.binary.Binarylizable;

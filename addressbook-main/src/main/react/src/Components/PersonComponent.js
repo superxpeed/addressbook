@@ -127,6 +127,28 @@ export class PersonComponent extends React.Component {
                             this.setState({locked: false});
                         }
                     });
+                } else {
+                    fetch(url.SAVE_CONTACT_LIST + '?personId=' + personId, {
+                        method: 'post',
+                        credentials: 'include',
+                        headers: headers,
+                        body: this.container.getJson()
+                    }).then(response => {
+                        ifNoAuthorizedRedirect(response);
+                        isOk = response.ok;
+                        return response.text()
+                    }).then(text => {
+                        if (isOk) {
+                            if (this.props.forUpdate)
+                                this.setState(update(this.state, {
+                                    person: {$set: savedPerson},
+                                    contactList: {data: {$set: JSON.parse(text).data}}
+                                }));
+                            this.props.onUpdate(savedPerson);
+                        } else {
+                            this.props.showCommonErrorAlert(text);
+                        }
+                    })
                 }
             } else {
                 this.props.showCommonErrorAlert(text);

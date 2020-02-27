@@ -25,6 +25,7 @@ import javax.cache.Cache;
 import java.lang.reflect.Constructor;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GridDAO {
 
@@ -138,6 +139,9 @@ public class GridDAO {
         if (notLockedByUser(Person.class.getName() + personId, user))
             throw new LockRecordException("Parent record was not locked by " + user);
         IgniteCache<String, Contact> cacheContacts = ignite.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE);
+        List<String> toDelete = getContactsByPersonId(personId).stream().map(ContactDto::getId).collect(Collectors.toList());
+        List<String> updated = contactDtos.stream().map(ContactDto::getId).collect(Collectors.toList());
+        toDelete.removeAll(updated);
         IgniteTransactions transactions = ignite.transactions();
         try (Transaction tx = transactions.txStart()) {
             for (ContactDto contactDto : contactDtos) {
@@ -150,6 +154,7 @@ public class GridDAO {
                 contact.setType(ContactType.values()[Integer.parseInt(contactDto.getType())]);
                 cacheContacts.put(contact.getContactId(), contact);
             }
+            for(String id: toDelete) cacheContacts.remove(id);
             tx.commit();
         }
         return contactDtos;
