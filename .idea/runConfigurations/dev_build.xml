@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="dev-build" type="js.build_tools.npm">
-    <package-json value="$PROJECT_DIR$/src/main/webapp/package.json" />
+    <package-json value="$PROJECT_DIR$/addressbook-main/src/main/react/package.json" />
     <command value="run" />
     <scripts>
       <script value="dev-build" />

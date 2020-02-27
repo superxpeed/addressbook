@@ -17,6 +17,10 @@ public class UniversalFieldsDescriptor {
     public static final String USER_CACHE = "com.addressbook.model.User";
     public static final String LOCK_RECORD_CACHE = "java.lang.String";
 
+    public static final String STRING_MODEL_TYPE = "java.lang.String";
+    public static final String DATE_MODEL_TYPE = "java.util.Date";
+    public static final String STANDARD_COLUMN_WIDTH = "170px";
+
     private static Map<String, FieldDescription> fieldDescriptionMapOrganization = new LinkedHashMap<>();
     private static Map<String, FieldDescription> fieldDescriptionMapPerson = new LinkedHashMap<>();
     private static Map<String, Map<String, FieldDescription>> fieldDescriptionMaps = new LinkedHashMap<>();
@@ -24,19 +28,19 @@ public class UniversalFieldsDescriptor {
     private static Map<String, Class<?>> dtoClasses = new LinkedHashMap<>();
 
     static {
-        fieldDescriptionMapOrganization.put("id",           new FieldDescription("id",          "ID",           "java.lang.String", "170px"));
-        fieldDescriptionMapOrganization.put("name",         new FieldDescription("name",        "Name",         "java.lang.String", "170px"));
-        fieldDescriptionMapOrganization.put("street",       new FieldDescription("street",      "Street",       "java.lang.String", "170px"));
-        fieldDescriptionMapOrganization.put("zip",          new FieldDescription("zip",         "Zip",          "java.lang.Long",   "170px"));
-        fieldDescriptionMapOrganization.put("type",         new FieldDescription("type",        "Type",         "java.lang.String", "170px"));
-        fieldDescriptionMapOrganization.put("lastUpdated",  new FieldDescription("lastUpdated", "Last updated", "java.util.Date",   "170px"));
+        fieldDescriptionMapOrganization.put("id",           new FieldDescription("id",          "ID",           STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
+        fieldDescriptionMapOrganization.put("name",         new FieldDescription("name",        "Name",         STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
+        fieldDescriptionMapOrganization.put("street",       new FieldDescription("street",      "Street",       STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
+        fieldDescriptionMapOrganization.put("zip",          new FieldDescription("zip",         "Zip",          STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
+        fieldDescriptionMapOrganization.put("type",         new FieldDescription("type",        "Type",         STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
+        fieldDescriptionMapOrganization.put("lastUpdated",  new FieldDescription("lastUpdated", "Last updated", STANDARD_COLUMN_WIDTH,DATE_MODEL_TYPE));
 
-        fieldDescriptionMapPerson.put("id",         new FieldDescription("id",          "ID",           "java.lang.String", "170px"));
-        fieldDescriptionMapPerson.put("orgId",      new FieldDescription("orgId",       "Organization", "java.lang.String", "170px"));
-        fieldDescriptionMapPerson.put("firstName",  new FieldDescription("firstName",   "First name",   "java.lang.String", "170px"));
-        fieldDescriptionMapPerson.put("lastName",   new FieldDescription("lastName",    "Last name",    "java.lang.String", "170px"));
-        fieldDescriptionMapPerson.put("resume",     new FieldDescription("resume",      "Resume",       "java.lang.String", "170px"));
-        fieldDescriptionMapPerson.put("salary",     new FieldDescription("salary",      "Salary",       "java.lang.String", "170px"));
+        fieldDescriptionMapPerson.put("id",         new FieldDescription("id",          "ID",           STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
+        fieldDescriptionMapPerson.put("orgId",      new FieldDescription("orgId",       "Organization", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
+        fieldDescriptionMapPerson.put("firstName",  new FieldDescription("firstName",   "First name",   STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
+        fieldDescriptionMapPerson.put("lastName",   new FieldDescription("lastName",    "Last name",    STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
+        fieldDescriptionMapPerson.put("resume",     new FieldDescription("resume",      "Resume",       STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
+        fieldDescriptionMapPerson.put("salary",     new FieldDescription("salary",      "Salary",       STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE));
 
         fieldDescriptionMaps.put(ORGANIZATION_CACHE, fieldDescriptionMapOrganization);
         fieldDescriptionMaps.put(PERSON_CACHE, fieldDescriptionMapPerson);
