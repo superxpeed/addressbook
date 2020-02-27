@@ -52,7 +52,8 @@ public class GridDAO {
 
             TcpDiscoverySpi tcpDiscoverySpi = new TcpDiscoverySpi();
             TcpDiscoveryMulticastIpFinder tcpDiscoveryMulticastIpFinder = new TcpDiscoveryMulticastIpFinder();
-            tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton(System.getenv("IGNITE_SERVER")));
+            //tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton(System.getenv("IGNITE_SERVER"))); for standalone Apache Ignite Server
+            tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("db:47500..47509"));
             tcpDiscoverySpi.setIpFinder(tcpDiscoveryMulticastIpFinder);
             igniteConfiguration.setDiscoverySpi(tcpDiscoverySpi);
             ignite = Ignition.start(igniteConfiguration);
