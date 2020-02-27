@@ -34,3 +34,6 @@ monitoring, binary marshalling
 
 
 #### Tested by JUnit & Selenium (Chrome)
+
+#### DevOps:
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/deployment.png" width="900"/>
