@@ -108,7 +108,7 @@ export class Table extends React.Component {
                     position: 'relative',
                     left: '90%',
                     display: 'inline-block'
-                }}> С {start} по {to} из {total}</p>
+                }}>From {start} to {to} total {total}</p>
             );
         };
 
