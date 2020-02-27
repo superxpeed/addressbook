@@ -34,5 +34,20 @@ monitoring, binary marshalling
 
 #### Tested by JUnit & Selenium (Chrome)
 
-#### DevOps:
+#### Deployment:
+Build Addressbook application Docker image:
+```sh
+cd addressbook-main
+docker build -t addressbook_web .
+```
+Build Apache Ignite Docker image:
+```sh
+cd ignite-server
+docker build -t addressbook_db .
+```
+Start both:
+```sh
+cd ..
+docker-compose -f docker-compose.yml up -d
+```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/deployment.png" width="900"/>
