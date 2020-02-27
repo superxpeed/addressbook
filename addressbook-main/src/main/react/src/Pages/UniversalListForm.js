@@ -7,7 +7,7 @@ import {Table} from '../Table/Table';
 import {AlertList} from 'react-bs-notifier';
 import * as CommonActions from './UniversalListActions';
 import * as Url from '../Common/Url';
-import {Caches, Generator, HashUtils} from '../Common/Utils';
+import {Caches, HashUtils} from '../Common/Utils';
 import {Breadcrumb, Button, Nav, Navbar, Tab, Tabs} from 'react-bootstrap'
 import * as TableActions from '../Table/TableActions';
 import * as MenuActions from './MenuFormActions';
@@ -97,7 +97,7 @@ export default class UniversalListForm extends React.Component {
     };
 
     refreshTable = (start, pageSize, sortName, sortOrder, filterDto, cache) => {
-        if (cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId !== undefined && this.state.selectedRowsOrgId !== null && (filterDto === undefined || filterDto === null)) {
+        if (cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId != null && (filterDto === undefined || filterDto === null)) {
             filterDto = filterDto.filter(x => x.name === 'orgId' && x.value === this.state.selectedRowsOrgId);
             filterDto.push({name: 'orgId', value: this.state.selectedRowsOrgId, comparator: '', type: 'TextFilter'});
         }

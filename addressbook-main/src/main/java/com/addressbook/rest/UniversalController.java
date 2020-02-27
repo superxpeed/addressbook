@@ -44,7 +44,7 @@ public class UniversalController {
                         .fieldDescriptionMap(UniversalFieldsDescriptor.getFieldDescriptionMap(cache)).build());
     }
 
-    @GetMapping("/getContactList")
+    @PostMapping("/getContactList")
     public CompletableFuture<PageDataDto<TableDataDto<?>>> getContactList(@RequestParam(value = "personId") String id) {
         return CompletableFuture.supplyAsync(() -> PageDataDto.<TableDataDto<?>>builder().data(new TableDataDto<>(GridDAO.getContactsByPersonId(id))).build());
     }
