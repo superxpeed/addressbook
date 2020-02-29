@@ -11,6 +11,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Component
@@ -18,19 +19,19 @@ import java.util.Collection;
 public class CurrentUser implements Serializable {
 
     private String userName;
-    private Collection<? extends GrantedAuthority> authorities;
+    private Collection<GrantedAuthority> authorities;
 
     @PostConstruct
     private void init() {
         userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        authorities = new ArrayList<>(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
     }
 
     public String getCurrentUser() {
         return userName;
     }
 
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<GrantedAuthority> getAuthorities() {
         return authorities;
     }
 

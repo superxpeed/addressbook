@@ -69,7 +69,7 @@ public class UniversalController {
 
     @GetMapping(value = "/getNextLevelMenus")
     public CompletableFuture<PageDataDto<List<MenuEntryDto>>> getNextLevelMenus(@RequestParam(value = "currentUrl") String url) {
-        Collection<? extends GrantedAuthority> authorities = currentUser.getAuthorities();
+        Collection<GrantedAuthority> authorities = currentUser.getAuthorities();
         return CompletableFuture.supplyAsync(() -> PageDataDto.<List<MenuEntryDto>>builder().data(GridDAO.readNextLevel(url, authorities)).build());
     }
 

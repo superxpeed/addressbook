@@ -18,3 +18,4 @@ addressbook-main/src/main/react/dist/bundle.js.map
 /.idea/vcs.xml
 /.idea/encodings.xml
 /.idea/jsLibraryMappings.xml
+/httpRequests/
