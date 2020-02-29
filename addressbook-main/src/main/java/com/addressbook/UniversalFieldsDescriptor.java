@@ -4,10 +4,13 @@ import com.addressbook.dto.ContactDto;
 import com.addressbook.dto.OrganizationDto;
 import com.addressbook.dto.PersonDto;
 import com.addressbook.model.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UniversalFieldsDescriptor {
 
     public static final String ORGANIZATION_CACHE = "com.addressbook.model.Organization";

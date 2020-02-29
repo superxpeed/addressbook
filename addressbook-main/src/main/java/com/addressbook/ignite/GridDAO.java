@@ -4,6 +4,8 @@ import com.addressbook.LockRecordException;
 import com.addressbook.UniversalFieldsDescriptor;
 import com.addressbook.dto.*;
 import com.addressbook.model.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.IgniteTransactions;
@@ -27,9 +29,10 @@ import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GridDAO {
 
-    private static Logger logger = LoggerFactory.getLogger(GridDAO.class);
+    private static final Logger logger = LoggerFactory.getLogger(GridDAO.class);
 
     private static Ignite ignite;
 
@@ -283,7 +286,7 @@ public class GridDAO {
         return baseSql;
     }
 
-    public static List<?> selectCachePage(int page, int pageSize, String sortName, String sortOrder, List<FilterDto> filterDto, String cacheName) {
+    public static List<Object> selectCachePage(int page, int pageSize, String sortName, String sortOrder, List<FilterDto> filterDto, String cacheName) {
         IgniteCache<String, Object> cache = ignite.getOrCreateCache(cacheName);
         List<Object> cacheDtoArrayList = new ArrayList<>();
         SqlQuery<String, Object> sql = new SqlQuery<>(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)

@@ -1,12 +1,15 @@
 package com.addressbook.ignite;
 
 import com.addressbook.model.User;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class UserCreator {
     static void initUsers() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

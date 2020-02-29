@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collection;
@@ -32,21 +33,21 @@ public class UniversalController {
     private CurrentUser currentUser;
 
     @PostMapping("/getList4UniversalListForm")
-    public CompletableFuture<PageDataDto<TableDataDto<?>>> getList(@RequestParam(value = "start") int start,
+    public CompletableFuture<PageDataDto<TableDataDto<Object>>> getList(@RequestParam(value = "start") int start,
                                                                 @RequestParam(value = "pageSize") int pageSize,
                                                                 @RequestParam(value = "sortName") String sortName,
                                                                 @RequestParam(value = "sortOrder") String sortOrder,
                                                                 @RequestParam(value = "cache") String cache,
                                                                 @RequestBody List<FilterDto> filterDto) {
         return CompletableFuture.supplyAsync(() ->
-                PageDataDto.<TableDataDto<?>>builder()
+                PageDataDto.<TableDataDto<Object>>builder()
                         .data(new TableDataDto<>(GridDAO.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), GridDAO.getTotalDataSize(cache, filterDto)))
                         .fieldDescriptionMap(UniversalFieldsDescriptor.getFieldDescriptionMap(cache)).build());
     }
 
     @PostMapping("/getContactList")
-    public CompletableFuture<PageDataDto<TableDataDto<?>>> getContactList(@RequestParam(value = "personId") String id) {
-        return CompletableFuture.supplyAsync(() -> PageDataDto.<TableDataDto<?>>builder().data(new TableDataDto<>(GridDAO.getContactsByPersonId(id))).build());
+    public CompletableFuture<PageDataDto<TableDataDto<ContactDto>>> getContactList(@RequestParam(value = "personId") String id) {
+        return CompletableFuture.supplyAsync(() -> PageDataDto.<TableDataDto<ContactDto>>builder().data(new TableDataDto<>(GridDAO.getContactsByPersonId(id))).build());
     }
 
     @PostMapping(value = "/saveOrCreatePerson")
@@ -81,16 +82,16 @@ public class UniversalController {
     @GetMapping(value = "/lockRecord")
     public PageDataDto<Alert> lockRecord(@RequestParam(value = "type") String type, @RequestParam(value = "id") String id) {
         Alert alert = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser(), true)
-                ? Alert.builder().headline("Record locked!").type(Alert.SUCCESS).message("Record id " + id + " locked!").build()
-                : Alert.builder().headline("Record was not locked!").type(Alert.WARNING).message("Record id " + id + " was already locked!").build();
+                ? Alert.builder().headline("Record locked!").type(Alert.SUCCESS).message(Alert.RECORD_PREFIX + id + " locked!").build()
+                : Alert.builder().headline("Record was not locked!").type(Alert.WARNING).message(Alert.RECORD_PREFIX + id + " was already locked!").build();
         return PageDataDto.<Alert>builder().data(alert).build();
     }
 
     @GetMapping(value = "/unlockRecord")
     public PageDataDto<Alert> unlockRecord(@RequestParam(value = "type") String type, @RequestParam(value = "id") String id) {
         Alert alert = GridDAO.lockUnlockRecord(type + id, currentUser.getCurrentUser(), false)
-                ? Alert.builder().headline("Record unlocked!").type(Alert.SUCCESS).message("Record id " + id + " unlocked!").build()
-                : Alert.builder().headline("Record was not unlocked!").type(Alert.WARNING).message("Record id " + id + " was not locked by you!").build();
+                ? Alert.builder().headline("Record unlocked!").type(Alert.SUCCESS).message(Alert.RECORD_PREFIX + id + " unlocked!").build()
+                : Alert.builder().headline("Record was not unlocked!").type(Alert.WARNING).message(Alert.RECORD_PREFIX + id + " was not locked by you!").build();
         return PageDataDto.<Alert>builder().data(alert).build();
     }
 
@@ -105,7 +106,7 @@ public class UniversalController {
     }
 
     @ExceptionHandler(Throwable.class)
-    public void handleError(HttpServletResponse response, Throwable ex) throws Exception {
+    public void handleError(HttpServletResponse response, Throwable ex) throws IOException {
         response.setStatus(500);
         Alert alert = Alert.builder().type(Alert.DANGER).headline("Error occurred!").build();
         if (ex.getClass().equals(IllegalArgumentException.class) || ex.getClass().equals(LockRecordException.class)) {

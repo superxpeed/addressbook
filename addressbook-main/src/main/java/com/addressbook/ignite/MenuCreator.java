@@ -1,9 +1,12 @@
 package com.addressbook.ignite;
 
 import com.addressbook.dto.MenuEntryDto;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.Collections;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class MenuCreator {
     static void initMenu() {
         GridDAO.clearMenus();
