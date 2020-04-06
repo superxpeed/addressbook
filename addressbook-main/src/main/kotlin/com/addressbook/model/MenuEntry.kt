@@ -3,7 +3,7 @@ package com.addressbook.model
 import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.util.UUID
 
-class MenuEntry() {
+class MenuEntry {
 
     @QuerySqlField(index = true)
     var id: String? = null

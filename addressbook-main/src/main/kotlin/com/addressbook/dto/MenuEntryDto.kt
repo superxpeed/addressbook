@@ -15,7 +15,7 @@ class MenuEntryDto(menuEntry: MenuEntry? = null) : Serializable {
         this.id = menuEntry?.id
         this.parentId = menuEntry?.parentId
         this.url = menuEntry?.url
-        this.name = menuEntry?.url
+        this.name = menuEntry?.name
         this.roles = menuEntry?.roles
     }
 
