@@ -146,9 +146,9 @@ class UniversalController {
     }
 
     @GetMapping("/getUserInfo")
-    fun getUserInfo(): User {
+    fun getUserInfo(): User? {
         val user = GridDAO.getUserByLogin(currentUser?.getCurrentUser()!!)
-        user.password = null
+        user?.password = null
         return user;
     }
 }
