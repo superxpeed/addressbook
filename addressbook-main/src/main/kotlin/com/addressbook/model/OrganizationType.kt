@@ -8,4 +8,8 @@ enum class OrganizationType(s: String) {
     PUBLIC("Public");
 
     var eng: String? = null
+
+    init {
+        this.eng = s
+    }
 }
