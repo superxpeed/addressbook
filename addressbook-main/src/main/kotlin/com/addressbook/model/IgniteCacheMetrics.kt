@@ -1,16 +1,9 @@
 package com.addressbook.model
 
-import lombok.Getter
-import lombok.Setter
-import lombok.ToString
 import org.apache.ignite.cache.CacheMetrics
-
 import java.io.Serializable
 
-@ToString
-@Getter
-@Setter
-class IgniteCacheMetrics constructor(cacheMetrics: CacheMetrics): Serializable {
+class IgniteCacheMetrics constructor(cacheMetrics: CacheMetrics) : Serializable {
     var cacheGets: Long? = null
     var cachePuts: Long? = null
     var cacheRemovals: Long? = null

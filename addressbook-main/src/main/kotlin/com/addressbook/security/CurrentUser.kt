@@ -14,7 +14,7 @@ import java.io.Serializable
 
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-class CurrentUser: Serializable {
+class CurrentUser : Serializable {
 
     private var userName: String? = null
     var authorities: Collection<GrantedAuthority>? = null

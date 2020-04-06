@@ -12,17 +12,17 @@ import javax.servlet.http.HttpSessionListener;
 open class RootConfiguration {
 
     @Bean
-    open fun mappingJackson2HttpMessageConverter(): MappingJackson2HttpMessageConverter{
+    open fun mappingJackson2HttpMessageConverter(): MappingJackson2HttpMessageConverter {
         return MappingJackson2HttpMessageConverter();
     }
 
     @Bean
-    open fun  gridStarter(): GridStarter {
+    open fun gridStarter(): GridStarter {
         return GridStarter();
     }
 
     @Bean
     open fun sessionListener(): ServletListenerRegistrationBean<HttpSessionListener> {
-        return ServletListenerRegistrationBean<HttpSessionListener>( SessionListener());
+        return ServletListenerRegistrationBean<HttpSessionListener>(SessionListener());
     }
 }

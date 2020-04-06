@@ -26,19 +26,19 @@ object UniversalFieldsDescriptor {
     private val dtoClasses = LinkedHashMap<String, Class<*>>()
 
     init {
-        fieldDescriptionMapOrganization["id"] = FieldDescription("id",          "ID",           STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapOrganization["name"] = FieldDescription("name",        "Name",         STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapOrganization["street"] = FieldDescription("street",      "Street",       STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapOrganization["zip"] = FieldDescription("zip",         "Zip",          STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapOrganization["type"] = FieldDescription("type",        "Type",         STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapOrganization["lastUpdated"] = FieldDescription("lastUpdated", "Last updated", STANDARD_COLUMN_WIDTH,DATE_MODEL_TYPE)
+        fieldDescriptionMapOrganization["id"] = FieldDescription("id", "ID", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapOrganization["name"] = FieldDescription("name", "Name", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapOrganization["street"] = FieldDescription("street", "Street", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapOrganization["zip"] = FieldDescription("zip", "Zip", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapOrganization["type"] = FieldDescription("type", "Type", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapOrganization["lastUpdated"] = FieldDescription("lastUpdated", "Last updated", STANDARD_COLUMN_WIDTH, DATE_MODEL_TYPE)
 
-        fieldDescriptionMapPerson["id"] = FieldDescription("id",          "ID",           STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapPerson["orgId"] = FieldDescription("orgId",       "Organization", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapPerson["firstName"] = FieldDescription("firstName",   "First name",   STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapPerson["lastName"] = FieldDescription("lastName",    "Last name",    STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapPerson["resume"] = FieldDescription("resume",      "Resume",       STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapPerson["salary"] = FieldDescription("salary",      "Salary",       STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["id"] = FieldDescription("id", "ID", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["orgId"] = FieldDescription("orgId", "Organization", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["firstName"] = FieldDescription("firstName", "First name", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["lastName"] = FieldDescription("lastName", "Last name", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["resume"] = FieldDescription("resume", "Resume", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["salary"] = FieldDescription("salary", "Salary", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
 
         fieldDescriptionMaps[ORGANIZATION_CACHE] = fieldDescriptionMapOrganization
         fieldDescriptionMaps[PERSON_CACHE] = fieldDescriptionMapPerson

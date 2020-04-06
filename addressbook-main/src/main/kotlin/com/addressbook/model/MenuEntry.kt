@@ -10,13 +10,13 @@ class MenuEntry() {
     var id: String? = null
 
     @QuerySqlField(index = true)
-    var  parentId: String? = null
+    var parentId: String? = null
 
     @QuerySqlField(index = true)
-    var  url: String? = null
+    var url: String? = null
 
     @QuerySqlField(index = true)
-    var  name: String? = null
+    var name: String? = null
 
     var roles: List<String>? = null
 

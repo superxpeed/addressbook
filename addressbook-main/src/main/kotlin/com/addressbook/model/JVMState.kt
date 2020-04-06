@@ -38,7 +38,7 @@ class JVMState : Serializable {
 
     init {
         val byteToMb: Double = 1024.0 * 1024.0
-        val df =  DecimalFormat("#.##")
+        val df = DecimalFormat("#.##")
         runtimeTotalMemory = df.format(Runtime.getRuntime().totalMemory() / byteToMb) + " Mb"
         runtimeFreeMemory = df.format(Runtime.getRuntime().freeMemory() / byteToMb) + " Mb"
         runtimeMaxMemory = df.format(Runtime.getRuntime().maxMemory() / byteToMb) + " Mb"
@@ -65,7 +65,7 @@ class JVMState : Serializable {
         version = ManagementFactory.getOperatingSystemMXBean().version
 
         totalPhysicalMemory = df.format((ManagementFactory.getOperatingSystemMXBean() as com.sun.management.OperatingSystemMXBean).totalPhysicalMemorySize / byteToMb) + " Mb"
-        totalCpuLoad = df.format(( ManagementFactory.getOperatingSystemMXBean() as com.sun.management.OperatingSystemMXBean).systemCpuLoad * 100.0) + "%"
+        totalCpuLoad = df.format((ManagementFactory.getOperatingSystemMXBean() as com.sun.management.OperatingSystemMXBean).systemCpuLoad * 100.0) + "%"
         diskSize = df.format(File("/").totalSpace / (1000.0 * 1000.0 * 1000.0)) + " Gb"
         user = System.getProperty("user.name")
     }

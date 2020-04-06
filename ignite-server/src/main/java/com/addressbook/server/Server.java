@@ -23,7 +23,7 @@ public class Server {
 
         TcpDiscoverySpi tcpDiscoverySpi = new TcpDiscoverySpi();
         TcpDiscoveryMulticastIpFinder tcpDiscoveryMulticastIpFinder = new TcpDiscoveryMulticastIpFinder();
-        tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("192.168.1.51:47500..47509"));
+        tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("localhost:47500..47509"));
         tcpDiscoverySpi.setIpFinder(tcpDiscoveryMulticastIpFinder);
         igniteConfiguration.setDiscoverySpi(tcpDiscoverySpi);
         Ignition.start(igniteConfiguration);

@@ -9,10 +9,10 @@ import java.time.Duration;
 import java.util.stream.Stream;
 
 @Service
- class IgniteStateService {
+class IgniteStateService {
     fun getIgniteState(): Flux<IgniteMetricsContainer> {
         val interval = Flux.interval(Duration.ofSeconds(1))
-        val igniteMetricsContainerFlux= Flux.fromStream(Stream.generate(::IgniteMetricsContainer))
+        val igniteMetricsContainerFlux = Flux.fromStream(Stream.generate(::IgniteMetricsContainer))
         return Flux.zip(interval, igniteMetricsContainerFlux).map(Tuple2<Long, IgniteMetricsContainer>::getT2)
     }
 }

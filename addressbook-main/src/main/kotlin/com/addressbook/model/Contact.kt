@@ -13,7 +13,7 @@ class Contact(personId: String?, type: ContactType?, data: String?, description:
     var contactId: String? = null
 
     @QuerySqlField(index = true)
-    var  type: ContactType? = type
+    var type: ContactType? = type
 
     @QuerySqlField(index = true)
     var data: String? = data

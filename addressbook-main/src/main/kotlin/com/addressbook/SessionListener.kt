@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSessionEvent
 import javax.servlet.http.HttpSessionListener
 import java.util.concurrent.atomic.AtomicInteger
 
-class SessionListener: HttpSessionListener {
+class SessionListener : HttpSessionListener {
 
     private val logger = LoggerFactory.getLogger(SessionListener::class.java)
     private val activeSessions: AtomicInteger = AtomicInteger()

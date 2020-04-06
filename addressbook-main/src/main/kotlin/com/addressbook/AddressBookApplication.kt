@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 open class AddressBookApplication {
     companion object {
         @JvmStatic
-        fun main(args : Array<String>) {
+        fun main(args: Array<String>) {
             SpringApplication.run(AddressBookApplication::class.java, *args);
         }
     }

@@ -6,7 +6,7 @@ import org.apache.ignite.cache.query.annotations.QuerySqlField;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-class Organization constructor(id: String?, name: String?,  addr: Address?,  type: OrganizationType?,  lastUpdated: Timestamp?) {
+class Organization constructor(id: String?, name: String?, addr: Address?, type: OrganizationType?, lastUpdated: Timestamp?) {
 
     @QuerySqlField(index = true)
     var id: String? = null
@@ -24,9 +24,9 @@ class Organization constructor(id: String?, name: String?,  addr: Address?,  typ
     var lastUpdated: Timestamp? = null
 
     constructor(organizationDto: OrganizationDto) : this(organizationDto.id, null, null, null, null)
-    constructor(name: String): this(UUID.randomUUID().toString(), name, null, null, null)
-    constructor(id: String, name: String): this(id, name, null, null, null)
-    constructor(name: String,  addr: Address,  type: OrganizationType,  lastUpdated: Timestamp) : this(UUID.randomUUID().toString(), name, addr, type, lastUpdated)
+    constructor(name: String) : this(UUID.randomUUID().toString(), name, null, null, null)
+    constructor(id: String, name: String) : this(id, name, null, null, null)
+    constructor(name: String, addr: Address, type: OrganizationType, lastUpdated: Timestamp) : this(UUID.randomUUID().toString(), name, addr, type, lastUpdated)
 
     init {
         this.id = id

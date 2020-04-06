@@ -46,7 +46,7 @@ object GridDAO {
 
         val tcpDiscoverySpi = TcpDiscoverySpi()
         val tcpDiscoveryMulticastIpFinder = TcpDiscoveryMulticastIpFinder()
-        tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("192.168.1.51:47500..47509"))
+        tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("db:47500..47509"))
         tcpDiscoverySpi.ipFinder = tcpDiscoveryMulticastIpFinder
         igniteConfiguration.discoverySpi = tcpDiscoverySpi
         ignite = Ignition.start(igniteConfiguration)
@@ -177,7 +177,7 @@ object GridDAO {
         cacheLocks.removeAll(HashSet(cacheLocks.query(ScanQuery { _, v -> v == user }, Cache.Entry<String, String>::getKey).all))
     }
 
-    fun getUserByLogin(login: String): User {
+    fun getUserByLogin(login: String): User? {
         val cacheUser: IgniteCache<String, User> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE)!!
         return cacheUser.get(login)
     }

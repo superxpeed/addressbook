@@ -11,7 +11,7 @@ class Person : Serializable {
     var id: String? = null
 
     @QuerySqlField(index = true)
-    var  orgId: String? = null
+    var orgId: String? = null
 
     @QuerySqlField(index = true)
     var firstName: String? = null
@@ -25,7 +25,7 @@ class Person : Serializable {
     @QuerySqlField(index = true)
     var salary: String? = null
 
-    constructor( org: Organization, firstName: String,  lastName: String,  salary: String,  resume: String): this() {
+    constructor(org: Organization, firstName: String, lastName: String, salary: String, resume: String) : this() {
         this.orgId = org.id
         this.firstName = firstName
         this.lastName = lastName
@@ -33,11 +33,11 @@ class Person : Serializable {
         this.resume = resume
     }
 
-    constructor(){
+    constructor() {
         id = UUID.randomUUID().toString()
     }
 
-    constructor( id: String,  firstName: String,  lastName: String): this() {
+    constructor(id: String, firstName: String, lastName: String) : this() {
         this.id = id
         this.firstName = firstName
         this.lastName = lastName
