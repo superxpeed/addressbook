@@ -35,19 +35,14 @@ class UniversalController {
                 @RequestParam(value = "cache") cache: String,
                 @RequestBody filterDto: List<FilterDto>): CompletableFuture<PageDataDto<TableDataDto<Any>>> {
         return CompletableFuture.supplyAsync {
-            val result = PageDataDto<TableDataDto<Any>>()
-            result.data = TableDataDto(GridDAO.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), GridDAO.getTotalDataSize(cache, filterDto))
-            result.fieldDescriptionMap = UniversalFieldsDescriptor.getFieldDescriptionMap(cache)
-            return@supplyAsync result
+            return@supplyAsync PageDataDto(TableDataDto(GridDAO.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), GridDAO.getTotalDataSize(cache, filterDto)),  UniversalFieldsDescriptor.getFieldDescriptionMap(cache) )
         }
     }
 
     @PostMapping("/getContactList")
     fun getContactList(@RequestParam(value = "personId") id: String): CompletableFuture<PageDataDto<TableDataDto<ContactDto>>> {
         return CompletableFuture.supplyAsync {
-            val result = PageDataDto<TableDataDto<ContactDto>>()
-            result.data = TableDataDto(GridDAO.getContactsByPersonId(id))
-            return@supplyAsync result
+            return@supplyAsync PageDataDto(TableDataDto(GridDAO.getContactsByPersonId(id)))
         }
     }
 
@@ -55,9 +50,7 @@ class UniversalController {
     fun saveOrCreatePerson(@RequestBody personDto: PersonDto): CompletableFuture<PageDataDto<PersonDto>> {
         val login = currentUser?.getCurrentUser()!!
         return CompletableFuture.supplyAsync {
-            val result = PageDataDto<PersonDto>()
-            result.data = GridDAO.createOrUpdatePerson(personDto, login)
-            return@supplyAsync result
+            return@supplyAsync PageDataDto(GridDAO.createOrUpdatePerson(personDto, login))
         }
     }
 
@@ -65,18 +58,14 @@ class UniversalController {
     fun saveOrCreateOrganization(@RequestBody organizationDto: OrganizationDto): CompletableFuture<PageDataDto<OrganizationDto>> {
         val login = currentUser?.getCurrentUser()!!
         return CompletableFuture.supplyAsync {
-            val result = PageDataDto<OrganizationDto>()
-            result.data = GridDAO.createOrUpdateOrganization(organizationDto, login)
-            return@supplyAsync result
+            return@supplyAsync PageDataDto(GridDAO.createOrUpdateOrganization(organizationDto, login))
         }
     }
 
     @GetMapping("/getBreadcrumbs")
     fun getBreadcrumbs(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<Breadcrumb>>> {
         return CompletableFuture.supplyAsync {
-            val result = PageDataDto<List<Breadcrumb>>()
-            result.data = GridDAO.readBreadcrumbs(url)
-            return@supplyAsync result
+            return@supplyAsync PageDataDto(GridDAO.readBreadcrumbs(url))
         }
     }
 
@@ -84,9 +73,7 @@ class UniversalController {
     fun getNextLevelMenus(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<MenuEntryDto>>> {
         val authorities = currentUser?.authorities!!
         return CompletableFuture.supplyAsync {
-            val result = PageDataDto<List<MenuEntryDto>>()
-            result.data = GridDAO.readNextLevel(url, authorities)
-            return@supplyAsync result
+            return@supplyAsync PageDataDto(GridDAO.readNextLevel(url, authorities))
         }
     }
 
@@ -94,28 +81,22 @@ class UniversalController {
     fun saveOrCreateContacts(@RequestBody contactDto: List<ContactDto>, @RequestParam(value = "personId") personId: String): CompletableFuture<PageDataDto<List<ContactDto>>> {
         val login = currentUser?.getCurrentUser()!!
         return CompletableFuture.supplyAsync {
-            val result = PageDataDto<List<ContactDto>>()
-            result.data = GridDAO.createOrUpdateContacts(contactDto, login, personId)
-            return@supplyAsync result
+            return@supplyAsync PageDataDto(GridDAO.createOrUpdateContacts(contactDto, login, personId))
         }
     }
 
     @GetMapping("/lockRecord")
     fun lockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
-        val result = PageDataDto<Alert>()
-        result.data = if (GridDAO.lockUnlockRecord(type + id, currentUser?.getCurrentUser()!!, true))
+        return PageDataDto(if (GridDAO.lockUnlockRecord(type + id, currentUser?.getCurrentUser()!!, true))
             Alert("Record locked!", Alert.SUCCESS, Alert.RECORD_PREFIX + id + " locked!")
-        else Alert("Record was not locked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was already locked!")
-        return result
+        else Alert("Record was not locked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was already locked!"))
     }
 
     @GetMapping("/unlockRecord")
     fun unlockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
-        val result = PageDataDto<Alert>()
-        result.data = if (GridDAO.lockUnlockRecord(type + id, currentUser?.getCurrentUser()!!, false))
+        return PageDataDto(if (GridDAO.lockUnlockRecord(type + id, currentUser?.getCurrentUser()!!, false))
             Alert("Record unlocked!", Alert.SUCCESS, Alert.RECORD_PREFIX + id + " unlocked!")
-        else Alert("Record was not unlocked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was not locked by you!")
-        return result
+        else Alert("Record was not unlocked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was not locked by you!"))
     }
 
     @GetMapping("/logout")
