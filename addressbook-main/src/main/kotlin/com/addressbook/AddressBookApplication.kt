@@ -1,7 +1,7 @@
-package com.addressbook;
+package com.addressbook
 
 import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication(scanBasePackages = ["com.addressbook"])
 open class AddressBookApplication {

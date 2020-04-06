@@ -1,4 +1,4 @@
-package com.addressbook.model;
+package com.addressbook.model
 
 enum class OrganizationType(s: String) {
 

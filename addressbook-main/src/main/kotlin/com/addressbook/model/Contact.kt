@@ -22,6 +22,6 @@ class Contact(personId: String?, type: ContactType?, data: String?, description:
     var description: String? = description
 
     init {
-        this.contactId = UUID.randomUUID().toString();
+        this.contactId = UUID.randomUUID().toString()
     }
 }

@@ -123,13 +123,13 @@ class UniversalController {
             alert.message = errors.toString()
         }
         val objectMapper = ObjectMapper()
-        objectMapper.writeValue(response.writer, alert);
+        objectMapper.writeValue(response.writer, alert)
     }
 
     @GetMapping("/getUserInfo")
     fun getUserInfo(): User? {
         val user = GridDAO.getUserByLogin(currentUser?.getCurrentUser()!!)
         user?.password = null
-        return user;
+        return user
     }
 }

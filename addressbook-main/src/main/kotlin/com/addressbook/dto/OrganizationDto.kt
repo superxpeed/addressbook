@@ -17,7 +17,12 @@ class OrganizationDto(id: String?,
     var type: String? = null
     var lastUpdated: String? = null
 
-    constructor(organization: Organization?) : this(organization?.id, organization?.name, organization?.addr?.street, organization?.addr?.zip, organization?.type?.eng, organization?.lastUpdated.toString())
+    constructor(organization: Organization?) : this(organization?.id,
+            organization?.name,
+            organization?.addr?.street,
+            organization?.addr?.zip,
+            organization?.type?.eng,
+            organization?.lastUpdated.toString())
 
     init {
         this.id = id

@@ -1,12 +1,12 @@
-package com.addressbook;
+package com.addressbook
 
-import com.addressbook.model.IgniteMetricsContainer;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.util.function.Tuple2;
+import com.addressbook.model.IgniteMetricsContainer
+import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
+import reactor.util.function.Tuple2
 
-import java.time.Duration;
-import java.util.stream.Stream;
+import java.time.Duration
+import java.util.stream.Stream
 
 @Service
 class IgniteStateService {

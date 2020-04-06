@@ -9,7 +9,7 @@ class IgniteMetricsContainer : Serializable {
     var igniteCacheMetricsMap: HashMap<String, IgniteCacheMetrics>? = null
 
     init {
-        igniteCacheMetricsMap = HashMap<String, IgniteCacheMetrics>()
+        igniteCacheMetricsMap = HashMap()
         for (metricsEntry in GridDAO.getCacheMetrics().entries) {
             igniteCacheMetricsMap?.put(metricsEntry.key, IgniteCacheMetrics(metricsEntry.value))
         }
