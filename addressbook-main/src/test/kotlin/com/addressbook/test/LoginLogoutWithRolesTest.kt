@@ -12,7 +12,7 @@ class LoginLogoutWithRolesTest {
     @Test
     fun stage1_loginLogoutWithRoles() {
         // Set Chrome driver location
-        System.setProperty("webdriver.chrome.driver", LoginLogoutWithRolesTest::class.java.classLoader.getResource("chromedriver.exe").path)
+        System.setProperty("webdriver.chrome.driver", LoginLogoutWithRolesTest::class.java.classLoader.getResource("chromedriver.exe")?.path!!)
         // Initialize Selenium driver
         val driver = ChromeDriver()
         // Initialize wait driver

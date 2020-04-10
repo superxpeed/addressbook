@@ -19,7 +19,7 @@ class AddingAndEditingEntitiesTest {
     @Test
     fun stage1_addAndEditOrganization() {
         // Set Chrome driver location
-        System.setProperty("webdriver.chrome.driver", AddingAndEditingEntitiesTest::class.java.classLoader.getResource("chromedriver.exe").path)
+        System.setProperty("webdriver.chrome.driver", AddingAndEditingEntitiesTest::class.java.classLoader.getResource("chromedriver.exe")?.path!!)
         // Initialize Selenium driver
         val driver: WebDriver = ChromeDriver()
         // Initialize wait driver
@@ -155,7 +155,7 @@ class AddingAndEditingEntitiesTest {
     @Test
     fun stage1_addAndEditPerson() {
         // Set Chrome driver location
-        System.setProperty("webdriver.chrome.driver", AddingAndEditingEntitiesTest::class.java.classLoader.getResource("chromedriver.exe").path)
+        System.setProperty("webdriver.chrome.driver", AddingAndEditingEntitiesTest::class.java.classLoader.getResource("chromedriver.exe")?.path!!)
         // Initialize Selenium driver
         val driver = ChromeDriver()
         // Initialize wait driver
