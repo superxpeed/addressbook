@@ -71,6 +71,7 @@ class LoginLogoutWithRolesTest {
         // Click logout button
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/button"))).click()
         Thread.sleep(300)
+        driver.close()
         driver.quit()
     }
 }

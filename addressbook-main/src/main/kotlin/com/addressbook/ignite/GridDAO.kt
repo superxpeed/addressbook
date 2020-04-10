@@ -46,7 +46,7 @@ object GridDAO {
 
         val tcpDiscoverySpi = TcpDiscoverySpi()
         val tcpDiscoveryMulticastIpFinder = TcpDiscoveryMulticastIpFinder()
-        tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("localhost:47500..47509"))
+        tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("db:47500..47509"))
         tcpDiscoverySpi.ipFinder = tcpDiscoveryMulticastIpFinder
         igniteConfiguration.discoverySpi = tcpDiscoverySpi
         ignite = Ignition.start(igniteConfiguration)

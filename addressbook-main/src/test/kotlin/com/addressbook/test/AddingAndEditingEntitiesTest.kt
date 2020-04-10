@@ -149,6 +149,7 @@ class AddingAndEditingEntitiesTest {
         // Click logout button
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/button[2]"))).click()
         Thread.sleep(300)
+        driver.close()
         driver.quit()
     }
 
@@ -346,6 +347,7 @@ class AddingAndEditingEntitiesTest {
         // Click logout button
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/button[2]"))).click()
         Thread.sleep(300)
+        driver.close()
         driver.quit()
     }
 

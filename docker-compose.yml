@@ -1,9 +1,13 @@
 version: '2'
 
 services:
+  eureka:
+    build: eureka-server/.
+    ports:
+      - "7777:7777"
+  db:
+    build: ignite-server/.
   web:
     build: addressbook-main/.
     ports:
-      - "9090:8080"
-  db:
-    build: ignite-server/.
+      - "10000:9000"
