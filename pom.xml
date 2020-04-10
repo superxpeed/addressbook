@@ -6,6 +6,7 @@
     <modules>
         <module>ignite-server</module>
         <module>addressbook-main</module>
+        <module>eureka-server</module>
     </modules>
 
     <groupId>com.edwardhyde</groupId>

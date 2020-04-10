@@ -12,13 +12,13 @@ class LoginLogoutWithRolesTest {
     @Test
     fun stage1_loginLogoutWithRoles() {
         // Set Chrome driver location
-        System.setProperty("webdriver.chrome.driver", LoginLogoutWithRolesTest::class.java.classLoader.getResource("chromedriver").path)
+        System.setProperty("webdriver.chrome.driver", LoginLogoutWithRolesTest::class.java.classLoader.getResource("chromedriver.exe").path)
         // Initialize Selenium driver
         val driver = ChromeDriver()
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, 20)
         // Open login page
-        driver.get("http://localhost:8080")
+        driver.get("http://localhost:9000")
         // Wait until page is loaded
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]")))
         // Locate login input field
