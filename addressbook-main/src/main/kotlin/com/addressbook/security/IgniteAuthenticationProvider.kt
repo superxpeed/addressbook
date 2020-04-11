@@ -1,6 +1,7 @@
 package com.addressbook.security
 
 import com.addressbook.ignite.GridDAO
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -15,12 +16,15 @@ import java.util.ArrayList
 @Component
 class IgniteAuthenticationProvider : AuthenticationProvider {
 
+    @Autowired
+    var igniteDao: GridDAO? = null
+
     override fun authenticate(authentication: Authentication): Authentication {
         // Here I receive login and password (plaintext) from UI
         val login = authentication.name
         val password = authentication.credentials.toString()
         // Then I read user using that login as a key
-        val user: com.addressbook.model.User = GridDAO.getUserByLogin(login)
+        val user: com.addressbook.model.User = igniteDao?.getUserByLogin(login)
                 ?: throw BadCredentialsException("Incorrect login")
         val encoder = BCryptPasswordEncoder()
         // And since password stored in Ignite is encoded, I use encoder to check if it's right

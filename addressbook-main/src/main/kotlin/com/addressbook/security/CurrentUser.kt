@@ -1,6 +1,7 @@
 package com.addressbook.security
 
 import com.addressbook.ignite.GridDAO
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode
 import org.springframework.security.core.GrantedAuthority
@@ -15,6 +16,9 @@ import java.io.Serializable
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 class CurrentUser : Serializable {
+
+    @Autowired
+    var igniteDao: GridDAO? = null
 
     private var userName: String? = null
     var authorities: Collection<GrantedAuthority>? = null
@@ -31,6 +35,6 @@ class CurrentUser : Serializable {
 
     @PreDestroy
     fun destroy() {
-        userName?.let { GridDAO.unlockAllRecordsForUser(it) }
+        userName?.let { igniteDao?.unlockAllRecordsForUser(it) }
     }
 }

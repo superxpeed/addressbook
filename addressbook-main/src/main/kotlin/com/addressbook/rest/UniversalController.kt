@@ -27,6 +27,9 @@ class UniversalController {
     @Autowired
     var currentUser: CurrentUser? = null
 
+    @Autowired
+    var igniteDao: GridDAO? = null
+
     @PostMapping("/getList4UniversalListForm")
     fun getList(@RequestParam(value = "start") start: Int,
                 @RequestParam(value = "pageSize") pageSize: Int,
@@ -35,14 +38,14 @@ class UniversalController {
                 @RequestParam(value = "cache") cache: String,
                 @RequestBody filterDto: List<FilterDto>): CompletableFuture<PageDataDto<TableDataDto<Any>>> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(TableDataDto(GridDAO.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), GridDAO.getTotalDataSize(cache, filterDto)),  UniversalFieldsDescriptor.getFieldDescriptionMap(cache) )
+            return@supplyAsync PageDataDto(TableDataDto(igniteDao?.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), igniteDao?.getTotalDataSize(cache, filterDto)),  UniversalFieldsDescriptor.getFieldDescriptionMap(cache) )
         }
     }
 
     @PostMapping("/getContactList")
     fun getContactList(@RequestParam(value = "personId") id: String): CompletableFuture<PageDataDto<TableDataDto<ContactDto>>> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(TableDataDto(GridDAO.getContactsByPersonId(id)))
+            return@supplyAsync PageDataDto(TableDataDto(igniteDao?.getContactsByPersonId(id)))
         }
     }
 
@@ -50,7 +53,7 @@ class UniversalController {
     fun saveOrCreatePerson(@RequestBody personDto: PersonDto): CompletableFuture<PageDataDto<PersonDto>> {
         val login = currentUser?.getCurrentUser()!!
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(GridDAO.createOrUpdatePerson(personDto, login))
+            return@supplyAsync PageDataDto(igniteDao?.createOrUpdatePerson(personDto, login))
         }
     }
 
@@ -58,14 +61,14 @@ class UniversalController {
     fun saveOrCreateOrganization(@RequestBody organizationDto: OrganizationDto): CompletableFuture<PageDataDto<OrganizationDto>> {
         val login = currentUser?.getCurrentUser()!!
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(GridDAO.createOrUpdateOrganization(organizationDto, login))
+            return@supplyAsync PageDataDto(igniteDao?.createOrUpdateOrganization(organizationDto, login))
         }
     }
 
     @GetMapping("/getBreadcrumbs")
     fun getBreadcrumbs(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<Breadcrumb>>> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(GridDAO.readBreadcrumbs(url))
+            return@supplyAsync PageDataDto(igniteDao?.readBreadcrumbs(url))
         }
     }
 
@@ -73,7 +76,7 @@ class UniversalController {
     fun getNextLevelMenus(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<MenuEntryDto>>> {
         val authorities = currentUser?.authorities!!
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(GridDAO.readNextLevel(url, authorities))
+            return@supplyAsync PageDataDto(igniteDao?.readNextLevel(url, authorities))
         }
     }
 
@@ -81,20 +84,20 @@ class UniversalController {
     fun saveOrCreateContacts(@RequestBody contactDto: List<ContactDto>, @RequestParam(value = "personId") personId: String): CompletableFuture<PageDataDto<List<ContactDto>>> {
         val login = currentUser?.getCurrentUser()!!
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(GridDAO.createOrUpdateContacts(contactDto, login, personId))
+            return@supplyAsync PageDataDto(igniteDao?.createOrUpdateContacts(contactDto, login, personId))
         }
     }
 
     @GetMapping("/lockRecord")
     fun lockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
-        return PageDataDto(if (GridDAO.lockUnlockRecord(type + id, currentUser?.getCurrentUser()!!, true))
+        return PageDataDto(if (igniteDao?.lockUnlockRecord(type + id, currentUser?.getCurrentUser()!!, true)!!)
             Alert("Record locked!", Alert.SUCCESS, Alert.RECORD_PREFIX + id + " locked!")
         else Alert("Record was not locked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was already locked!"))
     }
 
     @GetMapping("/unlockRecord")
     fun unlockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
-        return PageDataDto(if (GridDAO.lockUnlockRecord(type + id, currentUser?.getCurrentUser()!!, false))
+        return PageDataDto(if (igniteDao?.lockUnlockRecord(type + id, currentUser?.getCurrentUser()!!, false)!!)
             Alert("Record unlocked!", Alert.SUCCESS, Alert.RECORD_PREFIX + id + " unlocked!")
         else Alert("Record was not unlocked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was not locked by you!"))
     }
@@ -103,7 +106,7 @@ class UniversalController {
     fun logoutPage(request: HttpServletRequest, response: HttpServletResponse): String {
         val auth = SecurityContextHolder.getContext().authentication
         if (auth != null) {
-            GridDAO.unlockAllRecordsForUser(auth.name)
+            igniteDao?.unlockAllRecordsForUser(auth.name)
             SecurityContextLogoutHandler().logout(request, response, auth)
         }
         return "redirect:/#/login"
@@ -128,7 +131,7 @@ class UniversalController {
 
     @GetMapping("/getUserInfo")
     fun getUserInfo(): User? {
-        val user = GridDAO.getUserByLogin(currentUser?.getCurrentUser()!!)
+        val user = igniteDao?.getUserByLogin(currentUser?.getCurrentUser()!!)
         user?.password = null
         return user
     }

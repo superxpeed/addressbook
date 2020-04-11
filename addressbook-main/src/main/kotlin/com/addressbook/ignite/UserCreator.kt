@@ -1,22 +1,28 @@
 package com.addressbook.ignite
 
 import com.addressbook.model.User
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.stereotype.Component
 
 import java.util.ArrayList
 import java.util.Collections
+import javax.annotation.PostConstruct
 
+@Component
 class UserCreator {
-    companion object {
-        fun initUsers() {
-            val encoder = BCryptPasswordEncoder()
-            val adminRoles = ArrayList<String>()
-            adminRoles.add("USER")
-            adminRoles.add("ADMIN")
-            val admin = User("admin", encoder.encode("adminPass"), adminRoles)
-            GridDAO.createOrUpdateUser(admin)
-            val user = User("user", encoder.encode("userPass"), Collections.singletonList("USER"))
-            GridDAO.createOrUpdateUser(user)
-        }
+    @Autowired
+    var igniteDao: GridDAO? = null
+
+    @PostConstruct
+    fun initUsers() {
+        val encoder = BCryptPasswordEncoder()
+        val adminRoles = ArrayList<String>()
+        adminRoles.add("USER")
+        adminRoles.add("ADMIN")
+        val admin = User("admin", encoder.encode("adminPass"), adminRoles)
+        igniteDao?.createOrUpdateUser(admin)
+        val user = User("user", encoder.encode("userPass"), Collections.singletonList("USER"))
+        igniteDao?.createOrUpdateUser(user)
     }
 }

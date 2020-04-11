@@ -17,18 +17,23 @@ import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.stereotype.Component
 
 import javax.cache.Cache
 import java.sql.Timestamp
 import java.util.*
+import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
 import kotlin.collections.HashSet
 
-object GridDAO {
+@Component
+class GridDAO {
 
     private val logger = LoggerFactory.getLogger(GridDAO::class.java)
 
     var ignite: Ignite? = null
 
+    @PostConstruct
     fun startClient() {
         if (ignite != null) return
         val igniteConfiguration = IgniteConfiguration()
@@ -66,8 +71,6 @@ object GridDAO {
                 logger.info("")
             }
         }
-        MenuCreator.initMenu()
-        UserCreator.initUsers()
     }
 
 
@@ -311,6 +314,7 @@ object GridDAO {
         return size
     }
 
+    @PreDestroy
     fun stopClient() {
         if (ignite != null) {
             ignite?.close()

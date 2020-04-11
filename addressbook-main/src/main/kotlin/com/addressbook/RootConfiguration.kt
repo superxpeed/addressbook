@@ -1,6 +1,5 @@
 package com.addressbook
 
-import com.addressbook.ignite.GridStarter
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,11 +12,6 @@ class RootConfiguration {
     @Bean
     fun mappingJackson2HttpMessageConverter(): MappingJackson2HttpMessageConverter {
         return MappingJackson2HttpMessageConverter()
-    }
-
-    @Bean
-    fun gridStarter(): GridStarter {
-        return GridStarter()
     }
 
     @Bean
