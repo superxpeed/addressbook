@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Controller
-class WebErrorController : ErrorController {
+class ErrorWebController : ErrorController {
 
     @RequestMapping(path = ["/error"], method = [RequestMethod.GET, RequestMethod.POST])
     fun handleError(request: HttpServletRequest, response: HttpServletResponse): String? {
