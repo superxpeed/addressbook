@@ -62,11 +62,15 @@ docker-compose -f docker-compose.yml up -d
 
 #### WebApp host: http://localhost:10000/  
 #### Eureka host: http://localhost:7777/  
-#### Swagger2 WebApp: http://localhost:10000/swagger-ui.html
-#### Swagger2 DPL: http://localhost:11000/swagger-ui.html
 
 ### Docker Apps:
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/deployment.png" width="900"/>  
   
 ### Eureka Services:
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/eureka.png" width="900"/>  
+
+### Swagger2 WebApp: http://localhost:10000/swagger-ui.html
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/swagger-web.png" width="700"/>  
+
+#### Swagger2 DPL: http://localhost:11000/swagger-ui.html
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/swagger-dao.png" width="700"/>  
