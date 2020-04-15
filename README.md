@@ -1,4 +1,4 @@
-# Addressbook (Spring Framework Application Example)
+# Addressbook (Spring Ecosystem Application Example)
 
 #### Back-end:
 1. [**Spring Boot**](https://spring.io/projects/spring-boot): 
