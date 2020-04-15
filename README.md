@@ -2,27 +2,26 @@
 
 #### Back-end:
 1. [**Spring Boot**](https://spring.io/projects/spring-boot): 
-    -   Maven dependency management
-    -   Single executable Jar assembly (with React static)
-    -   Setting http-session duration
-    -   Static resource handler
+    -   [Maven dependency management for Spring & Kotlin & Java & NPM](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml)
+    -   [Single executable Jar assembly (with React static)](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml)
+    -   [Setting http-session duration](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/security/RequestAwareAuthenticationSuccessHandler.kt)
+    -   [Static resource handler](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configuration/WebConfiguration.kt)
 2.  [**Spring Security**](https://spring.io/projects/spring-security):
-    -   Custom AuthenticationProvider
-    -   Custom UrlAuthenticationSuccessHandler for REST API
-    -   Custom role model
+    -   Custom [AuthenticationProvider](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/security/IgniteAuthenticationProvider.kt)
+    -   Custom [UrlAuthenticationSuccessHandler](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/security/RequestAwareAuthenticationSuccessHandler.kt) for REST API
+    -   Custom [role model](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/ignite/UserCreator.kt) for [feature availabilty](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/ignite/MenuCreator.kt)
     -   External user management
 3.  [**Spring Cloud Netflix**](https://spring.io/projects/spring-cloud-netflix):
-    -   Service registration with **Spring Eureka**
-    -   Service location using **Spring Feign** and **Netflix Ribbon**
+    -   [Service registration](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-common/src/main/kotlin/com/addressbook/AddressBookDAO.kt) with **Spring Eureka**
+    -   [Service location](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/ignite/IgniteClient.kt) using **Spring Feign** and **Netflix Ribbon**
 4. [**Spring Web**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html):
-    -   Exception handler for all back-end exceptions
-    -   Custom 404 page & 401 handlers with session listener 
-    (using ErrorController, ExceptionHandler and HttpSessionListener)
-    -   Automatic Jackson marshalling
-5.  [**Spring Flux**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html) for reactive updates on front-end
-6.  [**Spring Fox**](https://springfox.github.io/springfox/docs/current/) with Swagger2
-7.  [**Apache Ignite**](https://apacheignite.readme.io/docs) client configuration, start/stop at Spring context start/closing, SQL queries, transactions, 
-monitoring, binary marshalling
+    -   [Exception handler for all back-end exceptions](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/rest/MainController.kt#L121)
+    -   [Custom 404 page & 401 handlers](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/rest/ErrorWebController.kt) with [session listener](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configuration/SessionListener.kt)  
+    -   [Automatic Jackson marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configuration/RootConfiguration.kt)
+5.  [**Spring Flux**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html) for [reactive updates on front-end](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/services/IgniteStateService.kt)
+6.  [**Spring Fox**](https://springfox.github.io/springfox/docs/current/) [configuration](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configuration/SpringFoxConfiguration.kt) with Swagger2
+7.  [**Apache Ignite**](https://apacheignite.readme.io/docs) [server configuration](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L37), [SQL queries](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L278), [transactions](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L122), 
+[monitoring](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/ignite/IgniteMetricsContainer.kt), [binary marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-common/src/main/kotlin/com/addressbook/model/Organization.kt)
 
 #### Front-end:
 1.  Complex user interface with multiple dynamically added tables/tabs/custom forms, user-input validation and more
