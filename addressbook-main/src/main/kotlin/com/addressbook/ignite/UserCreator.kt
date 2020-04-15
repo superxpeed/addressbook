@@ -11,8 +11,9 @@ import javax.annotation.PostConstruct
 
 @Component
 class UserCreator {
+
     @Autowired
-    var igniteDao: GridDAO? = null
+    var igniteDao: IgniteDAOClient? = null;
 
     @PostConstruct
     fun initUsers() {

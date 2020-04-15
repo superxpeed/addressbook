@@ -1,6 +1,6 @@
 package com.addressbook.security
 
-import com.addressbook.ignite.GridDAO
+import com.addressbook.ignite.IgniteDAOClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.BadCredentialsException
@@ -17,7 +17,7 @@ import java.util.ArrayList
 class IgniteAuthenticationProvider : AuthenticationProvider {
 
     @Autowired
-    var igniteDao: GridDAO? = null
+    var igniteDao: IgniteDAOClient? = null;
 
     override fun authenticate(authentication: Authentication): Authentication {
         // Here I receive login and password (plaintext) from UI

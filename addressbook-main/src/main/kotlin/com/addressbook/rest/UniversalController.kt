@@ -3,10 +3,8 @@ package com.addressbook.rest
 import com.addressbook.LockRecordException
 import com.addressbook.UniversalFieldsDescriptor
 import com.addressbook.dto.*
-import com.addressbook.ignite.GridDAO
-import com.addressbook.model.Alert
-import com.addressbook.model.Breadcrumb
-import com.addressbook.model.User
+import com.addressbook.ignite.IgniteDAOClient
+import com.addressbook.model.*
 import com.addressbook.security.CurrentUser
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,7 +26,7 @@ class UniversalController {
     var currentUser: CurrentUser? = null
 
     @Autowired
-    var igniteDao: GridDAO? = null
+    var igniteDao: IgniteDAOClient? = null;
 
     @PostMapping("/getList4UniversalListForm")
     fun getList(@RequestParam(value = "start") start: Int,
@@ -52,6 +50,8 @@ class UniversalController {
     @PostMapping("/saveOrCreatePerson")
     fun saveOrCreatePerson(@RequestBody personDto: PersonDto): CompletableFuture<PageDataDto<PersonDto>> {
         val login = currentUser?.getCurrentUser()!!
+        if (igniteDao?.ifPersonExists(personDto.id!!)!! && igniteDao?.notLockedByUser(Person::class.java.name + personDto.id, login)!!)
+            throw LockRecordException("Parent record was not locked by $login")
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(igniteDao?.createOrUpdatePerson(personDto, login))
         }
@@ -60,6 +60,8 @@ class UniversalController {
     @PostMapping("/saveOrCreateOrganization")
     fun saveOrCreateOrganization(@RequestBody organizationDto: OrganizationDto): CompletableFuture<PageDataDto<OrganizationDto>> {
         val login = currentUser?.getCurrentUser()!!
+        if (igniteDao?.ifOrganizationExists(organizationDto.id!!)!! && igniteDao?.notLockedByUser(Organization::class.java.name + organizationDto.id, login)!!)
+            throw LockRecordException("Record was not locked by $login")
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(igniteDao?.createOrUpdateOrganization(organizationDto, login))
         }
@@ -83,6 +85,8 @@ class UniversalController {
     @PostMapping("/saveOrCreateContacts")
     fun saveOrCreateContacts(@RequestBody contactDto: List<ContactDto>, @RequestParam(value = "personId") personId: String): CompletableFuture<PageDataDto<List<ContactDto>>> {
         val login = currentUser?.getCurrentUser()!!
+        if (igniteDao?.ifPersonExists(personId)!! && igniteDao?.notLockedByUser(Person::class.java.name + personId, login)!!)
+            throw LockRecordException("Parent record was not locked by $login")
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(igniteDao?.createOrUpdateContacts(contactDto, login, personId))
         }

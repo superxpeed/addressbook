@@ -1,6 +1,6 @@
 package com.addressbook.security
 
-import com.addressbook.ignite.GridDAO
+import com.addressbook.ignite.IgniteDAOClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode
@@ -17,11 +17,11 @@ import java.io.Serializable
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 class CurrentUser : Serializable {
 
-    @Autowired
-    var igniteDao: GridDAO? = null
-
     private var userName: String? = null
     var authorities: Collection<GrantedAuthority>? = null
+
+    @Autowired
+    var igniteDao: IgniteDAOClient? = null;
 
     @PostConstruct
     fun init() {

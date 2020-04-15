@@ -2,7 +2,7 @@ package com.addressbook.rest
 
 import com.addressbook.IgniteStateService
 import com.addressbook.JVMStateService
-import com.addressbook.model.IgniteMetricsContainer
+import com.addressbook.ignite.IgniteMetricsContainer
 import com.addressbook.model.JVMState
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType

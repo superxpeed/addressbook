@@ -1,6 +1,6 @@
 package com.addressbook
 
-import com.addressbook.model.IgniteMetricsContainer
+import com.addressbook.ignite.IgniteMetricsContainer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux

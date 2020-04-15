@@ -1,6 +1,6 @@
-package com.addressbook.ignite
+package com.addressbook.server.dao
 
-import com.addressbook.LockRecordException
+import com.addressbook.AddressBookDAO
 import com.addressbook.UniversalFieldsDescriptor
 import com.addressbook.dto.*
 import com.addressbook.model.*
@@ -27,9 +27,9 @@ import javax.annotation.PreDestroy
 import kotlin.collections.HashSet
 
 @Component
-class GridDAO {
+class DAO: AddressBookDAO {
 
-    private val logger = LoggerFactory.getLogger(GridDAO::class.java)
+    private val logger = LoggerFactory.getLogger(DAO::class.java)
 
     var ignite: Ignite? = null
 
@@ -38,7 +38,6 @@ class GridDAO {
         if (ignite != null) return
         val igniteConfiguration = IgniteConfiguration()
         igniteConfiguration.isPeerClassLoadingEnabled = true
-        igniteConfiguration.isClientMode = true
         igniteConfiguration.setIncludeEventTypes(org.apache.ignite.events.EventType.EVT_TASK_STARTED,
                 org.apache.ignite.events.EventType.EVT_TASK_FINISHED,
                 org.apache.ignite.events.EventType.EVT_TASK_FAILED,
@@ -80,20 +79,17 @@ class GridDAO {
      * @param user current user (will be used for locking existing entity)
      * @return updated or created organization entity
      */
-    fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
-        val cachePerson: IgniteCache<String, Organization> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)!!
-        var organization = cachePerson.get(organizationDto.id)
+    override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
+        val cacheOrganization: IgniteCache<String, Organization> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)!!
+        var organization = cacheOrganization.get(organizationDto.id)
         if (organization == null) {
             organization = Organization(organizationDto)
-        } else {
-            if (notLockedByUser(Organization::class.java.name + organization.id, user))
-                throw LockRecordException("Record was not locked by $user")
         }
         organization.type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
         organization.lastUpdated = Timestamp(System.currentTimeMillis())
         organization.name = organizationDto.name
         organization.addr = Address(organizationDto.street, organizationDto.zip)
-        cachePerson.put(organization.id, organization)
+        cacheOrganization.put(organization.id, organization)
         return organizationDto
     }
 
@@ -103,15 +99,12 @@ class GridDAO {
      * @param user current user (will be used for locking existing entity)
      * @return updated or created person entity
      */
-    fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
+    override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
         val cachePerson: IgniteCache<String, Person> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE)!!
         var person = if (personDto.id != null) cachePerson.get(personDto.id) else null
         if (person == null) {
             person = Person()
             personDto.id = person.id
-        } else {
-            if (notLockedByUser(Person::class.java.name + person.id, user))
-                throw LockRecordException("Record was not locked by $user")
         }
         person.firstName = personDto.firstName
         person.lastName = personDto.lastName
@@ -128,10 +121,8 @@ class GridDAO {
      * @param user current user (was used for locking existing parent person entity)
      * @return updated or created contact entities
      */
-    fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, personId: String): List<ContactDto> {
+    override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, personId: String): List<ContactDto> {
         if (contactDtos.isEmpty()) return contactDtos
-        if (notLockedByUser(Person::class.java.name + personId, user))
-            throw LockRecordException("Parent record was not locked by $user")
         val cacheContacts: IgniteCache<String, Contact> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)!!
         var toDelete: List<String> = getContactsByPersonId(personId).mapNotNull { it.id }
         val updated: List<String> = contactDtos.mapNotNull { it.id }
@@ -154,7 +145,7 @@ class GridDAO {
         return contactDtos
     }
 
-    fun createOrUpdateUser(newUser: User) {
+    override fun createOrUpdateUser(newUser: User) {
         val cacheUser: IgniteCache<String, User> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE)!!
         var user = cacheUser.get(newUser.login)
         if (user != null) {
@@ -164,40 +155,55 @@ class GridDAO {
         cacheUser.put(user.login, user)
     }
 
-    private fun notLockedByUser(key: String, user: String): Boolean {
+    override fun notLockedByUser(key: String, user: String): Boolean {
         val cacheLocks: IgniteCache<String, String> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
         val userLocked = cacheLocks.get(key)
         return user != userLocked
     }
 
-    fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
+    override fun ifOrganizationExists(key: String): Boolean {
+        val cacheOrganization: IgniteCache<String, Organization> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)!!
+        return cacheOrganization.get(key) == null
+    }
+
+    override fun ifPersonExists(key: String): Boolean {
+        val cachePerson: IgniteCache<String, Person> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE)!!
+        return cachePerson.get(key) == null
+    }
+
+    override fun ifContactExists(key: String): Boolean {
+        val cacheContacts: IgniteCache<String, Contact> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)!!
+        return cacheContacts.get(key) == null
+    }
+
+    override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         val cacheLocks: IgniteCache<String, String> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
         return if (lock) cacheLocks.putIfAbsent(key, user) else cacheLocks.remove(key, user)
     }
 
-    fun unlockAllRecordsForUser(user: String) {
+    override fun unlockAllRecordsForUser(user: String) {
         val cacheLocks: IgniteCache<String, String> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
         cacheLocks.removeAll(HashSet(cacheLocks.query(ScanQuery { _, v -> v == user }, Cache.Entry<String, String>::getKey).all))
     }
 
-    fun getUserByLogin(login: String): User? {
+    override fun getUserByLogin(login: String): User? {
         val cacheUser: IgniteCache<String, User> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE)!!
         return cacheUser.get(login)
     }
 
-    fun clearMenus() {
+    override fun clearMenus() {
         val cacheMenu: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
         cacheMenu.clear()
     }
 
-    fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryDto: MenuEntryDto?): MenuEntryDto {
+    override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {
         val cachePerson: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
         val menuEntry: MenuEntry?
         menuEntry = if (menuEntryDto.id != null) cachePerson.get(menuEntryDto.id) else MenuEntry()
         menuEntry?.name = menuEntryDto.name
         menuEntry?.url = menuEntryDto.url
         menuEntry?.roles = menuEntryDto.roles
-        if (parentEntryDto != null) menuEntry?.parentId = parentEntryDto.id
+        if (parentEntryId != null) menuEntry?.parentId = parentEntryId
         menuEntryDto.id = menuEntry?.id
         cachePerson.put(menuEntry?.id, menuEntry)
         return menuEntryDto
@@ -209,7 +215,7 @@ class GridDAO {
         return entries
     }
 
-    fun readNextLevel(url: String, authorities: Collection<GrantedAuthority>): List<MenuEntryDto> {
+    override fun readNextLevel(url: String, authorities: Collection<GrantedAuthority>): List<MenuEntryDto> {
         val cache: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
         val entries: List<Cache.Entry<String, MenuEntry>> = checkIfMenuExists(cache, url)
         val menuEntry: MenuEntry = entries[0].value
@@ -228,7 +234,7 @@ class GridDAO {
         return menuEntryDtos
     }
 
-    fun readBreadcrumbs(url: String): List<Breadcrumb> {
+    override fun readBreadcrumbs(url: String): List<Breadcrumb> {
         val cache: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
         val entries: List<Cache.Entry<String, MenuEntry>> = checkIfMenuExists(cache, url)
         val original: MenuEntry = entries[0].value
@@ -268,7 +274,7 @@ class GridDAO {
         return baseSql
     }
 
-    fun selectCachePage(page: Int, pageSize: Int, sortName: String, sortOrder: String, filterDto: List<FilterDto>, cacheName: String): List<Any> {
+    override fun selectCachePage(page: Int, pageSize: Int, sortName: String, sortOrder: String, filterDto: List<FilterDto>, cacheName: String): List<Any> {
         val cache: IgniteCache<String, Any> = ignite?.getOrCreateCache(cacheName)!!
         val cacheDtoArrayList = ArrayList<Any>()
         val sql = SqlQuery<String, Any>(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
@@ -285,7 +291,7 @@ class GridDAO {
         return cacheDtoArrayList
     }
 
-    fun getContactsByPersonId(id: String): List<ContactDto> {
+    override fun getContactsByPersonId(id: String): List<ContactDto> {
         val cache: IgniteCache<String, Contact> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)!!
         val cacheDtoArrayList = ArrayList<ContactDto>()
         val sql = SqlQuery<String, Contact>(Contact::class.java, "personId = ? order by type")
@@ -301,7 +307,7 @@ class GridDAO {
         else " " + filterDto.comparator + " "
     }
 
-    fun getTotalDataSize(cacheName: String, filterDto: List<FilterDto>): Int {
+    override fun getTotalDataSize(cacheName: String, filterDto: List<FilterDto>): Int {
         if (filterDto.isEmpty()) {
             val cache: IgniteCache<Any, Any> = ignite?.getOrCreateCache(cacheName)!!
             return cache.size(CachePeekMode.ALL)
@@ -321,7 +327,7 @@ class GridDAO {
         }
     }
 
-    fun getCacheMetrics(): Map<String, CacheMetrics> {
+    override fun getCacheMetrics(): Map<String, CacheMetrics> {
         val cacheMetricsMap = HashMap<String, CacheMetrics>()
         for (cacheName in UniversalFieldsDescriptor.getCacheClasses().keys) {
             val cache: IgniteCache<String, Any> = ignite?.getOrCreateCache(cacheName)!!

@@ -1,8 +1,7 @@
-package com.addressbook.model
+package com.addressbook.ignite
 
-import com.addressbook.ignite.GridDAO
+import com.addressbook.model.IgniteCacheMetrics
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
 import java.io.Serializable
 import java.util.*
@@ -12,7 +11,7 @@ import java.util.*
 class IgniteMetricsContainer : Serializable {
 
     @Autowired
-    var igniteDao: GridDAO? = null
+    var igniteDao: IgniteDAOClient? = null;
 
     var igniteCacheMetricsMap: HashMap<String, IgniteCacheMetrics>? = null
 

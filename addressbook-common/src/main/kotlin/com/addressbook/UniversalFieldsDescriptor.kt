@@ -1,8 +1,6 @@
 package com.addressbook
 
-import com.addressbook.dto.ContactDto
-import com.addressbook.dto.OrganizationDto
-import com.addressbook.dto.PersonDto
+import com.addressbook.dto.*
 import com.addressbook.model.*
 import java.util.LinkedHashMap
 
