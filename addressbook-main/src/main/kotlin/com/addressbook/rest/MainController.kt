@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture
 
 @RestController
 @RequestMapping(path = ["/rest"])
-class UniversalController {
+class MainController {
 
     @Autowired
     var currentUser: CurrentUser? = null
