@@ -1,6 +1,5 @@
-# Address Book (Skeleton Spring MVC application)
+# Addressbook (Spring Framework Application Example)
 
-#### Contains following useful snippets:
 #### Back-end:
 1. Spring Boot: 
     -   Java Configuration
