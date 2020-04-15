@@ -1,7 +1,7 @@
 package com.addressbook.model
 
 import org.apache.ignite.cache.query.annotations.QuerySqlField
-import java.util.UUID
+import java.util.*
 
 class Contact(personId: String?, type: ContactType?, data: String?, description: String?) {
     constructor() : this(null, null, null, null)

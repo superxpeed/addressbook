@@ -17,16 +17,15 @@ import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
-
-import javax.cache.Cache
 import java.sql.Timestamp
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
+import javax.cache.Cache
 import kotlin.collections.HashSet
 
 @Controller
-class DAO: AddressBookDAO {
+class DAO : AddressBookDAO {
 
     private val logger = LoggerFactory.getLogger(DAO::class.java)
 
@@ -144,7 +143,7 @@ class DAO: AddressBookDAO {
         return contactDtos
     }
 
-    override fun createOrUpdateUser(newUser: User) :String {
+    override fun createOrUpdateUser(newUser: User): String {
         val cacheUser: IgniteCache<String, User> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE)!!
         var user = cacheUser.get(newUser.login)
         if (user != null) {

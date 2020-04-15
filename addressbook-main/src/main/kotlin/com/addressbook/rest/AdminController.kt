@@ -1,9 +1,9 @@
 package com.addressbook.rest
 
+import com.addressbook.dto.JavaMetrics
+import com.addressbook.ignite.IgniteMetricsContainer
 import com.addressbook.services.IgniteStateService
 import com.addressbook.services.JVMStateService
-import com.addressbook.ignite.IgniteMetricsContainer
-import com.addressbook.dto.JavaMetrics
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller

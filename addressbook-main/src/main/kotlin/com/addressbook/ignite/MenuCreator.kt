@@ -3,14 +3,14 @@ package com.addressbook.ignite
 import com.addressbook.dto.MenuEntryDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import java.util.Collections
+import java.util.*
 import javax.annotation.PostConstruct
 
 @Component
 class MenuCreator {
 
     @Autowired
-    var igniteDao: IgniteClient? = null;
+    var igniteDao: IgniteClient? = null
 
     @PostConstruct
     fun initMenu() {

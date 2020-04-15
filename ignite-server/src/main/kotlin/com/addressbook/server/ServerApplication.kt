@@ -1,4 +1,4 @@
-package com.addressbook.server;
+package com.addressbook.server
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
@@ -12,7 +12,7 @@ class ServerApplication {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            SpringApplication.run(ServerApplication::class.java, *args);
+            SpringApplication.run(ServerApplication::class.java, *args)
         }
     }
 }

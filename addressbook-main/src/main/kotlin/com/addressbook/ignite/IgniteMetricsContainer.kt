@@ -11,7 +11,7 @@ import java.util.*
 class IgniteMetricsContainer : Serializable {
 
     @Autowired
-    var igniteDao: IgniteClient? = null;
+    var igniteDao: IgniteClient? = null
 
     var igniteCacheMetricsMap: HashMap<String, IgniteMetrics>? = null
 

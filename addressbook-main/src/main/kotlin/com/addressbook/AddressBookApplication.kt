@@ -8,11 +8,11 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 @EnableEurekaClient
 @EnableFeignClients
 @SpringBootApplication(scanBasePackages = ["com.addressbook"])
-open class AddressBookApplication {
+class AddressBookApplication {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            SpringApplication.run(AddressBookApplication::class.java, *args);
+            SpringApplication.run(AddressBookApplication::class.java, *args)
         }
     }
 }

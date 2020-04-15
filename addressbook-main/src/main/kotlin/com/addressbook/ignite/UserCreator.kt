@@ -4,16 +4,14 @@ import com.addressbook.model.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
-
-import java.util.ArrayList
-import java.util.Collections
+import java.util.*
 import javax.annotation.PostConstruct
 
 @Component
 class UserCreator {
 
     @Autowired
-    var igniteDao: IgniteClient? = null;
+    var igniteDao: IgniteClient? = null
 
     @PostConstruct
     fun initUsers() {

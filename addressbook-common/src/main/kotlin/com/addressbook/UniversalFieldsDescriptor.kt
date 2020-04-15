@@ -1,8 +1,11 @@
 package com.addressbook
 
-import com.addressbook.dto.*
+import com.addressbook.dto.ContactDto
+import com.addressbook.dto.FieldDescription
+import com.addressbook.dto.OrganizationDto
+import com.addressbook.dto.PersonDto
 import com.addressbook.model.*
-import java.util.LinkedHashMap
+import java.util.*
 
 object UniversalFieldsDescriptor {
 

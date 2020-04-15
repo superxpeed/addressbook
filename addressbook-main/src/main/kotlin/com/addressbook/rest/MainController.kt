@@ -1,22 +1,23 @@
 package com.addressbook.rest
 
-import com.addressbook.exception.LockRecordException
 import com.addressbook.UniversalFieldsDescriptor
 import com.addressbook.dto.*
+import com.addressbook.exception.LockRecordException
 import com.addressbook.ignite.IgniteClient
-import com.addressbook.model.*
+import com.addressbook.model.Organization
+import com.addressbook.model.Person
+import com.addressbook.model.User
 import com.addressbook.security.CurrentUser
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.web.bind.annotation.*
-
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.concurrent.CompletableFuture
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping(path = ["/rest"])
@@ -26,7 +27,7 @@ class MainController {
     var currentUser: CurrentUser? = null
 
     @Autowired
-    var igniteDao: IgniteClient? = null;
+    var igniteDao: IgniteClient? = null
 
     @PostMapping("/getList4UniversalListForm")
     fun getList(@RequestParam(value = "start") start: Int,
@@ -36,7 +37,7 @@ class MainController {
                 @RequestParam(value = "cache") cache: String,
                 @RequestBody filterDto: List<FilterDto>): CompletableFuture<PageDataDto<TableDataDto<Any>>> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(TableDataDto(igniteDao?.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), igniteDao?.getTotalDataSize(cache, filterDto)),  UniversalFieldsDescriptor.getFieldDescriptionMap(cache) )
+            return@supplyAsync PageDataDto(TableDataDto(igniteDao?.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), igniteDao?.getTotalDataSize(cache, filterDto)), UniversalFieldsDescriptor.getFieldDescriptionMap(cache))
         }
     }
 

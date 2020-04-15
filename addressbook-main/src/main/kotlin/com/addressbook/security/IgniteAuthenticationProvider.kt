@@ -11,13 +11,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
-import java.util.ArrayList
+import java.util.*
 
 @Component
 class IgniteAuthenticationProvider : AuthenticationProvider {
 
     @Autowired
-    var igniteDao: IgniteClient? = null;
+    var igniteDao: IgniteClient? = null
 
     override fun authenticate(authentication: Authentication): Authentication {
         // Here I receive login and password (plaintext) from UI

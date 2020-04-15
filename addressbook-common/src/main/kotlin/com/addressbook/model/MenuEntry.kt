@@ -1,7 +1,7 @@
 package com.addressbook.model
 
 import org.apache.ignite.cache.query.annotations.QuerySqlField
-import java.util.UUID
+import java.util.*
 
 class MenuEntry {
 

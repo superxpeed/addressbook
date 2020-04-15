@@ -2,9 +2,8 @@ package com.addressbook.model
 
 import com.addressbook.dto.OrganizationDto
 import org.apache.ignite.cache.query.annotations.QuerySqlField
-
 import java.sql.Timestamp
-import java.util.UUID
+import java.util.*
 
 class Organization constructor(id: String?, name: String?, addr: Address?, type: OrganizationType?, lastUpdated: Timestamp?) {
 

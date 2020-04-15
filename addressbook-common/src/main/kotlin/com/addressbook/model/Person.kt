@@ -2,7 +2,7 @@ package com.addressbook.model
 
 import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.io.Serializable
-import java.util.UUID
+import java.util.*
 
 class Person : Serializable {
 

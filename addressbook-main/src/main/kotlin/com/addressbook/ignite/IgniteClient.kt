@@ -4,5 +4,4 @@ import com.addressbook.AddressBookDAO
 import org.springframework.cloud.openfeign.FeignClient
 
 @FeignClient("ignite-server")
-interface IgniteClient : AddressBookDAO {
-}
+interface IgniteClient : AddressBookDAO

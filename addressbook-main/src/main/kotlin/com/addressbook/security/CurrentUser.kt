@@ -8,10 +8,9 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.context.WebApplicationContext
-
+import java.io.Serializable
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
-import java.io.Serializable
 
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -21,7 +20,7 @@ class CurrentUser : Serializable {
     var authorities: Collection<GrantedAuthority>? = null
 
     @Autowired
-    var igniteDao: IgniteClient? = null;
+    var igniteDao: IgniteClient? = null
 
     @PostConstruct
     fun init() {

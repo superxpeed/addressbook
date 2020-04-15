@@ -1,4 +1,4 @@
-package com.addressbook.configuration;
+package com.addressbook.configuration
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,7 +15,7 @@ import java.util.*
 @EnableSwagger2
 class SpringFoxConfiguration {
     @Bean
-    fun api(): Docket{
+    fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())
