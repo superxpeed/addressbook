@@ -61,7 +61,7 @@ cd ..
 docker-compose -f docker-compose.yml up -d
 ```
 
-#### Webapp host: http://localhost:10000/  
+#### WebApp host: http://localhost:10000/  
 #### Eureka host: http://localhost:7777/  
 
 ### Docker Apps:
