@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="WebApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+  <configuration default="false" name="AddressbookApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="addressbook-main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.AddressBookApplication" />
     <option name="VM_PARAMETERS" value="-Xms2048m -Xmx4096m -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -DIGNITE_NO_SHUTDOWN_HOOK=true" />

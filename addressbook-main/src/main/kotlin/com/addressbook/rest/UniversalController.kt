@@ -76,7 +76,7 @@ class UniversalController {
 
     @GetMapping("/getNextLevelMenus")
     fun getNextLevelMenus(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<MenuEntryDto>>> {
-        val authorities = currentUser?.authorities!!
+        val authorities = currentUser?.authorities!!.map { x -> x.authority }
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(igniteDao?.readNextLevel(url, authorities))
         }

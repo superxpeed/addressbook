@@ -17,7 +17,7 @@ import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Controller
 
 import javax.cache.Cache
 import java.sql.Timestamp
@@ -26,12 +26,12 @@ import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 import kotlin.collections.HashSet
 
-@Component
+@Controller
 class DAO: AddressBookDAO {
 
     private val logger = LoggerFactory.getLogger(DAO::class.java)
 
-    var ignite: Ignite? = null
+    private var ignite: Ignite? = null
 
     @PostConstruct
     fun startClient() {
@@ -50,7 +50,7 @@ class DAO: AddressBookDAO {
 
         val tcpDiscoverySpi = TcpDiscoverySpi()
         val tcpDiscoveryMulticastIpFinder = TcpDiscoveryMulticastIpFinder()
-        tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("db:47500..47509"))
+        tcpDiscoveryMulticastIpFinder.setAddresses(Collections.singleton("localhost:47500..47509"))
         tcpDiscoverySpi.ipFinder = tcpDiscoveryMulticastIpFinder
         igniteConfiguration.discoverySpi = tcpDiscoverySpi
         ignite = Ignition.start(igniteConfiguration)
@@ -145,7 +145,7 @@ class DAO: AddressBookDAO {
         return contactDtos
     }
 
-    override fun createOrUpdateUser(newUser: User) {
+    override fun createOrUpdateUser(newUser: User) :String {
         val cacheUser: IgniteCache<String, User> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE)!!
         var user = cacheUser.get(newUser.login)
         if (user != null) {
@@ -153,6 +153,7 @@ class DAO: AddressBookDAO {
             user.roles = newUser.roles
         } else user = newUser
         cacheUser.put(user.login, user)
+        return "OK"
     }
 
     override fun notLockedByUser(key: String, user: String): Boolean {
@@ -163,17 +164,17 @@ class DAO: AddressBookDAO {
 
     override fun ifOrganizationExists(key: String): Boolean {
         val cacheOrganization: IgniteCache<String, Organization> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)!!
-        return cacheOrganization.get(key) == null
+        return cacheOrganization.get(key) != null
     }
 
     override fun ifPersonExists(key: String): Boolean {
         val cachePerson: IgniteCache<String, Person> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE)!!
-        return cachePerson.get(key) == null
+        return cachePerson.get(key) != null
     }
 
     override fun ifContactExists(key: String): Boolean {
         val cacheContacts: IgniteCache<String, Contact> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)!!
-        return cacheContacts.get(key) == null
+        return cacheContacts.get(key) != null
     }
 
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
@@ -181,9 +182,10 @@ class DAO: AddressBookDAO {
         return if (lock) cacheLocks.putIfAbsent(key, user) else cacheLocks.remove(key, user)
     }
 
-    override fun unlockAllRecordsForUser(user: String) {
+    override fun unlockAllRecordsForUser(user: String): String {
         val cacheLocks: IgniteCache<String, String> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
         cacheLocks.removeAll(HashSet(cacheLocks.query(ScanQuery { _, v -> v == user }, Cache.Entry<String, String>::getKey).all))
+        return "OK"
     }
 
     override fun getUserByLogin(login: String): User? {
@@ -191,9 +193,10 @@ class DAO: AddressBookDAO {
         return cacheUser.get(login)
     }
 
-    override fun clearMenus() {
+    override fun clearMenus(): String {
         val cacheMenu: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
         cacheMenu.clear()
+        return "OK"
     }
 
     override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {
@@ -215,7 +218,7 @@ class DAO: AddressBookDAO {
         return entries
     }
 
-    override fun readNextLevel(url: String, authorities: Collection<GrantedAuthority>): List<MenuEntryDto> {
+    override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
         val cache: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
         val entries: List<Cache.Entry<String, MenuEntry>> = checkIfMenuExists(cache, url)
         val menuEntry: MenuEntry = entries[0].value
@@ -224,7 +227,7 @@ class DAO: AddressBookDAO {
         val cursor: QueryCursor<Cache.Entry<String, MenuEntry>> = cache.query(sql.setArgs(menuEntry.id))
         for (e in cursor) {
             for (authority in authorities) {
-                if (e.value.roles != null && e.value.roles!!.contains(authority.authority.replace("ROLE_", ""))) {
+                if (e.value.roles != null && e.value.roles!!.contains(authority.replace("ROLE_", ""))) {
                     menuEntryDtos.add(MenuEntryDto(e.value))
                     break
                 }
