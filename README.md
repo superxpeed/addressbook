@@ -2,15 +2,15 @@
 
 #### Back-end:
 1. Spring Boot: 
-    -   Java Configuration
-    -   Maven dependencies
-    -   Fat-jar assembly (with React static)
+    -   Maven dependency management
+    -   Single executable Jar assembly (with React static)
     -   Setting http-session duration
     -   Static resource handler
 2.  Spring Security:
     -   Custom AuthenticationProvider
     -   Custom UrlAuthenticationSuccessHandler for REST API
-    -   Retrieving current user with roles
+    -   Custom role model
+    -   External user management
 3.  Spring Cloud Netflix:
     -   Service registration with Spring Eureka
     -   Service location using Spring Feign and Ribbon
@@ -24,15 +24,14 @@
 monitoring, binary marshalling
 
 #### Front-end:
-1.  complicated user interface with multiple dynamically added tables/tabs/custom forms, user-input validation and more
-2.  react, redux, react-router, component lifecycle, fetch, custom headers, credentials (JSESSIONID) for REST-API
-3.  react-bootstrap-table & react-bootstrap components
-4.  webpack-dev-server & npm configuration & assembly (including maven)
-5.  working with http statuses & js exceptions
-6.  user notifications about all back-end and front-end events (including exceptions)
-7.  hierarchical menu with breadcrumbs and role-dependent feature availability
-8.  locking table records for editing (with user notifications)
-9.  working with refs for dynamically added/removed children components
+1.  Complex user interface with multiple dynamically added tables/tabs/custom forms, user-input validation and more
+2.  React, redux, react-router, Component lifecycle, integration with Spring Security for REST-API
+3.  React-bootstrap-table & React-bootstrap components
+4.  Webpack-dev-server & npm configuration & assembly (+ multiplatform maven configs)
+5.  Heavy usage of HTTP Statuses & handling JS exceptions
+6.  User notifications about all back-end and front-end events (+ exception handling) using react-bs-notifier
+7.  Hierarchical menu with breadcrumbs and role-dependent feature availability
+8.  Dynamically added/removed components using Maps
 
 #### Tested by JUnit & Selenium (Chrome)
 
