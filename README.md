@@ -1,27 +1,27 @@
 # Addressbook (Spring Framework Application Example)
 
 #### Back-end:
-1. Spring Boot: 
+1. **Spring Boot**: 
     -   Maven dependency management
     -   Single executable Jar assembly (with React static)
     -   Setting http-session duration
     -   Static resource handler
-2.  Spring Security:
+2.  **Spring Security**:
     -   Custom AuthenticationProvider
     -   Custom UrlAuthenticationSuccessHandler for REST API
     -   Custom role model
     -   External user management
-3.  Spring Cloud Netflix:
-    -   Service registration with Spring Eureka
-    -   Service location using Spring Feign and Ribbon
-4. Spring Core:
+3.  **Spring Cloud Netflix**:
+    -   Service registration with **Spring Eureka**
+    -   Service location using **Spring Feign** and **Netflix Ribbon**
+4. **Spring Core**:
     -   Exception handler for all back-end exceptions
     -   Custom 404 page & 401 handlers with session listener 
     (using ErrorController, ExceptionHandler and HttpSessionListener)
     -   Automatic Jackson marshalling
-5.  Spring Flux for reactive updates on front-end
-6.  Spring Fox with Swagger2
-7.  Apache Ignite client configuration, start/stop at Spring context start/closing, SQL queries, transactions, 
+5.  **Spring Flux** for reactive updates on front-end
+6.  **Spring Fox** with Swagger2
+7.  **Apache Ignite** client configuration, start/stop at Spring context start/closing, SQL queries, transactions, 
 monitoring, binary marshalling
 
 #### Front-end:
