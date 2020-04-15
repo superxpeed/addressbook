@@ -1,4 +1,4 @@
-package com.addressbook.model
+package com.addressbook.dto
 
 class Breadcrumb constructor(name: String?, url: String?) {
     var name: String? = null

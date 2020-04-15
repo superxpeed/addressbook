@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct
 class MenuCreator {
 
     @Autowired
-    var igniteDao: IgniteDAOClient? = null;
+    var igniteDao: IgniteClient? = null;
 
     @PostConstruct
     fun initMenu() {

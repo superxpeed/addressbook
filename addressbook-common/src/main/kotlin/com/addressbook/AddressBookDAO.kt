@@ -1,7 +1,7 @@
 package com.addressbook;
 
 import com.addressbook.dto.*
-import com.addressbook.model.Breadcrumb
+import com.addressbook.dto.Breadcrumb
 import com.addressbook.model.User
 import org.apache.ignite.cache.CacheMetrics
 import org.springframework.web.bind.annotation.RequestBody

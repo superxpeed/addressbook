@@ -1,4 +1,4 @@
-package com.addressbook.model
+package com.addressbook.dto
 
 class FieldDescription(name: String, displayName: String, width: String, type: String) {
 

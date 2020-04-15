@@ -1,9 +1,9 @@
 package com.addressbook.rest
 
-import com.addressbook.IgniteStateService
-import com.addressbook.JVMStateService
+import com.addressbook.services.IgniteStateService
+import com.addressbook.services.JVMStateService
 import com.addressbook.ignite.IgniteMetricsContainer
-import com.addressbook.model.JVMState
+import com.addressbook.dto.JavaMetrics
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
@@ -24,7 +24,7 @@ class AdminController {
 
     @GetMapping(value = ["/jvmState"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     @ResponseBody
-    fun jvmStateEvents(): Flux<JVMState> {
+    fun jvmStateEvents(): Flux<JavaMetrics> {
         return jvmStateService!!.getJVMState()
     }
 

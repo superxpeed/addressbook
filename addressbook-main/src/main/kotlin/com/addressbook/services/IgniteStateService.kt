@@ -1,4 +1,4 @@
-package com.addressbook
+package com.addressbook.services
 
 import com.addressbook.ignite.IgniteMetricsContainer
 import org.springframework.beans.factory.annotation.Autowired

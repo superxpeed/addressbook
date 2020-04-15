@@ -1,9 +1,9 @@
 package com.addressbook.rest
 
-import com.addressbook.LockRecordException
+import com.addressbook.exception.LockRecordException
 import com.addressbook.UniversalFieldsDescriptor
 import com.addressbook.dto.*
-import com.addressbook.ignite.IgniteDAOClient
+import com.addressbook.ignite.IgniteClient
 import com.addressbook.model.*
 import com.addressbook.security.CurrentUser
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -26,7 +26,7 @@ class UniversalController {
     var currentUser: CurrentUser? = null
 
     @Autowired
-    var igniteDao: IgniteDAOClient? = null;
+    var igniteDao: IgniteClient? = null;
 
     @PostMapping("/getList4UniversalListForm")
     fun getList(@RequestParam(value = "start") start: Int,

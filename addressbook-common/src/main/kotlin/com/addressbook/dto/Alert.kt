@@ -1,4 +1,4 @@
-package com.addressbook.model
+package com.addressbook.dto
 
 import java.io.Serializable
 

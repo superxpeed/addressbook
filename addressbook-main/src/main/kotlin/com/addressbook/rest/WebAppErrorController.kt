@@ -1,6 +1,6 @@
 package com.addressbook.rest
 
-import com.addressbook.model.Alert
+import com.addressbook.dto.Alert
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.http.HttpStatus

@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct
 class UserCreator {
 
     @Autowired
-    var igniteDao: IgniteDAOClient? = null;
+    var igniteDao: IgniteClient? = null;
 
     @PostConstruct
     fun initUsers() {

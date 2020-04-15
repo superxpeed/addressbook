@@ -1,6 +1,6 @@
 package com.addressbook.security
 
-import com.addressbook.ignite.IgniteDAOClient
+import com.addressbook.ignite.IgniteClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode
@@ -21,7 +21,7 @@ class CurrentUser : Serializable {
     var authorities: Collection<GrantedAuthority>? = null
 
     @Autowired
-    var igniteDao: IgniteDAOClient? = null;
+    var igniteDao: IgniteClient? = null;
 
     @PostConstruct
     fun init() {

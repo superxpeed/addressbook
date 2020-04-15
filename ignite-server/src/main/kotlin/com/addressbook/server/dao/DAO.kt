@@ -16,7 +16,6 @@ import org.apache.ignite.configuration.IgniteConfiguration
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder
 import org.slf4j.LoggerFactory
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Controller
 
 import javax.cache.Cache

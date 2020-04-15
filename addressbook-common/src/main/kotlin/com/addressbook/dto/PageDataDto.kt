@@ -1,7 +1,5 @@
 package com.addressbook.dto
 
-import com.addressbook.model.FieldDescription
-
 class PageDataDto<T>(data: T?, fieldDescriptionMap: Map<String, FieldDescription>?) {
 
     var data: T? = null

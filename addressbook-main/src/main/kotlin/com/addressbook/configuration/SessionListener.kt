@@ -1,4 +1,4 @@
-package com.addressbook
+package com.addressbook.configuration
 
 import org.slf4j.LoggerFactory
 

@@ -1,9 +1,9 @@
-package com.addressbook.model
+package com.addressbook.dto
 
 import org.apache.ignite.cache.CacheMetrics
 import java.io.Serializable
 
-class IgniteCacheMetrics constructor(cacheMetrics: CacheMetrics) : Serializable {
+class IgniteMetrics constructor(cacheMetrics: CacheMetrics) : Serializable {
     var cacheGets: Long? = null
     var cachePuts: Long? = null
     var cacheRemovals: Long? = null

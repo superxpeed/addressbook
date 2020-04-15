@@ -1,4 +1,4 @@
-package com.addressbook
+package com.addressbook.configuration
 
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.context.annotation.Bean

@@ -1,6 +1,6 @@
 package com.addressbook.security
 
-import com.addressbook.ignite.IgniteDAOClient
+import com.addressbook.ignite.IgniteClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.BadCredentialsException
@@ -17,7 +17,7 @@ import java.util.ArrayList
 class IgniteAuthenticationProvider : AuthenticationProvider {
 
     @Autowired
-    var igniteDao: IgniteDAOClient? = null;
+    var igniteDao: IgniteClient? = null;
 
     override fun authenticate(authentication: Authentication): Authentication {
         // Here I receive login and password (plaintext) from UI

@@ -1,11 +1,11 @@
-package com.addressbook.model
+package com.addressbook.dto
 
 import java.io.File
 import java.io.Serializable
 import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
 
-class JVMState : Serializable {
+class JavaMetrics : Serializable {
 
     var runtimeTotalMemory: String? = null
     var runtimeFreeMemory: String? = null
