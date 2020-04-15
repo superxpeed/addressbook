@@ -7,6 +7,8 @@ services:
       - "7777:7777"
   db:
     build: ignite-server/.
+    ports:
+      - "11000:10000"
   web:
     build: addressbook-main/.
     ports:
