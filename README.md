@@ -14,7 +14,7 @@
 3.  [**Spring Cloud Netflix**](https://spring.io/projects/spring-cloud-netflix):
     -   Service registration with **Spring Eureka**
     -   Service location using **Spring Feign** and **Netflix Ribbon**
-4. [**Spring Core**](https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/core.html):
+4. [**Spring Web**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html):
     -   Exception handler for all back-end exceptions
     -   Custom 404 page & 401 handlers with session listener 
     (using ErrorController, ExceptionHandler and HttpSessionListener)
