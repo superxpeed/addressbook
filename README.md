@@ -72,5 +72,5 @@ docker-compose -f docker-compose.yml up -d
 ### Swagger2 WebApp: http://localhost:10000/swagger-ui.html
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/swagger-web.png" width="700"/>  
 
-#### Swagger2 DPL: http://localhost:11000/swagger-ui.html
+### Swagger2 DPL: http://localhost:11000/swagger-ui.html
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/swagger-dao.png" width="700"/>  
