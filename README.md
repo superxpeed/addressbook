@@ -12,7 +12,10 @@
     -   Custom AuthenticationProvider
     -   Custom UrlAuthenticationSuccessHandler for REST API
     -   Retrieving current user with roles
-3. Spring Core:
+3.  Spring Cloud Netflix:
+    -   Service registration with Spring Eureka
+    -   Service location using Spring Feign and Ribbon
+4. Spring Core:
     -   Exception handler for all back-end exceptions
     -   Custom 404 page & 401 handlers with session listener 
     (using ErrorController, ExceptionHandler and HttpSessionListener)
@@ -35,19 +38,34 @@ monitoring, binary marshalling
 #### Tested by JUnit & Selenium (Chrome)
 
 #### Deployment:
-Build Addressbook application Docker image:
+Build the following Docker images (Intellij Idea profiles available):
+
+Build Spring Boot Web Application:
 ```sh
 cd addressbook-main
 docker build -t addressbook_web .
 ```
-Build Apache Ignite Docker image:
+Build Spring Boot with Apache Ignite Server:
 ```sh
 cd ignite-server
 docker build -t addressbook_db .
 ```
-Start both:
+Build Spring Boot with Eureka Server:
+```sh
+cd eureka-server
+docker build -t addressbook_eureka .
+```
+Start all:
 ```sh
 cd ..
 docker-compose -f docker-compose.yml up -d
 ```
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/deployment.png" width="900"/>
+
+#### Webapp host: http://localhost:10000/  
+#### Eureka host: http://localhost:7777/  
+
+### Docker Apps:
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/deployment.png" width="900"/>  
+  
+### Eureka Services:
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/eureka.png" width="900"/>  
