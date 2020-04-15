@@ -1,33 +1,33 @@
 # Addressbook (Spring Framework Application Example)
 
 #### Back-end:
-1. **Spring Boot**: 
+1. [**Spring Boot**](https://spring.io/projects/spring-boot): 
     -   Maven dependency management
     -   Single executable Jar assembly (with React static)
     -   Setting http-session duration
     -   Static resource handler
-2.  **Spring Security**:
+2.  [**Spring Security**](https://spring.io/projects/spring-security):
     -   Custom AuthenticationProvider
     -   Custom UrlAuthenticationSuccessHandler for REST API
     -   Custom role model
     -   External user management
-3.  **Spring Cloud Netflix**:
+3.  [**Spring Cloud Netflix**](https://spring.io/projects/spring-cloud-netflix):
     -   Service registration with **Spring Eureka**
     -   Service location using **Spring Feign** and **Netflix Ribbon**
-4. **Spring Core**:
+4. [**Spring Core**](https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/core.html):
     -   Exception handler for all back-end exceptions
     -   Custom 404 page & 401 handlers with session listener 
     (using ErrorController, ExceptionHandler and HttpSessionListener)
     -   Automatic Jackson marshalling
-5.  **Spring Flux** for reactive updates on front-end
-6.  **Spring Fox** with Swagger2
-7.  **Apache Ignite** client configuration, start/stop at Spring context start/closing, SQL queries, transactions, 
+5.  [**Spring Flux**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html) for reactive updates on front-end
+6.  [**Spring Fox**](https://springfox.github.io/springfox/docs/current/) with Swagger2
+7.  [**Apache Ignite**](https://apacheignite.readme.io/docs) client configuration, start/stop at Spring context start/closing, SQL queries, transactions, 
 monitoring, binary marshalling
 
 #### Front-end:
 1.  Complex user interface with multiple dynamically added tables/tabs/custom forms, user-input validation and more
-2.  React, redux, react-router, Component lifecycle, integration with Spring Security for REST-API
-3.  React-bootstrap-table & React-bootstrap components
+2.  [**react v15.3.1**](https://reactjs.org/blog/2016/04/07/react-v15.html), [**redux v3.6.0**](https://react-redux.js.org/), [**react-router v4.0.0**](https://reacttraining.com/react-router/web/guides/quick-start), component lifecycle, integration with Spring Security for REST-API
+3.  [**react-bootstrap-table**](http://allenfang.github.io/react-bootstrap-table/) & [**react-bootstrap**](https://react-bootstrap.github.io/components/table/) components
 4.  Webpack-dev-server & npm configuration & assembly (+ multiplatform maven configs)
 5.  Heavy usage of HTTP Statuses & handling JS exceptions
 6.  User notifications about all back-end and front-end events (+ exception handling) using react-bs-notifier
