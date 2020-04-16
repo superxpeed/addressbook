@@ -2,7 +2,6 @@ package com.addressbook;
 
 import com.addressbook.dto.*
 import com.addressbook.model.User
-import org.apache.ignite.cache.CacheMetrics
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -68,7 +67,7 @@ interface AddressBookDAO {
 
     @ResponseBody
     @RequestMapping("/getCacheMetrics")
-    fun getCacheMetrics(): Map<String, CacheMetrics>
+    fun getCacheMetrics(): Map<String, IgniteMetrics>
 
     @ResponseBody
     @RequestMapping("/notLockedByUser")

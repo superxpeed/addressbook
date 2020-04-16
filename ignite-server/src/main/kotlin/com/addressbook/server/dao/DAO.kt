@@ -328,12 +328,28 @@ class DAO : AddressBookDAO {
         }
     }
 
-    override fun getCacheMetrics(): Map<String, CacheMetrics> {
+    override fun getCacheMetrics(): Map<String, IgniteMetrics> {
         val cacheMetricsMap = HashMap<String, CacheMetrics>()
         for (cacheName in UniversalFieldsDescriptor.getCacheClasses().keys) {
             val cache: IgniteCache<String, Any> = ignite?.getOrCreateCache(cacheName)!!
             cacheMetricsMap[cacheName] = cache.metrics()
         }
-        return cacheMetricsMap
+        val igniteCacheMetricsMap = HashMap<String, IgniteMetrics>()
+        for (metricsEntry in cacheMetricsMap.entries) {
+            val metric = IgniteMetrics()
+            metric.cacheGets = metricsEntry.value.cacheGets
+            metric.cachePuts = metricsEntry.value.cachePuts
+            metric.cacheRemovals = metricsEntry.value.cacheRemovals
+            metric.averageGetTime = metricsEntry.value.averageGetTime
+            metric.averagePutTime = metricsEntry.value.averagePutTime
+            metric.averageRemoveTime = metricsEntry.value.averageRemoveTime
+            metric.offHeapGets = metricsEntry.value.offHeapGets
+            metric.offHeapPuts = metricsEntry.value.offHeapPuts
+            metric.offHeapRemovals = metricsEntry.value.offHeapRemovals
+            metric.heapEntriesCount = metricsEntry.value.heapEntriesCount
+            metric.offHeapEntriesCount = metricsEntry.value.offHeapEntriesCount
+            igniteCacheMetricsMap[metricsEntry.key] = metric
+        }
+        return igniteCacheMetricsMap
     }
 }
