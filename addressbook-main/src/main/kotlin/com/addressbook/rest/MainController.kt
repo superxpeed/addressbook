@@ -1,6 +1,7 @@
 package com.addressbook.rest
 
 import com.addressbook.UniversalFieldsDescriptor
+import com.addressbook.aop.LogExecutionTime
 import com.addressbook.dto.*
 import com.addressbook.exception.LockRecordException
 import com.addressbook.ignite.IgniteClient
@@ -29,6 +30,7 @@ class MainController {
     @Autowired
     var igniteDao: IgniteClient? = null
 
+    @LogExecutionTime
     @PostMapping("/getList4UniversalListForm")
     fun getList(@RequestParam(value = "start") start: Int,
                 @RequestParam(value = "pageSize") pageSize: Int,
@@ -41,6 +43,7 @@ class MainController {
         }
     }
 
+    @LogExecutionTime
     @PostMapping("/getContactList")
     fun getContactList(@RequestParam(value = "personId") id: String): CompletableFuture<PageDataDto<TableDataDto<ContactDto>>> {
         return CompletableFuture.supplyAsync {
@@ -48,6 +51,7 @@ class MainController {
         }
     }
 
+    @LogExecutionTime
     @PostMapping("/saveOrCreatePerson")
     fun saveOrCreatePerson(@RequestBody personDto: PersonDto): CompletableFuture<PageDataDto<PersonDto>> {
         val login = currentUser?.getCurrentUser()!!
@@ -58,6 +62,7 @@ class MainController {
         }
     }
 
+    @LogExecutionTime
     @PostMapping("/saveOrCreateOrganization")
     fun saveOrCreateOrganization(@RequestBody organizationDto: OrganizationDto): CompletableFuture<PageDataDto<OrganizationDto>> {
         val login = currentUser?.getCurrentUser()!!
@@ -68,6 +73,7 @@ class MainController {
         }
     }
 
+    @LogExecutionTime
     @GetMapping("/getBreadcrumbs")
     fun getBreadcrumbs(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<Breadcrumb>>> {
         return CompletableFuture.supplyAsync {
@@ -75,6 +81,7 @@ class MainController {
         }
     }
 
+    @LogExecutionTime
     @GetMapping("/getNextLevelMenus")
     fun getNextLevelMenus(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<MenuEntryDto>>> {
         val authorities = currentUser?.authorities!!.map { x -> x.authority }
@@ -83,6 +90,7 @@ class MainController {
         }
     }
 
+    @LogExecutionTime
     @PostMapping("/saveOrCreateContacts")
     fun saveOrCreateContacts(@RequestBody contactDto: List<ContactDto>, @RequestParam(value = "personId") personId: String): CompletableFuture<PageDataDto<List<ContactDto>>> {
         val login = currentUser?.getCurrentUser()!!
@@ -93,6 +101,7 @@ class MainController {
         }
     }
 
+    @LogExecutionTime
     @GetMapping("/lockRecord")
     fun lockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
         return PageDataDto(if (igniteDao?.lockUnlockRecord(type + id, currentUser?.getCurrentUser()!!, true)!!)
@@ -100,6 +109,7 @@ class MainController {
         else Alert("Record was not locked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was already locked!"))
     }
 
+    @LogExecutionTime
     @GetMapping("/unlockRecord")
     fun unlockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
         return PageDataDto(if (igniteDao?.lockUnlockRecord(type + id, currentUser?.getCurrentUser()!!, false)!!)
@@ -107,6 +117,7 @@ class MainController {
         else Alert("Record was not unlocked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was not locked by you!"))
     }
 
+    @LogExecutionTime
     @GetMapping("/logout")
     fun logoutPage(request: HttpServletRequest, response: HttpServletResponse): String {
         val auth = SecurityContextHolder.getContext().authentication
@@ -117,6 +128,7 @@ class MainController {
         return "redirect:/#/login"
     }
 
+    @LogExecutionTime
     @ExceptionHandler(*[Throwable::class])
     fun handleError(response: HttpServletResponse, ex: Throwable) {
         response.status = 500
@@ -134,6 +146,7 @@ class MainController {
         objectMapper.writeValue(response.writer, alert)
     }
 
+    @LogExecutionTime
     @GetMapping("/getUserInfo")
     fun getUserInfo(): User? {
         val user = igniteDao?.getUserByLogin(currentUser?.getCurrentUser()!!)
