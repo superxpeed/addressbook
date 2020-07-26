@@ -16,11 +16,11 @@ import javax.annotation.PreDestroy
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 class CurrentUser : Serializable {
 
-    private var userName: String? = null
-    var authorities: Collection<GrantedAuthority>? = null
+    lateinit var userName: String
+    lateinit var authorities: Collection<GrantedAuthority>
 
     @Autowired
-    var igniteDao: IgniteClient? = null
+    lateinit var igniteDao: IgniteClient
 
     @PostConstruct
     fun init() {
@@ -28,12 +28,8 @@ class CurrentUser : Serializable {
         authorities = ArrayList(SecurityContextHolder.getContext().authentication.authorities)
     }
 
-    fun getCurrentUser(): String? {
-        return userName
-    }
-
     @PreDestroy
     fun destroy() {
-        userName?.let { igniteDao?.unlockAllRecordsForUser(it) }
+        userName.let { igniteDao.unlockAllRecordsForUser(it) }
     }
 }

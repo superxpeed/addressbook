@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct
 class UserCreator {
 
     @Autowired
-    var igniteDao: IgniteClient? = null
+    lateinit var igniteDao: IgniteClient
 
     @PostConstruct
     fun initUsers() {
@@ -20,8 +20,8 @@ class UserCreator {
         adminRoles.add("USER")
         adminRoles.add("ADMIN")
         val admin = User("admin", encoder.encode("adminPass"), adminRoles)
-        igniteDao?.createOrUpdateUser(admin)
+        igniteDao.createOrUpdateUser(admin)
         val user = User("user", encoder.encode("userPass"), Collections.singletonList("USER"))
-        igniteDao?.createOrUpdateUser(user)
+        igniteDao.createOrUpdateUser(user)
     }
 }

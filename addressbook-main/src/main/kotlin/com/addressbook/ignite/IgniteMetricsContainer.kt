@@ -9,12 +9,12 @@ import java.io.Serializable
 class IgniteMetricsContainer : Serializable {
 
     @Autowired
-    var igniteDao: IgniteClient? = null
+    lateinit var igniteDao: IgniteClient
 
     var igniteCacheMetricsMap: Map<String, IgniteMetrics>? = null
 
     fun refresh(): IgniteMetricsContainer {
-        igniteCacheMetricsMap = igniteDao?.getCacheMetrics()
+        igniteCacheMetricsMap = igniteDao.getCacheMetrics()
         return this
     }
 }

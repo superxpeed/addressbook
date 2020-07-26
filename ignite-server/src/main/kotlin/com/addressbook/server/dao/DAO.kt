@@ -33,7 +33,7 @@ class DAO : AddressBookDAO {
 
     @PostConstruct
     fun startClient() {
-        if (ignite != null) return
+        if (Objects.nonNull(ignite)) return
         val igniteConfiguration = IgniteConfiguration()
         igniteConfiguration.isPeerClassLoadingEnabled = true
         igniteConfiguration.setIncludeEventTypes(org.apache.ignite.events.EventType.EVT_TASK_STARTED,
@@ -80,7 +80,7 @@ class DAO : AddressBookDAO {
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
         val cacheOrganization: IgniteCache<String, Organization> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)!!
         var organization = cacheOrganization.get(organizationDto.id)
-        if (organization == null) {
+        if (Objects.isNull(organization)) {
             organization = Organization(organizationDto)
         }
         organization.type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
@@ -99,17 +99,17 @@ class DAO : AddressBookDAO {
      */
     override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
         val cachePerson: IgniteCache<String, Person> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE)!!
-        var person = if (personDto.id != null) cachePerson.get(personDto.id) else null
-        if (person == null) {
+        var person = if (Objects.nonNull(personDto.id)) cachePerson.get(personDto.id) else null
+        if (Objects.isNull(person)) {
             person = Person()
             personDto.id = person.id
         }
-        person.firstName = personDto.firstName
-        person.lastName = personDto.lastName
-        person.orgId = personDto.orgId
-        person.salary = personDto.salary
-        person.resume = personDto.resume
-        cachePerson.put(person.id, person)
+        person?.firstName = personDto.firstName
+        person?.lastName = personDto.lastName
+        person?.orgId = personDto.orgId
+        person?.salary = personDto.salary
+        person?.resume = personDto.resume
+        cachePerson.put(person?.id, person)
         return personDto
     }
 
@@ -130,7 +130,7 @@ class DAO : AddressBookDAO {
         for (contactDto in contactDtos) {
             contactDto.personId = personId
             var contact = cacheContacts.get(contactDto.id)
-            if (contact == null) contact = Contact()
+            if (Objects.isNull(contact)) contact = Contact()
             contact.data = contactDto.data
             contact.description = contactDto.description
             contact.personId = contactDto.personId
@@ -146,7 +146,7 @@ class DAO : AddressBookDAO {
     override fun createOrUpdateUser(newUser: User): String {
         val cacheUser: IgniteCache<String, User> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE)!!
         var user = cacheUser.get(newUser.login)
-        if (user != null) {
+        if (Objects.nonNull(user)) {
             user.password = newUser.password
             user.roles = newUser.roles
         } else user = newUser
@@ -162,17 +162,17 @@ class DAO : AddressBookDAO {
 
     override fun ifOrganizationExists(key: String): Boolean {
         val cacheOrganization: IgniteCache<String, Organization> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)!!
-        return cacheOrganization.get(key) != null
+        return Objects.nonNull(cacheOrganization.get(key))
     }
 
     override fun ifPersonExists(key: String): Boolean {
         val cachePerson: IgniteCache<String, Person> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE)!!
-        return cachePerson.get(key) != null
+        return Objects.nonNull(cachePerson.get(key))
     }
 
     override fun ifContactExists(key: String): Boolean {
         val cacheContacts: IgniteCache<String, Contact> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)!!
-        return cacheContacts.get(key) != null
+        return Objects.nonNull(cacheContacts.get(key))
     }
 
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
@@ -200,11 +200,11 @@ class DAO : AddressBookDAO {
     override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {
         val cachePerson: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
         val menuEntry: MenuEntry?
-        menuEntry = if (menuEntryDto.id != null) cachePerson.get(menuEntryDto.id) else MenuEntry()
+        menuEntry = if (Objects.nonNull(menuEntryDto.id)) cachePerson.get(menuEntryDto.id) else MenuEntry()
         menuEntry?.name = menuEntryDto.name
         menuEntry?.url = menuEntryDto.url
         menuEntry?.roles = menuEntryDto.roles
-        if (parentEntryId != null) menuEntry?.parentId = parentEntryId
+        if (Objects.nonNull(parentEntryId)) menuEntry?.parentId = parentEntryId
         menuEntryDto.id = menuEntry?.id
         cachePerson.put(menuEntry?.id, menuEntry)
         return menuEntryDto
@@ -225,7 +225,7 @@ class DAO : AddressBookDAO {
         val cursor: QueryCursor<Cache.Entry<String, MenuEntry>> = cache.query(sql.setArgs(menuEntry.id))
         for (e in cursor) {
             for (authority in authorities) {
-                if (e.value.roles != null && e.value.roles!!.contains(authority.replace("ROLE_", ""))) {
+                if (Objects.nonNull(e.value.roles) && e.value.roles!!.contains(authority.replace("ROLE_", ""))) {
                     menuEntryDtos.add(MenuEntryDto(e.value))
                     break
                 }
@@ -242,7 +242,7 @@ class DAO : AddressBookDAO {
         var menuEntry: MenuEntry = original
         var menuEntries: List<Cache.Entry<String, MenuEntry>>
         val breadcrumbs = ArrayList<Breadcrumb>()
-        if (menuEntry.parentId == null) return breadcrumbs
+        if (Objects.isNull(menuEntry.parentId)) return breadcrumbs
         val sql = SqlQuery<String, MenuEntry>(MenuEntry::class.java, "id = ?")
         while (true) {
             menuEntries = cache.query(sql.setArgs(menuEntry.parentId)).all
@@ -303,7 +303,7 @@ class DAO : AddressBookDAO {
     }
 
     private fun getComparator(filterDto: FilterDto): String {
-        return if (filterDto.comparator == null || filterDto.comparator.equals(""))
+        return if (Objects.isNull(filterDto.comparator) || filterDto.comparator.equals(""))
             " = "
         else " " + filterDto.comparator + " "
     }
@@ -323,7 +323,7 @@ class DAO : AddressBookDAO {
 
     @PreDestroy
     fun stopClient() {
-        if (ignite != null) {
+        if (Objects.nonNull(ignite)) {
             ignite?.close()
         }
     }

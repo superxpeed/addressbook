@@ -13,11 +13,11 @@ import java.util.stream.Stream
 class IgniteStateService {
 
     @Autowired
-    var igniteMetricsContainer: IgniteMetricsContainer? = null
+    lateinit var igniteMetricsContainer: IgniteMetricsContainer
 
     fun getIgniteState(): Flux<IgniteMetricsContainer> {
         val interval = Flux.interval(Duration.ofSeconds(1))
-        val igniteMetricsContainerFlux = Flux.fromStream(Stream.generate(igniteMetricsContainer!!::refresh))
+        val igniteMetricsContainerFlux = Flux.fromStream(Stream.generate(igniteMetricsContainer::refresh))
         return Flux.zip(interval, igniteMetricsContainerFlux).map(Tuple2<Long, IgniteMetricsContainer>::getT2)
     }
 }

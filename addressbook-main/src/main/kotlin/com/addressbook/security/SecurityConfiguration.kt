@@ -15,13 +15,13 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     @Autowired
-    var restAuthenticationEntryPoint: RestAuthenticationEntryPoint? = null
+    lateinit var restAuthenticationEntryPoint: RestAuthenticationEntryPoint
 
     @Autowired
-    var mySuccessHandler: RequestAwareAuthenticationSuccessHandler? = null
+    lateinit var mySuccessHandler: RequestAwareAuthenticationSuccessHandler
 
     @Autowired
-    var igniteAuthenticationProvider: IgniteAuthenticationProvider? = null
+    lateinit var igniteAuthenticationProvider: IgniteAuthenticationProvider
 
     val myFailureHandler = SimpleUrlAuthenticationFailureHandler()
 

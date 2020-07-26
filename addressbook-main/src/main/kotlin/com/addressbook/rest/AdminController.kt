@@ -17,20 +17,20 @@ import reactor.core.publisher.Flux
 class AdminController {
 
     @Autowired
-    var jvmStateService: JVMStateService? = null
+    lateinit var jvmStateService: JVMStateService
 
     @Autowired
-    var igniteStateService: IgniteStateService? = null
+    lateinit var igniteStateService: IgniteStateService
 
     @GetMapping(value = ["/jvmState"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     @ResponseBody
     fun jvmStateEvents(): Flux<JavaMetrics> {
-        return jvmStateService!!.getJVMState()
+        return jvmStateService.getJVMState()
     }
 
     @GetMapping(value = ["/igniteState"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     @ResponseBody
     fun igniteMetricEvents(): Flux<IgniteMetricsContainer> {
-        return igniteStateService!!.getIgniteState()
+        return igniteStateService.getIgniteState()
     }
 }
