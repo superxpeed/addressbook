@@ -7,7 +7,10 @@ import com.addressbook.model.*
 import org.apache.ignite.Ignite
 import org.apache.ignite.IgniteCache
 import org.apache.ignite.Ignition
-import org.apache.ignite.cache.*
+import org.apache.ignite.cache.CacheAtomicityMode
+import org.apache.ignite.cache.CacheMode
+import org.apache.ignite.cache.CachePeekMode
+import org.apache.ignite.cache.CacheWriteSynchronizationMode
 import org.apache.ignite.cache.query.QueryCursor
 import org.apache.ignite.cache.query.ScanQuery
 import org.apache.ignite.cache.query.SqlQuery
@@ -70,13 +73,6 @@ class DAO : AddressBookDAO {
         }
     }
 
-
-    /**
-     *7
-     * @param organizationDto contains all data related to existing or new organization entity
-     * @param user current user (will be used for locking existing entity)
-     * @return updated or created organization entity
-     */
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
         val cacheOrganization: IgniteCache<String, Organization> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)!!
         var organization = cacheOrganization.get(organizationDto.id)
@@ -91,12 +87,6 @@ class DAO : AddressBookDAO {
         return organizationDto
     }
 
-    /**
-     *
-     * @param personDto contains all data related to existing or new person entity
-     * @param user current user (will be used for locking existing entity)
-     * @return updated or created person entity
-     */
     override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
         val cachePerson: IgniteCache<String, Person> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE)!!
         var person = if (Objects.nonNull(personDto.id)) cachePerson.get(personDto.id) else null
@@ -113,12 +103,6 @@ class DAO : AddressBookDAO {
         return personDto
     }
 
-    /**
-     *
-     * @param contactDtos contains all data related to existing or new contact entities
-     * @param user current user (was used for locking existing parent person entity)
-     * @return updated or created contact entities
-     */
     override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, personId: String): List<ContactDto> {
         if (contactDtos.isEmpty()) return contactDtos
         val cacheContacts: IgniteCache<String, Contact> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)!!
@@ -326,30 +310,5 @@ class DAO : AddressBookDAO {
         if (Objects.nonNull(ignite)) {
             ignite?.close()
         }
-    }
-
-    override fun getCacheMetrics(): Map<String, IgniteMetrics> {
-        val cacheMetricsMap = HashMap<String, CacheMetrics>()
-        for (cacheName in UniversalFieldsDescriptor.getCacheClasses().keys) {
-            val cache: IgniteCache<String, Any> = ignite?.getOrCreateCache(cacheName)!!
-            cacheMetricsMap[cacheName] = cache.metrics()
-        }
-        val igniteCacheMetricsMap = HashMap<String, IgniteMetrics>()
-        for (metricsEntry in cacheMetricsMap.entries) {
-            val metric = IgniteMetrics()
-            metric.cacheGets = metricsEntry.value.cacheGets
-            metric.cachePuts = metricsEntry.value.cachePuts
-            metric.cacheRemovals = metricsEntry.value.cacheRemovals
-            metric.averageGetTime = metricsEntry.value.averageGetTime
-            metric.averagePutTime = metricsEntry.value.averagePutTime
-            metric.averageRemoveTime = metricsEntry.value.averageRemoveTime
-            metric.offHeapGets = metricsEntry.value.offHeapGets
-            metric.offHeapPuts = metricsEntry.value.offHeapPuts
-            metric.offHeapRemovals = metricsEntry.value.offHeapRemovals
-            metric.heapEntriesCount = metricsEntry.value.heapEntriesCount
-            metric.offHeapEntriesCount = metricsEntry.value.offHeapEntriesCount
-            igniteCacheMetricsMap[metricsEntry.key] = metric
-        }
-        return igniteCacheMetricsMap
     }
 }

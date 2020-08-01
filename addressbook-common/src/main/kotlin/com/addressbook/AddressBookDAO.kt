@@ -66,10 +66,6 @@ interface AddressBookDAO {
     fun getTotalDataSize(@RequestParam cacheName: String, @RequestBody filterDto: List<FilterDto>): Int
 
     @ResponseBody
-    @RequestMapping("/getCacheMetrics")
-    fun getCacheMetrics(): Map<String, IgniteMetrics>
-
-    @ResponseBody
     @RequestMapping("/notLockedByUser")
     fun notLockedByUser(@RequestParam key: String, @RequestParam user: String): Boolean
 
