@@ -7,7 +7,10 @@ import java.io.Serializable
 
 @Entity("locks")
 @javax.persistence.Entity
-class Lock(@javax.persistence.Id @Id @QuerySqlField(index = true) var id: String?, @QuerySqlField(index = true) var login: String?) : Serializable {
+class Lock(@javax.persistence.Id
+           @Id
+           @QuerySqlField(index = true) var id: String?,
+           @QuerySqlField(index = true) var login: String?) : Serializable {
 
     constructor() : this(null, null)
 }
