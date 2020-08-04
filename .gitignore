@@ -19,3 +19,4 @@ addressbook-main/src/main/react/dist/bundle.js.map
 /.idea/encodings.xml
 /.idea/jsLibraryMappings.xml
 /httpRequests/
+/postgre-server/postgre-server.iml
