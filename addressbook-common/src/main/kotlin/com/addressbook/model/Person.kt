@@ -7,9 +7,11 @@ import java.io.Serializable
 import java.util.*
 
 @Entity("persons")
+@javax.persistence.Entity
 class Person : Serializable {
 
     @Id
+    @javax.persistence.Id
     @QuerySqlField(index = true)
     var id: String? = null
 

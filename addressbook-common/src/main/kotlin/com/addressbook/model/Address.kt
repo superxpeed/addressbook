@@ -4,7 +4,9 @@ import org.apache.ignite.binary.BinaryReader
 import org.apache.ignite.binary.BinaryWriter
 import org.apache.ignite.binary.Binarylizable
 import org.apache.ignite.cache.query.annotations.QuerySqlField
+import javax.persistence.Embeddable
 
+@Embeddable
 class Address(street: String?, zip: String?) : Binarylizable {
 
     @QuerySqlField(index = true)

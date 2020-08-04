@@ -9,9 +9,11 @@ import java.sql.Timestamp
 import java.util.*
 
 @Entity("organizations")
+@javax.persistence.Entity
 class Organization constructor(id: String?, name: String?, addr: Address?, type: OrganizationType?, lastUpdated: Timestamp?) {
 
     @Id
+    @javax.persistence.Id
     @QuerySqlField(index = true)
     var id: String? = null
 
@@ -20,6 +22,7 @@ class Organization constructor(id: String?, name: String?, addr: Address?, type:
 
     @QuerySqlField(index = true)
     @Embedded
+    @javax.persistence.Embedded
     var addr: Address? = null
 
     @QuerySqlField(index = true)

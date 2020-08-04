@@ -6,7 +6,8 @@ import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.io.Serializable
 
 @Entity("locks")
-class Lock(@Id @QuerySqlField(index = true) var id: String?, @QuerySqlField(index = true) var login: String?) : Serializable {
+@javax.persistence.Entity
+class Lock(@javax.persistence.Id @Id @QuerySqlField(index = true) var id: String?, @QuerySqlField(index = true) var login: String?) : Serializable {
 
     constructor() : this(null, null)
 }
