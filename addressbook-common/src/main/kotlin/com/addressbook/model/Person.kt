@@ -6,7 +6,7 @@ import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.io.Serializable
 import java.util.*
 
-@Entity("Persons")
+@Entity("persons")
 class Person : Serializable {
 
     @Id

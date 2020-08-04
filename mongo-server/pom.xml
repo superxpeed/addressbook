@@ -13,6 +13,7 @@
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mongodb.driver.version>3.12.6</mongodb.driver.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -184,8 +185,8 @@
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.4.1</version>
+            <artifactId>mongodb-driver</artifactId>
+            <version>${mongodb.driver.version}</version>
         </dependency>
     </dependencies>
     <build>
