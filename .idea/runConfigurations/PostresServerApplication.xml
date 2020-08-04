@@ -1,0 +1,23 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PostresServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="postgre-server" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.addressbook.server.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.server.ServerApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <envs>
+      <env name="POSTGRES_HOST" value="localhost" />
+      <env name="POSTGRES_PORT" value="5432" />
+      <env name="POSTGRES_DB" value="postgres" />
+      <env name="POSTGRES_USER" value="test" />
+      <env name="POSTGRES_PASSWORD" value="test" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

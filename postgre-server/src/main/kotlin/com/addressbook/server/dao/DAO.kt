@@ -3,19 +3,22 @@ package com.addressbook.server.dao
 import com.addressbook.AddressBookDAO
 import com.addressbook.dto.*
 import com.addressbook.model.User
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
+import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
+
 
 @Controller
 class DAO : AddressBookDAO {
 
-    private val logger = LoggerFactory.getLogger(DAO::class.java)
+    @PersistenceContext
+    private val entityManager: EntityManager? = null
 
     @PostConstruct
     fun startClient() {
-        TODO("Not yet implemented")
+        print(entityManager.toString())
     }
 
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
