@@ -26,7 +26,7 @@ class SpringFoxConfiguration {
 
     private fun apiInfo(): ApiInfo? {
         return ApiInfo(
-                "Elasticsearch Persistence Layer REST API",
+                "PostgreSQL Persistence Layer REST API",
                 "Spring Framework Application Example",
                 "1.0",
                 "",

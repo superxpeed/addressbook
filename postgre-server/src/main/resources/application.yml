@@ -10,4 +10,4 @@ eureka:
     prefer-ip-address: true
 spring:
   application:
-    name: elastic-server
+    name: postgre-server

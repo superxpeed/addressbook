@@ -6,7 +6,7 @@
     <modules>
         <module>ignite-server</module>
         <module>mongo-server</module>
-        <module>elastic-server</module>
+        <module>postgre-server</module>
         <module>addressbook-main</module>
         <module>eureka-server</module>
         <module>addressbook-common</module>
