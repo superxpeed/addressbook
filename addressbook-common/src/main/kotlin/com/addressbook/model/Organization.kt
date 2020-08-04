@@ -1,12 +1,17 @@
 package com.addressbook.model
 
 import com.addressbook.dto.OrganizationDto
+import dev.morphia.annotations.Embedded
+import dev.morphia.annotations.Entity
+import dev.morphia.annotations.Id
 import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.sql.Timestamp
 import java.util.*
 
+@Entity("organizations")
 class Organization constructor(id: String?, name: String?, addr: Address?, type: OrganizationType?, lastUpdated: Timestamp?) {
 
+    @Id
     @QuerySqlField(index = true)
     var id: String? = null
 
@@ -14,6 +19,7 @@ class Organization constructor(id: String?, name: String?, addr: Address?, type:
     var name: String? = null
 
     @QuerySqlField(index = true)
+    @Embedded
     var addr: Address? = null
 
     @QuerySqlField(index = true)
@@ -24,6 +30,7 @@ class Organization constructor(id: String?, name: String?, addr: Address?, type:
 
     constructor(organizationDto: OrganizationDto) : this(organizationDto.id, null, null, null, null)
     constructor(name: String) : this(UUID.randomUUID().toString(), name, null, null, null)
+    constructor() : this(UUID.randomUUID().toString(), null, null, null, null)
     constructor(id: String, name: String) : this(id, name, null, null, null)
     constructor(name: String, addr: Address, type: OrganizationType, lastUpdated: Timestamp) : this(UUID.randomUUID().toString(), name, addr, type, lastUpdated)
 

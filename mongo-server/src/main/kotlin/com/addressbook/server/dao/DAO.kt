@@ -1,97 +1,293 @@
 package com.addressbook.server.dao
 
 import com.addressbook.AddressBookDAO
+import com.addressbook.UniversalFieldsDescriptor
 import com.addressbook.dto.*
-import com.addressbook.model.User
+import com.addressbook.model.*
+import com.mongodb.MongoClient
+import dev.morphia.Datastore
+import dev.morphia.Morphia
+import dev.morphia.query.FindOptions
+import dev.morphia.query.Query
+import dev.morphia.query.Sort
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
+
 
 @Controller
 class DAO : AddressBookDAO {
 
     private val logger = LoggerFactory.getLogger(DAO::class.java)
 
+    private var mongoClient: MongoClient? = null
+    private var dataStore: Datastore? = null
+
     @PostConstruct
     fun startClient() {
-        TODO("Not yet implemented")
+        if (Objects.nonNull(mongoClient)) return
+        mongoClient = MongoClient("localhost", 27017)
+        val morphia = Morphia()
+        morphia.mapPackage("com.addressbook.model")
+        dataStore = morphia.createDatastore(mongoClient, "addressbook")
+        dataStore?.ensureIndexes()
+    }
+
+    private fun <T : Any> getById(idColumn: String, id: String?, clazz: Class<T>): T? {
+        val collection = dataStore?.createQuery(clazz)
+                ?.field(idColumn)
+                ?.equal(id)
+                ?.find()
+                ?.toList()
+        return if (collection is List<T> && collection.isNotEmpty()) collection[0]
+        else null
     }
 
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
-        TODO("Not yet implemented")
+        var organization = getById("id", organizationDto.id, Organization::class.java)
+        if (Objects.isNull(organization)) {
+            organization = Organization(organizationDto)
+        }
+        organization?.type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
+        organization?.lastUpdated = Timestamp(System.currentTimeMillis())
+        organization?.name = organizationDto.name
+        organization?.addr = Address(organizationDto.street, organizationDto.zip)
+        dataStore?.save(organization)
+        return organizationDto
     }
 
     override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
-        TODO("Not yet implemented")
+        var person = if (Objects.nonNull(personDto.id)) getById("id", personDto.id, Person::class.java) else null
+        if (Objects.isNull(person)) {
+            person = Person()
+            personDto.id = person.id
+        }
+        person?.firstName = personDto.firstName
+        person?.lastName = personDto.lastName
+        person?.orgId = personDto.orgId
+        person?.salary = personDto.salary
+        person?.resume = personDto.resume
+        dataStore?.save(person)
+        return personDto
     }
 
     override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, personId: String): List<ContactDto> {
-        TODO("Not yet implemented")
+        if (contactDtos.isEmpty()) return contactDtos
+        var toDelete: List<String> = getContactsByPersonId(personId).mapNotNull { it.id }
+        val updated: List<String> = contactDtos.mapNotNull { it.id }
+        toDelete = toDelete.minus(updated)
+        for (contactDto in contactDtos) {
+            contactDto.personId = personId
+            var contact = getById("contactId", contactDto.id, Contact::class.java)
+            if (Objects.isNull(contact)) contact = Contact()
+            contact?.data = contactDto.data
+            contact?.description = contactDto.description
+            contact?.personId = contactDto.personId
+            contact?.type = ContactType.values()[Integer.parseInt(contactDto.type)]
+            dataStore?.save(contact)
+        }
+        for (id in toDelete) {
+            dataStore?.delete(getById("contactId", id, Contact::class.java))
+        }
+        return contactDtos
     }
 
     override fun createOrUpdateUser(newUser: User): String {
-        TODO("Not yet implemented")
+        var user = getById("login", newUser.login, User::class.java)
+        if (Objects.nonNull(user)) {
+            user?.password = newUser.password
+            user?.roles = newUser.roles
+        } else user = newUser
+        dataStore?.save(user)
+        return "OK"
     }
 
     override fun notLockedByUser(key: String, user: String): Boolean {
-        TODO("Not yet implemented")
+        val userLocked = getById("id", key, Lock::class.java)
+        return user != userLocked?.login
     }
 
     override fun ifOrganizationExists(key: String): Boolean {
-        TODO("Not yet implemented")
+        return Objects.nonNull(getById("id", key, Organization::class.java))
     }
 
     override fun ifPersonExists(key: String): Boolean {
-        TODO("Not yet implemented")
+        return Objects.nonNull(getById("id", key, Person::class.java))
     }
 
     override fun ifContactExists(key: String): Boolean {
-        TODO("Not yet implemented")
+        return Objects.nonNull(getById("contactId", key, Contact::class.java))
     }
 
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
-        TODO("Not yet implemented")
+        if (lock) {
+            dataStore?.save(Lock(key, user))
+        } else {
+            dataStore?.delete(getById("id", key, Lock::class.java))
+        }
+        return true
     }
 
     override fun unlockAllRecordsForUser(user: String): String {
-        TODO("Not yet implemented")
+        dataStore?.delete(dataStore?.createQuery(Lock::class.java)?.field("login")?.equal(user))
+        return "OK"
     }
 
     override fun getUserByLogin(login: String): User? {
-        TODO("Not yet implemented")
+        return getById("login", login, User::class.java)
     }
 
     override fun clearMenus(): String {
-        TODO("Not yet implemented")
+        dataStore?.delete(dataStore?.createQuery(MenuEntry::class.java))
+        return "OK"
     }
 
     override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {
-        TODO("Not yet implemented")
+        val menuEntry: MenuEntry? = if (Objects.nonNull(menuEntryDto.id)) getById("id", menuEntryDto.id, MenuEntry::class.java) else MenuEntry()
+        menuEntry?.name = menuEntryDto.name
+        menuEntry?.url = menuEntryDto.url
+        menuEntry?.roles = menuEntryDto.roles
+        if (Objects.nonNull(parentEntryId)) menuEntry?.parentId = parentEntryId
+        menuEntryDto.id = menuEntry?.id
+        dataStore?.save(menuEntry)
+        return menuEntryDto
+    }
+
+    private fun checkIfMenuExists(url: String): MutableList<MenuEntry>? {
+        val entries: MutableList<MenuEntry>? = dataStore?.createQuery(MenuEntry::class.java)?.field("url")?.equal(url)?.find()?.toList()
+        if (entries!!.isEmpty()) throw IllegalArgumentException("Menu with url: $url doesn't exist")
+        return entries
     }
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
-        TODO("Not yet implemented")
+        val entries: List<MenuEntry>? = checkIfMenuExists(url)
+        val menuEntry: MenuEntry? = entries?.get(0)
+        val menuEntryDtos = ArrayList<MenuEntryDto>()
+        val cursor: MutableList<MenuEntry>? = dataStore?.createQuery(MenuEntry::class.java)?.field("parentId")?.equal(menuEntry?.id)?.find()?.toList()
+        if (cursor is MutableList<MenuEntry>) {
+            for (e in cursor) {
+                for (authority in authorities) {
+                    if (Objects.nonNull(e.roles) && e.roles!!.contains(authority.replace("ROLE_", ""))) {
+                        menuEntryDtos.add(MenuEntryDto(e))
+                        break
+                    }
+                }
+            }
+        }
+        return menuEntryDtos
     }
 
     override fun readBreadcrumbs(url: String): List<Breadcrumb> {
-        TODO("Not yet implemented")
+        val entries: List<MenuEntry>? = checkIfMenuExists(url)
+        val original: MenuEntry? = entries?.get(0)
+        var menuEntry: MenuEntry? = original
+        var menuEntries: MutableList<MenuEntry>?
+        val breadcrumbs = ArrayList<Breadcrumb>()
+        if (Objects.isNull(menuEntry?.parentId)) return breadcrumbs
+        while (true) {
+            menuEntries = dataStore?.createQuery(MenuEntry::class.java)?.field("id")?.equal(menuEntry?.parentId)?.find()?.toList()
+            if (menuEntries is MutableList<MenuEntry> && menuEntries.isNotEmpty()) {
+                menuEntry = menuEntries[0]
+                breadcrumbs.add(0, Breadcrumb(menuEntry.name, menuEntry.url))
+            } else break
+        }
+        breadcrumbs.add(Breadcrumb(original?.name, original?.url))
+        return breadcrumbs
+    }
+
+    private fun <T : Any> getQuerySql(filterDto: List<FilterDto>, queryBase: Query<T>?): Query<T>? {
+        var temp = queryBase
+        if (filterDto.isNotEmpty()) {
+            for (filter in filterDto) {
+                val type = filter.type
+                if (type.equals("NumberFilter")) {
+                    val tempFieldEnd = temp?.field(filter.name)
+                    val query = Integer.parseInt(filter.value)
+                    when (filter.comparator) {
+                        "=" -> temp = tempFieldEnd?.equal(query)
+                        ">" -> temp = tempFieldEnd?.greaterThan(query)
+                        ">=" -> temp = tempFieldEnd?.greaterThanOrEq(query)
+                        "<=" -> temp = tempFieldEnd?.lessThanOrEq(query)
+                        "<" -> temp = tempFieldEnd?.lessThan(query)
+                    }
+                }
+                if (type.equals("TextFilter")) temp = temp?.field(filter.name)?.containsIgnoreCase(filter.value)
+                if (type.equals("DateFilter")) {
+                    val dateFormatEqual = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                    val dateFormatOther = SimpleDateFormat("yyyy-MM-dd")
+                    when (filter.comparator) {
+                        "=" -> {
+                            val dateBefore: Date = dateFormatEqual.parse(filter.value + "T00:00:00")
+                            val dateAfter: Date = dateFormatEqual.parse(filter.value + "T23:59:59")
+                            temp = temp?.field(filter.name)
+                                    ?.greaterThan(Timestamp(dateBefore.time))
+                                    ?.field(filter.name)
+                                    ?.lessThan(Timestamp(dateAfter.time))
+                        }
+                        ">" -> {
+                            temp = temp?.field(filter.name)
+                                    ?.greaterThan(Timestamp(dateFormatOther.parse(filter.value).time))
+                        }
+                        ">=" -> {
+                            temp = temp?.field(filter.name)
+                                    ?.greaterThanOrEq(Timestamp(dateFormatOther.parse(filter.value).time))
+                        }
+                        "<=" -> {
+                            temp = temp?.field(filter.name)
+                                    ?.lessThanOrEq(Timestamp(dateFormatOther.parse(filter.value).time))
+                        }
+                        "<" -> {
+                            temp = temp?.field(filter.name)
+                                    ?.lessThan(Timestamp(dateFormatOther.parse(filter.value).time))
+                        }
+                    }
+                }
+            }
+        }
+        return temp
     }
 
     override fun selectCachePage(page: Int, pageSize: Int, sortName: String, sortOrder: String, filterDto: List<FilterDto>, cacheName: String): List<Any> {
-        TODO("Not yet implemented")
+        val cacheDtoArrayList = ArrayList<Any>()
+        var query = dataStore?.createQuery(UniversalFieldsDescriptor.getCacheClass(cacheName))
+        query = getQuerySql(filterDto, query)
+        query = if (sortOrder == "asc") {
+            query?.order(Sort.ascending(sortName))
+        } else {
+            query?.order(Sort.descending(sortName))
+        }
+        val cursor = query?.find(FindOptions()
+                .skip(((page - 1) * pageSize))
+                .limit(pageSize))?.toList()
+        val dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName)?.getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName))
+        for (e in cursor!!)
+            cacheDtoArrayList.add(dtoConstructor!!.newInstance(e))
+        return cacheDtoArrayList
     }
 
     override fun getContactsByPersonId(id: String): List<ContactDto> {
-        TODO("Not yet implemented")
+        val cacheDtoArrayList = ArrayList<ContactDto>()
+        val contacts = dataStore?.createQuery(Contact::class.java)?.field("personId")?.equal(id)?.order(Sort.ascending("type"))?.find()?.toList()
+        for (e in contacts!!) cacheDtoArrayList.add(ContactDto(e))
+        return cacheDtoArrayList
     }
 
     override fun getTotalDataSize(cacheName: String, filterDto: List<FilterDto>): Int {
-        TODO("Not yet implemented")
+        return if (filterDto.isEmpty()) {
+            dataStore?.createQuery(UniversalFieldsDescriptor.getCacheClass(cacheName))!!.count().toInt()
+        } else {
+            getQuerySql(filterDto, dataStore?.createQuery(UniversalFieldsDescriptor.getCacheClass(cacheName)))!!.count().toInt()
+        }
     }
 
     @PreDestroy
     fun stopClient() {
-        TODO("Not yet implemented")
+        if (Objects.nonNull(mongoClient)) {
+            mongoClient?.close()
+        }
     }
 }

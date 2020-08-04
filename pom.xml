@@ -41,6 +41,7 @@
         <guava.version>25.0-jre</guava.version>
         <junit.version>4.12</junit.version>
         <selenium.version>3.141.59</selenium.version>
+        <morphia.version>1.5.3</morphia.version>
     </properties>
 
     <dependencyManagement>
@@ -217,6 +218,11 @@
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger2</artifactId>
                 <version>${springfox.swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.morphia.morphia</groupId>
+                <artifactId>core</artifactId>
+                <version>${morphia.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

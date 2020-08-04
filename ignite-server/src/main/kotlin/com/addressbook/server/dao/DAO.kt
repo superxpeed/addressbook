@@ -139,9 +139,9 @@ class DAO : AddressBookDAO {
     }
 
     override fun notLockedByUser(key: String, user: String): Boolean {
-        val cacheLocks: IgniteCache<String, String> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
+        val cacheLocks: IgniteCache<String, Lock> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
         val userLocked = cacheLocks.get(key)
-        return user != userLocked
+        return user != userLocked.login
     }
 
     override fun ifOrganizationExists(key: String): Boolean {
@@ -160,13 +160,13 @@ class DAO : AddressBookDAO {
     }
 
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
-        val cacheLocks: IgniteCache<String, String> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
-        return if (lock) cacheLocks.putIfAbsent(key, user) else cacheLocks.remove(key, user)
+        val cacheLocks: IgniteCache<String, Lock> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
+        return if (lock) cacheLocks.putIfAbsent(key, Lock(key, user)) else cacheLocks.remove(key, Lock(key, user))
     }
 
     override fun unlockAllRecordsForUser(user: String): String {
-        val cacheLocks: IgniteCache<String, String> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
-        cacheLocks.removeAll(HashSet(cacheLocks.query(ScanQuery { _, v -> v == user }, Cache.Entry<String, String>::getKey).all))
+        val cacheLocks: IgniteCache<String, Lock> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
+        cacheLocks.removeAll(HashSet(cacheLocks.query(ScanQuery { _, v -> v.login == user }, Cache.Entry<String, Lock>::getKey).all))
         return "OK"
     }
 

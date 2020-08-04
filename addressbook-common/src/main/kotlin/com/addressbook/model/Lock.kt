@@ -5,16 +5,13 @@ import dev.morphia.annotations.Id
 import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.io.Serializable
 
-@Entity("users")
-class User(login: String, password: String, roles: List<String>) : Serializable {
+@Entity("locks")
+class Lock(id: String, login: String) : Serializable {
 
     @Id
     @QuerySqlField(index = true)
-    var login: String? = login
+    var id: String? = id
 
     @QuerySqlField(index = true)
-    var password: String? = password
-
-    var roles: List<String>? = roles
-
+    var login: String? = login
 }

@@ -49,7 +49,7 @@ object UniversalFieldsDescriptor {
         cacheClasses[CONTACT_CACHE] = Contact::class.java
         cacheClasses[MENU_CACHE] = MenuEntry::class.java
         cacheClasses[USER_CACHE] = User::class.java
-        cacheClasses[LOCK_RECORD_CACHE] = String::class.java
+        cacheClasses[LOCK_RECORD_CACHE] = Lock::class.java
 
         dtoClasses[ORGANIZATION_CACHE] = OrganizationDto::class.java
         dtoClasses[PERSON_CACHE] = PersonDto::class.java
