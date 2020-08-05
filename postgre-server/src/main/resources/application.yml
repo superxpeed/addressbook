@@ -17,11 +17,15 @@ spring:
     hibernate:
       ddl-auto: update
     properties:
-      hibernate.jdbc.batch_size: 20
-      hibernate.cache.use_query_cache: false
-      hibernate.cache.use_second_level_cache: false
-      hibernate.cache.use_structured_entries: false
-      hibernate.cache.use_minimal_puts: false
+      hibernate:
+        default_schema: ${POSTGRES_USER}
+        jdbc:
+          batch_size: 20
+        cache:
+          use_query_cache: false
+          use_second_level_cache: false
+          use_structured_entries: false
+          use_minimal_puts: false
     generate-ddl: true
   datasource:
     platform: postgres
