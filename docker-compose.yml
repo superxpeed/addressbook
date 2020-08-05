@@ -5,10 +5,27 @@ services:
     build: eureka-server/.
     ports:
       - "7777:7777"
-  db:
+  ignite:
     build: ignite-server/.
     ports:
       - "11000:10000"
+  mongo:
+    build: mongo-server/.
+    ports:
+      - "12000:10000"
+    environment:
+      - MONGO_HOST=host.docker.internal
+      - MONGO_PORT=27017
+  posgre:
+    build: postgre-server/.
+    environment:
+      - POSTGRES_HOST=host.docker.internal
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+    ports:
+      - "13000:10000"
   web:
     build: addressbook-main/.
     ports:

@@ -31,7 +31,7 @@ class DAO : AddressBookDAO {
     @PostConstruct
     fun startClient() {
         if (Objects.nonNull(mongoClient)) return
-        mongoClient = MongoClient("localhost", 27017)
+        mongoClient = MongoClient(System.getenv("MONGO_HOST"), Integer.parseInt(System.getenv("MONGO_PORT")))
         val morphia = Morphia()
         morphia.mapPackage("com.addressbook.model")
         dataStore = morphia.createDatastore(mongoClient, "addressbook")
