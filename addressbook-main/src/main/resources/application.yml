@@ -11,3 +11,5 @@ eureka:
 spring:
   application:
     name: addressbook
+dao:
+  implementation:${DAO_IMPLEMENTATION}

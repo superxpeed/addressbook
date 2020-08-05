@@ -30,3 +30,5 @@ services:
     build: addressbook-main/.
     ports:
       - "10000:9000"
+    environment:
+      - DAO_IMPLEMENTATION=mongo-server
