@@ -108,6 +108,7 @@ class DAO : AddressBookDAO {
 
     override fun notLockedByUser(key: String, user: String): Boolean {
         val userLocked = getById("id", key, Lock::class.java)
+        if (Objects.isNull(userLocked)) return false
         return user != userLocked?.login
     }
 
@@ -127,7 +128,9 @@ class DAO : AddressBookDAO {
         if (lock) {
             dataStore?.save(Lock(key, user))
         } else {
-            dataStore?.delete(getById("id", key, Lock::class.java))
+            val userLocked = getById("id", key, Lock::class.java)
+            if (Objects.isNull(userLocked)) return false
+            dataStore?.delete(userLocked)
         }
         return true
     }
@@ -298,8 +301,6 @@ class DAO : AddressBookDAO {
 
     @PreDestroy
     fun stopClient() {
-        if (Objects.nonNull(mongoClient)) {
-            mongoClient?.close()
-        }
+        mongoClient?.close()
     }
 }

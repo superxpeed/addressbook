@@ -1,14 +1,12 @@
 package com.addressbook.model
 
-import dev.morphia.annotations.Entity
-import dev.morphia.annotations.Id
 import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.io.Serializable
 
-@Entity("locks")
+@dev.morphia.annotations.Entity("locks")
 @javax.persistence.Entity
 class Lock(@javax.persistence.Id
-           @Id
+           @dev.morphia.annotations.Id
            @QuerySqlField(index = true) var id: String?,
            @QuerySqlField(index = true) var login: String?) : Serializable {
 

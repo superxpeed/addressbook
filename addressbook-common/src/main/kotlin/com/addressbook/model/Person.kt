@@ -1,16 +1,14 @@
 package com.addressbook.model
 
-import dev.morphia.annotations.Entity
-import dev.morphia.annotations.Id
 import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.io.Serializable
 import java.util.*
 
-@Entity("persons")
+@dev.morphia.annotations.Entity("persons")
 @javax.persistence.Entity
 class Person : Serializable {
 
-    @Id
+    @dev.morphia.annotations.Id
     @javax.persistence.Id
     @QuerySqlField(index = true)
     var id: String? = null

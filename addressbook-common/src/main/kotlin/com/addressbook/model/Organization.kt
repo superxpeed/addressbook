@@ -2,17 +2,15 @@ package com.addressbook.model
 
 import com.addressbook.dto.OrganizationDto
 import dev.morphia.annotations.Embedded
-import dev.morphia.annotations.Entity
-import dev.morphia.annotations.Id
 import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.sql.Timestamp
 import java.util.*
 
-@Entity("organizations")
+@dev.morphia.annotations.Entity("organizations")
 @javax.persistence.Entity
 class Organization constructor(id: String?, name: String?, addr: Address?, type: OrganizationType?, lastUpdated: Timestamp?) {
 
-    @Id
+    @dev.morphia.annotations.Id
     @javax.persistence.Id
     @QuerySqlField(index = true)
     var id: String? = null
