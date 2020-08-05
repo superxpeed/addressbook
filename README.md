@@ -18,10 +18,11 @@
     -   [Exception handler for all back-end exceptions](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/rest/MainController.kt#L121)
     -   [Custom 404 page & 401 handlers](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/rest/ErrorWebController.kt) with [session listener](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configuration/SessionListener.kt)  
     -   [Automatic Jackson marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configuration/RootConfiguration.kt)
-5.  [**Spring Flux**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html) for [reactive updates on front-end](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/services/IgniteStateService.kt)
+5.  [**Spring Flux**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html) for [reactive updates on front-end](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/services/JVMStateService.kt)
 6.  [**Spring Fox**](https://springfox.github.io/springfox/docs/current/) [configuration](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configuration/SpringFoxConfiguration.kt) with Swagger2
-7.  [**Apache Ignite**](https://apacheignite.readme.io/docs) [server configuration](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L37), [SQL queries](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L278), [transactions](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L122), 
-[monitoring](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/ignite/IgniteMetricsContainer.kt), [binary marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-common/src/main/kotlin/com/addressbook/model/Organization.kt)
+7.  [**Apache Ignite**](https://apacheignite.readme.io/docs) [server configuration](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L37), [SQL queries](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L278), [transactions](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L122), [binary marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-common/src/main/kotlin/com/addressbook/model/Organization.kt)
+8.  [**MongoDB**](https://www.mongodb.com/) with [**Morphia ORM**](https://morphia.dev)  
+9.  [**PostgreSQL**](https://www.postgresql.org) with [**Spring JPA**](https://spring.io/projects/spring-data-jpa)  
 
 #### Front-end:
 1.  Complex user interface with multiple dynamically added tables/tabs/custom forms, user-input validation and more
@@ -46,7 +47,17 @@ docker build -t addressbook_web .
 Build Spring Boot DPL Application with Apache Ignite Server:
 ```sh
 cd ignite-server
-docker build -t addressbook_db .
+docker build -t addressbook_ignite .
+```
+Build Spring Boot DPL Application with PostgreSQL:
+```sh
+cd postgre-server
+docker build -t addressbook_postgre .
+```
+Build Spring Boot DPL Application with MongoDB:
+```sh
+cd mongo-server
+docker build -t addressbook_mongo .
 ```
 Build Spring Boot with Eureka Server:
 ```sh
