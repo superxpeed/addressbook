@@ -1,4 +1,4 @@
-package com.addressbook.ignite
+package com.addressbook.dao
 
 import com.addressbook.model.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct
 class UserCreator {
 
     @Autowired
-    lateinit var igniteDao: IgniteClient
+    lateinit var daoDao: DaoClient
 
     @PostConstruct
     fun initUsers() {
@@ -20,8 +20,8 @@ class UserCreator {
         adminRoles.add("USER")
         adminRoles.add("ADMIN")
         val admin = User("admin", encoder.encode("adminPass"), adminRoles)
-        igniteDao.createOrUpdateUser(admin)
+        daoDao.createOrUpdateUser(admin)
         val user = User("user", encoder.encode("userPass"), Collections.singletonList("USER"))
-        igniteDao.createOrUpdateUser(user)
+        daoDao.createOrUpdateUser(user)
     }
 }

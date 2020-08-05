@@ -1,6 +1,6 @@
 package com.addressbook.security
 
-import com.addressbook.ignite.IgniteClient
+import com.addressbook.dao.DaoClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.BadCredentialsException
@@ -14,17 +14,17 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class IgniteAuthenticationProvider : AuthenticationProvider {
+class AddressbookAuthenticationProvider : AuthenticationProvider {
 
     @Autowired
-    lateinit var igniteDao: IgniteClient
+    lateinit var daoDao: DaoClient
 
     override fun authenticate(authentication: Authentication): Authentication {
         // Here I receive login and password (plaintext) from UI
         val login = authentication.name
         val password = authentication.credentials.toString()
         // Then I read user using that login as a key
-        val user: com.addressbook.model.User = igniteDao.getUserByLogin(login)
+        val user: com.addressbook.model.User = daoDao.getUserByLogin(login)
                 ?: throw BadCredentialsException("Incorrect login")
         val encoder = BCryptPasswordEncoder()
         // And since password stored in Ignite is encoded, I use encoder to check if it's right

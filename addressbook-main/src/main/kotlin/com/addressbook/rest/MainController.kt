@@ -4,7 +4,7 @@ import com.addressbook.UniversalFieldsDescriptor
 import com.addressbook.aop.LogExecutionTime
 import com.addressbook.dto.*
 import com.addressbook.exception.LockRecordException
-import com.addressbook.ignite.IgniteClient
+import com.addressbook.dao.DaoClient
 import com.addressbook.model.Organization
 import com.addressbook.model.Person
 import com.addressbook.model.User
@@ -29,7 +29,7 @@ class MainController {
     lateinit var currentUser: CurrentUser
 
     @Autowired
-    lateinit var igniteDao: IgniteClient
+    lateinit var daoDao: DaoClient
 
     @LogExecutionTime
     @PostMapping("/getList4UniversalListForm")
@@ -40,7 +40,7 @@ class MainController {
                 @RequestParam(value = "cache") cache: String,
                 @RequestBody filterDto: List<FilterDto>): CompletableFuture<PageDataDto<TableDataDto<Any>>> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(TableDataDto(igniteDao.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), igniteDao.getTotalDataSize(cache, filterDto)), UniversalFieldsDescriptor.getFieldDescriptionMap(cache))
+            return@supplyAsync PageDataDto(TableDataDto(daoDao.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), daoDao.getTotalDataSize(cache, filterDto)), UniversalFieldsDescriptor.getFieldDescriptionMap(cache))
         }
     }
 
@@ -48,7 +48,7 @@ class MainController {
     @PostMapping("/getContactList")
     fun getContactList(@RequestParam(value = "personId") id: String): CompletableFuture<PageDataDto<TableDataDto<ContactDto>>> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(TableDataDto(igniteDao.getContactsByPersonId(id)))
+            return@supplyAsync PageDataDto(TableDataDto(daoDao.getContactsByPersonId(id)))
         }
     }
 
@@ -56,10 +56,10 @@ class MainController {
     @PostMapping("/saveOrCreatePerson")
     fun saveOrCreatePerson(@RequestBody personDto: PersonDto): CompletableFuture<PageDataDto<PersonDto>> {
         val login = currentUser.userName
-        if (igniteDao.ifPersonExists(personDto.id!!) && igniteDao.notLockedByUser(Person::class.java.name + personDto.id, login))
+        if (daoDao.ifPersonExists(personDto.id!!) && daoDao.notLockedByUser(Person::class.java.name + personDto.id, login))
             throw LockRecordException("Parent record was not locked by $login")
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(igniteDao.createOrUpdatePerson(personDto, login))
+            return@supplyAsync PageDataDto(daoDao.createOrUpdatePerson(personDto, login))
         }
     }
 
@@ -67,10 +67,10 @@ class MainController {
     @PostMapping("/saveOrCreateOrganization")
     fun saveOrCreateOrganization(@RequestBody organizationDto: OrganizationDto): CompletableFuture<PageDataDto<OrganizationDto>> {
         val login = currentUser.userName
-        if (igniteDao.ifOrganizationExists(organizationDto.id!!) && igniteDao.notLockedByUser(Organization::class.java.name + organizationDto.id, login))
+        if (daoDao.ifOrganizationExists(organizationDto.id!!) && daoDao.notLockedByUser(Organization::class.java.name + organizationDto.id, login))
             throw LockRecordException("Record was not locked by $login")
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(igniteDao.createOrUpdateOrganization(organizationDto, login))
+            return@supplyAsync PageDataDto(daoDao.createOrUpdateOrganization(organizationDto, login))
         }
     }
 
@@ -78,7 +78,7 @@ class MainController {
     @GetMapping("/getBreadcrumbs")
     fun getBreadcrumbs(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<Breadcrumb>>> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(igniteDao.readBreadcrumbs(url))
+            return@supplyAsync PageDataDto(daoDao.readBreadcrumbs(url))
         }
     }
 
@@ -87,7 +87,7 @@ class MainController {
     fun getNextLevelMenus(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<MenuEntryDto>>> {
         val authorities = currentUser.authorities.map { x -> x.authority }
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(igniteDao.readNextLevel(url, authorities))
+            return@supplyAsync PageDataDto(daoDao.readNextLevel(url, authorities))
         }
     }
 
@@ -95,10 +95,10 @@ class MainController {
     @PostMapping("/saveOrCreateContacts")
     fun saveOrCreateContacts(@RequestBody contactDto: List<ContactDto>, @RequestParam(value = "personId") personId: String): CompletableFuture<PageDataDto<List<ContactDto>>> {
         val login = currentUser.userName
-        if (igniteDao.ifPersonExists(personId) && igniteDao.notLockedByUser(Person::class.java.name + personId, login))
+        if (daoDao.ifPersonExists(personId) && daoDao.notLockedByUser(Person::class.java.name + personId, login))
             throw LockRecordException("Parent record was not locked by $login")
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(igniteDao.createOrUpdateContacts(contactDto, login, personId))
+            return@supplyAsync PageDataDto(daoDao.createOrUpdateContacts(contactDto, login, personId))
         }
     }
 
@@ -106,7 +106,7 @@ class MainController {
     @GetMapping("/lockRecord")
     fun lockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
         val login = currentUser.userName
-        return PageDataDto(if (igniteDao.lockUnlockRecord(type + id, login, true))
+        return PageDataDto(if (daoDao.lockUnlockRecord(type + id, login, true))
             Alert("Record locked!", Alert.SUCCESS, Alert.RECORD_PREFIX + id + " locked!")
         else Alert("Record was not locked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was already locked!"))
     }
@@ -115,7 +115,7 @@ class MainController {
     @GetMapping("/unlockRecord")
     fun unlockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
         val login = currentUser.userName
-        return PageDataDto(if (igniteDao.lockUnlockRecord(type + id, login, false))
+        return PageDataDto(if (daoDao.lockUnlockRecord(type + id, login, false))
             Alert("Record unlocked!", Alert.SUCCESS, Alert.RECORD_PREFIX + id + " unlocked!")
         else Alert("Record was not unlocked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was not locked by you!"))
     }
@@ -125,7 +125,7 @@ class MainController {
     fun logoutPage(request: HttpServletRequest, response: HttpServletResponse): String {
         val auth = SecurityContextHolder.getContext().authentication
         if (Objects.nonNull(auth)) {
-            igniteDao.unlockAllRecordsForUser(auth.name)
+            daoDao.unlockAllRecordsForUser(auth.name)
             SecurityContextLogoutHandler().logout(request, response, auth)
         }
         return "redirect:/#/login"
@@ -153,7 +153,7 @@ class MainController {
     @LogExecutionTime
     @GetMapping("/getUserInfo")
     fun getUserInfo(): User? {
-        val user = igniteDao.getUserByLogin(currentUser.userName)
+        val user = daoDao.getUserByLogin(currentUser.userName)
         user?.password = null
         return user
     }

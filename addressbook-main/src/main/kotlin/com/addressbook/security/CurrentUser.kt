@@ -1,6 +1,6 @@
 package com.addressbook.security
 
-import com.addressbook.ignite.IgniteClient
+import com.addressbook.dao.DaoClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode
@@ -20,7 +20,7 @@ class CurrentUser : Serializable {
     lateinit var authorities: Collection<GrantedAuthority>
 
     @Autowired
-    lateinit var igniteDao: IgniteClient
+    lateinit var daoDao: DaoClient
 
     @PostConstruct
     fun init() {
@@ -30,6 +30,6 @@ class CurrentUser : Serializable {
 
     @PreDestroy
     fun destroy() {
-        userName.let { igniteDao.unlockAllRecordsForUser(it) }
+        userName.let { daoDao.unlockAllRecordsForUser(it) }
     }
 }

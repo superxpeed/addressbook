@@ -21,12 +21,12 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     lateinit var mySuccessHandler: RequestAwareAuthenticationSuccessHandler
 
     @Autowired
-    lateinit var igniteAuthenticationProvider: IgniteAuthenticationProvider
+    lateinit var addressbookAuthenticationProvider: AddressbookAuthenticationProvider
 
     val myFailureHandler = SimpleUrlAuthenticationFailureHandler()
 
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.authenticationProvider(igniteAuthenticationProvider)
+        auth.authenticationProvider(addressbookAuthenticationProvider)
     }
 
     override fun configure(http: HttpSecurity) {

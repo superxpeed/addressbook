@@ -1,4 +1,4 @@
-package com.addressbook.ignite
+package com.addressbook.dao
 
 import com.addressbook.dto.MenuEntryDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,22 +10,22 @@ import javax.annotation.PostConstruct
 class MenuCreator {
 
     @Autowired
-    lateinit var igniteDao: IgniteClient
+    lateinit var daoDao: DaoClient
 
     @PostConstruct
     fun initMenu() {
-        igniteDao.clearMenus()
+        daoDao.clearMenus()
         var root = MenuEntryDto("/root", "Root entry", Collections.singletonList("USER"))
-        root = igniteDao.createOrUpdateMenuEntry(root, null)
+        root = daoDao.createOrUpdateMenuEntry(root, null)
         var firstLevel = MenuEntryDto("/level1", "First level", Collections.singletonList("USER"))
-        firstLevel = igniteDao.createOrUpdateMenuEntry(firstLevel, root.id)
+        firstLevel = daoDao.createOrUpdateMenuEntry(firstLevel, root.id)
         var secondLevelOne = MenuEntryDto("/level2", "Second level 1", Collections.singletonList("USER"))
-        secondLevelOne = igniteDao.createOrUpdateMenuEntry(secondLevelOne, firstLevel.id)
+        secondLevelOne = daoDao.createOrUpdateMenuEntry(secondLevelOne, firstLevel.id)
         val secondLevelTwo = MenuEntryDto("/adminPage", "Admin page", Collections.singletonList("ADMIN"))
         var thirdLevel = MenuEntryDto("/level3", "Third level", Collections.singletonList("USER"))
-        thirdLevel = igniteDao.createOrUpdateMenuEntry(thirdLevel, secondLevelOne.id)
+        thirdLevel = daoDao.createOrUpdateMenuEntry(thirdLevel, secondLevelOne.id)
         val lastLevel = MenuEntryDto("/lastLevel", "Last level", Collections.singletonList("USER"))
-        igniteDao.createOrUpdateMenuEntry(secondLevelTwo, firstLevel.id)
-        igniteDao.createOrUpdateMenuEntry(lastLevel, thirdLevel.id)
+        daoDao.createOrUpdateMenuEntry(secondLevelTwo, firstLevel.id)
+        daoDao.createOrUpdateMenuEntry(lastLevel, thirdLevel.id)
     }
 }
