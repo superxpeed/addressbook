@@ -134,6 +134,7 @@ class DAO : AddressBookDAO {
 
     @Transactional
     override fun clearMenus(): String {
+        entityManager?.createNativeQuery("DELETE FROM menu_entry_roles")?.executeUpdate()
         entityManager?.createNativeQuery("DELETE FROM menu_entry")?.executeUpdate()
         return "OK"
     }
@@ -209,7 +210,32 @@ class DAO : AddressBookDAO {
                     addSql = filter.name + getComparator(filter) + query
                 }
                 if (type.equals("TextFilter")) addSql = filter.name + " like '%" + filter.value?.replace("'", "''") + "%'"
-                if (type.equals("DateFilter")) addSql = filter.name + getComparator(filter) + "'" + filter.value + "'"
+                if (type.equals("DateFilter")) {
+                    filter.value = filter.value?.substring(0, 10)
+                    val tailLower = " 00:00:00.00000'"
+                    val tailUpper = " 23:59:59.999999'"
+                    val format = "'YYYY-MM-DD HH24:MI:SS.US'";
+                    when (filter.comparator) {
+                        "=" -> {
+                            addSql = filter.name + " BETWEEN TO_TIMESTAMP('" + filter.value + tailLower + " , " + format + ") AND TO_TIMESTAMP('" + filter.value + tailUpper + " , " + format + ")"
+                        }
+                        "!=" -> {
+                            addSql = filter.name + " < TO_TIMESTAMP('" + filter.value + tailLower + " , " + format + ") AND " + filter.name + " > TO_TIMESTAMP('" + filter.value + tailUpper + " , " + format + ")"
+                        }
+                        ">" -> {
+                            addSql = filter.name + " > TO_TIMESTAMP('" + filter.value + tailUpper + " , " + format + ")"
+                        }
+                        ">=" -> {
+                            addSql = filter.name + " > TO_TIMESTAMP('" + filter.value + tailLower + " , " + format + ")"
+                        }
+                        "<=" -> {
+                            addSql = filter.name + " < TO_TIMESTAMP('" + filter.value + tailUpper + " , " + format + ")"
+                        }
+                        "<" -> {
+                            addSql = filter.name + " < TO_TIMESTAMP('" + filter.value + tailLower + " , " + format + ")"
+                        }
+                    }
+                }
                 if (filterDto.indexOf(filter) == 0) baseSql.append(" where ")
                 baseSql.append(addSql)
                 if (filterDto.indexOf(filter) != (filterDto.size - 1)) baseSql.append(" and ")
