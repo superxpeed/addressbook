@@ -70,6 +70,13 @@ cd ..
 docker-compose -f docker-compose.yml up -d
 ```
 
+#### PostgreSQL preparation:
+```sql
+CREATE SCHEMA IF NOT EXISTS test;
+CREATE USER test WITH PASSWORD 'test';
+GRANT ALL ON SCHEMA test TO test;
+```
+
 #### WebApp host: http://localhost:10000/  (user/userPass, admin/adminPass)
 #### Eureka host: http://localhost:7777/  
 
