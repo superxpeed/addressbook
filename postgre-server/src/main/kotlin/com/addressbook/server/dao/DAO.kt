@@ -22,29 +22,29 @@ class DAO : AddressBookDAO {
     @Transactional
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
         var organization = entityManager?.find(Organization::class.java, organizationDto.id)
-        if (Objects.isNull(organization)) {
+        if (organization == null) {
             organization = Organization(organizationDto)
         }
-        organization?.type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
-        organization?.lastUpdated = Timestamp(System.currentTimeMillis())
-        organization?.name = organizationDto.name
-        organization?.addr = Address(organizationDto.street, organizationDto.zip)
+        organization.type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
+        organization.lastUpdated = Timestamp(System.currentTimeMillis())
+        organization.name = organizationDto.name
+        organization.addr = Address(organizationDto.street, organizationDto.zip)
         entityManager?.persist(organization)
         return organizationDto
     }
 
     @Transactional
     override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
-        var person = if (Objects.nonNull(personDto.id)) entityManager?.find(Person::class.java, personDto.id) else null
-        if (Objects.isNull(person)) {
+        var person = if (personDto.id != null) entityManager?.find(Person::class.java, personDto.id) else null
+        if (person == null) {
             person = Person()
             personDto.id = person.id
         }
-        person?.firstName = personDto.firstName
-        person?.lastName = personDto.lastName
-        person?.orgId = personDto.orgId
-        person?.salary = personDto.salary
-        person?.resume = personDto.resume
+        person.firstName = personDto.firstName
+        person.lastName = personDto.lastName
+        person.orgId = personDto.orgId
+        person.salary = personDto.salary
+        person.resume = personDto.resume
         entityManager?.persist(person)
         return personDto
     }
@@ -58,11 +58,11 @@ class DAO : AddressBookDAO {
         for (contactDto in contactDtos) {
             contactDto.personId = personId
             var contact = entityManager?.find(Contact::class.java, contactDto.id)
-            if (Objects.isNull(contact)) contact = Contact()
-            contact?.data = contactDto.data
-            contact?.description = contactDto.description
-            contact?.personId = contactDto.personId
-            contact?.type = ContactType.values()[Integer.parseInt(contactDto.type)]
+            if (contact == null) contact = Contact()
+            contact.data = contactDto.data
+            contact.description = contactDto.description
+            contact.personId = contactDto.personId
+            contact.type = ContactType.values()[Integer.parseInt(contactDto.type)]
             entityManager?.persist(contact)
         }
         for (id in toDelete) {
@@ -74,9 +74,9 @@ class DAO : AddressBookDAO {
     @Transactional
     override fun createOrUpdateUser(newUser: User): String {
         var user = entityManager?.find(User::class.java, newUser.login)
-        if (Objects.nonNull(user)) {
-            user?.password = newUser.password
-            user?.roles = newUser.roles
+        if (user != null) {
+            user.password = newUser.password
+            user.roles = newUser.roles
         } else user = newUser
         entityManager?.persist(user)
         return "OK"
@@ -84,24 +84,23 @@ class DAO : AddressBookDAO {
 
     @Transactional
     override fun notLockedByUser(key: String, user: String): Boolean {
-        val userLocked = entityManager?.find(Lock::class.java, key)
-        if (Objects.isNull(userLocked)) return false
-        return user != userLocked?.login
+        val userLocked = entityManager?.find(Lock::class.java, key) ?: return false
+        return user != userLocked.login
     }
 
     @Transactional
     override fun ifOrganizationExists(key: String): Boolean {
-        return Objects.nonNull(entityManager?.find(Organization::class.java, key))
+        return entityManager?.find(Organization::class.java, key) != null
     }
 
     @Transactional
     override fun ifPersonExists(key: String): Boolean {
-        return Objects.nonNull(entityManager?.find(Person::class.java, key))
+        return entityManager?.find(Person::class.java, key) != null
     }
 
     @Transactional
     override fun ifContactExists(key: String): Boolean {
-        return Objects.nonNull(entityManager?.find(Contact::class.java, key))
+        return entityManager?.find(Contact::class.java, key) != null
     }
 
     @Transactional
@@ -109,9 +108,8 @@ class DAO : AddressBookDAO {
         if (lock) {
             entityManager?.persist(Lock(key, user))
         } else {
-            val userLocked = entityManager?.find(Lock::class.java, key)
-            if (Objects.isNull(userLocked)) return false
-            entityManager?.remove(userLocked)
+            val userLocked = entityManager?.find(Lock::class.java, key) ?: return false
+            entityManager.remove(userLocked)
         }
         return true
     }
@@ -120,9 +118,11 @@ class DAO : AddressBookDAO {
     override fun unlockAllRecordsForUser(user: String): String {
         val typedQuery: TypedQuery<Lock>? = entityManager?.createQuery("SELECT u FROM Lock u WHERE u.login=:user", Lock::class.java)
         typedQuery?.setParameter("user", user)
-        val results = typedQuery?.resultList as List<Lock>
-        for (u in results) {
-            entityManager?.remove(u)
+        val results = typedQuery?.resultList
+        if (results != null) {
+            for (u in results) {
+                entityManager?.remove(u)
+            }
         }
         return "OK"
     }
@@ -141,21 +141,21 @@ class DAO : AddressBookDAO {
 
     @Transactional
     override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {
-        val menuEntry = if (Objects.nonNull(menuEntryDto.id)) entityManager?.find(MenuEntry::class.java, menuEntryDto.id) else MenuEntry()
+        val menuEntry = if (menuEntryDto.id != null) entityManager?.find(MenuEntry::class.java, menuEntryDto.id) else MenuEntry()
         menuEntry?.name = menuEntryDto.name
         menuEntry?.url = menuEntryDto.url
         menuEntry?.roles = menuEntryDto.roles
-        if (Objects.nonNull(parentEntryId)) menuEntry?.parentId = parentEntryId
+        if (parentEntryId != null) menuEntry?.parentId = parentEntryId
         menuEntryDto.id = menuEntry?.id
         entityManager?.persist(menuEntry)
         return menuEntryDto
     }
 
-    public fun checkIfMenuExists(url: String): List<MenuEntry>? {
-        val typedQuery: TypedQuery<MenuEntry>? = entityManager?.createQuery("SELECT u FROM MenuEntry u WHERE u.url=:url", MenuEntry::class.java)
+    fun checkIfMenuExists(url: String): List<MenuEntry>? {
+        val typedQuery = entityManager?.createQuery("SELECT u FROM MenuEntry u WHERE u.url=:url", MenuEntry::class.java)
         typedQuery?.setParameter("url", url)
-        val results = typedQuery?.resultList as List<MenuEntry>
-        if (results.isEmpty()) throw IllegalArgumentException("Menu with url: $url doesn't exist")
+        val results = typedQuery?.resultList
+        if (results != null && results.isEmpty()) throw IllegalArgumentException("Menu with url: $url doesn't exist")
         return results
     }
 
@@ -164,14 +164,16 @@ class DAO : AddressBookDAO {
         val entries = checkIfMenuExists(url)
         val menuEntry = entries?.get(0)
         val menuEntryDtos = ArrayList<MenuEntryDto>()
-        val typedQuery: TypedQuery<MenuEntry>? = entityManager?.createQuery("SELECT u FROM MenuEntry u WHERE u.parentId=:parentId", MenuEntry::class.java)
+        val typedQuery = entityManager?.createQuery("SELECT u FROM MenuEntry u WHERE u.parentId=:parentId", MenuEntry::class.java)
         typedQuery?.setParameter("parentId", menuEntry?.id)
-        val cursor = typedQuery?.resultList as List<MenuEntry>
-        for (e in cursor) {
-            for (authority in authorities) {
-                if (Objects.nonNull(e.roles) && e.roles!!.contains(authority.replace("ROLE_", ""))) {
-                    menuEntryDtos.add(MenuEntryDto(e))
-                    break
+        val cursor = typedQuery?.resultList
+        if (cursor != null) {
+            for (e in cursor) {
+                for (authority in authorities) {
+                    if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
+                        menuEntryDtos.add(MenuEntryDto(e))
+                        break
+                    }
                 }
             }
         }
@@ -182,20 +184,20 @@ class DAO : AddressBookDAO {
     override fun readBreadcrumbs(url: String): List<Breadcrumb> {
         val entries = checkIfMenuExists(url)
         val original = entries?.get(0)
-        var menuEntry = original as MenuEntry
-        var menuEntries: MutableList<MenuEntry>
+        var menuEntry = original
+        var menuEntries: MutableList<MenuEntry>?
         val breadcrumbs = ArrayList<Breadcrumb>()
-        if (Objects.isNull(menuEntry.parentId)) return breadcrumbs
+        if (menuEntry?.parentId == null) return breadcrumbs
         while (true) {
-            val typedQuery: TypedQuery<MenuEntry>? = entityManager?.createQuery("SELECT u FROM MenuEntry u WHERE u.id=:id", MenuEntry::class.java)
-            typedQuery?.setParameter("id", menuEntry.parentId)
+            val typedQuery = entityManager?.createQuery("SELECT u FROM MenuEntry u WHERE u.id=:id", MenuEntry::class.java)
+            typedQuery?.setParameter("id", menuEntry?.parentId)
             menuEntries = typedQuery?.resultList as MutableList<MenuEntry>
             if (menuEntries.isNotEmpty()) {
                 menuEntry = menuEntries[0]
                 breadcrumbs.add(0, Breadcrumb(menuEntry.name, menuEntry.url))
             } else break
         }
-        breadcrumbs.add(Breadcrumb(original.name, original.url))
+        breadcrumbs.add(Breadcrumb(original?.name, original?.url))
         return breadcrumbs
     }
 
@@ -214,7 +216,7 @@ class DAO : AddressBookDAO {
                     filter.value = filter.value?.substring(0, 10)
                     val tailLower = " 00:00:00.00000'"
                     val tailUpper = " 23:59:59.999999'"
-                    val format = "'YYYY-MM-DD HH24:MI:SS.US'";
+                    val format = "'YYYY-MM-DD HH24:MI:SS.US'"
                     when (filter.comparator) {
                         "=" -> {
                             addSql = filter.name + " BETWEEN TO_TIMESTAMP('" + filter.value + tailLower + " , " + format + ") AND TO_TIMESTAMP('" + filter.value + tailUpper + " , " + format + ")"
@@ -245,7 +247,7 @@ class DAO : AddressBookDAO {
     }
 
     private fun getComparator(filterDto: FilterDto): String {
-        return if (Objects.isNull(filterDto.comparator) || filterDto.comparator.equals(""))
+        return if (filterDto.comparator == null || filterDto.comparator.equals(""))
             " = "
         else " " + filterDto.comparator + " "
     }
@@ -256,16 +258,18 @@ class DAO : AddressBookDAO {
                 + " u " + getQuerySql(filterDto) + " order by " + sortName + " " + sortOrder + " "), UniversalFieldsDescriptor.getCacheClass(cacheName))
         typedQuery?.maxResults = pageSize
         typedQuery?.firstResult = (page - 1) * pageSize
-        val cursor = typedQuery?.resultList as List<*>
+        val cursor = typedQuery?.resultList
         val dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName)?.getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName))
-        for (e in cursor)
-            cacheDtoArrayList.add(dtoConstructor!!.newInstance(e))
+        if (cursor != null) {
+            for (e in cursor)
+                dtoConstructor?.newInstance(e)?.let { cacheDtoArrayList.add(it) }
+        }
         return cacheDtoArrayList
     }
 
     override fun getContactsByPersonId(id: String): List<ContactDto> {
         val cacheDtoArrayList = ArrayList<ContactDto>()
-        val typedQuery: TypedQuery<Contact>? = entityManager?.createQuery("SELECT u FROM Contact u WHERE u.personId=:id order by u.type asc ", Contact::class.java)
+        val typedQuery = entityManager?.createQuery("SELECT u FROM Contact u WHERE u.personId=:id order by u.type asc ", Contact::class.java)
         typedQuery?.setParameter("id", id)
         val contacts = typedQuery?.resultList as MutableList<Contact>
         for (e in contacts) cacheDtoArrayList.add(ContactDto(e))
@@ -274,6 +278,6 @@ class DAO : AddressBookDAO {
 
     override fun getTotalDataSize(cacheName: String, filterDto: List<FilterDto>): Int {
         val typedQuery = entityManager?.createQuery("SELECT count(u) FROM " + (UniversalFieldsDescriptor.getCacheClass(cacheName)?.simpleName + " u " + getQuerySql(filterDto)), Long::class.javaObjectType)
-        return typedQuery!!.singleResult.toInt()
+        return if (typedQuery != null && typedQuery.singleResult != null) typedQuery.singleResult.toInt() else return 0
     }
 }
