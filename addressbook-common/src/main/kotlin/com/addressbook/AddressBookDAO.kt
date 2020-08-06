@@ -1,4 +1,4 @@
-package com.addressbook;
+package com.addressbook
 
 import com.addressbook.dto.*
 import com.addressbook.model.User
