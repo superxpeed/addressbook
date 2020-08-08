@@ -11,7 +11,6 @@ import dev.morphia.query.FindOptions
 import dev.morphia.query.Query
 import dev.morphia.query.Sort
 import org.springframework.stereotype.Controller
-import java.lang.reflect.Constructor
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,7 +29,7 @@ class DAO : AddressBookDAO {
 
     @PostConstruct
     fun startClient() {
-        if (Objects.nonNull(mongoClient)) return
+        if (mongoClient != null) return
         mongoClient = MongoClient(System.getenv("MONGO_HOST"), Integer.parseInt(System.getenv("MONGO_PORT")))
         val morphia = Morphia()
         morphia.mapPackage("com.addressbook.model")
@@ -49,28 +48,28 @@ class DAO : AddressBookDAO {
 
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
         var organization = getById("id", organizationDto.id, Organization::class.java)
-        if (Objects.isNull(organization)) {
+        if (organization == null) {
             organization = Organization(organizationDto)
         }
-        organization?.type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
-        organization?.lastUpdated = Timestamp(System.currentTimeMillis())
-        organization?.name = organizationDto.name
-        organization?.addr = Address(organizationDto.street, organizationDto.zip)
+        organization.type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
+        organization.lastUpdated = Timestamp(System.currentTimeMillis())
+        organization.name = organizationDto.name
+        organization.addr = Address(organizationDto.street, organizationDto.zip)
         dataStore?.save(organization)
         return organizationDto
     }
 
     override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
-        var person = if (Objects.nonNull(personDto.id)) getById("id", personDto.id, Person::class.java) else null
-        if (Objects.isNull(person)) {
+        var person = if (personDto.id != null) getById("id", personDto.id, Person::class.java) else null
+        if (person == null) {
             person = Person()
             personDto.id = person.id
         }
-        person?.firstName = personDto.firstName
-        person?.lastName = personDto.lastName
-        person?.orgId = personDto.orgId
-        person?.salary = personDto.salary
-        person?.resume = personDto.resume
+        person.firstName = personDto.firstName
+        person.lastName = personDto.lastName
+        person.orgId = personDto.orgId
+        person.salary = personDto.salary
+        person.resume = personDto.resume
         dataStore?.save(person)
         return personDto
     }
@@ -83,11 +82,11 @@ class DAO : AddressBookDAO {
         for (contactDto in contactDtos) {
             contactDto.personId = personId
             var contact = getById("contactId", contactDto.id, Contact::class.java)
-            if (Objects.isNull(contact)) contact = Contact()
-            contact?.data = contactDto.data
-            contact?.description = contactDto.description
-            contact?.personId = contactDto.personId
-            contact?.type = ContactType.values()[Integer.parseInt(contactDto.type)]
+            if (contact == null) contact = Contact()
+            contact.data = contactDto.data
+            contact.description = contactDto.description
+            contact.personId = contactDto.personId
+            contact.type = ContactType.values()[Integer.parseInt(contactDto.type)]
             dataStore?.save(contact)
         }
         for (id in toDelete) {
@@ -98,38 +97,36 @@ class DAO : AddressBookDAO {
 
     override fun createOrUpdateUser(newUser: User): String {
         var user = getById("login", newUser.login, User::class.java)
-        if (Objects.nonNull(user)) {
-            user?.password = newUser.password
-            user?.roles = newUser.roles
+        if (user != null) {
+            user.password = newUser.password
+            user.roles = newUser.roles
         } else user = newUser
         dataStore?.save(user)
         return "OK"
     }
 
     override fun notLockedByUser(key: String, user: String): Boolean {
-        val userLocked = getById("id", key, Lock::class.java)
-        if (Objects.isNull(userLocked)) return false
-        return user != userLocked?.login
+        val userLocked = getById("id", key, Lock::class.java) ?: return false
+        return user != userLocked.login
     }
 
     override fun ifOrganizationExists(key: String): Boolean {
-        return Objects.nonNull(getById("id", key, Organization::class.java))
+        return getById("id", key, Organization::class.java) != null
     }
 
     override fun ifPersonExists(key: String): Boolean {
-        return Objects.nonNull(getById("id", key, Person::class.java))
+        return getById("id", key, Person::class.java) != null
     }
 
     override fun ifContactExists(key: String): Boolean {
-        return Objects.nonNull(getById("contactId", key, Contact::class.java))
+        return getById("contactId", key, Contact::class.java) != null
     }
 
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         if (lock) {
             dataStore?.save(Lock(key, user))
         } else {
-            val userLocked = getById("id", key, Lock::class.java)
-            if (Objects.isNull(userLocked)) return false
+            val userLocked = getById("id", key, Lock::class.java) ?: return false
             dataStore?.delete(userLocked)
         }
         return true
@@ -150,19 +147,19 @@ class DAO : AddressBookDAO {
     }
 
     override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {
-        val menuEntry = if (Objects.nonNull(menuEntryDto.id)) getById("id", menuEntryDto.id, MenuEntry::class.java) else MenuEntry()
+        val menuEntry = if (menuEntryDto.id != null) getById("id", menuEntryDto.id, MenuEntry::class.java) else MenuEntry()
         menuEntry?.name = menuEntryDto.name
         menuEntry?.url = menuEntryDto.url
         menuEntry?.roles = menuEntryDto.roles
-        if (Objects.nonNull(parentEntryId)) menuEntry?.parentId = parentEntryId
+        if (parentEntryId != null) menuEntry?.parentId = parentEntryId
         menuEntryDto.id = menuEntry?.id
         dataStore?.save(menuEntry)
         return menuEntryDto
     }
 
     private fun checkIfMenuExists(url: String): List<MenuEntry>? {
-        val entries = dataStore?.createQuery(MenuEntry::class.java)?.field("url")?.equal(url)?.find()?.toList() as List<MenuEntry>
-        if (entries.isEmpty()) throw IllegalArgumentException("Menu with url: $url doesn't exist")
+        val entries = dataStore?.createQuery(MenuEntry::class.java)?.field("url")?.equal(url)?.find()?.toList()
+        if (entries != null && entries.isEmpty()) throw IllegalArgumentException("Menu with url: $url doesn't exist")
         return entries
     }
 
@@ -170,12 +167,14 @@ class DAO : AddressBookDAO {
         val entries = checkIfMenuExists(url)
         val menuEntry = entries?.get(0)
         val menuEntryDtos = ArrayList<MenuEntryDto>()
-        val cursor = dataStore?.createQuery(MenuEntry::class.java)?.field("parentId")?.equal(menuEntry?.id)?.find()?.toList() as MutableList<MenuEntry>
-        for (e in cursor) {
-            for (authority in authorities) {
-                if (Objects.nonNull(e.roles) && e.roles!!.contains(authority.replace("ROLE_", ""))) {
-                    menuEntryDtos.add(MenuEntryDto(e))
-                    break
+        val cursor = dataStore?.createQuery(MenuEntry::class.java)?.field("parentId")?.equal(menuEntry?.id)?.find()?.toList()
+        if (cursor != null) {
+            for (e in cursor) {
+                for (authority in authorities) {
+                    if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
+                        menuEntryDtos.add(MenuEntryDto(e))
+                        break
+                    }
                 }
             }
         }
@@ -188,7 +187,7 @@ class DAO : AddressBookDAO {
         var menuEntry = original as MenuEntry
         var menuEntries: MutableList<MenuEntry>
         val breadcrumbs = ArrayList<Breadcrumb>()
-        if (Objects.isNull(menuEntry.parentId)) return breadcrumbs
+        if (menuEntry.parentId == null) return breadcrumbs
         while (true) {
             menuEntries = dataStore?.createQuery(MenuEntry::class.java)?.field("id")?.equal(menuEntry.parentId)?.find()?.toList() as MutableList<MenuEntry>
             if (menuEntries.isNotEmpty()) {
@@ -224,7 +223,7 @@ class DAO : AddressBookDAO {
                     filter.value = filter.value?.substring(0, 10)
                     val dateBefore = dateFormatEqual.parse(filter.value + "T00:00:00")
                     val dateAfter = dateFormatEqual.parse(filter.value + "T23:59:59")
-                    val dateOther = dateFormatOther.parse(filter.value);
+                    val dateOther = dateFormatOther.parse(filter.value)
                     when (filter.comparator) {
                         "=" -> {
                             temp = temp?.field(filter.name)
@@ -278,24 +277,28 @@ class DAO : AddressBookDAO {
         val cursor = query?.find(FindOptions()
                 .skip(((page - 1) * pageSize))
                 .limit(pageSize))?.toList()
-        val dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName)?.getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName)) as Constructor
-        for (e in cursor!!)
-            cacheDtoArrayList.add(dtoConstructor.newInstance(e))
+        val dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName)?.getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName))
+        if (cursor != null) {
+            for (e in cursor)
+                dtoConstructor?.newInstance(e)?.let { cacheDtoArrayList.add(it) }
+        }
         return cacheDtoArrayList
     }
 
     override fun getContactsByPersonId(id: String): List<ContactDto> {
         val cacheDtoArrayList = ArrayList<ContactDto>()
-        val contacts = dataStore?.createQuery(Contact::class.java)?.field("personId")?.equal(id)?.order(Sort.ascending("type"))?.find()?.toList() as List<Contact>
-        for (e in contacts) cacheDtoArrayList.add(ContactDto(e))
+        val contacts = dataStore?.createQuery(Contact::class.java)?.field("personId")?.equal(id)?.order(Sort.ascending("type"))?.find()?.toList()
+        if (contacts != null) {
+            for (e in contacts) cacheDtoArrayList.add(ContactDto(e))
+        }
         return cacheDtoArrayList
     }
 
     override fun getTotalDataSize(cacheName: String, filterDto: List<FilterDto>): Int {
         return if (filterDto.isEmpty()) {
-            dataStore?.createQuery(UniversalFieldsDescriptor.getCacheClass(cacheName))!!.count().toInt()
+            dataStore?.createQuery(UniversalFieldsDescriptor.getCacheClass(cacheName))?.count()?.toInt() as Int
         } else {
-            getQuerySql(filterDto, dataStore?.createQuery(UniversalFieldsDescriptor.getCacheClass(cacheName)))!!.count().toInt()
+            getQuerySql(filterDto, dataStore?.createQuery(UniversalFieldsDescriptor.getCacheClass(cacheName)))?.count()?.toInt() as Int
         }
     }
 

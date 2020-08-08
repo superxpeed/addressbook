@@ -2,9 +2,9 @@ package com.addressbook.rest
 
 import com.addressbook.UniversalFieldsDescriptor
 import com.addressbook.aop.LogExecutionTime
+import com.addressbook.dao.DaoClient
 import com.addressbook.dto.*
 import com.addressbook.exception.LockRecordException
-import com.addressbook.dao.DaoClient
 import com.addressbook.model.Organization
 import com.addressbook.model.Person
 import com.addressbook.model.User
@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.util.*
 import java.util.concurrent.CompletableFuture
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -124,7 +123,7 @@ class MainController {
     @GetMapping("/logout")
     fun logoutPage(request: HttpServletRequest, response: HttpServletResponse): String {
         val auth = SecurityContextHolder.getContext().authentication
-        if (Objects.nonNull(auth)) {
+        if (auth != null) {
             daoDao.unlockAllRecordsForUser(auth.name)
             SecurityContextLogoutHandler().logout(request, response, auth)
         }

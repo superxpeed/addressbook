@@ -11,7 +11,6 @@ import org.apache.ignite.cache.CacheAtomicityMode
 import org.apache.ignite.cache.CacheMode
 import org.apache.ignite.cache.CachePeekMode
 import org.apache.ignite.cache.CacheWriteSynchronizationMode
-import org.apache.ignite.cache.query.QueryCursor
 import org.apache.ignite.cache.query.ScanQuery
 import org.apache.ignite.cache.query.SqlQuery
 import org.apache.ignite.configuration.CacheConfiguration
@@ -36,7 +35,7 @@ class DAO : AddressBookDAO {
 
     @PostConstruct
     fun startClient() {
-        if (Objects.nonNull(ignite)) return
+        if (ignite != null) return
         val igniteConfiguration = IgniteConfiguration()
         igniteConfiguration.isPeerClassLoadingEnabled = true
         igniteConfiguration.setIncludeEventTypes(org.apache.ignite.events.EventType.EVT_TASK_STARTED,
@@ -65,7 +64,7 @@ class DAO : AddressBookDAO {
             cfg.writeSynchronizationMode = CacheWriteSynchronizationMode.FULL_SYNC
             cfg.setIndexedTypes(String::class.java, cache.value)
             val createdCache: IgniteCache<String, Any>? = ignite?.getOrCreateCache(cfg)
-            if (ignite?.cluster()?.forDataNodes(createdCache?.name)?.nodes()?.isEmpty()!!) {
+            if (ignite?.cluster()?.forDataNodes(createdCache?.name)?.nodes()?.isEmpty() as Boolean) {
                 logger.info("")
                 logger.info(">>> Please start at least 1 remote cache node.")
                 logger.info("")
@@ -74,169 +73,170 @@ class DAO : AddressBookDAO {
     }
 
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
-        val cacheOrganization: IgniteCache<String, Organization> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)!!
-        var organization = cacheOrganization.get(organizationDto.id)
-        if (Objects.isNull(organization)) {
+        val cacheOrganization: IgniteCache<String, Organization>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)
+        var organization = cacheOrganization?.get(organizationDto.id)
+        if (organization == null) {
             organization = Organization(organizationDto)
         }
         organization.type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
         organization.lastUpdated = Timestamp(System.currentTimeMillis())
         organization.name = organizationDto.name
         organization.addr = Address(organizationDto.street, organizationDto.zip)
-        cacheOrganization.put(organization.id, organization)
+        cacheOrganization?.put(organization.id, organization)
         return organizationDto
     }
 
     override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
-        val cachePerson: IgniteCache<String, Person> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE)!!
-        var person = if (Objects.nonNull(personDto.id)) cachePerson.get(personDto.id) else null
-        if (Objects.isNull(person)) {
+        val cachePerson: IgniteCache<String, Person>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE)
+        var person = if (personDto.id != null) cachePerson?.get(personDto.id) else null
+        if (person == null) {
             person = Person()
             personDto.id = person.id
         }
-        person?.firstName = personDto.firstName
-        person?.lastName = personDto.lastName
-        person?.orgId = personDto.orgId
-        person?.salary = personDto.salary
-        person?.resume = personDto.resume
-        cachePerson.put(person?.id, person)
+        person.firstName = personDto.firstName
+        person.lastName = personDto.lastName
+        person.orgId = personDto.orgId
+        person.salary = personDto.salary
+        person.resume = personDto.resume
+        cachePerson?.put(person.id, person)
         return personDto
     }
 
     override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, personId: String): List<ContactDto> {
         if (contactDtos.isEmpty()) return contactDtos
-        val cacheContacts: IgniteCache<String, Contact> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)!!
-        var toDelete: List<String> = getContactsByPersonId(personId).mapNotNull { it.id }
-        val updated: List<String> = contactDtos.mapNotNull { it.id }
+        val cacheContacts: IgniteCache<String, Contact>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)
+        var toDelete = getContactsByPersonId(personId).mapNotNull { it.id }
+        val updated = contactDtos.mapNotNull { it.id }
         toDelete = toDelete.minus(updated)
         val transactions = ignite?.transactions()
         val tx = transactions?.txStart()
         for (contactDto in contactDtos) {
             contactDto.personId = personId
-            var contact = cacheContacts.get(contactDto.id)
-            if (Objects.isNull(contact)) contact = Contact()
+            var contact = cacheContacts?.get(contactDto.id)
+            if (contact == null) contact = Contact()
             contact.data = contactDto.data
             contact.description = contactDto.description
             contact.personId = contactDto.personId
             contact.type = ContactType.values()[Integer.parseInt(contactDto.type)]
-            cacheContacts.put(contact.contactId, contact)
+            cacheContacts?.put(contact.contactId, contact)
         }
-        for (id in toDelete) cacheContacts.remove(id)
+        for (id in toDelete) cacheContacts?.remove(id)
         tx?.commit()
         tx?.close()
         return contactDtos
     }
 
     override fun createOrUpdateUser(newUser: User): String {
-        val cacheUser: IgniteCache<String, User> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE)!!
-        var user = cacheUser.get(newUser.login)
-        if (Objects.nonNull(user)) {
+        val cacheUser: IgniteCache<String, User>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE)
+        var user = cacheUser?.get(newUser.login)
+        if (user != null) {
             user.password = newUser.password
             user.roles = newUser.roles
         } else user = newUser
-        cacheUser.put(user.login, user)
+        cacheUser?.put(user.login, user)
         return "OK"
     }
 
     override fun notLockedByUser(key: String, user: String): Boolean {
-        val cacheLocks: IgniteCache<String, Lock> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
-        val userLocked = cacheLocks.get(key)
-        if(Objects.isNull(userLocked)) return false
+        val cacheLocks: IgniteCache<String, Lock>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)
+        val userLocked = cacheLocks?.get(key) ?: return false
         return user != userLocked.login
     }
 
     override fun ifOrganizationExists(key: String): Boolean {
-        val cacheOrganization: IgniteCache<String, Organization> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)!!
-        return Objects.nonNull(cacheOrganization.get(key))
+        val cacheOrganization: IgniteCache<String, Organization>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.ORGANIZATION_CACHE)
+        return cacheOrganization?.get(key) != null
     }
 
     override fun ifPersonExists(key: String): Boolean {
-        val cachePerson: IgniteCache<String, Person> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE)!!
-        return Objects.nonNull(cachePerson.get(key))
+        val cachePerson: IgniteCache<String, Person>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.PERSON_CACHE)
+        return cachePerson?.get(key) != null
     }
 
     override fun ifContactExists(key: String): Boolean {
-        val cacheContacts: IgniteCache<String, Contact> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)!!
-        return Objects.nonNull(cacheContacts.get(key))
+        val cacheContacts: IgniteCache<String, Contact>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)
+        return cacheContacts?.get(key) != null
     }
 
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
-        val cacheLocks: IgniteCache<String, Lock> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
-        return if (lock) cacheLocks.putIfAbsent(key, Lock(key, user)) else cacheLocks.remove(key, Lock(key, user))
+        val cacheLocks: IgniteCache<String, Lock>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)
+        return if (lock) cacheLocks?.putIfAbsent(key, Lock(key, user)) as Boolean else cacheLocks?.remove(key, Lock(key, user)) as Boolean
     }
 
     override fun unlockAllRecordsForUser(user: String): String {
-        val cacheLocks: IgniteCache<String, Lock> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)!!
-        cacheLocks.removeAll(HashSet(cacheLocks.query(ScanQuery { _, v -> v.login == user }, Cache.Entry<String, Lock>::getKey).all))
+        val cacheLocks: IgniteCache<String, Lock>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.LOCK_RECORD_CACHE)
+        cacheLocks?.removeAll(HashSet(cacheLocks.query(ScanQuery { _, v -> v.login == user }, Cache.Entry<String, Lock>::getKey).all))
         return "OK"
     }
 
     override fun getUserByLogin(login: String): User? {
-        val cacheUser: IgniteCache<String, User> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE)!!
-        return cacheUser.get(login)
+        val cacheUser: IgniteCache<String, User>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.USER_CACHE)
+        return cacheUser?.get(login)
     }
 
     override fun clearMenus(): String {
-        val cacheMenu: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
-        cacheMenu.clear()
+        val cacheMenu: IgniteCache<String, MenuEntry>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)
+        cacheMenu?.clear()
         return "OK"
     }
 
     override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {
-        val cachePerson: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
+        val cachePerson: IgniteCache<String, MenuEntry>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)
         val menuEntry: MenuEntry?
-        menuEntry = if (Objects.nonNull(menuEntryDto.id)) cachePerson.get(menuEntryDto.id) else MenuEntry()
+        menuEntry = if (menuEntryDto.id != null) cachePerson?.get(menuEntryDto.id) else MenuEntry()
         menuEntry?.name = menuEntryDto.name
         menuEntry?.url = menuEntryDto.url
         menuEntry?.roles = menuEntryDto.roles
-        if (Objects.nonNull(parentEntryId)) menuEntry?.parentId = parentEntryId
+        if (parentEntryId != null) menuEntry?.parentId = parentEntryId
         menuEntryDto.id = menuEntry?.id
-        cachePerson.put(menuEntry?.id, menuEntry)
+        cachePerson?.put(menuEntry?.id, menuEntry)
         return menuEntryDto
     }
 
-    private fun checkIfMenuExists(menuCache: IgniteCache<String, MenuEntry>, url: String): List<Cache.Entry<String, MenuEntry>> {
-        val entries: MutableList<Cache.Entry<String, MenuEntry>> = menuCache.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "url = ?").setArgs(url)).all!!
-        if (entries.isEmpty()) throw IllegalArgumentException("Menu with url: $url doesn't exist")
+    private fun checkIfMenuExists(menuCache: IgniteCache<String, MenuEntry>?, url: String): List<Cache.Entry<String, MenuEntry>>? {
+        val entries = menuCache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "url = ?").setArgs(url))?.all
+        if (entries != null && entries.isEmpty()) throw IllegalArgumentException("Menu with url: $url doesn't exist")
         return entries
     }
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
-        val cache: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
-        val entries: List<Cache.Entry<String, MenuEntry>> = checkIfMenuExists(cache, url)
-        val menuEntry: MenuEntry = entries[0].value
-        val sql: SqlQuery<String, MenuEntry> = SqlQuery(MenuEntry::class.java, "parentId = ?")
+        val cache: IgniteCache<String, MenuEntry>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)
+        val entries = checkIfMenuExists(cache, url)
+        val menuEntry = entries?.get(0)?.value
+        val sql = SqlQuery<String, MenuEntry>(MenuEntry::class.java, "parentId = ?")
         val menuEntryDtos = ArrayList<MenuEntryDto>()
-        val cursor: QueryCursor<Cache.Entry<String, MenuEntry>> = cache.query(sql.setArgs(menuEntry.id))
-        for (e in cursor) {
-            for (authority in authorities) {
-                if (Objects.nonNull(e.value.roles) && e.value.roles!!.contains(authority.replace("ROLE_", ""))) {
-                    menuEntryDtos.add(MenuEntryDto(e.value))
-                    break
+        val cursor = cache?.query(sql.setArgs(menuEntry?.id))
+        if (cursor != null) {
+            for (e in cursor) {
+                for (authority in authorities) {
+                    if (e.value.roles != null && e.value.roles!!.contains(authority.replace("ROLE_", ""))) {
+                        menuEntryDtos.add(MenuEntryDto(e.value))
+                        break
+                    }
                 }
             }
         }
-        cursor.close()
+        cursor?.close()
         return menuEntryDtos
     }
 
     override fun readBreadcrumbs(url: String): List<Breadcrumb> {
-        val cache: IgniteCache<String, MenuEntry> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)!!
-        val entries: List<Cache.Entry<String, MenuEntry>> = checkIfMenuExists(cache, url)
-        val original: MenuEntry = entries[0].value
-        var menuEntry: MenuEntry = original
+        val cache: IgniteCache<String, MenuEntry>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.MENU_CACHE)
+        val entries = checkIfMenuExists(cache, url)
+        val original = entries?.get(0)?.value
+        var menuEntry = original
         var menuEntries: List<Cache.Entry<String, MenuEntry>>
         val breadcrumbs = ArrayList<Breadcrumb>()
-        if (Objects.isNull(menuEntry.parentId)) return breadcrumbs
+        if (menuEntry?.parentId == null) return breadcrumbs
         val sql = SqlQuery<String, MenuEntry>(MenuEntry::class.java, "id = ?")
         while (true) {
-            menuEntries = cache.query(sql.setArgs(menuEntry.parentId)).all
+            menuEntries = cache?.query(sql.setArgs(menuEntry?.parentId))?.all as List<Cache.Entry<String, MenuEntry>>
             if (menuEntries.isNotEmpty()) {
                 menuEntry = menuEntries[0].value
                 breadcrumbs.add(0, Breadcrumb(menuEntry.name, menuEntry.url))
             } else break
         }
-        breadcrumbs.add(Breadcrumb(original.name, original.url))
+        breadcrumbs.add(Breadcrumb(original?.name, original?.url))
         return breadcrumbs
     }
 
@@ -261,7 +261,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun selectCachePage(page: Int, pageSize: Int, sortName: String, sortOrder: String, filterDto: List<FilterDto>, cacheName: String): List<Any> {
-        val cache: IgniteCache<String, Any> = ignite?.getOrCreateCache(cacheName)!!
+        val cache: IgniteCache<String, Any>? = ignite?.getOrCreateCache(cacheName)
         val cacheDtoArrayList = ArrayList<Any>()
         val sql = SqlQuery<String, Any>(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
                 .append(" order by ")
@@ -269,39 +269,43 @@ class DAO : AddressBookDAO {
                 .append(sortOrder)
                 .append(" limit ? offset ?")
                 .toString())
-        val cursor = cache.query(sql.setArgs(pageSize, (page - 1) * pageSize))
+        val cursor = cache?.query(sql.setArgs(pageSize, (page - 1) * pageSize))
         val dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName)?.getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName))
-        for (e in cursor)
-            cacheDtoArrayList.add(dtoConstructor!!.newInstance(e.value))
-        cursor.close()
+        if (cursor != null) {
+            for (e in cursor)
+                dtoConstructor?.newInstance(e.value)?.let { cacheDtoArrayList.add(it) }
+        }
+        cursor?.close()
         return cacheDtoArrayList
     }
 
     override fun getContactsByPersonId(id: String): List<ContactDto> {
-        val cache: IgniteCache<String, Contact> = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)!!
+        val cache: IgniteCache<String, Contact>? = ignite?.getOrCreateCache(UniversalFieldsDescriptor.CONTACT_CACHE)
         val cacheDtoArrayList = ArrayList<ContactDto>()
         val sql = SqlQuery<String, Contact>(Contact::class.java, "personId = ? order by type")
-        val cursor: QueryCursor<Cache.Entry<String, Contact>> = cache.query(sql.setArgs(id))
-        for (e in cursor) cacheDtoArrayList.add(ContactDto(e.value))
-        cursor.close()
+        val cursor = cache?.query(sql.setArgs(id))
+        if (cursor != null) {
+            for (e in cursor) cacheDtoArrayList.add(ContactDto(e.value))
+        }
+        cursor?.close()
         return cacheDtoArrayList
     }
 
     private fun getComparator(filterDto: FilterDto): String {
-        return if (Objects.isNull(filterDto.comparator) || filterDto.comparator.equals(""))
+        return if (filterDto.comparator == null || filterDto.comparator.equals(""))
             " = "
         else " " + filterDto.comparator + " "
     }
 
     override fun getTotalDataSize(cacheName: String, filterDto: List<FilterDto>): Int {
         if (filterDto.isEmpty()) {
-            val cache: IgniteCache<Any, Any> = ignite?.getOrCreateCache(cacheName)!!
-            return cache.size(CachePeekMode.ALL)
+            val cache: IgniteCache<Any, Any>? = ignite?.getOrCreateCache(cacheName)
+            return cache?.size(CachePeekMode.ALL) as Int
         }
-        val cache: IgniteCache<String, Any> = ignite?.getOrCreateCache(cacheName)!!
+        val cache: IgniteCache<String, Any>? = ignite?.getOrCreateCache(cacheName)
         val sql = SqlQuery<String, Any>(UniversalFieldsDescriptor.getCacheClass(cacheName), getQuerySql(filterDto).toString())
-        val cursor = cache.query(sql)
-        val size = cursor.all.size
+        val cursor = cache?.query(sql)
+        val size = cursor?.all?.size as Int
         cursor.close()
         return size
     }
