@@ -13,3 +13,7 @@ spring:
     name: addressbook
 dao:
   implementation:${DAO_IMPLEMENTATION}
+management:
+  endpoint:
+    health:
+      enabled: true

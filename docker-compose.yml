@@ -1,14 +1,24 @@
-version: '2'
+version: '3'
 
 services:
   eureka:
     build: eureka-server/.
     ports:
       - "7777:7777"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "localhost:7777/actuator/health 2>&1 | grep UP || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
   ignite:
     build: ignite-server/.
     ports:
       - "11000:10000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "localhost:10000/actuator/health 2>&1 | grep UP || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
   mongo:
     build: mongo-server/.
     ports:
@@ -16,6 +26,11 @@ services:
     environment:
       - MONGO_HOST=host.docker.internal
       - MONGO_PORT=27017
+    healthcheck:
+      test: ["CMD", "curl", "-f", "localhost:10000/actuator/health 2>&1 | grep UP || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
   posgre:
     build: postgre-server/.
     environment:
@@ -26,9 +41,30 @@ services:
       - POSTGRES_PASSWORD=test
     ports:
       - "13000:10000"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "localhost:10000/actuator/health 2>&1 | grep UP || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
   web:
     build: addressbook-main/.
     ports:
       - "10000:9000"
     environment:
       - DAO_IMPLEMENTATION=mongo-server
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "localhost:9000/actuator/health 2>&1 | grep UP || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      - eureka
+      - posgre
+      - mongo
+      - ignite
+    links:
+      - eureka
+      - posgre
+      - mongo
+      - ignite

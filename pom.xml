@@ -19,6 +19,7 @@
 
     <properties>
         <spring.version>5.2.8.RELEASE</spring.version>
+        <spring.boot.version>2.2.4.RELEASE</spring.boot.version>
         <spring.security.version>5.2.2.RELEASE</spring.security.version>
         <lucene.version>7.5.0</lucene.version>
         <ignite.version>2.7.0</ignite.version>
@@ -121,6 +122,11 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
                 <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>
