@@ -3,8 +3,9 @@ package com.addressbook.model
 import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.io.Serializable
 
-@dev.morphia.annotations.Entity("locks")
 @javax.persistence.Entity
+@javax.persistence.Table(name = "locks")
+@dev.morphia.annotations.Entity("locks")
 class Lock(@javax.persistence.Id
            @dev.morphia.annotations.Id
            @QuerySqlField(index = true) var id: String?,

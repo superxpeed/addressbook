@@ -6,8 +6,9 @@ import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.sql.Timestamp
 import java.util.*
 
-@dev.morphia.annotations.Entity("organizations")
 @javax.persistence.Entity
+@javax.persistence.Table(name = "organizations")
+@dev.morphia.annotations.Entity("organizations")
 class Organization constructor(id: String?, name: String?, addr: Address?, type: OrganizationType?, lastUpdated: Timestamp?) {
 
     @dev.morphia.annotations.Id

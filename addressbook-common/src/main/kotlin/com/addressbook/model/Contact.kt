@@ -3,8 +3,9 @@ package com.addressbook.model
 import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.util.*
 
-@dev.morphia.annotations.Entity("contacts")
 @javax.persistence.Entity
+@javax.persistence.Table(name = "contacts")
+@dev.morphia.annotations.Entity("contacts")
 class Contact(@QuerySqlField(index = true) var personId: String?,
               @QuerySqlField(index = true) var type: ContactType?,
               @QuerySqlField(index = true) var data: String?,

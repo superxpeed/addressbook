@@ -4,8 +4,9 @@ import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.io.Serializable
 import java.util.*
 
-@dev.morphia.annotations.Entity("persons")
 @javax.persistence.Entity
+@javax.persistence.Table(name = "persons")
+@dev.morphia.annotations.Entity("persons")
 class Person : Serializable {
 
     @dev.morphia.annotations.Id

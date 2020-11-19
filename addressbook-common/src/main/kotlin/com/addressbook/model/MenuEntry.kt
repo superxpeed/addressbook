@@ -4,8 +4,9 @@ import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.util.*
 import javax.persistence.ElementCollection
 
-@dev.morphia.annotations.Entity("menus")
 @javax.persistence.Entity
+@javax.persistence.Table(name = "menus")
+@dev.morphia.annotations.Entity("menus")
 class MenuEntry {
 
     @dev.morphia.annotations.Id
