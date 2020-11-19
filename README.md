@@ -91,3 +91,26 @@ GRANT ALL ON SCHEMA test TO test;
 
 ### Swagger2 DPL: http://localhost:11000/swagger-ui.html
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/swagger-dao.png" width="700"/>  
+
+
+### How to use CDS:
+
+```sh
+"C:\Java\BellSoft\LibericaJDK-14\bin\java.exe" -Xlog:cds=debug -Xshare:off -XX:DumpLoadedClassList=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka.lst -jar C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-server\target\eureka-server.jar com.addressbook.eureka.EurekaMain
+```
+```sh
+"C:\Java\BellSoft\LibericaJDK-14\bin\java.exe" -Xlog:cds=debug -Xshare:dump -XX:SharedClassListFile=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka.lst -XX:SharedArchiveFile=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka.jsa -jar C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-server\target\eureka-server.jar com.addressbook.eureka.EurekaMain
+```
+```sh
+"C:\Java\BellSoft\LibericaJDK-14\bin\java.exe" -Xlog:cds=debug -Xshare:on -XX:SharedArchiveFile=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka.jsa -XX:ArchiveClassesAtExit=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-ext.jsa -jar C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-server\target\eureka-server.jar com.addressbook.eureka.EurekaMain 
+```
+```sh
+"C:\Java\BellSoft\LibericaJDK-14\bin\java.exe" -Xlog:cds=debug -Xshare:on -XX:SharedArchiveFile=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-ext.jsa -jar C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-server\target\eureka-server.jar com.addressbook.eureka.EurekaMain 
+```
+
+### How CDS affects statup time:  
+#### Before
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/cds-without.PNG" width="900"/>  
+
+#### After
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/cds-with.PNG" width="900"/>  
