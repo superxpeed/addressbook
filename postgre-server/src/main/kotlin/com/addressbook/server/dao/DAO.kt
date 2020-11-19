@@ -135,7 +135,7 @@ class DAO : AddressBookDAO {
     @Transactional
     override fun clearMenus(): String {
         entityManager?.createNativeQuery("DELETE FROM menu_entry_roles")?.executeUpdate()
-        entityManager?.createNativeQuery("DELETE FROM menu_entry")?.executeUpdate()
+        entityManager?.createNativeQuery("DELETE FROM menus")?.executeUpdate()
         return "OK"
     }
 

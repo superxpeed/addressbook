@@ -46,8 +46,6 @@ export default class LoginForm extends React.Component {
   };
 
   login = () => {
-    console.log("Login" + this.state.login);
-    console.log("Password" + this.state.password);
     let status;
     let headers = new Headers();
     headers.append("Content-Type", "application/x-www-form-urlencoded");
@@ -112,7 +110,7 @@ export default class LoginForm extends React.Component {
             />
             <FormControl
               style={{ marginTop: "5px" }}
-              type="text"
+              type="password"
               value={this.state.password}
               placeholder={"Enter password"}
               id="password"
