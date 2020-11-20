@@ -3,82 +3,64 @@ package com.addressbook
 import com.addressbook.dto.*
 import com.addressbook.model.User
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RequestMethod
 
+@ResponseBody
 interface AddressBookDAO {
 
-    @ResponseBody
-    @RequestMapping("/createOrUpdateOrganization", method = [RequestMethod.POST])
+    @PostMapping("/createOrUpdateOrganization")
     fun createOrUpdateOrganization(@RequestBody organizationDto: OrganizationDto, @RequestParam user: String): OrganizationDto
 
-    @ResponseBody
-    @RequestMapping("/createOrUpdatePerson", method = [RequestMethod.POST])
+    @PostMapping("/createOrUpdatePerson")
     fun createOrUpdatePerson(@RequestBody personDto: PersonDto, @RequestParam user: String): PersonDto
 
-    @ResponseBody
-    @RequestMapping("/createOrUpdateContacts", method = [RequestMethod.POST])
+    @PostMapping("/createOrUpdateContacts")
     fun createOrUpdateContacts(@RequestBody contactDtos: List<ContactDto>, @RequestParam user: String, @RequestParam personId: String): List<ContactDto>
 
-    @ResponseBody
-    @RequestMapping("/createOrUpdateUser", method = [RequestMethod.POST])
+    @PostMapping("/createOrUpdateUser")
     fun createOrUpdateUser(@RequestBody newUser: User): String
 
-    @ResponseBody
-    @RequestMapping("/lockUnlockRecord", method = [RequestMethod.POST])
+    @PostMapping("/lockUnlockRecord")
     fun lockUnlockRecord(@RequestParam key: String, @RequestParam user: String, @RequestParam lock: Boolean): Boolean
 
-    @ResponseBody
-    @RequestMapping("/unlockAllRecordsForUser", method = [RequestMethod.POST])
+    @PostMapping("/unlockAllRecordsForUser")
     fun unlockAllRecordsForUser(@RequestParam user: String): String
 
-    @ResponseBody
-    @RequestMapping("/getUserByLogin", method = [RequestMethod.POST])
+    @PostMapping("/getUserByLogin")
     fun getUserByLogin(@RequestParam login: String): User?
 
-    @ResponseBody
-    @RequestMapping("/clearMenus", method = [RequestMethod.POST])
+    @PostMapping("/clearMenus")
     fun clearMenus(): String
 
-    @ResponseBody
-    @RequestMapping("/createOrUpdateMenuEntry", method = [RequestMethod.POST])
+    @PostMapping("/createOrUpdateMenuEntry")
     fun createOrUpdateMenuEntry(@RequestBody menuEntryDto: MenuEntryDto, @RequestParam parentEntryId: String?): MenuEntryDto
 
-    @ResponseBody
-    @RequestMapping("/readNextLevel", method = [RequestMethod.POST])
+    @PostMapping("/readNextLevel")
     fun readNextLevel(@RequestParam url: String, @RequestBody authorities: List<String>): List<MenuEntryDto>
 
-    @ResponseBody
-    @RequestMapping("/readBreadcrumbs", method = [RequestMethod.POST])
+    @PostMapping("/readBreadcrumbs")
     fun readBreadcrumbs(@RequestParam url: String): List<Breadcrumb>
 
-    @ResponseBody
-    @RequestMapping("/selectCachePage", method = [RequestMethod.POST])
+    @PostMapping("/selectCachePage")
     fun selectCachePage(@RequestParam page: Int, @RequestParam pageSize: Int, @RequestParam sortName: String, @RequestParam sortOrder: String, @RequestBody filterDto: List<FilterDto>, @RequestParam cacheName: String): List<Any>
 
-    @ResponseBody
-    @RequestMapping("/getContactsByPersonId", method = [RequestMethod.POST])
+    @PostMapping("/getContactsByPersonId")
     fun getContactsByPersonId(@RequestParam id: String): List<ContactDto>
 
-    @ResponseBody
-    @RequestMapping("/getTotalDataSize", method = [RequestMethod.POST])
+    @PostMapping("/getTotalDataSize")
     fun getTotalDataSize(@RequestParam cacheName: String, @RequestBody filterDto: List<FilterDto>): Int
 
-    @ResponseBody
-    @RequestMapping("/notLockedByUser", method = [RequestMethod.POST])
+    @PostMapping("/notLockedByUser")
     fun notLockedByUser(@RequestParam key: String, @RequestParam user: String): Boolean
 
-    @ResponseBody
-    @RequestMapping("/ifOrganizationExists", method = [RequestMethod.POST])
+    @PostMapping("/ifOrganizationExists")
     fun ifOrganizationExists(@RequestParam key: String): Boolean
 
-    @ResponseBody
-    @RequestMapping("/ifPersonExists", method = [RequestMethod.POST])
+    @PostMapping("/ifPersonExists")
     fun ifPersonExists(@RequestParam key: String): Boolean
 
-    @ResponseBody
-    @RequestMapping("/ifContactExists", method = [RequestMethod.POST])
+    @PostMapping("/ifContactExists")
     fun ifContactExists(@RequestParam key: String): Boolean
 }
