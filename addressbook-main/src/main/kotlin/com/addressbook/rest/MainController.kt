@@ -1,7 +1,8 @@
 package com.addressbook.rest
 
 import com.addressbook.UniversalFieldsDescriptor
-import com.addressbook.aop.LogExecutionTime
+import com.addressbook.annotations.LoggedGetRequest
+import com.addressbook.annotations.LoggedPostRequest
 import com.addressbook.dao.DaoClient
 import com.addressbook.dto.*
 import com.addressbook.exception.LockRecordException
@@ -30,8 +31,7 @@ class MainController {
     @Autowired
     lateinit var daoDao: DaoClient
 
-    @LogExecutionTime
-    @PostMapping("/getList4UniversalListForm")
+    @LoggedPostRequest("/getList4UniversalListForm")
     fun getList(@RequestParam(value = "start") start: Int,
                 @RequestParam(value = "pageSize") pageSize: Int,
                 @RequestParam(value = "sortName") sortName: String,
@@ -43,16 +43,14 @@ class MainController {
         }
     }
 
-    @LogExecutionTime
-    @PostMapping("/getContactList")
+    @LoggedPostRequest("/getContactList")
     fun getContactList(@RequestParam(value = "personId") id: String): CompletableFuture<PageDataDto<TableDataDto<ContactDto>>> {
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(TableDataDto(daoDao.getContactsByPersonId(id)))
         }
     }
 
-    @LogExecutionTime
-    @PostMapping("/saveOrCreatePerson")
+    @LoggedPostRequest("/saveOrCreatePerson")
     fun saveOrCreatePerson(@RequestBody personDto: PersonDto): CompletableFuture<PageDataDto<PersonDto>> {
         val login = currentUser.userName
         if (daoDao.ifPersonExists(personDto.id!!) && daoDao.notLockedByUser(Person::class.java.name + personDto.id, login))
@@ -62,8 +60,7 @@ class MainController {
         }
     }
 
-    @LogExecutionTime
-    @PostMapping("/saveOrCreateOrganization")
+    @LoggedPostRequest("/saveOrCreateOrganization")
     fun saveOrCreateOrganization(@RequestBody organizationDto: OrganizationDto): CompletableFuture<PageDataDto<OrganizationDto>> {
         val login = currentUser.userName
         if (daoDao.ifOrganizationExists(organizationDto.id!!) && daoDao.notLockedByUser(Organization::class.java.name + organizationDto.id, login))
@@ -73,16 +70,14 @@ class MainController {
         }
     }
 
-    @LogExecutionTime
-    @GetMapping("/getBreadcrumbs")
+    @LoggedGetRequest("/getBreadcrumbs")
     fun getBreadcrumbs(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<Breadcrumb>>> {
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(daoDao.readBreadcrumbs(url))
         }
     }
 
-    @LogExecutionTime
-    @GetMapping("/getNextLevelMenus")
+    @LoggedGetRequest("/getNextLevelMenus")
     fun getNextLevelMenus(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<MenuEntryDto>>> {
         val authorities = currentUser.authorities.map { x -> x.authority }
         return CompletableFuture.supplyAsync {
@@ -90,8 +85,7 @@ class MainController {
         }
     }
 
-    @LogExecutionTime
-    @PostMapping("/saveOrCreateContacts")
+    @LoggedPostRequest("/saveOrCreateContacts")
     fun saveOrCreateContacts(@RequestBody contactDto: List<ContactDto>, @RequestParam(value = "personId") personId: String): CompletableFuture<PageDataDto<List<ContactDto>>> {
         val login = currentUser.userName
         if (daoDao.ifPersonExists(personId) && daoDao.notLockedByUser(Person::class.java.name + personId, login))
@@ -101,8 +95,7 @@ class MainController {
         }
     }
 
-    @LogExecutionTime
-    @GetMapping("/lockRecord")
+    @LoggedGetRequest("/lockRecord")
     fun lockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
         val login = currentUser.userName
         return PageDataDto(if (daoDao.lockUnlockRecord(type + id, login, true))
@@ -110,8 +103,7 @@ class MainController {
         else Alert("Record was not locked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was already locked!"))
     }
 
-    @LogExecutionTime
-    @GetMapping("/unlockRecord")
+    @LoggedGetRequest("/unlockRecord")
     fun unlockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
         val login = currentUser.userName
         return PageDataDto(if (daoDao.lockUnlockRecord(type + id, login, false))
@@ -119,8 +111,7 @@ class MainController {
         else Alert("Record was not unlocked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was not locked by you!"))
     }
 
-    @LogExecutionTime
-    @GetMapping("/logout")
+    @LoggedGetRequest("/logout")
     fun logoutPage(request: HttpServletRequest, response: HttpServletResponse): String {
         val auth = SecurityContextHolder.getContext().authentication
         if (auth != null) {
@@ -130,7 +121,6 @@ class MainController {
         return "redirect:/#/login"
     }
 
-    @LogExecutionTime
     @ExceptionHandler(*[Throwable::class])
     fun handleError(response: HttpServletResponse, ex: Throwable) {
         ex.printStackTrace()
@@ -149,8 +139,7 @@ class MainController {
         objectMapper.writeValue(response.writer, alert)
     }
 
-    @LogExecutionTime
-    @GetMapping("/getUserInfo")
+    @LoggedGetRequest("/getUserInfo")
     fun getUserInfo(): User? {
         val user = daoDao.getUserByLogin(currentUser.userName)
         user?.password = null
