@@ -1,14 +1,14 @@
 package com.addressbook.dto
 
-class PageDataDto<T>(data: T?, fieldDescriptionMap: Map<String, FieldDescription>?) {
+class PageDataDto<T>(data: T?, fieldDescriptionDtoMap: Map<String, FieldDescriptionDto>?) {
 
     var data: T? = null
-    var fieldDescriptionMap: Map<String, FieldDescription>? = null
+    var fieldDescriptionMap: Map<String, FieldDescriptionDto>? = null
 
     constructor(data: T?) : this(data, null)
 
     init {
         this.data = data
-        this.fieldDescriptionMap = fieldDescriptionMap
+        this.fieldDescriptionMap = fieldDescriptionDtoMap
     }
 }

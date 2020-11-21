@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <modules>
+        <module>addressbook-common</module>
+        <module>eureka-server</module>
+        <module>addressbook-main</module>
         <module>ignite-server</module>
         <module>mongo-server</module>
         <module>postgre-server</module>
-        <module>addressbook-main</module>
-        <module>eureka-server</module>
-        <module>addressbook-common</module>
     </modules>
 
     <groupId>com.github.dredwardhyde</groupId>

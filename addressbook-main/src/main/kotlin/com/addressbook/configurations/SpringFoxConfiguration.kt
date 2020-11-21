@@ -1,4 +1,4 @@
-package com.addressbook.server.configuration
+package com.addressbook.configurations
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,7 +26,7 @@ class SpringFoxConfiguration {
 
     private fun apiInfo(): ApiInfo? {
         return ApiInfo(
-                "PostgreSQL Persistence Layer REST API",
+                "Addressbook REST API",
                 "Spring Framework Application Example",
                 "1.0",
                 "",

@@ -1,5 +1,6 @@
-package com.addressbook.configuration
+package com.addressbook.configurations
 
+import com.addressbook.listeners.SessionListener
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

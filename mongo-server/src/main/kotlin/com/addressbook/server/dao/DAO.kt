@@ -1,7 +1,7 @@
 package com.addressbook.server.dao
 
 import com.addressbook.AddressBookDAO
-import com.addressbook.UniversalFieldsDescriptor
+import com.addressbook.FieldDescriptor
 import com.addressbook.dto.*
 import com.addressbook.model.*
 import com.mongodb.MongoClient
@@ -181,21 +181,21 @@ class DAO : AddressBookDAO {
         return menuEntryDtos
     }
 
-    override fun readBreadcrumbs(url: String): List<Breadcrumb> {
+    override fun readBreadcrumbs(url: String): List<BreadcrumbDto> {
         val entries = checkIfMenuExists(url)
         val original = entries?.get(0)
         var menuEntry = original as MenuEntry
         var menuEntries: MutableList<MenuEntry>
-        val breadcrumbs = ArrayList<Breadcrumb>()
+        val breadcrumbs = ArrayList<BreadcrumbDto>()
         if (menuEntry.parentId == null) return breadcrumbs
         while (true) {
             menuEntries = dataStore?.createQuery(MenuEntry::class.java)?.field("id")?.equal(menuEntry.parentId)?.find()?.toList() as MutableList<MenuEntry>
             if (menuEntries.isNotEmpty()) {
                 menuEntry = menuEntries[0]
-                breadcrumbs.add(0, Breadcrumb(menuEntry.name, menuEntry.url))
+                breadcrumbs.add(0, BreadcrumbDto(menuEntry.name, menuEntry.url))
             } else break
         }
-        breadcrumbs.add(Breadcrumb(original.name, original.url))
+        breadcrumbs.add(BreadcrumbDto(original.name, original.url))
         return breadcrumbs
     }
 
@@ -267,7 +267,7 @@ class DAO : AddressBookDAO {
         } else {
             sortName
         }
-        var query = dataStore?.createQuery(UniversalFieldsDescriptor.getCacheClass(cacheName))
+        var query = dataStore?.createQuery(FieldDescriptor.getCacheClass(cacheName))
         query = getQuerySql(filterDto, query)
         query = if (sortOrder == "asc") {
             query?.order(Sort.ascending(sortNameNew))
@@ -277,7 +277,7 @@ class DAO : AddressBookDAO {
         val cursor = query?.find(FindOptions()
                 .skip(((page - 1) * pageSize))
                 .limit(pageSize))?.toList()
-        val dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName)?.getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName))
+        val dtoConstructor = FieldDescriptor.getDtoClass(cacheName)?.getConstructor(FieldDescriptor.getCacheClass(cacheName))
         if (cursor != null) {
             for (e in cursor)
                 dtoConstructor?.newInstance(e)?.let { cacheDtoArrayList.add(it) }
@@ -296,9 +296,9 @@ class DAO : AddressBookDAO {
 
     override fun getTotalDataSize(cacheName: String, filterDto: List<FilterDto>): Int {
         return if (filterDto.isEmpty()) {
-            dataStore?.createQuery(UniversalFieldsDescriptor.getCacheClass(cacheName))?.count()?.toInt() as Int
+            dataStore?.createQuery(FieldDescriptor.getCacheClass(cacheName))?.count()?.toInt() as Int
         } else {
-            getQuerySql(filterDto, dataStore?.createQuery(UniversalFieldsDescriptor.getCacheClass(cacheName)))?.count()?.toInt() as Int
+            getQuerySql(filterDto, dataStore?.createQuery(FieldDescriptor.getCacheClass(cacheName)))?.count()?.toInt() as Int
         }
     }
 

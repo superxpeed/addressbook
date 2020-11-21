@@ -14,7 +14,7 @@ import javax.annotation.PreDestroy
 
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-class CurrentUser : Serializable {
+class AppUser : Serializable {
 
     lateinit var userName: String
     lateinit var authorities: Collection<GrantedAuthority>

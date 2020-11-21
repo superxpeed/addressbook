@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class AddressbookAuthenticationProvider : AuthenticationProvider {
+class AppAuthenticationProvider : AuthenticationProvider {
 
     @Autowired
     lateinit var daoDao: DaoClient

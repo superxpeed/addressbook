@@ -1,15 +1,15 @@
 package com.addressbook.rest
 
-import com.addressbook.UniversalFieldsDescriptor
+import com.addressbook.FieldDescriptor
 import com.addressbook.annotations.LoggedGetRequest
 import com.addressbook.annotations.LoggedPostRequest
 import com.addressbook.dao.DaoClient
 import com.addressbook.dto.*
-import com.addressbook.exception.LockRecordException
+import com.addressbook.exceptions.LockRecordException
 import com.addressbook.model.Organization
 import com.addressbook.model.Person
 import com.addressbook.model.User
-import com.addressbook.security.CurrentUser
+import com.addressbook.security.AppUser
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse
 class MainController {
 
     @Autowired
-    lateinit var currentUser: CurrentUser
+    lateinit var currentUser: AppUser
 
     @Autowired
     lateinit var daoDao: DaoClient
@@ -39,7 +39,7 @@ class MainController {
                 @RequestParam(value = "cache") cache: String,
                 @RequestBody filterDto: List<FilterDto>): CompletableFuture<PageDataDto<TableDataDto<Any>>> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(TableDataDto(daoDao.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), daoDao.getTotalDataSize(cache, filterDto)), UniversalFieldsDescriptor.getFieldDescriptionMap(cache))
+            return@supplyAsync PageDataDto(TableDataDto(daoDao.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), daoDao.getTotalDataSize(cache, filterDto)), FieldDescriptor.getFieldDescriptionMap(cache))
         }
     }
 
@@ -71,7 +71,7 @@ class MainController {
     }
 
     @LoggedGetRequest("/getBreadcrumbs")
-    fun getBreadcrumbs(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<Breadcrumb>>> {
+    fun getBreadcrumbs(@RequestParam(value = "currentUrl") url: String): CompletableFuture<PageDataDto<List<BreadcrumbDto>>> {
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(daoDao.readBreadcrumbs(url))
         }
@@ -96,19 +96,19 @@ class MainController {
     }
 
     @LoggedGetRequest("/lockRecord")
-    fun lockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
+    fun lockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<AlertDto> {
         val login = currentUser.userName
         return PageDataDto(if (daoDao.lockUnlockRecord(type + id, login, true))
-            Alert("Record locked!", Alert.SUCCESS, Alert.RECORD_PREFIX + id + " locked!")
-        else Alert("Record was not locked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was already locked!"))
+            AlertDto("Record locked!", AlertDto.SUCCESS, AlertDto.RECORD_PREFIX + id + " locked!")
+        else AlertDto("Record was not locked!", AlertDto.WARNING, AlertDto.RECORD_PREFIX + id + " was already locked!"))
     }
 
     @LoggedGetRequest("/unlockRecord")
-    fun unlockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<Alert> {
+    fun unlockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String): PageDataDto<AlertDto> {
         val login = currentUser.userName
         return PageDataDto(if (daoDao.lockUnlockRecord(type + id, login, false))
-            Alert("Record unlocked!", Alert.SUCCESS, Alert.RECORD_PREFIX + id + " unlocked!")
-        else Alert("Record was not unlocked!", Alert.WARNING, Alert.RECORD_PREFIX + id + " was not locked by you!"))
+            AlertDto("Record unlocked!", AlertDto.SUCCESS, AlertDto.RECORD_PREFIX + id + " unlocked!")
+        else AlertDto("Record was not unlocked!", AlertDto.WARNING, AlertDto.RECORD_PREFIX + id + " was not locked by you!"))
     }
 
     @LoggedGetRequest("/logout")
@@ -125,9 +125,9 @@ class MainController {
     fun handleError(response: HttpServletResponse, ex: Throwable) {
         ex.printStackTrace()
         response.status = 500
-        val alert = Alert()
+        val alert = AlertDto()
         alert.headline = "Error occurred!"
-        alert.type = Alert.DANGER
+        alert.type = AlertDto.DANGER
         if (ex.javaClass == IllegalArgumentException::class.java || ex.javaClass == LockRecordException::class.java) {
             alert.message = ex.message
         } else {

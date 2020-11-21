@@ -1,4 +1,4 @@
-package com.addressbook.server.configuration
+package com.addressbook.configurations
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry

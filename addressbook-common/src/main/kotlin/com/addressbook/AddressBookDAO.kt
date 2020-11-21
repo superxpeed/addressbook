@@ -41,7 +41,7 @@ interface AddressBookDAO {
     fun readNextLevel(@RequestParam url: String, @RequestBody authorities: List<String>): List<MenuEntryDto>
 
     @PostMapping("/readBreadcrumbs")
-    fun readBreadcrumbs(@RequestParam url: String): List<Breadcrumb>
+    fun readBreadcrumbs(@RequestParam url: String): List<BreadcrumbDto>
 
     @PostMapping("/selectCachePage")
     fun selectCachePage(@RequestParam page: Int, @RequestParam pageSize: Int, @RequestParam sortName: String, @RequestParam sortOrder: String, @RequestBody filterDto: List<FilterDto>, @RequestParam cacheName: String): List<Any>

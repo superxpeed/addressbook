@@ -1,4 +1,4 @@
-package com.addressbook.server.configuration
+package com.addressbook.server.configurations
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,7 +26,7 @@ class SpringFoxConfiguration {
 
     private fun apiInfo(): ApiInfo? {
         return ApiInfo(
-                "Apache Ignite Data Persistence Layer REST API",
+                "MongoDB Persistence Layer REST API",
                 "Spring Framework Application Example",
                 "1.0",
                 "",

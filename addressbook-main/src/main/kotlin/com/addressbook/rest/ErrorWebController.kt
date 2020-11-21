@@ -1,6 +1,6 @@
 package com.addressbook.rest
 
-import com.addressbook.dto.Alert
+import com.addressbook.dto.AlertDto
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.http.HttpStatus
@@ -22,7 +22,7 @@ class ErrorWebController : ErrorController {
         if (statusCode == HttpStatus.NOT_FOUND.value()) return "404.html"
         if (statusCode == HttpStatus.UNAUTHORIZED.value()) {
             val objectMapper = ObjectMapper()
-            objectMapper.writeValue(response.writer, Alert("Error occurred!", Alert.DANGER, "You are not authorized to see that content!"))
+            objectMapper.writeValue(response.writer, AlertDto("Error occurred!", AlertDto.DANGER, "You are not authorized to see that content!"))
         }
         return null
     }

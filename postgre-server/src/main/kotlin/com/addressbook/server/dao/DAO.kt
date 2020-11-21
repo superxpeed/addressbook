@@ -1,7 +1,7 @@
 package com.addressbook.server.dao
 
 import com.addressbook.AddressBookDAO
-import com.addressbook.UniversalFieldsDescriptor
+import com.addressbook.FieldDescriptor
 import com.addressbook.dto.*
 import com.addressbook.model.*
 import org.springframework.stereotype.Controller
@@ -181,12 +181,12 @@ class DAO : AddressBookDAO {
     }
 
     @Transactional
-    override fun readBreadcrumbs(url: String): List<Breadcrumb> {
+    override fun readBreadcrumbs(url: String): List<BreadcrumbDto> {
         val entries = checkIfMenuExists(url)
         val original = entries?.get(0)
         var menuEntry = original
         var menuEntries: MutableList<MenuEntry>?
-        val breadcrumbs = ArrayList<Breadcrumb>()
+        val breadcrumbs = ArrayList<BreadcrumbDto>()
         if (menuEntry?.parentId == null) return breadcrumbs
         while (true) {
             val typedQuery = entityManager?.createQuery("SELECT u FROM MenuEntry u WHERE u.id=:id", MenuEntry::class.java)
@@ -194,10 +194,10 @@ class DAO : AddressBookDAO {
             menuEntries = typedQuery?.resultList as MutableList<MenuEntry>
             if (menuEntries.isNotEmpty()) {
                 menuEntry = menuEntries[0]
-                breadcrumbs.add(0, Breadcrumb(menuEntry.name, menuEntry.url))
+                breadcrumbs.add(0, BreadcrumbDto(menuEntry.name, menuEntry.url))
             } else break
         }
-        breadcrumbs.add(Breadcrumb(original?.name, original?.url))
+        breadcrumbs.add(BreadcrumbDto(original?.name, original?.url))
         return breadcrumbs
     }
 
@@ -254,12 +254,12 @@ class DAO : AddressBookDAO {
 
     override fun selectCachePage(page: Int, pageSize: Int, sortName: String, sortOrder: String, filterDto: List<FilterDto>, cacheName: String): List<Any> {
         val cacheDtoArrayList = ArrayList<Any>()
-        val typedQuery = entityManager?.createQuery("SELECT u FROM " + (UniversalFieldsDescriptor.getCacheClass(cacheName)?.simpleName
-                + " u " + getQuerySql(filterDto) + " order by " + sortName + " " + sortOrder + " "), UniversalFieldsDescriptor.getCacheClass(cacheName))
+        val typedQuery = entityManager?.createQuery("SELECT u FROM " + (FieldDescriptor.getCacheClass(cacheName)?.simpleName
+                + " u " + getQuerySql(filterDto) + " order by " + sortName + " " + sortOrder + " "), FieldDescriptor.getCacheClass(cacheName))
         typedQuery?.maxResults = pageSize
         typedQuery?.firstResult = (page - 1) * pageSize
         val cursor = typedQuery?.resultList
-        val dtoConstructor = UniversalFieldsDescriptor.getDtoClass(cacheName)?.getConstructor(UniversalFieldsDescriptor.getCacheClass(cacheName))
+        val dtoConstructor = FieldDescriptor.getDtoClass(cacheName)?.getConstructor(FieldDescriptor.getCacheClass(cacheName))
         if (cursor != null) {
             for (e in cursor)
                 dtoConstructor?.newInstance(e)?.let { cacheDtoArrayList.add(it) }
@@ -277,7 +277,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun getTotalDataSize(cacheName: String, filterDto: List<FilterDto>): Int {
-        val typedQuery = entityManager?.createQuery("SELECT count(u) FROM " + (UniversalFieldsDescriptor.getCacheClass(cacheName)?.simpleName + " u " + getQuerySql(filterDto)), Long::class.javaObjectType)
+        val typedQuery = entityManager?.createQuery("SELECT count(u) FROM " + (FieldDescriptor.getCacheClass(cacheName)?.simpleName + " u " + getQuerySql(filterDto)), Long::class.javaObjectType)
         return if (typedQuery != null && typedQuery.singleResult != null) typedQuery.singleResult.toInt() else return 0
     }
 }

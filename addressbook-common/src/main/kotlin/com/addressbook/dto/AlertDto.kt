@@ -2,7 +2,7 @@ package com.addressbook.dto
 
 import java.io.Serializable
 
-class Alert(headline: String?, type: String?, message: String?) : Serializable {
+class AlertDto(headline: String?, type: String?, message: String?) : Serializable {
     companion object {
         const val SUCCESS: String = "success"
         const val WARNING: String = "warning"
