@@ -122,6 +122,15 @@ class DAO : AddressBookDAO {
         return getById("contactId", key, Contact::class.java) != null
     }
 
+    override fun ifPageExists(page: String): Boolean {
+        try {
+            checkIfMenuExists(page)
+        }catch (e : IllegalArgumentException){
+            return false
+        }
+        return true
+    }
+
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         if (lock) {
             dataStore?.save(Lock(key, user))

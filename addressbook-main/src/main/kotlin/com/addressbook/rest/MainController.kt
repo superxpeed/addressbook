@@ -82,6 +82,11 @@ class MainController {
         }
     }
 
+    @LoggedGetRequest("/checkIfPageExists")
+    fun checkIfPageExists(@RequestParam(value = "page") page: String): Boolean {
+        return dao.ifPageExists(page)
+    }
+
     @LoggedPostRequest("/saveOrCreateContacts")
     fun saveOrCreateContacts(@RequestBody contactDto: List<ContactDto>, @RequestParam(value = "personId") personId: String, authentication: Authentication): CompletableFuture<PageDataDto<List<ContactDto>>> {
         val login = (authentication.principal as AppUserDetails).username

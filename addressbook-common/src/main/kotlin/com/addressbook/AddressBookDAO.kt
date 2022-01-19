@@ -63,4 +63,7 @@ interface AddressBookDAO {
 
     @PostMapping("/ifContactExists")
     fun ifContactExists(@RequestParam key: String): Boolean
+
+    @PostMapping("/ifPageExists")
+    fun ifPageExists(@RequestParam page: String): Boolean
 }

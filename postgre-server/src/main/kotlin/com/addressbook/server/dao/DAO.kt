@@ -103,6 +103,15 @@ class DAO : AddressBookDAO {
         return entityManager?.find(Contact::class.java, key) != null
     }
 
+    override fun ifPageExists(page: String): Boolean {
+        try {
+            checkIfMenuExists(page)
+        }catch (e : IllegalArgumentException){
+            return false
+        }
+        return true
+    }
+
     @Transactional
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         if (lock) {

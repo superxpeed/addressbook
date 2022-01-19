@@ -12,6 +12,7 @@ export const LOCK_RECORD = cp + "rest/lockRecord";
 export const UNLOCK_RECORD = cp + "rest/unlockRecord";
 export const GET_USER_INFO = cp + "rest/getUserInfo";
 export const LOGOUT = cp + "rest/logout";
+export const CHECK_IF_PAGE_EXISTS = cp + "rest/checkIfPageExists";
 export const AUTH = cp + "auth";
 
 export function getContextPath() {

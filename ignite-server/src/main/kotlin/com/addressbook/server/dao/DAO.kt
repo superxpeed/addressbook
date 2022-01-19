@@ -158,6 +158,16 @@ class DAO : AddressBookDAO {
         return cacheContacts?.get(key) != null
     }
 
+    override fun ifPageExists(page: String): Boolean {
+        val cache: IgniteCache<String, MenuEntry>? = ignite?.getOrCreateCache(FieldDescriptor.MENU_CACHE)
+        try {
+            checkIfMenuExists(cache, page)
+        }catch (e : IllegalArgumentException){
+            return false
+        }
+        return true
+    }
+
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         val cacheLocks: IgniteCache<String, Lock>? = ignite?.getOrCreateCache(FieldDescriptor.LOCK_RECORD_CACHE)
         return if (lock) cacheLocks?.putIfAbsent(key, Lock(key, user)) as Boolean else cacheLocks?.remove(key, Lock(key, user)) as Boolean
