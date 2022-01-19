@@ -1,6 +1,7 @@
 package com.addressbook.security
 
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -27,6 +28,8 @@ class JwtProvider {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token)
             return true
+        } catch (e: MalformedJwtException) {
+            //No-op
         } catch (e: Exception) {
             e.printStackTrace()
         }

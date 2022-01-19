@@ -11,8 +11,7 @@ import java.util.stream.Stream
 @Service
 class JVMStateService {
     fun getJVMState(): Flux<JavaMetricsDto> {
-        val interval = Flux.interval(Duration.ofSeconds(1))
-        val jvmStateFlux = Flux.fromStream(Stream.generate(::JavaMetricsDto))
-        return Flux.zip(interval, jvmStateFlux).map(Tuple2<Long, JavaMetricsDto>::getT2)
+        return Flux.zip(Flux.interval(Duration.ofSeconds(1)),
+                Flux.fromStream(Stream.generate(::JavaMetricsDto))).map(Tuple2<Long, JavaMetricsDto>::getT2)
     }
 }
