@@ -16,11 +16,12 @@ export function getNextLevelMenus(currentUrl) {
   let isOk = false;
   return function (dispatch) {
     let headers = new Headers();
+    let token = window.sessionStorage.getItem("auth-token");
     headers.append("Accept", "application/json");
     headers.append("Content-Type", "application/json; charset=utf-8");
+    headers.append("Authorization", "Bearer " + token);
     fetch(url.GET_NEXT_LEVEL_MENUS + "?currentUrl=" + currentUrl, {
       method: "get",
-      credentials: "include",
       headers: headers,
     })
       .then((response) => {
@@ -60,11 +61,12 @@ export function getBreadcrumbs(currentUrl) {
   let isOk = false;
   return function (dispatch) {
     let headers = new Headers();
+    let token = window.sessionStorage.getItem("auth-token");
     headers.append("Accept", "application/json");
     headers.append("Content-Type", "application/json; charset=utf-8");
+    headers.append("Authorization", "Bearer " + token);
     fetch(url.GET_BREADCRUMBS + "?currentUrl=" + currentUrl, {
       method: "get",
-      credentials: "include",
       headers: headers,
     })
       .then((response) => {
@@ -101,9 +103,10 @@ export function lockUnlockRecord(type, id, action, callback) {
   }
   return function (dispatch) {
     let headers = new Headers();
+    let token = window.sessionStorage.getItem("auth-token");
+    headers.append("Authorization", "Bearer " + token);
     fetch(targetUrl + "?type=" + type + "&id=" + id, {
       method: "get",
-      credentials: "include",
       headers: headers,
     })
       .then((response) => {
@@ -135,13 +138,15 @@ export function logout() {
   let isOk = false;
   return function () {
     let headers = new Headers();
+    let token = window.sessionStorage.getItem("auth-token");
+    headers.append("Authorization", "Bearer " + token);
     fetch(url.LOGOUT, {
       method: "get",
-      credentials: "include",
       headers: headers,
     }).then((response) => {
       isOk = response.ok;
       if (isOk) {
+        window.sessionStorage.clear();
         window.location.hash = "#/login";
       }
     });

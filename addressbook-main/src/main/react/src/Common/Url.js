@@ -12,7 +12,7 @@ export const LOCK_RECORD = cp + "rest/lockRecord";
 export const UNLOCK_RECORD = cp + "rest/unlockRecord";
 export const GET_USER_INFO = cp + "rest/getUserInfo";
 export const LOGOUT = cp + "rest/logout";
-export const LOGIN = cp + "login";
+export const AUTH = cp + "auth";
 
 export function getContextPath() {
   return (

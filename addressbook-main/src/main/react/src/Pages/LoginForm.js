@@ -48,17 +48,25 @@ export default class LoginForm extends React.Component {
   login = () => {
     let status;
     let headers = new Headers();
-    headers.append("Content-Type", "application/x-www-form-urlencoded");
-    fetch(url.LOGIN, {
+    let credentials = {
+      "login":this.state.login,
+      "password": this.state.password
+    }
+    headers.append("Content-Type", "application/json; charset=utf-8");
+    fetch(url.AUTH, {
       method: "post",
       headers: headers,
-      body: "username=" + this.state.login + "&password=" + this.state.password,
+      body: JSON.stringify(credentials),
     }).then((response) => {
       status = response.status;
+      return response.text();
+    }).then((text) => {
       if (status === 401) {
         this.setState({ invalidLoginPassword: true });
       }
       if (status === 200) {
+        window.sessionStorage.clear();
+        window.sessionStorage.setItem("auth-token", JSON.parse(text).token);
         window.location.hash = "#/";
       }
     });

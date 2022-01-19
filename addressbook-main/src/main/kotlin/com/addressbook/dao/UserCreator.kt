@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct
 class UserCreator {
 
     @Autowired
-    lateinit var daoDao: DaoClient
+    lateinit var dao: DaoClient
 
     @PostConstruct
     fun initUsers() {
@@ -20,8 +20,8 @@ class UserCreator {
         adminRoles.add("USER")
         adminRoles.add("ADMIN")
         val admin = User("admin", encoder.encode("adminPass"), adminRoles)
-        daoDao.createOrUpdateUser(admin)
+        dao.createOrUpdateUser(admin)
         val user = User("user", encoder.encode("userPass"), Collections.singletonList("USER"))
-        daoDao.createOrUpdateUser(user)
+        dao.createOrUpdateUser(user)
     }
 }

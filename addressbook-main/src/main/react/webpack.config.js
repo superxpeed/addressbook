@@ -40,7 +40,7 @@ module.exports = {
         port: 7070,
         proxy: {
             '**': {
-                target: 'http://localhost:8080',
+                target: 'http://localhost:9000',
                 secure: false,
                 changeOrigin: true
             }

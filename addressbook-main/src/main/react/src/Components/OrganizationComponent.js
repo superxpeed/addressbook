@@ -102,12 +102,13 @@ export class OrganizationComponent extends React.Component {
   saveOrganization = () => {
     let isOk = false;
     let headers = new Headers();
+    let token = window.sessionStorage.getItem("auth-token");
     headers.append("Accept", "application/json");
     headers.append("Content-Type", "application/json; charset=utf-8");
+    headers.append("Authorization", "Bearer " + token);
     fetch(url.SAVE_ORGANIZATION, {
       method: "post",
       headers: headers,
-      credentials: "include",
       body: JSON.stringify(this.state.organization),
     })
       .then((response) => {

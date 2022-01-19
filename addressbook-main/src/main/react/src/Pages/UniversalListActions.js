@@ -30,13 +30,13 @@ export function getList(url, filterDto = null, cacheName) {
   let isOk = false;
   return function (dispatch) {
     let headers = new Headers();
+    let token = window.sessionStorage.getItem("auth-token");
     headers.append("Accept", "application/json");
     headers.append("Content-Type", "application/json; charset=utf-8");
-
+    headers.append("Authorization", "Bearer " + token);
     fetch(url, {
       method: "post",
       headers: headers,
-      credentials: "include",
       body: JSON.stringify(filterDto),
     })
       .then((response) => {

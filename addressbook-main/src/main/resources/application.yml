@@ -17,3 +17,5 @@ management:
   endpoint:
     health:
       enabled: true
+jwt:
+  secret: q1w2e3r4

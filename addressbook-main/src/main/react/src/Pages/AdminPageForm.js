@@ -5,6 +5,7 @@ import * as MenuActions from "./MenuFormActions";
 import { Breadcrumb, Button, Label, Nav, Navbar, Table } from "react-bootstrap";
 import { HashUtils } from "../Common/Utils";
 import { UserComponent } from "../Components/UserComponent";
+import { EventSourcePolyfill } from "event-source-polyfill";
 
 @connect(
   (state) => ({
@@ -42,10 +43,15 @@ export default class AdminPageForm extends React.Component {
   };
 
   componentDidMount() {
+    let EventSource = EventSourcePolyfill;
     let currentUrl = window.location.hash;
     this.props.getBreadcrumbs(HashUtils.cleanHash(currentUrl));
-
-    let newEventSource = new EventSource("/rest/admin/jvmState");
+    let token = window.sessionStorage.getItem("auth-token");
+    let newEventSource = new EventSource("/rest/admin/jvmState",{
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
     newEventSource.onopen = this.onOpen;
     newEventSource.onmessage = this.onMessage;
     newEventSource.onerror = this.onError;

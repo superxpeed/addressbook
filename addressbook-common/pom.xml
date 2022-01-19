@@ -45,6 +45,12 @@
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
             <artifactId>core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mongodb</groupId>
+                    <artifactId>mongo-java-driver</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

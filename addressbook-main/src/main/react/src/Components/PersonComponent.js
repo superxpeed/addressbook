@@ -64,11 +64,12 @@ export class PersonComponent extends React.Component {
   getContactList = (id) => {
     let isOk = false;
     let headers = new Headers();
+    let token = window.sessionStorage.getItem("auth-token");
     headers.append("Accept", "application/json");
     headers.append("Content-Type", "application/json; charset=utf-8");
+    headers.append("Authorization", "Bearer " + token);
     fetch(url.GET_CONTACT_LIST + "?personId=" + id, {
       method: "post",
-      credentials: "include",
       headers: headers,
     })
       .then((response) => {
@@ -88,11 +89,12 @@ export class PersonComponent extends React.Component {
   saveContacts = (creation, personId, savedPerson) => {
     let isOk = false;
     let headers = new Headers();
+    let token = window.sessionStorage.getItem("auth-token");
     headers.append("Accept", "application/json");
     headers.append("Content-Type", "application/json; charset=utf-8");
+    headers.append("Authorization", "Bearer " + token);
     fetch(url.SAVE_CONTACT_LIST + "?personId=" + personId, {
       method: "post",
-      credentials: "include",
       headers: headers,
       body: this.container.getJson(),
     })
@@ -128,12 +130,13 @@ export class PersonComponent extends React.Component {
     let savedPerson;
     let creation = this.state.person.id === undefined;
     let headers = new Headers();
+    let token = window.sessionStorage.getItem("auth-token");
     headers.append("Accept", "application/json");
     headers.append("Content-Type", "application/json; charset=utf-8");
+    headers.append("Authorization", "Bearer " + token);
     let isOk = false;
     fetch(url.SAVE_PERSON, {
       method: "post",
-      credentials: "include",
       headers: headers,
       body: JSON.stringify(this.state.person),
     })

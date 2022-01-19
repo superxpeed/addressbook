@@ -34,11 +34,12 @@ export class UserComponent extends React.Component {
   updatePersonInfo = () => {
     let isOk = false;
     let headers = new Headers();
+    let token = window.sessionStorage.getItem("auth-token");
     headers.append("Accept", "application/json");
     headers.append("Content-Type", "application/json; charset=utf-8");
+    headers.append("Authorization", "Bearer " + token);
     fetch(url.GET_USER_INFO, {
       method: "get",
-      credentials: "include",
       headers: headers,
     })
       .then((response) => {
