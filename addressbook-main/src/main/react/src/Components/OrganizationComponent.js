@@ -6,7 +6,7 @@ import {ifNoAuthorizedRedirect} from "../Pages/UniversalListActions";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as TableActions from "../Table/TableActions";
-import {Caches, Generator, OrgTypes} from "../Common/Utils";
+import {AuthTokenUtils, Caches, Generator, OrgTypes} from "../Common/Utils";
 import * as MenuActions from "../Pages/MenuFormActions";
 
 @connect(null, (dispatch) => ({
@@ -99,10 +99,9 @@ export class OrganizationComponent extends React.Component {
     saveOrganization = () => {
         let isOk = false;
         let headers = new Headers();
-        let token = window.sessionStorage.getItem("auth-token");
+        AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
-        headers.append("Authorization", "Bearer " + token);
         fetch(url.SAVE_ORGANIZATION, {
             method: "post",
             headers: headers,

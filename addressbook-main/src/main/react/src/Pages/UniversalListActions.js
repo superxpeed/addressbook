@@ -1,4 +1,4 @@
-import {ADD_ALERT, Caches, SUCCESS} from "../Common/Utils";
+import {ADD_ALERT, AuthTokenUtils, Caches, SUCCESS} from "../Common/Utils";
 import * as tableActions from "../Table/TableActions";
 
 export const GET_LIST = "GET_LIST";
@@ -30,10 +30,9 @@ export function getList(url, filterDto = null, cacheName) {
     let isOk = false;
     return function (dispatch) {
         let headers = new Headers();
-        let token = window.sessionStorage.getItem("auth-token");
+        AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
-        headers.append("Authorization", "Bearer " + token);
         fetch(url, {
             method: "post",
             headers: headers,

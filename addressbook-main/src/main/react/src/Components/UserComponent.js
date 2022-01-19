@@ -5,6 +5,7 @@ import {ifNoAuthorizedRedirect} from "../Pages/UniversalListActions";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as MenuActions from "../Pages/MenuFormActions";
+import {AuthTokenUtils} from "../Common/Utils";
 
 @connect(null, (dispatch) => ({
     showCommonErrorAlert: bindActionCreators(
@@ -34,10 +35,9 @@ export class UserComponent extends React.Component {
     updatePersonInfo = () => {
         let isOk = false;
         let headers = new Headers();
-        let token = window.sessionStorage.getItem("auth-token");
+        AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
-        headers.append("Authorization", "Bearer " + token);
         fetch(url.GET_USER_INFO, {
             method: "get",
             headers: headers,

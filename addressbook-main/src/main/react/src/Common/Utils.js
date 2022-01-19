@@ -43,6 +43,12 @@ export class HashUtils {
     };
 }
 
+export class AuthTokenUtils {
+    static addAuthToken = (headers) => {
+        headers.append("Authorization", "Bearer " + window.sessionStorage.getItem("auth-token"));
+    };
+}
+
 export class TitleConverter {
     static prepareTitle = (field) => {
         let title = "";

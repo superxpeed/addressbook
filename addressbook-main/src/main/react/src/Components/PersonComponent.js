@@ -4,7 +4,7 @@ import React from "react";
 import {ContactContainer} from "./ContactContainer";
 import {ifNoAuthorizedRedirect} from "../Pages/UniversalListActions";
 import * as url from "../Common/Url";
-import {Caches, TitleConverter} from "../Common/Utils";
+import {AuthTokenUtils, Caches, TitleConverter} from "../Common/Utils";
 import RichTextEditor from "react-rte";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -61,10 +61,9 @@ export class PersonComponent extends React.Component {
     getContactList = (id) => {
         let isOk = false;
         let headers = new Headers();
-        let token = window.sessionStorage.getItem("auth-token");
+        AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
-        headers.append("Authorization", "Bearer " + token);
         fetch(url.GET_CONTACT_LIST + "?personId=" + id, {
             method: "post",
             headers: headers,
@@ -86,10 +85,9 @@ export class PersonComponent extends React.Component {
     saveContacts = (creation, personId, savedPerson) => {
         let isOk = false;
         let headers = new Headers();
-        let token = window.sessionStorage.getItem("auth-token");
+        AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
-        headers.append("Authorization", "Bearer " + token);
         fetch(url.SAVE_CONTACT_LIST + "?personId=" + personId, {
             method: "post",
             headers: headers,
@@ -127,10 +125,9 @@ export class PersonComponent extends React.Component {
         let savedPerson;
         let creation = this.state.person.id === undefined;
         let headers = new Headers();
-        let token = window.sessionStorage.getItem("auth-token");
+        AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
-        headers.append("Authorization", "Bearer " + token);
         let isOk = false;
         fetch(url.SAVE_PERSON, {
             method: "post",

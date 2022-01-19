@@ -4,7 +4,7 @@ import {bindActionCreators} from "redux";
 import * as MenuActions from "./MenuFormActions";
 import {Breadcrumb, Button, Nav, Navbar} from "react-bootstrap";
 import {AlertList} from "react-bs-notifier";
-import {HashUtils} from "../Common/Utils";
+import {AuthTokenUtils, HashUtils} from "../Common/Utils";
 import {UserComponent} from "../Components/UserComponent";
 import * as url from "../Common/Url";
 import {ifNoAuthorizedRedirect} from "./UniversalListActions";
@@ -37,8 +37,7 @@ export default class MenuForm extends React.Component {
         currentUrl = HashUtils.cleanHash(currentUrl);
         if (this.state.currentUrl !== currentUrl) {
             let headers = new Headers();
-            let token = window.sessionStorage.getItem("auth-token");
-            headers.append("Authorization", "Bearer " + token);
+            AuthTokenUtils.addAuthToken(headers);
             fetch(url.CHECK_IF_PAGE_EXISTS + "?page=" + currentUrl, {
                 method: "get",
                 headers: headers,

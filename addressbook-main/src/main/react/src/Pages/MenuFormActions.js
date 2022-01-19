@@ -1,4 +1,12 @@
-import {ADD_ALERT, CLEAR_ALERTS, DISMISS_ALERT, GET_BREADCRUMBS, GET_MENU, SUCCESS} from "../Common/Utils";
+import {
+    ADD_ALERT,
+    AuthTokenUtils,
+    CLEAR_ALERTS,
+    DISMISS_ALERT,
+    GET_BREADCRUMBS,
+    GET_MENU,
+    SUCCESS
+} from "../Common/Utils";
 import {asyncCommonCatch, ifNoAuthorizedRedirect,} from "./UniversalListActions";
 import * as url from "../Common/Url";
 
@@ -6,10 +14,9 @@ export function getNextLevelMenus(currentUrl) {
     let isOk = false;
     return function (dispatch) {
         let headers = new Headers();
-        let token = window.sessionStorage.getItem("auth-token");
+        AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
-        headers.append("Authorization", "Bearer " + token);
         fetch(url.GET_NEXT_LEVEL_MENUS + "?currentUrl=" + currentUrl, {
             method: "get",
             headers: headers,
@@ -51,10 +58,9 @@ export function getBreadcrumbs(currentUrl) {
     let isOk = false;
     return function (dispatch) {
         let headers = new Headers();
-        let token = window.sessionStorage.getItem("auth-token");
+        AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
-        headers.append("Authorization", "Bearer " + token);
         fetch(url.GET_BREADCRUMBS + "?currentUrl=" + currentUrl, {
             method: "get",
             headers: headers,
@@ -93,8 +99,7 @@ export function lockUnlockRecord(type, id, action, callback) {
     }
     return function (dispatch) {
         let headers = new Headers();
-        let token = window.sessionStorage.getItem("auth-token");
-        headers.append("Authorization", "Bearer " + token);
+        AuthTokenUtils.addAuthToken(headers);
         fetch(targetUrl + "?type=" + type + "&id=" + id, {
             method: "get",
             headers: headers,
@@ -128,8 +133,7 @@ export function logout() {
     let isOk = false;
     return function () {
         let headers = new Headers();
-        let token = window.sessionStorage.getItem("auth-token");
-        headers.append("Authorization", "Bearer " + token);
+        AuthTokenUtils.addAuthToken(headers);
         fetch(url.LOGOUT, {
             method: "get",
             headers: headers,
