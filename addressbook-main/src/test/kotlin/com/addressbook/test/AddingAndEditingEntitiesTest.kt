@@ -40,18 +40,25 @@ class AddingAndEditingEntitiesTest {
         passwordInput.sendKeys("userPass")
         // Click login
         loginButton.click()
+        Thread.sleep(500)
         // Locate user info button on navigation bar
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/div/button")))
+        Thread.sleep(500)
         // First level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
+        Thread.sleep(500)
         // Second level 1 tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
+        Thread.sleep(500)
         // Third level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
+        Thread.sleep(500)
         // Last level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
+        Thread.sleep(500)
         // Click first tab - Organizations
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables-tab-1\"]"))).click()
+        Thread.sleep(500)
         // Generate test name
         var name = "Test " + Math.random() + " Name"
         // Enter data to create new organization record
@@ -177,17 +184,22 @@ class AddingAndEditingEntitiesTest {
         passwordInput.sendKeys("userPass")
         // Click login
         loginButton.click()
+        Thread.sleep(500)
         // Locate user info button on navigation bar
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/div/button")))
+        Thread.sleep(500)
         // First level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
+        Thread.sleep(500)
         // Second level 1 tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
+        Thread.sleep(500)
         // Third level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
+        Thread.sleep(500)
         // Last level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
-
+        Thread.sleep(500)
         // Click first tab - Organizations
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables-tab-1\"]"))).click()
         // Find table
@@ -301,9 +313,9 @@ class AddingAndEditingEntitiesTest {
         Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"lastName\"]")).getAttribute("value"), "Last name")
         Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"salary\"]")).getAttribute("value"), "10000$/m")
         Thread.sleep(300)
-        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[2]/div/div/div/div/ul/li[1]/div/span/span")).text, "First point")
+        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[2]/div/div/div/div/div[1]/div/span/span")).text, "First point")
         Thread.sleep(300)
-        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[2]/div/div/div/div/ul/li[2]/div/span/span")).text, "Second point")
+        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/span/span")).text, "Second point")
         Thread.sleep(300)
 
         // Click contact header to expand

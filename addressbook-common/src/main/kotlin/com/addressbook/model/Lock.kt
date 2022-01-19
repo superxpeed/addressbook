@@ -12,4 +12,22 @@ class Lock(@javax.persistence.Id
            @QuerySqlField(index = true) var login: String?) : Serializable {
 
     constructor() : this(null, null)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Lock
+
+        if (id != other.id) return false
+        if (login != other.login) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + (login?.hashCode() ?: 0)
+        return result
+    }
 }
