@@ -162,7 +162,7 @@ class DAO : AddressBookDAO {
         val cache: IgniteCache<String, MenuEntry>? = ignite?.getOrCreateCache(FieldDescriptor.MENU_CACHE)
         try {
             checkIfMenuExists(cache, page)
-        }catch (e : IllegalArgumentException){
+        } catch (e: IllegalArgumentException) {
             return false
         }
         return true

@@ -14,7 +14,7 @@ class MainAspect {
     private val logger = LoggerFactory.getLogger(MainAspect::class.java)
 
     @Around("@annotation(com.addressbook.annotations.LoggedGetRequest) " +
-               "|| @annotation(com.addressbook.annotations.LoggedPostRequest)")
+            "|| @annotation(com.addressbook.annotations.LoggedPostRequest)")
     @Throws(Throwable::class)
     fun logExecutionTime(joinPoint: ProceedingJoinPoint): Any? {
         val start = System.nanoTime()

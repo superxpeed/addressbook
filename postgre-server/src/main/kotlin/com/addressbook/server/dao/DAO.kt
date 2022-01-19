@@ -106,7 +106,7 @@ class DAO : AddressBookDAO {
     override fun ifPageExists(page: String): Boolean {
         try {
             checkIfMenuExists(page)
-        }catch (e : IllegalArgumentException){
+        } catch (e: IllegalArgumentException) {
             return false
         }
         return true
