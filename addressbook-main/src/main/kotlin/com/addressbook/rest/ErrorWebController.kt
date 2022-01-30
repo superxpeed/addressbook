@@ -17,8 +17,7 @@ class ErrorWebController : ErrorController {
 
     @RequestMapping(path = ["/error"], method = [RequestMethod.GET, RequestMethod.POST])
     fun handleError(request: HttpServletRequest, response: HttpServletResponse): String? {
-        val status: Any = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
-        val statusCode = Integer.parseInt(status.toString())
+        val statusCode = Integer.parseInt(request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE).toString())
         if (statusCode == HttpStatus.NOT_FOUND.value()) return "404.html"
         if (statusCode == HttpStatus.UNAUTHORIZED.value()) {
             val objectMapper = ObjectMapper()

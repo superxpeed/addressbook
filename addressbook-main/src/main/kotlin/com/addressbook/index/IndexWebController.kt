@@ -33,7 +33,7 @@ class IndexWebController {
 
     @PostMapping("/auth")
     fun auth(@RequestBody request: AuthRequest): ResponseEntity<Any> {
-        val user: com.addressbook.model.User = request.login?.let { dao.getUserByLogin(it) }
+        val user = request.login?.let { dao.getUserByLogin(it) }
                 ?: return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
         if (!encoder.matches(request.password, user.password))
             return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)

@@ -16,7 +16,7 @@ class AppUserDetailsService : UserDetailsService {
     lateinit var dao: DaoClient
 
     override fun loadUserByUsername(username: String): UserDetails {
-        val userEntity: User = dao.getUserByLogin(username) ?: throw UsernameNotFoundException("User not found!")
+        val userEntity = dao.getUserByLogin(username) ?: throw UsernameNotFoundException("User not found!")
         return AppUserDetails.fromUserEntityToCustomUserDetails(userEntity)
     }
 }

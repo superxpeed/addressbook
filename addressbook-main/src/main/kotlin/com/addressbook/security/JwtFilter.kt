@@ -25,7 +25,7 @@ class JwtFilter : GenericFilterBean() {
     override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
         val token = getTokenFromRequest(servletRequest as HttpServletRequest)
         if (token != null && jwtProvider.validateToken(token)) {
-            val customUserDetails: UserDetails = appUserDetailsService.loadUserByUsername(jwtProvider.getLoginFromToken(token))
+            val customUserDetails = appUserDetailsService.loadUserByUsername(jwtProvider.getLoginFromToken(token))
             SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.authorities)
         }
         filterChain.doFilter(servletRequest, servletResponse)
