@@ -24,7 +24,7 @@ class SpringFoxConfiguration {
                 .apiInfo(apiInfo())
     }
 
-    private fun apiInfo(): ApiInfo? {
+    private fun apiInfo(): ApiInfo {
         return ApiInfo(
                 "MongoDB Persistence Layer REST API",
                 "Spring Framework Application Example",
