@@ -6,6 +6,7 @@
     <option name="ALTERNATIVE_JRE_PATH" />
     <envs>
       <env name="DAO_IMPLEMENTATION" value="ignite-server" />
+      <env name="JWT_SECRET" value="q1w2e3r4" />
     </envs>
     <method v="2" />
   </configuration>

@@ -24,4 +24,4 @@ management:
     health:
       enabled: true
 jwt:
-  secret: q1w2e3r4
+  secret: ${JWT_SECRET}
