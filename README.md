@@ -1,4 +1,5 @@
-# Addressbook (Spring Ecosystem Application Example)
+# Spring Ecosystem Single Page Application Example
+### Spring Boot/Cloud/Eureka/Netflix/MVC using React/Redux for UI and MongoDB/PostgreSQL/Apache Ignite for data persistence
 
 #### Back-end:
 1. [**Spring Boot**](https://spring.io/projects/spring-boot): 
