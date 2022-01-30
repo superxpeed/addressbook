@@ -50,7 +50,7 @@ export default class MenuForm extends React.Component {
                     this.props.getBreadcrumbs(currentUrl);
                     this.props.getNextLevelMenus(currentUrl);
                 } else if (text === "false") {
-                    window.history.pushState('', '/', "404.html")
+                    window.history.pushState("", "/", "404.html")
                     window.location.pathname = "404.html"
                 }
             });

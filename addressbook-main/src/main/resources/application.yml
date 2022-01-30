@@ -1,5 +1,11 @@
 server:
   port: 9000
+  http2:
+    enabled: true
+  compression:
+    enabled: true
+    mime-types: text/html,text/plain,text/css,application/javascript,application/json
+    min-response-size: 1024
 eureka:
   client:
     service-url:
