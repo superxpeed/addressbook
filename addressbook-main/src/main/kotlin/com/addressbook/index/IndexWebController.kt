@@ -37,7 +37,6 @@ class IndexWebController {
                 ?: return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
         if (!encoder.matches(request.password, user.password))
             return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
-        val token = jwtProvider.generateToken(request.login)
-        return ResponseEntity(AuthResponse(token), HttpStatus.OK)
+        return ResponseEntity(AuthResponse(jwtProvider.generateToken(request.login)), HttpStatus.OK)
     }
 }

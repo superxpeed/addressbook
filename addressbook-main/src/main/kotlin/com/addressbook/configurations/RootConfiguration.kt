@@ -11,5 +11,4 @@ class RootConfiguration {
     fun mappingJackson2HttpMessageConverter(): MappingJackson2HttpMessageConverter {
         return MappingJackson2HttpMessageConverter()
     }
-
 }

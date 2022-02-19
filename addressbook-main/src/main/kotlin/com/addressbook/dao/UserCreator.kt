@@ -16,12 +16,7 @@ class UserCreator {
     @PostConstruct
     fun initUsers() {
         val encoder = BCryptPasswordEncoder()
-        val adminRoles = ArrayList<String>()
-        adminRoles.add("USER")
-        adminRoles.add("ADMIN")
-        val admin = User("admin", encoder.encode("adminPass"), adminRoles)
-        dao.createOrUpdateUser(admin)
-        val user = User("user", encoder.encode("userPass"), Collections.singletonList("USER"))
-        dao.createOrUpdateUser(user)
+        dao.createOrUpdateUser(User("admin", encoder.encode("adminPass"), listOf("USER", "ADMIN")))
+        dao.createOrUpdateUser(User("user", encoder.encode("userPass"), Collections.singletonList("USER")))
     }
 }

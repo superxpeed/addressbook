@@ -48,9 +48,7 @@ class AppUserDetails : UserDetails {
             val appDetails = AppUserDetails()
             appDetails.login = userEntity.login
             appDetails.password = userEntity.password
-            val grantedAuths = ArrayList<GrantedAuthority>()
-            userEntity.roles.forEach { x -> grantedAuths.add(SimpleGrantedAuthority("ROLE_$x")) }
-            appDetails.grantedAuthorities = grantedAuths
+            appDetails.grantedAuthorities = userEntity.roles.map { x -> SimpleGrantedAuthority("ROLE_$x") }.toList()
             return appDetails
         }
     }

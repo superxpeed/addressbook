@@ -23,19 +23,22 @@ class JwtFilter : GenericFilterBean() {
     lateinit var appUserDetailsService: AppUserDetailsService
 
     override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
-        val token = getTokenFromRequest(servletRequest as HttpServletRequest)
-        if (token != null && jwtProvider.validateToken(token)) {
-            val customUserDetails = appUserDetailsService.loadUserByUsername(jwtProvider.getLoginFromToken(token))
-            SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.authorities)
+        getTokenFromRequest(servletRequest as HttpServletRequest)?.let { s ->
+            if (jwtProvider.validateToken(s)) {
+                appUserDetailsService.loadUserByUsername(jwtProvider.getLoginFromToken(s)).also {
+                    SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(it, null, it.authorities)
+                }
+            }
         }
         filterChain.doFilter(servletRequest, servletResponse)
     }
 
     private fun getTokenFromRequest(request: HttpServletRequest): String? {
-        val bearer = request.getHeader(AUTHORIZATION)
-        return if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
-            bearer.substring(7)
-        } else null
+        request.getHeader(AUTHORIZATION).also {
+            return if (StringUtils.hasText(it) && it.startsWith("Bearer ")) {
+                it.substring(7)
+            } else null
+        }
     }
 
     companion object {

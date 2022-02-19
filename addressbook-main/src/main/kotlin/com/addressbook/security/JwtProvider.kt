@@ -37,7 +37,6 @@ class JwtProvider {
     }
 
     fun getLoginFromToken(token: String?): String {
-        val claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).body
-        return claims.subject
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).body.subject
     }
 }
