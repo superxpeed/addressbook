@@ -121,7 +121,7 @@ class MainController {
         return "redirect:/#/login"
     }
 
-    @ExceptionHandler(*[Throwable::class])
+    @ExceptionHandler(Throwable::class)
     fun handleError(response: HttpServletResponse, ex: Throwable) {
         ex.printStackTrace()
         response.status = 500

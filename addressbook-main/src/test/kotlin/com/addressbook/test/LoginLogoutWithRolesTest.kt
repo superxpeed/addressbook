@@ -1,4 +1,4 @@
-package com.addressbook.test;
+package com.addressbook.test
 
 import org.junit.Assert
 import org.junit.Test

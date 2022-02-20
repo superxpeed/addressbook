@@ -5,7 +5,6 @@ import com.addressbook.dto.FieldDescriptionDto
 import com.addressbook.dto.OrganizationDto
 import com.addressbook.dto.PersonDto
 import com.addressbook.model.*
-import java.util.*
 
 object FieldDescriptor {
 

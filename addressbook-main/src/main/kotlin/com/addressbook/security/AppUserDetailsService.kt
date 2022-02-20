@@ -1,7 +1,6 @@
 package com.addressbook.security
 
 import com.addressbook.dao.DaoClient
-import com.addressbook.model.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

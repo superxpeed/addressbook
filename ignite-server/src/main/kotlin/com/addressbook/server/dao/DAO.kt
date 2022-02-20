@@ -48,8 +48,10 @@ class DAO : AddressBookDAO {
                     EventType.EVT_CACHE_OBJECT_READ,
                     EventType.EVT_CACHE_OBJECT_REMOVED)
             discoverySpi = TcpDiscoverySpi()
-                    .also { spi -> spi.ipFinder = TcpDiscoveryMulticastIpFinder()
-                            .also { it.setAddresses(Collections.singleton("localhost:47500..47509")) } }
+                    .also { spi ->
+                        spi.ipFinder = TcpDiscoveryMulticastIpFinder()
+                                .also { it.setAddresses(Collections.singleton("localhost:47500..47509")) }
+                    }
         }
         ignite = Ignition.start(igniteConfiguration)
         ignite.cluster()?.active(true)
