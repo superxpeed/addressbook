@@ -88,14 +88,13 @@ class DAO : AddressBookDAO {
         return contactDtos
     }
 
-    override fun createOrUpdateUser(newUser: User): String {
+    override fun createOrUpdateUser(newUser: User) {
         var user = getById("login", newUser.login, User::class.java)
         user?.let {
             it.password = newUser.password
             it.roles = newUser.roles
         } ?: let { user = newUser }
         dataStore?.save(user)
-        return "OK"
     }
 
     override fun notLockedByUser(key: String, user: String): Boolean {
@@ -134,18 +133,16 @@ class DAO : AddressBookDAO {
         return true
     }
 
-    override fun unlockAllRecordsForUser(user: String): String {
+    override fun unlockAllRecordsForUser(user: String) {
         dataStore?.delete(dataStore?.createQuery(Lock::class.java)?.field("login")?.equal(user))
-        return "OK"
     }
 
     override fun getUserByLogin(login: String): User? {
         return getById("login", login, User::class.java)
     }
 
-    override fun clearMenus(): String {
+    override fun clearMenus() {
         dataStore?.delete(dataStore?.createQuery(MenuEntry::class.java))
-        return "OK"
     }
 
     override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {

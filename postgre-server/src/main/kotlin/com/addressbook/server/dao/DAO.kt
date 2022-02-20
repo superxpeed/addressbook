@@ -67,14 +67,13 @@ class DAO : AddressBookDAO {
     }
 
     @Transactional
-    override fun createOrUpdateUser(newUser: User): String {
+    override fun createOrUpdateUser(newUser: User) {
         var user = entityManager?.find(User::class.java, newUser.login)
         user?.let {
             it.password = newUser.password
             it.roles = newUser.roles
         } ?: let { user = newUser }
         entityManager?.persist(user)
-        return "OK"
     }
 
     @Transactional
@@ -119,10 +118,9 @@ class DAO : AddressBookDAO {
     }
 
     @Transactional
-    override fun unlockAllRecordsForUser(user: String): String {
+    override fun unlockAllRecordsForUser(user: String) {
         entityManager?.createQuery("SELECT u FROM Lock u WHERE u.login=:user", Lock::class.java)
                 .also { it?.setParameter("user", user) }?.resultList?.forEach { u -> entityManager?.remove(u) }
-        return "OK"
     }
 
     @Transactional
@@ -131,10 +129,9 @@ class DAO : AddressBookDAO {
     }
 
     @Transactional
-    override fun clearMenus(): String {
+    override fun clearMenus() {
         entityManager?.createNativeQuery("DELETE FROM menu_entry_roles")?.executeUpdate()
         entityManager?.createNativeQuery("DELETE FROM menus")?.executeUpdate()
-        return "OK"
     }
 
     @Transactional

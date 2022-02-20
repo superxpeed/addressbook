@@ -20,19 +20,19 @@ interface AddressBookDAO {
     fun createOrUpdateContacts(@RequestBody contactDtos: List<ContactDto>, @RequestParam user: String, @RequestParam targetPersonId: String): List<ContactDto>
 
     @PostMapping("/createOrUpdateUser")
-    fun createOrUpdateUser(@RequestBody newUser: User): String
+    fun createOrUpdateUser(@RequestBody newUser: User)
 
     @PostMapping("/lockUnlockRecord")
     fun lockUnlockRecord(@RequestParam key: String, @RequestParam user: String, @RequestParam lock: Boolean): Boolean
 
     @PostMapping("/unlockAllRecordsForUser")
-    fun unlockAllRecordsForUser(@RequestParam user: String): String
+    fun unlockAllRecordsForUser(@RequestParam user: String)
 
     @PostMapping("/getUserByLogin")
     fun getUserByLogin(@RequestParam login: String): User?
 
     @PostMapping("/clearMenus")
-    fun clearMenus(): String
+    fun clearMenus()
 
     @PostMapping("/createOrUpdateMenuEntry")
     fun createOrUpdateMenuEntry(@RequestBody menuEntryDto: MenuEntryDto, @RequestParam parentEntryId: String?): MenuEntryDto

@@ -122,7 +122,7 @@ class DAO : AddressBookDAO {
         return contactDtos
     }
 
-    override fun createOrUpdateUser(newUser: User): String {
+    override fun createOrUpdateUser(newUser: User) {
         val cacheUser: IgniteCache<String, User>? = ignite?.getOrCreateCache(FieldDescriptor.USER_CACHE)
         var user = cacheUser?.get(newUser.login)
         user?.let {
@@ -130,7 +130,6 @@ class DAO : AddressBookDAO {
             it.roles = newUser.roles
         } ?: let { user = newUser }
         cacheUser?.put(user?.login, user)
-        return "OK"
     }
 
     override fun notLockedByUser(key: String, user: String): Boolean {
@@ -169,10 +168,9 @@ class DAO : AddressBookDAO {
         return if (lock) cacheLocks?.putIfAbsent(key, Lock(key, user)) as Boolean else cacheLocks?.remove(key, Lock(key, user)) as Boolean
     }
 
-    override fun unlockAllRecordsForUser(user: String): String {
+    override fun unlockAllRecordsForUser(user: String) {
         val cacheLocks: IgniteCache<String, Lock>? = ignite?.getOrCreateCache(FieldDescriptor.LOCK_RECORD_CACHE)
         cacheLocks?.removeAll(HashSet(cacheLocks.query(ScanQuery { _, v -> v.login == user }, Cache.Entry<String, Lock>::getKey).all))
-        return "OK"
     }
 
     override fun getUserByLogin(login: String): User? {
@@ -180,10 +178,9 @@ class DAO : AddressBookDAO {
         return cacheUser?.get(login)
     }
 
-    override fun clearMenus(): String {
+    override fun clearMenus() {
         val cacheMenu: IgniteCache<String, MenuEntry>? = ignite?.getOrCreateCache(FieldDescriptor.MENU_CACHE)
         cacheMenu?.clear()
-        return "OK"
     }
 
     override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {
