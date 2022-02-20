@@ -104,20 +104,21 @@ class DAO : AddressBookDAO {
         val cacheContacts: IgniteCache<String, Contact>? = ignite?.getOrCreateCache(FieldDescriptor.CONTACT_CACHE)
         val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         val tx = ignite?.transactions()?.txStart()
-        for (contactDto in contactDtos) {
-            contactDto.personId = targetPersonId
-            val contact = cacheContacts?.get(contactDto.id) ?: Contact()
-            with(contact) {
-                data = contactDto.data
-                description = contactDto.description
-                personId = contactDto.personId
-                type = ContactType.values()[Integer.parseInt(contactDto.type)]
+        tx.use {
+            for (contactDto in contactDtos) {
+                contactDto.personId = targetPersonId
+                val contact = cacheContacts?.get(contactDto.id) ?: Contact()
+                with(contact) {
+                    data = contactDto.data
+                    description = contactDto.description
+                    personId = contactDto.personId
+                    type = ContactType.values()[Integer.parseInt(contactDto.type)]
+                }
+                cacheContacts?.put(contact.contactId, contact)
             }
-            cacheContacts?.put(contact.contactId, contact)
+            toDelete.forEach { cacheContacts?.remove(it) }
+            tx?.commit()
         }
-        toDelete.forEach { cacheContacts?.remove(it) }
-        tx?.commit()
-        tx?.close()
         return contactDtos
     }
 
@@ -208,15 +209,16 @@ class DAO : AddressBookDAO {
         val cache: IgniteCache<String, MenuEntry>? = ignite?.getOrCreateCache(FieldDescriptor.MENU_CACHE)
         val menuEntryDtos = ArrayList<MenuEntryDto>()
         val cursor = cache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "parentId = ?").setArgs(checkIfMenuExists(cache, url)[0].value?.id))
-        cursor?.forEach { e ->
-            for (authority in authorities) {
-                if (e.value.roles != null && e.value.roles!!.contains(authority.replace("ROLE_", ""))) {
-                    menuEntryDtos.add(MenuEntryDto(e.value))
-                    break
+        cursor.use {
+            cursor?.forEach { e ->
+                for (authority in authorities) {
+                    if (e.value.roles != null && e.value.roles!!.contains(authority.replace("ROLE_", ""))) {
+                        menuEntryDtos.add(MenuEntryDto(e.value))
+                        break
+                    }
                 }
             }
         }
-        cursor?.close()
         return menuEntryDtos
     }
 
@@ -266,8 +268,7 @@ class DAO : AddressBookDAO {
                 .append(" limit ? offset ?")
                 .toString()).setArgs(pageSize, (page - 1) * pageSize))
         val dtoConstructor = FieldDescriptor.getDtoClass(cacheName)?.getConstructor(FieldDescriptor.getCacheClass(cacheName))
-        cursor?.forEach { x -> dtoConstructor?.newInstance(x.value)?.let { cacheDtoArrayList.add(it) } }
-        cursor?.close()
+        cursor.use { cursor?.forEach { x -> dtoConstructor?.newInstance(x.value)?.let { cacheDtoArrayList.add(it) } } }
         return cacheDtoArrayList
     }
 
@@ -275,8 +276,7 @@ class DAO : AddressBookDAO {
         val cache: IgniteCache<String, Contact>? = ignite?.getOrCreateCache(FieldDescriptor.CONTACT_CACHE)
         val cacheDtoArrayList = ArrayList<ContactDto>()
         val cursor = cache?.query(SqlQuery<String, Contact>(Contact::class.java, "personId = ? order by type").setArgs(id))
-        cursor?.forEach { cacheDtoArrayList.add(ContactDto(it.value)) }
-        cursor?.close()
+        cursor.use { cursor?.forEach { cacheDtoArrayList.add(ContactDto(it.value)) } }
         return cacheDtoArrayList
     }
 
@@ -293,8 +293,8 @@ class DAO : AddressBookDAO {
         }
         val cache: IgniteCache<String, Any>? = ignite?.getOrCreateCache(cacheName)
         val cursor = cache?.query(SqlQuery<String, Any>(FieldDescriptor.getCacheClass(cacheName), getQuerySql(filterDto).toString()))
-        val size = cursor?.all?.size as Int
-        cursor.close()
+        var size = 0
+        cursor.use { size = cursor?.all?.size as Int }
         return size
     }
 
