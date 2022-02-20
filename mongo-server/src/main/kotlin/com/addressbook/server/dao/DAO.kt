@@ -24,19 +24,18 @@ class DAO : AddressBookDAO {
     private val dateFormatEqual = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
     private val dateFormatOther = SimpleDateFormat("yyyy-MM-dd")
 
-    private var mongoClient: MongoClient? = null
-    private var dataStore: Datastore? = null
+    private lateinit var mongoClient: MongoClient
+    private lateinit var dataStore: Datastore
 
     @PostConstruct
     fun startClient() {
-        if (mongoClient != null) return
         mongoClient = MongoClient(System.getenv("MONGO_HOST"), Integer.parseInt(System.getenv("MONGO_PORT")))
         dataStore = Morphia().also { it.mapPackage("com.addressbook.model") }
                 .createDatastore(mongoClient, "addressbook").also { it.ensureIndexes() }
     }
 
     private fun <T : Any> getById(idColumn: String, id: String?, clazz: Class<T>): T? {
-        val collection = dataStore?.createQuery(clazz)
+        val collection = dataStore.createQuery(clazz)
                 ?.field(idColumn)
                 ?.equal(id)
                 ?.find()
@@ -52,7 +51,7 @@ class DAO : AddressBookDAO {
             name = organizationDto.name
             addr = Address(organizationDto.street, organizationDto.zip)
         }
-        dataStore?.save(organization)
+        dataStore.save(organization)
         return organizationDto
     }
 
@@ -66,7 +65,7 @@ class DAO : AddressBookDAO {
             salary = personDto.salary
             resume = personDto.resume
         }
-        dataStore?.save(person)
+        dataStore.save(person)
         return personDto
     }
 
@@ -82,9 +81,9 @@ class DAO : AddressBookDAO {
                 personId = contactDto.personId
                 type = ContactType.values()[Integer.parseInt(contactDto.type)]
             }
-            dataStore?.save(contact)
+            dataStore.save(contact)
         }
-        toDelete.forEach { dataStore?.delete(getById("contactId", it, Contact::class.java)) }
+        toDelete.forEach { dataStore.delete(getById("contactId", it, Contact::class.java)) }
         return contactDtos
     }
 
@@ -94,7 +93,7 @@ class DAO : AddressBookDAO {
             it.password = newUser.password
             it.roles = newUser.roles
         } ?: let { user = newUser }
-        dataStore?.save(user)
+        dataStore.save(user)
     }
 
     override fun notLockedByUser(key: String, user: String): Boolean {
@@ -125,16 +124,16 @@ class DAO : AddressBookDAO {
 
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         if (lock) {
-            dataStore?.save(Lock(key, user))
+            dataStore.save(Lock(key, user))
         } else {
             val userLocked = getById("id", key, Lock::class.java) ?: return false
-            dataStore?.delete(userLocked)
+            dataStore.delete(userLocked)
         }
         return true
     }
 
     override fun unlockAllRecordsForUser(user: String) {
-        dataStore?.delete(dataStore?.createQuery(Lock::class.java)?.field("login")?.equal(user))
+        dataStore.delete(dataStore.createQuery(Lock::class.java)?.field("login")?.equal(user))
     }
 
     override fun getUserByLogin(login: String): User? {
@@ -142,7 +141,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun clearMenus() {
-        dataStore?.delete(dataStore?.createQuery(MenuEntry::class.java))
+        dataStore.delete(dataStore.createQuery(MenuEntry::class.java))
     }
 
     override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {
@@ -154,18 +153,18 @@ class DAO : AddressBookDAO {
             parentEntryId?.let { menuEntry.parentId = parentEntryId }
         }
         menuEntryDto.id = menuEntry.id
-        dataStore?.save(menuEntry)
+        dataStore.save(menuEntry)
         return menuEntryDto
     }
 
     private fun checkIfMenuExists(url: String): List<MenuEntry> {
-        val entries = dataStore?.createQuery(MenuEntry::class.java)?.field("url")?.equal(url)?.find()?.toList()
-        return if (entries != null && entries.isEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
+        val entries = dataStore.createQuery(MenuEntry::class.java)?.field("url")?.equal(url)?.find()?.toList()
+        return if (entries != null && entries.isNotEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
     }
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
         val menuEntryDtos = ArrayList<MenuEntryDto>()
-        dataStore?.createQuery(MenuEntry::class.java)?.field("parentId")?.equal(checkIfMenuExists(url)[0].id)?.find()?.toList()?.forEach { e ->
+        dataStore.createQuery(MenuEntry::class.java)?.field("parentId")?.equal(checkIfMenuExists(url)[0].id)?.find()?.toList()?.forEach { e ->
             for (authority in authorities) {
                 if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
                     menuEntryDtos.add(MenuEntryDto(e))
@@ -182,7 +181,7 @@ class DAO : AddressBookDAO {
         val breadcrumbs = ArrayList<BreadcrumbDto>()
         if (menuEntry.parentId == null) return breadcrumbs
         while (true) {
-            val menuEntries = dataStore?.createQuery(MenuEntry::class.java)?.field("id")?.equal(menuEntry.parentId)?.find()?.toList() as MutableList<MenuEntry>
+            val menuEntries = dataStore.createQuery(MenuEntry::class.java)?.field("id")?.equal(menuEntry.parentId)?.find()?.toList() as MutableList<MenuEntry>
             if (menuEntries.isNotEmpty()) {
                 menuEntry = menuEntries[0]
                 breadcrumbs.add(0, BreadcrumbDto(menuEntry.name, menuEntry.url))
@@ -262,7 +261,7 @@ class DAO : AddressBookDAO {
             sortName
         }
         val dtoConstructor = FieldDescriptor.getDtoClass(cacheName)?.getConstructor(FieldDescriptor.getCacheClass(cacheName))
-        getQuerySql(filterDto, dataStore?.createQuery(FieldDescriptor.getCacheClass(cacheName))).let {
+        getQuerySql(filterDto, dataStore.createQuery(FieldDescriptor.getCacheClass(cacheName))).let {
             if (sortOrder == "asc") {
                 it?.order(Sort.ascending(sortNameNew))
             } else {
@@ -273,20 +272,20 @@ class DAO : AddressBookDAO {
     }
 
     override fun getContactsByPersonId(id: String): List<ContactDto> {
-        return dataStore?.createQuery(Contact::class.java)?.field("personId")?.equal(id)?.order(Sort.ascending("type"))?.find()?.toList()?.map { ContactDto(it) }?.toList()
+        return dataStore.createQuery(Contact::class.java)?.field("personId")?.equal(id)?.order(Sort.ascending("type"))?.find()?.toList()?.map { ContactDto(it) }?.toList()
                 ?: emptyList()
     }
 
     override fun getTotalDataSize(cacheName: String, filterDto: List<FilterDto>): Int {
         return if (filterDto.isEmpty()) {
-            dataStore?.createQuery(FieldDescriptor.getCacheClass(cacheName))?.count()?.toInt() as Int
+            dataStore.createQuery(FieldDescriptor.getCacheClass(cacheName))?.count()?.toInt() as Int
         } else {
-            getQuerySql(filterDto, dataStore?.createQuery(FieldDescriptor.getCacheClass(cacheName)))?.count()?.toInt() as Int
+            getQuerySql(filterDto, dataStore.createQuery(FieldDescriptor.getCacheClass(cacheName)))?.count()?.toInt() as Int
         }
     }
 
     @PreDestroy
     fun stopClient() {
-        mongoClient?.close()
+        mongoClient.close()
     }
 }
