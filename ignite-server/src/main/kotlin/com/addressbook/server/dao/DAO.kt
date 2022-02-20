@@ -15,17 +15,16 @@ import org.apache.ignite.cache.query.ScanQuery
 import org.apache.ignite.cache.query.SqlQuery
 import org.apache.ignite.configuration.CacheConfiguration
 import org.apache.ignite.configuration.IgniteConfiguration
+import org.apache.ignite.events.EventType
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder
 import org.slf4j.LoggerFactory
-import org.apache.ignite.events.EventType
 import org.springframework.stereotype.Controller
 import java.sql.Timestamp
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 import javax.cache.Cache
-import kotlin.collections.HashSet
 
 @Controller
 class DAO : AddressBookDAO {
@@ -48,19 +47,21 @@ class DAO : AddressBookDAO {
                     EventType.EVT_CACHE_OBJECT_PUT,
                     EventType.EVT_CACHE_OBJECT_READ,
                     EventType.EVT_CACHE_OBJECT_REMOVED)
-            discoverySpi = TcpDiscoverySpi().also { spi -> spi.ipFinder = TcpDiscoveryMulticastIpFinder().also { it.setAddresses(Collections.singleton("localhost:47500..47509")) } }
+            discoverySpi = TcpDiscoverySpi()
+                    .also { spi -> spi.ipFinder = TcpDiscoveryMulticastIpFinder()
+                            .also { it.setAddresses(Collections.singleton("localhost:47500..47509")) } }
         }
         ignite = Ignition.start(igniteConfiguration)
         ignite.cluster()?.active(true)
-        for (cache in FieldDescriptor.getCacheClasses().entries) {
+        FieldDescriptor.getCacheClasses().entries.forEach {
             val cfg = CacheConfiguration<String, Any>()
             with(cfg) {
                 cacheMode = CacheMode.PARTITIONED
-                name = cache.key
+                name = it.key
                 atomicityMode = CacheAtomicityMode.TRANSACTIONAL
                 isStatisticsEnabled = true
                 writeSynchronizationMode = CacheWriteSynchronizationMode.FULL_SYNC
-                setIndexedTypes(String::class.java, cache.value)
+                setIndexedTypes(String::class.java, it.value)
             }
             val createdCache: IgniteCache<String, Any>? = ignite.getOrCreateCache(cfg)
             if (ignite.cluster()?.forDataNodes(createdCache?.name)?.nodes()?.isEmpty() as Boolean) {
@@ -104,14 +105,14 @@ class DAO : AddressBookDAO {
         val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         val tx = ignite.transactions()?.txStart()
         tx.use {
-            for (contactDto in contactDtos) {
-                contactDto.personId = targetPersonId
-                val contact = cacheContacts?.get(contactDto.id) ?: Contact()
+            contactDtos.forEach {
+                it.personId = targetPersonId
+                val contact = cacheContacts?.get(it.id) ?: Contact()
                 with(contact) {
-                    data = contactDto.data
-                    description = contactDto.description
-                    personId = contactDto.personId
-                    type = ContactType.values()[Integer.parseInt(contactDto.type)]
+                    data = it.data
+                    description = it.description
+                    personId = it.personId
+                    type = ContactType.values()[Integer.parseInt(it.type)]
                 }
                 cacheContacts?.put(contact.contactId, contact)
             }
@@ -239,16 +240,16 @@ class DAO : AddressBookDAO {
     private fun getQuerySql(filterDto: List<FilterDto>): StringBuilder {
         val baseSql = StringBuilder(" ")
         if (filterDto.isNotEmpty()) {
-            for (filter in filterDto) {
+            filterDto.forEach {
                 var addSql = ""
-                when (filter.type) {
-                    "NumberFilter" -> addSql = filter.name + getComparator(filter) + Integer.parseInt(filter.value)
-                    "TextFilter" -> addSql = filter.name + " like '%" + filter.value?.replace("'", "''") + "%'"
-                    "DateFilter" -> addSql = filter.name + getComparator(filter) + "'" + filter.value + "'"
+                when (it.type) {
+                    "NumberFilter" -> addSql = it.name + getComparator(it) + Integer.parseInt(it.value)
+                    "TextFilter" -> addSql = it.name + " like '%" + it.value?.replace("'", "''") + "%'"
+                    "DateFilter" -> addSql = it.name + getComparator(it) + "'" + it.value + "'"
                 }
-                if (filterDto.indexOf(filter) == 0) baseSql.append(" where ")
+                if (filterDto.indexOf(it) == 0) baseSql.append(" where ")
                 baseSql.append(addSql)
-                if (filterDto.indexOf(filter) != (filterDto.size - 1)) baseSql.append(" and ")
+                if (filterDto.indexOf(it) != (filterDto.size - 1)) baseSql.append(" and ")
             }
         }
         return baseSql
@@ -257,12 +258,14 @@ class DAO : AddressBookDAO {
     override fun selectCachePage(page: Int, pageSize: Int, sortName: String, sortOrder: String, filterDto: List<FilterDto>, cacheName: String): List<Any> {
         val cache: IgniteCache<String, Any>? = ignite.getOrCreateCache(cacheName)
         val cacheDtoArrayList = ArrayList<Any>()
-        val cursor = cache?.query(SqlQuery<String, Any>(FieldDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
-                .append(" order by ")
-                .append(sortName).append(" ")
-                .append(sortOrder)
-                .append(" limit ? offset ?")
-                .toString()).setArgs(pageSize, (page - 1) * pageSize))
+        val cursor = cache?.query(SqlQuery<String, Any>(FieldDescriptor.getCacheClass(cacheName),
+                getQuerySql(filterDto)
+                        .append(" order by ")
+                        .append(sortName)
+                        .append(" ")
+                        .append(sortOrder)
+                        .append(" limit ? offset ?").toString())
+                .setArgs(pageSize, (page - 1) * pageSize))
         val dtoConstructor = FieldDescriptor.getDtoClass(cacheName)?.getConstructor(FieldDescriptor.getCacheClass(cacheName))
         cursor.use { cursor?.forEach { x -> dtoConstructor?.newInstance(x.value)?.let { cacheDtoArrayList.add(it) } } }
         return cacheDtoArrayList
@@ -277,8 +280,7 @@ class DAO : AddressBookDAO {
     }
 
     private fun getComparator(filterDto: FilterDto): String {
-        return if (filterDto.comparator == null || filterDto.comparator.equals(""))
-            " = "
+        return if (filterDto.comparator == null || filterDto.comparator.equals("")) " = "
         else " " + filterDto.comparator + " "
     }
 

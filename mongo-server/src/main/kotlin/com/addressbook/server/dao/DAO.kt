@@ -13,7 +13,6 @@ import dev.morphia.query.Sort
 import org.springframework.stereotype.Controller
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
@@ -30,8 +29,10 @@ class DAO : AddressBookDAO {
     @PostConstruct
     fun startClient() {
         mongoClient = MongoClient(System.getenv("MONGO_HOST"), Integer.parseInt(System.getenv("MONGO_PORT")))
-        dataStore = Morphia().also { it.mapPackage("com.addressbook.model") }
-                .createDatastore(mongoClient, "addressbook").also { it.ensureIndexes() }
+        dataStore = Morphia()
+                .also { it.mapPackage("com.addressbook.model") }
+                .createDatastore(mongoClient, "addressbook")
+                .also { it.ensureIndexes() }
     }
 
     private fun <T : Any> getById(idColumn: String, id: String?, clazz: Class<T>): T? {
@@ -72,14 +73,14 @@ class DAO : AddressBookDAO {
     override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, targetPersonId: String): List<ContactDto> {
         if (contactDtos.isEmpty()) return contactDtos
         val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
-        for (contactDto in contactDtos) {
-            contactDto.personId = targetPersonId
-            val contact = getById("contactId", contactDto.id, Contact::class.java) ?: Contact()
+        contactDtos.forEach {
+            it.personId = targetPersonId
+            val contact = getById("contactId", it.id, Contact::class.java) ?: Contact()
             with(contact) {
-                data = contactDto.data
-                description = contactDto.description
-                personId = contactDto.personId
-                type = ContactType.values()[Integer.parseInt(contactDto.type)]
+                data = it.data
+                description = it.description
+                personId = it.personId
+                type = ContactType.values()[Integer.parseInt(it.type)]
             }
             dataStore.save(contact)
         }
@@ -133,7 +134,9 @@ class DAO : AddressBookDAO {
     }
 
     override fun unlockAllRecordsForUser(user: String) {
-        dataStore.delete(dataStore.createQuery(Lock::class.java)?.field("login")?.equal(user))
+        dataStore.delete(dataStore.createQuery(Lock::class.java)
+                ?.field("login")
+                ?.equal(user))
     }
 
     override fun getUserByLogin(login: String): User? {
@@ -158,20 +161,29 @@ class DAO : AddressBookDAO {
     }
 
     private fun checkIfMenuExists(url: String): List<MenuEntry> {
-        val entries = dataStore.createQuery(MenuEntry::class.java)?.field("url")?.equal(url)?.find()?.toList()
+        val entries = dataStore.createQuery(MenuEntry::class.java)
+                ?.field("url")
+                ?.equal(url)
+                ?.find()
+                ?.toList()
         return if (entries != null && entries.isNotEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
     }
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
         val menuEntryDtos = ArrayList<MenuEntryDto>()
-        dataStore.createQuery(MenuEntry::class.java)?.field("parentId")?.equal(checkIfMenuExists(url)[0].id)?.find()?.toList()?.forEach { e ->
-            for (authority in authorities) {
-                if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
-                    menuEntryDtos.add(MenuEntryDto(e))
-                    break
+        dataStore.createQuery(MenuEntry::class.java)
+                ?.field("parentId")
+                ?.equal(checkIfMenuExists(url)[0].id)
+                ?.find()
+                ?.toList()
+                ?.forEach { e ->
+                    for (authority in authorities) {
+                        if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
+                            menuEntryDtos.add(MenuEntryDto(e))
+                            break
+                        }
+                    }
                 }
-            }
-        }
         return menuEntryDtos
     }
 
@@ -181,7 +193,11 @@ class DAO : AddressBookDAO {
         val breadcrumbs = ArrayList<BreadcrumbDto>()
         if (menuEntry.parentId == null) return breadcrumbs
         while (true) {
-            val menuEntries = dataStore.createQuery(MenuEntry::class.java)?.field("id")?.equal(menuEntry.parentId)?.find()?.toList() as MutableList<MenuEntry>
+            val menuEntries = dataStore.createQuery(MenuEntry::class.java)
+                    ?.field("id")
+                    ?.equal(menuEntry.parentId)
+                    ?.find()
+                    ?.toList() as MutableList<MenuEntry>
             if (menuEntries.isNotEmpty()) {
                 menuEntry = menuEntries[0]
                 breadcrumbs.add(0, BreadcrumbDto(menuEntry.name, menuEntry.url))
@@ -194,15 +210,15 @@ class DAO : AddressBookDAO {
     private fun <T : Any> getQuerySql(filterDto: List<FilterDto>, queryBase: Query<T>?): Query<T>? {
         var temp = queryBase
         if (filterDto.isNotEmpty()) {
-            for (filter in filterDto) {
-                if (filter.name == "street" || filter.name == "zip") {
-                    filter.name = "addr.$filter.name"
+            filterDto.forEach {
+                if (it.name == "street" || it.name == "zip") {
+                    it.name = "addr.$it.name"
                 }
-                when (filter.type) {
+                when (it.type) {
                     "NumberFilter" -> {
-                        val tempFieldEnd = temp?.field(filter.name)
-                        val query = Integer.parseInt(filter.value)
-                        when (filter.comparator) {
+                        val tempFieldEnd = temp?.field(it.name)
+                        val query = Integer.parseInt(it.value)
+                        when (it.comparator) {
                             "=" -> temp = tempFieldEnd?.equal(query)
                             ">" -> temp = tempFieldEnd?.greaterThan(query)
                             ">=" -> temp = tempFieldEnd?.greaterThanOrEq(query)
@@ -210,40 +226,30 @@ class DAO : AddressBookDAO {
                             "<" -> temp = tempFieldEnd?.lessThan(query)
                         }
                     }
-                    "TextFilter" -> temp = temp?.field(filter.name)?.containsIgnoreCase(filter.value)
+                    "TextFilter" -> temp = temp?.field(it.name)?.containsIgnoreCase(it.value)
                     "DateFilter" -> {
-                        filter.value = filter.value?.substring(0, 10)
-                        val dateBefore = dateFormatEqual.parse(filter.value + "T00:00:00")
-                        val dateAfter = dateFormatEqual.parse(filter.value + "T23:59:59")
-                        val dateOther = dateFormatOther.parse(filter.value)
-                        when (filter.comparator) {
+                        it.value = it.value?.substring(0, 10)
+                        val dateBefore = dateFormatEqual.parse(it.value + "T00:00:00")
+                        val dateAfter = dateFormatEqual.parse(it.value + "T23:59:59")
+                        val dateOther = dateFormatOther.parse(it.value)
+                        when (it.comparator) {
                             "=" -> {
-                                temp = temp?.field(filter.name)
-                                        ?.greaterThan(Timestamp(dateBefore.time))
-                                        ?.field(filter.name)
-                                        ?.lessThan(Timestamp(dateAfter.time))
+                                temp = temp?.field(it.name)?.greaterThan(Timestamp(dateBefore.time))?.field(it.name)?.lessThan(Timestamp(dateAfter.time))
                             }
                             "!=" -> {
-                                temp = temp?.field(filter.name)
-                                        ?.lessThan(Timestamp(dateBefore.time))
-                                        ?.field(filter.name)
-                                        ?.greaterThan(Timestamp(dateAfter.time))
+                                temp = temp?.field(it.name)?.lessThan(Timestamp(dateBefore.time))?.field(it.name)?.greaterThan(Timestamp(dateAfter.time))
                             }
                             ">" -> {
-                                temp = temp?.field(filter.name)
-                                        ?.greaterThan(Timestamp(dateOther.time))
+                                temp = temp?.field(it.name)?.greaterThan(Timestamp(dateOther.time))
                             }
                             ">=" -> {
-                                temp = temp?.field(filter.name)
-                                        ?.greaterThanOrEq(Timestamp(dateOther.time))
+                                temp = temp?.field(it.name)?.greaterThanOrEq(Timestamp(dateOther.time))
                             }
                             "<=" -> {
-                                temp = temp?.field(filter.name)
-                                        ?.lessThanOrEq(Timestamp(dateOther.time))
+                                temp = temp?.field(it.name)?.lessThanOrEq(Timestamp(dateOther.time))
                             }
                             "<" -> {
-                                temp = temp?.field(filter.name)
-                                        ?.lessThan(Timestamp(dateOther.time))
+                                temp = temp?.field(it.name)?.lessThan(Timestamp(dateOther.time))
                             }
                         }
                     }
@@ -267,12 +273,26 @@ class DAO : AddressBookDAO {
             } else {
                 it?.order(Sort.descending(sortNameNew))
             }
-        }?.find(FindOptions().skip(((page - 1) * pageSize)).limit(pageSize))?.toList()?.forEach { e -> dtoConstructor?.newInstance(e)?.let { cacheDtoArrayList.add(it) } }
+        }?.find(FindOptions()
+                .skip(((page - 1) * pageSize))
+                .limit(pageSize))
+                ?.toList()
+                ?.forEach { e ->
+                    dtoConstructor?.newInstance(e)
+                            ?.let { cacheDtoArrayList.add(it) }
+                }
         return cacheDtoArrayList
     }
 
     override fun getContactsByPersonId(id: String): List<ContactDto> {
-        return dataStore.createQuery(Contact::class.java)?.field("personId")?.equal(id)?.order(Sort.ascending("type"))?.find()?.toList()?.map { ContactDto(it) }?.toList()
+        return dataStore.createQuery(Contact::class.java)
+                ?.field("personId")
+                ?.equal(id)
+                ?.order(Sort.ascending("type"))
+                ?.find()
+                ?.toList()
+                ?.map { ContactDto(it) }
+                ?.toList()
                 ?: emptyList()
     }
 
@@ -280,7 +300,9 @@ class DAO : AddressBookDAO {
         return if (filterDto.isEmpty()) {
             dataStore.createQuery(FieldDescriptor.getCacheClass(cacheName))?.count()?.toInt() as Int
         } else {
-            getQuerySql(filterDto, dataStore.createQuery(FieldDescriptor.getCacheClass(cacheName)))?.count()?.toInt() as Int
+            getQuerySql(filterDto, dataStore.createQuery(FieldDescriptor.getCacheClass(cacheName)))
+                    ?.count()
+                    ?.toInt() as Int
         }
     }
 
