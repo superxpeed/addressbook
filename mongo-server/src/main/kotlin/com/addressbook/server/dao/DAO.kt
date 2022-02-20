@@ -31,10 +31,8 @@ class DAO : AddressBookDAO {
     fun startClient() {
         if (mongoClient != null) return
         mongoClient = MongoClient(System.getenv("MONGO_HOST"), Integer.parseInt(System.getenv("MONGO_PORT")))
-        val morphia = Morphia()
-        morphia.mapPackage("com.addressbook.model")
-        dataStore = morphia.createDatastore(mongoClient, "addressbook")
-        dataStore?.ensureIndexes()
+        dataStore = Morphia().also { it.mapPackage("com.addressbook.model") }
+                .createDatastore(mongoClient, "addressbook").also { it.ensureIndexes() }
     }
 
     private fun <T : Any> getById(idColumn: String, id: String?, clazz: Class<T>): T? {
@@ -47,60 +45,55 @@ class DAO : AddressBookDAO {
     }
 
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
-        var organization = getById("id", organizationDto.id, Organization::class.java)
-        if (organization == null) {
-            organization = Organization(organizationDto)
+        val organization = getById("id", organizationDto.id, Organization::class.java) ?: Organization(organizationDto)
+        with(organization) {
+            type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
+            lastUpdated = Timestamp(System.currentTimeMillis())
+            name = organizationDto.name
+            addr = Address(organizationDto.street, organizationDto.zip)
         }
-        organization.type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
-        organization.lastUpdated = Timestamp(System.currentTimeMillis())
-        organization.name = organizationDto.name
-        organization.addr = Address(organizationDto.street, organizationDto.zip)
         dataStore?.save(organization)
         return organizationDto
     }
 
     override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
-        var person = if (personDto.id != null) getById("id", personDto.id, Person::class.java) else null
-        if (person == null) {
-            person = Person()
-            personDto.id = person.id
+        val person = personDto.id?.let { getById("id", personDto.id, Person::class.java) }
+                ?: Person().also { personDto.id = it.id }
+        with(person) {
+            firstName = personDto.firstName
+            lastName = personDto.lastName
+            orgId = personDto.orgId
+            salary = personDto.salary
+            resume = personDto.resume
         }
-        person.firstName = personDto.firstName
-        person.lastName = personDto.lastName
-        person.orgId = personDto.orgId
-        person.salary = personDto.salary
-        person.resume = personDto.resume
         dataStore?.save(person)
         return personDto
     }
 
-    override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, personId: String): List<ContactDto> {
+    override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, targetPersonId: String): List<ContactDto> {
         if (contactDtos.isEmpty()) return contactDtos
-        var toDelete = getContactsByPersonId(personId).mapNotNull { it.id }
-        val updated = contactDtos.mapNotNull { it.id }
-        toDelete = toDelete.minus(updated)
+        val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         for (contactDto in contactDtos) {
-            contactDto.personId = personId
-            var contact = getById("contactId", contactDto.id, Contact::class.java)
-            if (contact == null) contact = Contact()
-            contact.data = contactDto.data
-            contact.description = contactDto.description
-            contact.personId = contactDto.personId
-            contact.type = ContactType.values()[Integer.parseInt(contactDto.type)]
+            contactDto.personId = targetPersonId
+            val contact = getById("contactId", contactDto.id, Contact::class.java) ?: Contact()
+            with(contact) {
+                data = contactDto.data
+                description = contactDto.description
+                personId = contactDto.personId
+                type = ContactType.values()[Integer.parseInt(contactDto.type)]
+            }
             dataStore?.save(contact)
         }
-        for (id in toDelete) {
-            dataStore?.delete(getById("contactId", id, Contact::class.java))
-        }
+        toDelete.forEach { dataStore?.delete(getById("contactId", it, Contact::class.java)) }
         return contactDtos
     }
 
     override fun createOrUpdateUser(newUser: User): String {
         var user = getById("login", newUser.login, User::class.java)
-        if (user != null) {
-            user.password = newUser.password
-            user.roles = newUser.roles
-        } else user = newUser
+        user?.let {
+            it.password = newUser.password
+            it.roles = newUser.roles
+        } ?: let { user = newUser }
         dataStore?.save(user)
         return "OK"
     }
@@ -156,34 +149,31 @@ class DAO : AddressBookDAO {
     }
 
     override fun createOrUpdateMenuEntry(menuEntryDto: MenuEntryDto, parentEntryId: String?): MenuEntryDto {
-        val menuEntry = if (menuEntryDto.id != null) getById("id", menuEntryDto.id, MenuEntry::class.java) else MenuEntry()
-        menuEntry?.name = menuEntryDto.name
-        menuEntry?.url = menuEntryDto.url
-        menuEntry?.roles = menuEntryDto.roles
-        if (parentEntryId != null) menuEntry?.parentId = parentEntryId
-        menuEntryDto.id = menuEntry?.id
+        val menuEntry = menuEntryDto.id?.let { getById("id", menuEntryDto.id, MenuEntry::class.java) } ?: MenuEntry()
+        with(menuEntry) {
+            name = menuEntryDto.name
+            url = menuEntryDto.url
+            roles = menuEntryDto.roles
+            parentEntryId?.let { menuEntry.parentId = parentEntryId }
+        }
+        menuEntryDto.id = menuEntry.id
         dataStore?.save(menuEntry)
         return menuEntryDto
     }
 
-    private fun checkIfMenuExists(url: String): List<MenuEntry>? {
+    private fun checkIfMenuExists(url: String): List<MenuEntry> {
         val entries = dataStore?.createQuery(MenuEntry::class.java)?.field("url")?.equal(url)?.find()?.toList()
-        if (entries != null && entries.isEmpty()) throw IllegalArgumentException("Menu with url: $url doesn't exist")
-        return entries
+        return if (entries != null && entries.isEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
     }
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
-        val entries = checkIfMenuExists(url)
-        val menuEntry = entries?.get(0)
         val menuEntryDtos = ArrayList<MenuEntryDto>()
-        val cursor = dataStore?.createQuery(MenuEntry::class.java)?.field("parentId")?.equal(menuEntry?.id)?.find()?.toList()
-        if (cursor != null) {
-            for (e in cursor) {
-                for (authority in authorities) {
-                    if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
-                        menuEntryDtos.add(MenuEntryDto(e))
-                        break
-                    }
+        val cursor = dataStore?.createQuery(MenuEntry::class.java)?.field("parentId")?.equal(checkIfMenuExists(url)[0].id)?.find()?.toList()
+        cursor?.forEach { e ->
+            for (authority in authorities) {
+                if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
+                    menuEntryDtos.add(MenuEntryDto(e))
+                    break
                 }
             }
         }
@@ -191,14 +181,12 @@ class DAO : AddressBookDAO {
     }
 
     override fun readBreadcrumbs(url: String): List<BreadcrumbDto> {
-        val entries = checkIfMenuExists(url)
-        val original = entries?.get(0)
-        var menuEntry = original as MenuEntry
-        var menuEntries: MutableList<MenuEntry>
+        val original = checkIfMenuExists(url)[0]
+        var menuEntry = original
         val breadcrumbs = ArrayList<BreadcrumbDto>()
         if (menuEntry.parentId == null) return breadcrumbs
         while (true) {
-            menuEntries = dataStore?.createQuery(MenuEntry::class.java)?.field("id")?.equal(menuEntry.parentId)?.find()?.toList() as MutableList<MenuEntry>
+            val menuEntries = dataStore?.createQuery(MenuEntry::class.java)?.field("id")?.equal(menuEntry.parentId)?.find()?.toList() as MutableList<MenuEntry>
             if (menuEntries.isNotEmpty()) {
                 menuEntry = menuEntries[0]
                 breadcrumbs.add(0, BreadcrumbDto(menuEntry.name, menuEntry.url))
@@ -215,52 +203,53 @@ class DAO : AddressBookDAO {
                 if (filter.name == "street" || filter.name == "zip") {
                     filter.name = "addr.$filter.name"
                 }
-                val type = filter.type
-                if (type.equals("NumberFilter")) {
-                    val tempFieldEnd = temp?.field(filter.name)
-                    val query = Integer.parseInt(filter.value)
-                    when (filter.comparator) {
-                        "=" -> temp = tempFieldEnd?.equal(query)
-                        ">" -> temp = tempFieldEnd?.greaterThan(query)
-                        ">=" -> temp = tempFieldEnd?.greaterThanOrEq(query)
-                        "<=" -> temp = tempFieldEnd?.lessThanOrEq(query)
-                        "<" -> temp = tempFieldEnd?.lessThan(query)
+                when (filter.type) {
+                    "NumberFilter" -> {
+                        val tempFieldEnd = temp?.field(filter.name)
+                        val query = Integer.parseInt(filter.value)
+                        when (filter.comparator) {
+                            "=" -> temp = tempFieldEnd?.equal(query)
+                            ">" -> temp = tempFieldEnd?.greaterThan(query)
+                            ">=" -> temp = tempFieldEnd?.greaterThanOrEq(query)
+                            "<=" -> temp = tempFieldEnd?.lessThanOrEq(query)
+                            "<" -> temp = tempFieldEnd?.lessThan(query)
+                        }
                     }
-                }
-                if (type.equals("TextFilter")) temp = temp?.field(filter.name)?.containsIgnoreCase(filter.value)
-                if (type.equals("DateFilter")) {
-                    filter.value = filter.value?.substring(0, 10)
-                    val dateBefore = dateFormatEqual.parse(filter.value + "T00:00:00")
-                    val dateAfter = dateFormatEqual.parse(filter.value + "T23:59:59")
-                    val dateOther = dateFormatOther.parse(filter.value)
-                    when (filter.comparator) {
-                        "=" -> {
-                            temp = temp?.field(filter.name)
-                                    ?.greaterThan(Timestamp(dateBefore.time))
-                                    ?.field(filter.name)
-                                    ?.lessThan(Timestamp(dateAfter.time))
-                        }
-                        "!=" -> {
-                            temp = temp?.field(filter.name)
-                                    ?.lessThan(Timestamp(dateBefore.time))
-                                    ?.field(filter.name)
-                                    ?.greaterThan(Timestamp(dateAfter.time))
-                        }
-                        ">" -> {
-                            temp = temp?.field(filter.name)
-                                    ?.greaterThan(Timestamp(dateOther.time))
-                        }
-                        ">=" -> {
-                            temp = temp?.field(filter.name)
-                                    ?.greaterThanOrEq(Timestamp(dateOther.time))
-                        }
-                        "<=" -> {
-                            temp = temp?.field(filter.name)
-                                    ?.lessThanOrEq(Timestamp(dateOther.time))
-                        }
-                        "<" -> {
-                            temp = temp?.field(filter.name)
-                                    ?.lessThan(Timestamp(dateOther.time))
+                    "TextFilter" -> temp = temp?.field(filter.name)?.containsIgnoreCase(filter.value)
+                    "DateFilter" -> {
+                        filter.value = filter.value?.substring(0, 10)
+                        val dateBefore = dateFormatEqual.parse(filter.value + "T00:00:00")
+                        val dateAfter = dateFormatEqual.parse(filter.value + "T23:59:59")
+                        val dateOther = dateFormatOther.parse(filter.value)
+                        when (filter.comparator) {
+                            "=" -> {
+                                temp = temp?.field(filter.name)
+                                        ?.greaterThan(Timestamp(dateBefore.time))
+                                        ?.field(filter.name)
+                                        ?.lessThan(Timestamp(dateAfter.time))
+                            }
+                            "!=" -> {
+                                temp = temp?.field(filter.name)
+                                        ?.lessThan(Timestamp(dateBefore.time))
+                                        ?.field(filter.name)
+                                        ?.greaterThan(Timestamp(dateAfter.time))
+                            }
+                            ">" -> {
+                                temp = temp?.field(filter.name)
+                                        ?.greaterThan(Timestamp(dateOther.time))
+                            }
+                            ">=" -> {
+                                temp = temp?.field(filter.name)
+                                        ?.greaterThanOrEq(Timestamp(dateOther.time))
+                            }
+                            "<=" -> {
+                                temp = temp?.field(filter.name)
+                                        ?.lessThanOrEq(Timestamp(dateOther.time))
+                            }
+                            "<" -> {
+                                temp = temp?.field(filter.name)
+                                        ?.lessThan(Timestamp(dateOther.time))
+                            }
                         }
                     }
                 }
@@ -276,31 +265,20 @@ class DAO : AddressBookDAO {
         } else {
             sortName
         }
-        var query = dataStore?.createQuery(FieldDescriptor.getCacheClass(cacheName))
-        query = getQuerySql(filterDto, query)
-        query = if (sortOrder == "asc") {
-            query?.order(Sort.ascending(sortNameNew))
-        } else {
-            query?.order(Sort.descending(sortNameNew))
-        }
-        val cursor = query?.find(FindOptions()
-                .skip(((page - 1) * pageSize))
-                .limit(pageSize))?.toList()
         val dtoConstructor = FieldDescriptor.getDtoClass(cacheName)?.getConstructor(FieldDescriptor.getCacheClass(cacheName))
-        if (cursor != null) {
-            for (e in cursor)
-                dtoConstructor?.newInstance(e)?.let { cacheDtoArrayList.add(it) }
-        }
+        getQuerySql(filterDto, dataStore?.createQuery(FieldDescriptor.getCacheClass(cacheName))).let {
+            if (sortOrder == "asc") {
+                it?.order(Sort.ascending(sortNameNew))
+            } else {
+                it?.order(Sort.descending(sortNameNew))
+            }
+        }?.find(FindOptions().skip(((page - 1) * pageSize)).limit(pageSize))?.toList()?.forEach { e -> dtoConstructor?.newInstance(e)?.let { cacheDtoArrayList.add(it) } }
         return cacheDtoArrayList
     }
 
     override fun getContactsByPersonId(id: String): List<ContactDto> {
-        val cacheDtoArrayList = ArrayList<ContactDto>()
-        val contacts = dataStore?.createQuery(Contact::class.java)?.field("personId")?.equal(id)?.order(Sort.ascending("type"))?.find()?.toList()
-        if (contacts != null) {
-            for (e in contacts) cacheDtoArrayList.add(ContactDto(e))
-        }
-        return cacheDtoArrayList
+        return dataStore?.createQuery(Contact::class.java)?.field("personId")?.equal(id)?.order(Sort.ascending("type"))?.find()?.toList()?.map { ContactDto(it) }?.toList()
+                ?: emptyList()
     }
 
     override fun getTotalDataSize(cacheName: String, filterDto: List<FilterDto>): Int {

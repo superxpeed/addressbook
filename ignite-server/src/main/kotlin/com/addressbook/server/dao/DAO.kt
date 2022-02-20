@@ -99,24 +99,23 @@ class DAO : AddressBookDAO {
         return personDto
     }
 
-    override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, personId: String): List<ContactDto> {
+    override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, targetPersonId: String): List<ContactDto> {
         if (contactDtos.isEmpty()) return contactDtos
         val cacheContacts: IgniteCache<String, Contact>? = ignite?.getOrCreateCache(FieldDescriptor.CONTACT_CACHE)
-        var toDelete = getContactsByPersonId(personId).mapNotNull { it.id }
-        toDelete = toDelete.minus(contactDtos.mapNotNull { it.id }.toSet())
+        val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         val tx = ignite?.transactions()?.txStart()
         for (contactDto in contactDtos) {
-            contactDto.personId = personId
+            contactDto.personId = targetPersonId
             val contact = cacheContacts?.get(contactDto.id) ?: Contact()
             with(contact) {
                 data = contactDto.data
                 description = contactDto.description
-                this.personId = contactDto.personId
+                personId = contactDto.personId
                 type = ContactType.values()[Integer.parseInt(contactDto.type)]
             }
             cacheContacts?.put(contact.contactId, contact)
         }
-        for (id in toDelete) cacheContacts?.remove(id)
+        toDelete.forEach { cacheContacts?.remove(it) }
         tx?.commit()
         tx?.close()
         return contactDtos
@@ -125,11 +124,11 @@ class DAO : AddressBookDAO {
     override fun createOrUpdateUser(newUser: User): String {
         val cacheUser: IgniteCache<String, User>? = ignite?.getOrCreateCache(FieldDescriptor.USER_CACHE)
         var user = cacheUser?.get(newUser.login)
-        if (user != null) {
-            user.password = newUser.password
-            user.roles = newUser.roles
-        } else user = newUser
-        cacheUser?.put(user.login, user)
+        user?.let {
+            it.password = newUser.password
+            it.roles = newUser.roles
+        } ?: let { user = newUser }
+        cacheUser?.put(user?.login, user)
         return "OK"
     }
 
@@ -200,23 +199,20 @@ class DAO : AddressBookDAO {
         return menuEntryDto
     }
 
-    private fun checkIfMenuExists(menuCache: IgniteCache<String, MenuEntry>?, url: String): List<Cache.Entry<String, MenuEntry>>? {
+    private fun checkIfMenuExists(menuCache: IgniteCache<String, MenuEntry>?, url: String): List<Cache.Entry<String, MenuEntry>> {
         val entries = menuCache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "url = ?").setArgs(url))?.all
-        if (entries != null && entries.isEmpty()) throw IllegalArgumentException("Menu with url: $url doesn't exist")
-        return entries
+        return if (entries != null && entries.isEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
     }
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
         val cache: IgniteCache<String, MenuEntry>? = ignite?.getOrCreateCache(FieldDescriptor.MENU_CACHE)
         val menuEntryDtos = ArrayList<MenuEntryDto>()
-        val cursor = cache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "parentId = ?").setArgs(checkIfMenuExists(cache, url)?.get(0)?.value?.id))
-        cursor?.let {
-            for (e in it) {
-                for (authority in authorities) {
-                    if (e.value.roles != null && e.value.roles!!.contains(authority.replace("ROLE_", ""))) {
-                        menuEntryDtos.add(MenuEntryDto(e.value))
-                        break
-                    }
+        val cursor = cache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "parentId = ?").setArgs(checkIfMenuExists(cache, url)[0].value?.id))
+        cursor?.forEach { e ->
+            for (authority in authorities) {
+                if (e.value.roles != null && e.value.roles!!.contains(authority.replace("ROLE_", ""))) {
+                    menuEntryDtos.add(MenuEntryDto(e.value))
+                    break
                 }
             }
         }
@@ -226,7 +222,7 @@ class DAO : AddressBookDAO {
 
     override fun readBreadcrumbs(url: String): List<BreadcrumbDto> {
         val cache: IgniteCache<String, MenuEntry>? = ignite?.getOrCreateCache(FieldDescriptor.MENU_CACHE)
-        val original = checkIfMenuExists(cache, url)?.get(0)?.value
+        val original = checkIfMenuExists(cache, url)[0].value
         var menuEntry = original
         val breadcrumbs = ArrayList<BreadcrumbDto>()
         if (menuEntry?.parentId == null) return breadcrumbs
@@ -271,9 +267,7 @@ class DAO : AddressBookDAO {
                 .toString())
         val cursor = cache?.query(sql.setArgs(pageSize, (page - 1) * pageSize))
         val dtoConstructor = FieldDescriptor.getDtoClass(cacheName)?.getConstructor(FieldDescriptor.getCacheClass(cacheName))
-        cursor?.let { queryCursor ->
-            for (e in queryCursor) dtoConstructor?.newInstance(e.value)?.let { cacheDtoArrayList.add(it) }
-        }
+        cursor?.forEach { x -> dtoConstructor?.newInstance(x.value)?.let { cacheDtoArrayList.add(it) } }
         cursor?.close()
         return cacheDtoArrayList
     }
@@ -282,9 +276,7 @@ class DAO : AddressBookDAO {
         val cache: IgniteCache<String, Contact>? = ignite?.getOrCreateCache(FieldDescriptor.CONTACT_CACHE)
         val cacheDtoArrayList = ArrayList<ContactDto>()
         val cursor = cache?.query(SqlQuery<String, Contact>(Contact::class.java, "personId = ? order by type").setArgs(id))
-        cursor?.let {
-            for (e in cursor) cacheDtoArrayList.add(ContactDto(e.value))
-        }
+        cursor?.forEach { cacheDtoArrayList.add(ContactDto(it.value)) }
         cursor?.close()
         return cacheDtoArrayList
     }

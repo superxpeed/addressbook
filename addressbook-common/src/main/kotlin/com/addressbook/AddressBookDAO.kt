@@ -17,7 +17,7 @@ interface AddressBookDAO {
     fun createOrUpdatePerson(@RequestBody personDto: PersonDto, @RequestParam user: String): PersonDto
 
     @PostMapping("/createOrUpdateContacts")
-    fun createOrUpdateContacts(@RequestBody contactDtos: List<ContactDto>, @RequestParam user: String, @RequestParam personId: String): List<ContactDto>
+    fun createOrUpdateContacts(@RequestBody contactDtos: List<ContactDto>, @RequestParam user: String, @RequestParam targetPersonId: String): List<ContactDto>
 
     @PostMapping("/createOrUpdateUser")
     fun createOrUpdateUser(@RequestBody newUser: User): String
