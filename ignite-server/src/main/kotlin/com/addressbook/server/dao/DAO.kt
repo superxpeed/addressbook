@@ -259,13 +259,12 @@ class DAO : AddressBookDAO {
     override fun selectCachePage(page: Int, pageSize: Int, sortName: String, sortOrder: String, filterDto: List<FilterDto>, cacheName: String): List<Any> {
         val cache: IgniteCache<String, Any>? = ignite?.getOrCreateCache(cacheName)
         val cacheDtoArrayList = ArrayList<Any>()
-        val sql = SqlQuery<String, Any>(FieldDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
+        val cursor = cache?.query(SqlQuery<String, Any>(FieldDescriptor.getCacheClass(cacheName), getQuerySql(filterDto)
                 .append(" order by ")
                 .append(sortName).append(" ")
                 .append(sortOrder)
                 .append(" limit ? offset ?")
-                .toString())
-        val cursor = cache?.query(sql.setArgs(pageSize, (page - 1) * pageSize))
+                .toString()).setArgs(pageSize, (page - 1) * pageSize))
         val dtoConstructor = FieldDescriptor.getDtoClass(cacheName)?.getConstructor(FieldDescriptor.getCacheClass(cacheName))
         cursor?.forEach { x -> dtoConstructor?.newInstance(x.value)?.let { cacheDtoArrayList.add(it) } }
         cursor?.close()

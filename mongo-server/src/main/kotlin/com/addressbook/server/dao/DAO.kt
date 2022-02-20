@@ -168,8 +168,7 @@ class DAO : AddressBookDAO {
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
         val menuEntryDtos = ArrayList<MenuEntryDto>()
-        val cursor = dataStore?.createQuery(MenuEntry::class.java)?.field("parentId")?.equal(checkIfMenuExists(url)[0].id)?.find()?.toList()
-        cursor?.forEach { e ->
+        dataStore?.createQuery(MenuEntry::class.java)?.field("parentId")?.equal(checkIfMenuExists(url)[0].id)?.find()?.toList()?.forEach { e ->
             for (authority in authorities) {
                 if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
                     menuEntryDtos.add(MenuEntryDto(e))

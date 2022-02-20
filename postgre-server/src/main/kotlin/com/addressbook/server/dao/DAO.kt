@@ -160,15 +160,15 @@ class DAO : AddressBookDAO {
     @Transactional
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
         val menuEntryDtos = ArrayList<MenuEntryDto>()
-        val cursor = entityManager?.createQuery("SELECT u FROM MenuEntry u WHERE u.parentId=:parentId", MenuEntry::class.java).also { it?.setParameter("parentId", checkIfMenuExists(url)[0].id) }?.resultList
-        cursor?.forEach { e ->
-            for (authority in authorities) {
-                if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
-                    menuEntryDtos.add(MenuEntryDto(e))
-                    break
+        entityManager?.createQuery("SELECT u FROM MenuEntry u WHERE u.parentId=:parentId", MenuEntry::class.java)
+                .also { it?.setParameter("parentId", checkIfMenuExists(url)[0].id) }?.resultList?.forEach { e ->
+                    for (authority in authorities) {
+                        if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
+                            menuEntryDtos.add(MenuEntryDto(e))
+                            break
+                        }
+                    }
                 }
-            }
-        }
         return menuEntryDtos
     }
 
