@@ -4,6 +4,7 @@ import {Button, FormControl, Label, Panel} from "react-bootstrap";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as MenuActions from "./MenuFormActions";
+import Cookies from "js-cookie";
 
 @connect(null, (dispatch) => ({
     clearAlerts: bindActionCreators(MenuActions.clearAlerts, dispatch),
@@ -65,6 +66,7 @@ export default class LoginForm extends React.Component {
                 this.setState({invalidLoginPassword: true});
             }
             if (status === 200) {
+                Cookies.remove("Authorization")
                 window.sessionStorage.clear();
                 window.sessionStorage.setItem("auth-token", JSON.parse(text).token);
                 window.location.hash = "#/";

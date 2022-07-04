@@ -9,6 +9,7 @@ import {
 } from "../Common/Utils";
 import {asyncCommonCatch, ifNoAuthorizedRedirect,} from "./UniversalListActions";
 import * as url from "../Common/Url";
+import Cookies from "js-cookie"
 
 export function getNextLevelMenus(currentUrl) {
     let isOk = false;
@@ -141,6 +142,7 @@ export function logout() {
             isOk = response.ok;
             if (isOk) {
                 window.sessionStorage.clear();
+                Cookies.remove("Authorization")
                 window.location.hash = "#/login";
             }
         });

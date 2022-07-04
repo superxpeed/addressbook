@@ -1,3 +1,5 @@
+import Cookies from "js-cookie"
+
 export const REQUEST = "_REQUEST";
 export const SUCCESS = "_SUCCESS";
 export const GET_LIST = "GET_LIST";
@@ -45,6 +47,11 @@ export class HashUtils {
 
 export class AuthTokenUtils {
     static addAuthToken = (headers) => {
+        let auth = Cookies.get("Authorization")
+        if(auth != null && auth !== window.sessionStorage.getItem("auth-token")){
+            window.sessionStorage.clear();
+            window.sessionStorage.setItem("auth-token", auth);
+        }
         headers.append("Authorization", "Bearer " + window.sessionStorage.getItem("auth-token"));
     };
 }
