@@ -1,13 +1,21 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="AddressbookApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="addressbook-main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.AddressBookApplication" />
-    <option name="VM_PARAMETERS" value="-Xms2048m -Xmx4096m -DIGNITE_NO_SHUTDOWN_HOOK=true" />
-    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="ACTIVE_PROFILES" />
     <envs>
       <env name="DAO_IMPLEMENTATION" value="ignite-server" />
       <env name="JWT_SECRET" value="q1w2e3r4" />
+      <env name="KEY_ALIAS" value="localhost" />
+      <env name="KEYSTORE_PASSWORD" value="q1w2e3r4" />
+      <env name="KEYSTORE_PATH" value="$PROJECT_DIR$\addressbook-main\certs\keystore.jks" />
+      <env name="TRUSTSTORE_PASSWORD" value="q1w2e3r4" />
+      <env name="TRUSTSTORE_PATH" value="$PROJECT_DIR$\addressbook-main\certs\truststore.jks" />
+      <env name="KEY_PASSWORD" value="q1w2e3r4" />
     </envs>
-    <method v="2" />
+    <module name="addressbook-main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.AddressBookApplication" />
+    <option name="VM_PARAMETERS" value="-Xms2048m -Xmx4096m -DIGNITE_NO_SHUTDOWN_HOOK=true" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
   </configuration>
 </component>
