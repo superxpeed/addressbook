@@ -33,17 +33,17 @@ class IndexWebController {
 
     @LoggedGetRequest("/")
     fun start(httpServletRequest: HttpServletRequest, httpServletResponse: HttpServletResponse): String {
-            httpServletRequest.getAttribute("javax.servlet.request.X509Certificate")?.let { it ->
-                if ((it as Array<X509Certificate>).isNotEmpty()) {
-                    val username = it[0].subjectX500Principal.name.replace("CN=", "")
-                    val cookies = httpServletRequest.cookies?.filter { cookie -> cookie.name.equals(JwtFilter.AUTHORIZATION) }
-                    if(cookies == null || cookies.isEmpty()){
-                        httpServletResponse.addCookie(Cookie(JwtFilter.AUTHORIZATION, jwtProvider.generateToken(username)))
-                    }
+        httpServletRequest.getAttribute("javax.servlet.request.X509Certificate")?.let { it ->
+            if ((it as Array<*>).isNotEmpty()) {
+                val cookies = httpServletRequest.cookies?.filter { cookie -> cookie.name.equals(JwtFilter.AUTHORIZATION) }
+                if (cookies == null || cookies.isEmpty()) {
+                    httpServletResponse.addCookie(Cookie(JwtFilter.AUTHORIZATION,
+                            jwtProvider.generateToken((it[0] as X509Certificate).subjectX500Principal.name.replace("CN=", ""))))
                 }
             }
-            return "index.html"
         }
+        return "index.html"
+    }
 
     @PostMapping("/auth")
     fun auth(@RequestBody request: AuthRequest): ResponseEntity<Any> {
