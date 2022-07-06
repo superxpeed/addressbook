@@ -51,7 +51,7 @@ services:
     ports:
       - "10000:9000"
     environment:
-      - DAO_IMPLEMENTATION=mongo-server
+      - DAO_IMPLEMENTATION=MONGO-SERVER
       - JWT_SECRET=q1w2e3r4
       - KEY_ALIAS=localhost
       - KEYSTORE_PASSWORD=q1w2e3r4
