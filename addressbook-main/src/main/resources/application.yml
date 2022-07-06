@@ -28,7 +28,7 @@ spring:
   application:
     name: addressbook
 dao:
-  implementation:${DAO_IMPLEMENTATION}
+  implementation: ${DAO_IMPLEMENTATION}
 management:
   endpoint:
     health:
