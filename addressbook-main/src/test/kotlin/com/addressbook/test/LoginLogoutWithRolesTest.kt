@@ -1,25 +1,37 @@
 package com.addressbook.test
 
+import io.github.bonigarcia.wdm.WebDriverManager
 import org.junit.Assert
 import org.junit.Test
 import org.openqa.selenium.By
-import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
+import java.awt.Robot
+import java.awt.event.KeyEvent
 import java.time.Duration
 
 class LoginLogoutWithRolesTest {
 
     @Test
     fun stage1_loginLogoutWithRoles() {
-        // Set Chrome driver location
-        System.setProperty("webdriver.chrome.driver", LoginLogoutWithRolesTest::class.java.classLoader.getResource("chromedriver.exe")?.path!!)
         // Initialize Selenium driver
-        val driver = ChromeDriver()
+        val driver = WebDriverManager.chromedriver().create()
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
+        // Dismiss certificate choice dialog
+        val certificationConfirmation = Runnable {
+            try {
+                Thread.sleep(1_000)
+                val robot = Robot()
+                robot.keyPress(KeyEvent.VK_ESCAPE);
+                robot.keyRelease(KeyEvent.VK_ESCAPE);
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        Thread(certificationConfirmation).start()
         // Open login page
-        driver.get("http://localhost:9000")
+        driver.get("https://localhost:9000")
         // Wait until page is loaded
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]")))
         // Locate login input field

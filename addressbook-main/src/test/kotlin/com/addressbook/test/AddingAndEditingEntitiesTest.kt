@@ -1,17 +1,18 @@
 package com.addressbook.test
 
+import io.github.bonigarcia.wdm.WebDriverManager
 import org.junit.Assert
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runners.MethodSorters
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
-import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
-import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
+import java.awt.Robot
+import java.awt.event.KeyEvent
 import java.time.Duration
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -19,14 +20,24 @@ class AddingAndEditingEntitiesTest {
 
     @Test
     fun stage1_addAndEditOrganization() {
-        // Set Chrome driver location
-        System.setProperty("webdriver.chrome.driver", AddingAndEditingEntitiesTest::class.java.classLoader.getResource("chromedriver.exe")?.path!!)
         // Initialize Selenium driver
-        val driver: WebDriver = ChromeDriver()
+        val driver = WebDriverManager.chromedriver().create()
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
+        // Dismiss certificate choice dialog
+        val certificationConfirmation = Runnable {
+            try {
+                Thread.sleep(1_000)
+                val robot = Robot()
+                robot.keyPress(KeyEvent.VK_ESCAPE);
+                robot.keyRelease(KeyEvent.VK_ESCAPE);
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        Thread(certificationConfirmation).start()
         // Open login page
-        driver.get("http://localhost:9000")
+        driver.get("https://localhost:9000")
         // Wait until page is loaded
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]")))
         // Locate login input field
@@ -163,14 +174,24 @@ class AddingAndEditingEntitiesTest {
 
     @Test
     fun stage1_addAndEditPerson() {
-        // Set Chrome driver location
-        System.setProperty("webdriver.chrome.driver", AddingAndEditingEntitiesTest::class.java.classLoader.getResource("chromedriver.exe")?.path!!)
         // Initialize Selenium driver
-        val driver = ChromeDriver()
+        val driver = WebDriverManager.chromedriver().create()
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
+        // Dismiss certificate choice dialog
+        val certificationConfirmation = Runnable {
+            try {
+                Thread.sleep(1_000)
+                val robot = Robot()
+                robot.keyPress(KeyEvent.VK_ESCAPE);
+                robot.keyRelease(KeyEvent.VK_ESCAPE);
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        Thread(certificationConfirmation).start()
         // Open login page
-        driver.get("http://localhost:9000")
+        driver.get("https://localhost:9000")
         // Wait until page is loaded
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]")))
         // Locate login input field
@@ -355,7 +376,7 @@ class AddingAndEditingEntitiesTest {
 
 
         // Wait until all notifications disappear
-        Thread.sleep(30_000)
+        Thread.sleep(10_000)
 
         // Click logout button
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/button[2]"))).click()

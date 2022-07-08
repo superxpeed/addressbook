@@ -11,6 +11,7 @@ import com.addressbook.model.Person
 import com.addressbook.model.User
 import com.addressbook.security.AppUserDetails
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
@@ -24,6 +25,8 @@ import javax.servlet.http.HttpServletResponse
 @RestController
 @RequestMapping(path = ["/rest"])
 class MainController {
+
+    private val logger = LoggerFactory.getLogger(MainController::class.java)
 
     @Autowired
     lateinit var dao: DaoClient
@@ -123,7 +126,7 @@ class MainController {
 
     @ExceptionHandler(Throwable::class)
     fun handleError(response: HttpServletResponse, ex: Throwable) {
-        ex.printStackTrace()
+        logger.error("Exception occurred:", ex)
         response.status = 500
         val alert = AlertDto()
         alert.headline = "Error occurred!"
