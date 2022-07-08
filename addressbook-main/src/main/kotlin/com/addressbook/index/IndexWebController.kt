@@ -2,8 +2,6 @@ package com.addressbook.index
 
 import com.addressbook.annotations.LoggedGetRequest
 import com.addressbook.dao.DaoClient
-import com.addressbook.security.AuthRequest
-import com.addressbook.security.AuthResponse
 import com.addressbook.security.JwtFilter
 import com.addressbook.security.JwtProvider
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,11 +11,15 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import java.io.Serializable
 import java.security.cert.X509Certificate
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+data class AuthRequest(val login: String? = null, val password: String? = null) : Serializable
+
+data class AuthResponse(val token: String? = null) : Serializable
 
 @Controller
 class IndexWebController {

@@ -18,6 +18,7 @@ import javax.annotation.PreDestroy
 
 
 @Controller
+@Suppress("DEPRECATION")
 class DAO : AddressBookDAO {
 
     private val dateFormatEqual = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")

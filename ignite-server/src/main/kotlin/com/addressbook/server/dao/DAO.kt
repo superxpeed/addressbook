@@ -27,6 +27,7 @@ import javax.annotation.PreDestroy
 import javax.cache.Cache
 
 @Controller
+@Suppress("DEPRECATION")
 class DAO : AddressBookDAO {
 
     private val logger = LoggerFactory.getLogger(DAO::class.java)
@@ -293,7 +294,7 @@ class DAO : AddressBookDAO {
         }
         val cache: IgniteCache<String, Any>? = ignite.getOrCreateCache(cacheName)
         val cursor = cache?.query(SqlQuery<String, Any>(FieldDescriptor.getCacheClass(cacheName), getQuerySql(filterDto).toString()))
-        var size = 0
+        var size: Int
         cursor.use { size = cursor?.all?.size as Int }
         return size
     }
