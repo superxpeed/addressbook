@@ -1,7 +1,7 @@
-var webpack = require('webpack');
+const webpack = require('webpack');
 
-var webpackConfig = require('./webpack.config.js');
-var CompressionPlugin = require('compression-webpack-plugin');
+const webpackConfig = require('./webpack.config.js');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = Object.assign({}, webpackConfig, {
     plugins: webpackConfig.plugins.concat([
@@ -13,6 +13,7 @@ module.exports = Object.assign({}, webpackConfig, {
         }),
         new webpack.optimize.OccurrenceOrderPlugin(true),
         new webpack.optimize.UglifyJsPlugin({sourceMap: true}),
-        new webpack.optimize.AggressiveMergingPlugin()
+        new webpack.optimize.AggressiveMergingPlugin(),
+        new CompressionPlugin()
     ])
 });

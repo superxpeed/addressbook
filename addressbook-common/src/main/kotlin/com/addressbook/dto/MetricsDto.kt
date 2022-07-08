@@ -5,7 +5,7 @@ import java.io.Serializable
 import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
 
-class JavaMetricsDto : Serializable {
+class JvmMetricsDto : Serializable {
 
     var runtimeTotalMemory: String? = null
     var runtimeFreeMemory: String? = null

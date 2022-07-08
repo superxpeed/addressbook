@@ -1,6 +1,6 @@
 package com.addressbook.rest
 
-import com.addressbook.dto.JavaMetricsDto
+import com.addressbook.dto.JvmMetricsDto
 import com.addressbook.services.JVMStateService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -19,7 +19,7 @@ class AdminController {
 
     @GetMapping(value = ["/jvmState"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     @ResponseBody
-    fun jvmStateEvents(): Flux<JavaMetricsDto> {
+    fun jvmStateEvents(): Flux<JvmMetricsDto> {
         return jvmStateService.getJVMState()
     }
 }
