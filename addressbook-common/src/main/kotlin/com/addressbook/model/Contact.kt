@@ -22,3 +22,10 @@ class Contact(@QuerySqlField(index = true) var personId: String?,
         this.contactId = UUID.randomUUID().toString()
     }
 }
+
+enum class ContactType {
+    MOBILE_PHONE,
+    HOME_PHONE,
+    ADDRESS,
+    EMAIL
+}

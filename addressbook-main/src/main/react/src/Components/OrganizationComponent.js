@@ -187,7 +187,7 @@ export class OrganizationComponent extends React.Component {
                             <FormControl
                                 type="text"
                                 value={this.state.organization["street"]}
-                                placeholder="Enter address steet"
+                                placeholder="Enter address street"
                                 onChange={this.handleChange.bind(this, "street")}
                             />
                             <FormControl.Feedback/>

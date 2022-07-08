@@ -37,7 +37,7 @@ export class ContactContainer extends React.Component {
             });
             this.setState({contacts: contactsMap, conRefs: conRefsLocal});
         } else {
-            if (this.state.contacts === undefined || this.state.contacts.length === 0)
+            if (this.state.contacts === undefined || this.state.contacts.size === 0)
                 this.setState({contacts: new Map(), conRefs: new Map()});
         }
     };

@@ -16,6 +16,8 @@ server:
     trust-store-password: ${TRUSTSTORE_PASSWORD}
     enabled-protocols: TLSv1.2
     client-auth: want
+  error:
+    path: /error
 eureka:
   client:
     service-url:

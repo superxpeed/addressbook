@@ -23,6 +23,6 @@ class ErrorWebController : ErrorController {
                 ObjectMapper().also { it.writeValue(response.writer, AlertDto("Error occurred!", AlertDto.DANGER, "You are not authorized to see that content!")) }
             }
         }
-        return "/error"
+        return null
     }
 }

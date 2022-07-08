@@ -44,3 +44,17 @@ class Organization constructor(id: String?, name: String?, addr: Address?, type:
         this.lastUpdated = lastUpdated
     }
 }
+
+enum class OrganizationType(s: String) {
+
+    NON_PROFIT("Non profit"),
+    PRIVATE("Private"),
+    GOVERNMENT("Government"),
+    PUBLIC("Public");
+
+    var eng: String? = null
+
+    init {
+        this.eng = s
+    }
+}

@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component
 
 @Aspect
 @Component
-class MainAspect {
+class LoggingAspect {
 
-    private val logger = LoggerFactory.getLogger(MainAspect::class.java)
+    private val logger = LoggerFactory.getLogger(LoggingAspect::class.java)
 
     @Around("@annotation(com.addressbook.annotations.LoggedGetRequest) " +
             "|| @annotation(com.addressbook.annotations.LoggedPostRequest)")
