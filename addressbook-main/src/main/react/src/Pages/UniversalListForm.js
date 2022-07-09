@@ -332,7 +332,7 @@ export default class UniversalListForm extends React.Component {
                     id="tables"
                 >
                     <Tab key={1} eventKey={1} title="Organizations">
-                        <div style={{marginBottom: "15px"}}>
+                        <div style={{marginBottom: "1px", border: "1px solid #ddd", borderRadius: "5px"}}>
                             <OrganizationComponent
                                 organization={
                                     this.props.selectedRowsOrganization.length === 1
