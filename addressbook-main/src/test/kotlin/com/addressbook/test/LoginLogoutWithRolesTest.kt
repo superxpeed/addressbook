@@ -19,17 +19,16 @@ class LoginLogoutWithRolesTest {
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
         // Dismiss certificate choice dialog
-        val certificationConfirmation = Runnable {
+        Thread {
             try {
                 Thread.sleep(1_000)
                 val robot = Robot()
-                robot.keyPress(KeyEvent.VK_ESCAPE);
-                robot.keyRelease(KeyEvent.VK_ESCAPE);
+                robot.keyPress(KeyEvent.VK_ESCAPE)
+                robot.keyRelease(KeyEvent.VK_ESCAPE)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
-        Thread(certificationConfirmation).start()
+        }.start()
         // Open login page
         driver.get("https://localhost:9000")
         // Wait until page is loaded
