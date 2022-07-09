@@ -108,12 +108,16 @@ class DAO : AddressBookDAO {
     @Transactional
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         if (lock) {
-            entityManager.persist(Lock(key, user))
+            val userLocked = entityManager.find(Lock::class.java, key)
+            return if(userLocked == null) {
+                entityManager.persist(Lock(key, user))
+                true
+            } else true
         } else {
             val userLocked = entityManager.find(Lock::class.java, key) ?: return false
             entityManager.remove(userLocked)
+            return true
         }
-        return true
     }
 
     @Transactional
@@ -262,7 +266,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun getContactsByPersonId(id: String): List<ContactDto> {
-        return entityManager.createQuery("SELECT u FROM Contact u WHERE u.personId=:id order by u.type asc ", Contact::class.java)
+        return entityManager.createQuery("SELECT u FROM Contact u WHERE u.personId=:id order by u.createDate asc ", Contact::class.java)
                 .also { it?.setParameter("id", id) }
                 ?.resultList
                 ?.map { ContactDto(it) }

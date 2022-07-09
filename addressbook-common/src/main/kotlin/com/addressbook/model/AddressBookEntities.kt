@@ -150,8 +150,12 @@ class Contact(@QuerySqlField(index = true) var personId: String?,
     @QuerySqlField(index = true)
     var contactId: String? = null
 
+    @QuerySqlField(index = true)
+    var createDate: Date? = null
+
     init {
         this.contactId = UUID.randomUUID().toString()
+        this.createDate = Timestamp(System.currentTimeMillis())
     }
 }
 

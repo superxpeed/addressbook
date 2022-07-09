@@ -277,7 +277,7 @@ class DAO : AddressBookDAO {
     override fun getContactsByPersonId(id: String): List<ContactDto> {
         val cache: IgniteCache<String, Contact>? = ignite.getOrCreateCache(FieldDescriptor.CONTACT_CACHE)
         val cacheDtoArrayList = ArrayList<ContactDto>()
-        val cursor = cache?.query(SqlQuery<String, Contact>(Contact::class.java, "personId = ? order by type").setArgs(id))
+        val cursor = cache?.query(SqlQuery<String, Contact>(Contact::class.java, "personId = ? order by createDate asc").setArgs(id))
         cursor.use { cursor?.forEach { cacheDtoArrayList.add(ContactDto(it.value)) } }
         return cacheDtoArrayList
     }

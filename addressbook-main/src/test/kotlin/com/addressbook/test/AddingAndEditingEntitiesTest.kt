@@ -29,8 +29,8 @@ class AddingAndEditingEntitiesTest {
             try {
                 Thread.sleep(1_000)
                 val robot = Robot()
-                robot.keyPress(KeyEvent.VK_ESCAPE);
-                robot.keyRelease(KeyEvent.VK_ESCAPE);
+                robot.keyPress(KeyEvent.VK_ESCAPE)
+                robot.keyRelease(KeyEvent.VK_ESCAPE)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -103,7 +103,7 @@ class AddingAndEditingEntitiesTest {
 
         // Refresh page and reread data
         driver.navigate().refresh()
-        Thread.sleep(2_000)
+        Thread.sleep(4_000)
 
         // Again find our new record
         var foundBeforeUpdateAfterRefresh = false
@@ -183,8 +183,8 @@ class AddingAndEditingEntitiesTest {
             try {
                 Thread.sleep(1_000)
                 val robot = Robot()
-                robot.keyPress(KeyEvent.VK_ESCAPE);
-                robot.keyRelease(KeyEvent.VK_ESCAPE);
+                robot.keyPress(KeyEvent.VK_ESCAPE)
+                robot.keyRelease(KeyEvent.VK_ESCAPE)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

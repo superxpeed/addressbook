@@ -289,7 +289,7 @@ class DAO : AddressBookDAO {
         return dataStore.createQuery(Contact::class.java)
                 ?.field("personId")
                 ?.equal(id)
-                ?.order(Sort.ascending("type"))
+                ?.order(Sort.ascending("createDate"))
                 ?.find()
                 ?.toList()
                 ?.map { ContactDto(it) }
