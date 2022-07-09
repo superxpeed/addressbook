@@ -108,13 +108,15 @@ export default class UniversalListForm extends React.Component {
         if (
             cache === Caches.PERSON_CACHE &&
             this.state.selectedRowsOrgId != null &&
-            //TODO SOMETHING WEIRD HAPPENS HERE
-            (filterDto === undefined || filterDto === null)
+            (filterDto == null || filterDto.length === 0)
         ) {
-            filterDto = filterDto.filter(
-                (x) => x.name === "orgId" && x.value === this.state.selectedRowsOrgId
-            );
-            //TODO FIX THIS METHOD
+            if(filterDto != null) {
+                filterDto = filterDto.filter(
+                    (x) => x.name === "orgId" && x.value === this.state.selectedRowsOrgId
+                );
+            } else {
+                filterDto = []
+            }
             filterDto.push({
                 name: "orgId",
                 value: this.state.selectedRowsOrgId,
