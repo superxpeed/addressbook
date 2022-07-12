@@ -18,10 +18,10 @@ class LoggingAspect {
             "|| @annotation(com.addressbook.annotations.LoggedPostRequest)")
     @Throws(Throwable::class)
     fun logExecutionTime(joinPoint: ProceedingJoinPoint): Any? {
-        val start = System.nanoTime()
+        val start = System.currentTimeMillis()
         val proceed = joinPoint.proceed()
-        val executionTime = System.nanoTime() - start
-        logger.info(joinPoint.signature.toString() + " executed in " + executionTime + "ns")
+        val executionTime = System.currentTimeMillis() - start
+        logger.info(joinPoint.signature.toString() + " executed in " + executionTime + "ms")
         if(logger.isDebugEnabled) logger.debug(ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(proceed))
         return proceed
     }
