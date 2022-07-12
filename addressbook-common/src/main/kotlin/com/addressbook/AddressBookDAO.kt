@@ -1,8 +1,8 @@
 package com.addressbook
 
+import com.addressbook.annotations.LoggedPostRequest
 import com.addressbook.dto.*
 import com.addressbook.model.User
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
@@ -10,60 +10,60 @@ import org.springframework.web.bind.annotation.ResponseBody
 @ResponseBody
 interface AddressBookDAO {
 
-    @PostMapping("/createOrUpdateOrganization")
+    @LoggedPostRequest("/createOrUpdateOrganization")
     fun createOrUpdateOrganization(@RequestBody organizationDto: OrganizationDto, @RequestParam user: String): OrganizationDto
 
-    @PostMapping("/createOrUpdatePerson")
+    @LoggedPostRequest("/createOrUpdatePerson")
     fun createOrUpdatePerson(@RequestBody personDto: PersonDto, @RequestParam user: String): PersonDto
 
-    @PostMapping("/createOrUpdateContacts")
+    @LoggedPostRequest("/createOrUpdateContacts")
     fun createOrUpdateContacts(@RequestBody contactDtos: List<ContactDto>, @RequestParam user: String, @RequestParam targetPersonId: String): List<ContactDto>
 
-    @PostMapping("/createOrUpdateUser")
+    @LoggedPostRequest("/createOrUpdateUser")
     fun createOrUpdateUser(@RequestBody newUser: User)
 
-    @PostMapping("/lockUnlockRecord")
+    @LoggedPostRequest("/lockUnlockRecord")
     fun lockUnlockRecord(@RequestParam key: String, @RequestParam user: String, @RequestParam lock: Boolean): Boolean
 
-    @PostMapping("/unlockAllRecordsForUser")
+    @LoggedPostRequest("/unlockAllRecordsForUser")
     fun unlockAllRecordsForUser(@RequestParam user: String)
 
-    @PostMapping("/getUserByLogin")
+    @LoggedPostRequest("/getUserByLogin")
     fun getUserByLogin(@RequestParam login: String): User?
 
-    @PostMapping("/clearMenus")
+    @LoggedPostRequest("/clearMenus")
     fun clearMenus()
 
-    @PostMapping("/createOrUpdateMenuEntry")
+    @LoggedPostRequest("/createOrUpdateMenuEntry")
     fun createOrUpdateMenuEntry(@RequestBody menuEntryDto: MenuEntryDto, @RequestParam parentEntryId: String?): MenuEntryDto
 
-    @PostMapping("/readNextLevel")
+    @LoggedPostRequest("/readNextLevel")
     fun readNextLevel(@RequestParam url: String, @RequestBody authorities: List<String>): List<MenuEntryDto>
 
-    @PostMapping("/readBreadcrumbs")
+    @LoggedPostRequest("/readBreadcrumbs")
     fun readBreadcrumbs(@RequestParam url: String): List<BreadcrumbDto>
 
-    @PostMapping("/selectCachePage")
+    @LoggedPostRequest("/selectCachePage")
     fun selectCachePage(@RequestParam page: Int, @RequestParam pageSize: Int, @RequestParam sortName: String, @RequestParam sortOrder: String, @RequestBody filterDto: List<FilterDto>, @RequestParam cacheName: String): List<Any>
 
-    @PostMapping("/getContactsByPersonId")
+    @LoggedPostRequest("/getContactsByPersonId")
     fun getContactsByPersonId(@RequestParam id: String): List<ContactDto>
 
-    @PostMapping("/getTotalDataSize")
+    @LoggedPostRequest("/getTotalDataSize")
     fun getTotalDataSize(@RequestParam cacheName: String, @RequestBody filterDto: List<FilterDto>): Int
 
-    @PostMapping("/notLockedByUser")
+    @LoggedPostRequest("/notLockedByUser")
     fun notLockedByUser(@RequestParam key: String, @RequestParam user: String): Boolean
 
-    @PostMapping("/ifOrganizationExists")
+    @LoggedPostRequest("/ifOrganizationExists")
     fun ifOrganizationExists(@RequestParam key: String): Boolean
 
-    @PostMapping("/ifPersonExists")
+    @LoggedPostRequest("/ifPersonExists")
     fun ifPersonExists(@RequestParam key: String): Boolean
 
-    @PostMapping("/ifContactExists")
+    @LoggedPostRequest("/ifContactExists")
     fun ifContactExists(@RequestParam key: String): Boolean
 
-    @PostMapping("/ifPageExists")
+    @LoggedPostRequest("/ifPageExists")
     fun ifPageExists(@RequestParam page: String): Boolean
 }

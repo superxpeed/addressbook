@@ -1,5 +1,6 @@
 package com.addressbook.aop
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
@@ -21,6 +22,7 @@ class LoggingAspect {
         val proceed = joinPoint.proceed()
         val executionTime = System.nanoTime() - start
         logger.info(joinPoint.signature.toString() + " executed in " + executionTime + "ns")
+        if(logger.isDebugEnabled) logger.debug(ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(proceed))
         return proceed
     }
 }
