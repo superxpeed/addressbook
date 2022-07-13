@@ -21,7 +21,7 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka:7777/eureka
+      defaultZone: ${EUREKA_HOST}
   instance:
     lease-renewal-interval-in-seconds: 1
     lease-expiration-duration-in-seconds: 2

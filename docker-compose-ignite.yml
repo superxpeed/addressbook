@@ -14,6 +14,8 @@ services:
     build: ignite-server/.
     ports:
       - "11000:10000"
+    environment:
+      - EUREKA_HOST=http://eureka:7777/eureka
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:10000/actuator/health 2>&1 | grep UP || exit 1"]
       interval: 20s
@@ -32,6 +34,7 @@ services:
       - TRUSTSTORE_PASSWORD=q1w2e3r4
       - TRUSTSTORE_PATH=/mnt/certs/truststore.jks
       - KEY_PASSWORD=q1w2e3r4
+      - EUREKA_HOST=http://eureka:7777/eureka
     restart: on-failure
     volumes:
       - type: bind

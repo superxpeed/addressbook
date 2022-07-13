@@ -3,6 +3,7 @@
     <option name="ACTIVE_PROFILES" />
     <envs>
       <env name="DAO_IMPLEMENTATION" value="IGNITE-SERVER" />
+      <env name="EUREKA_HOST" value="http://localhost:7777/eureka" />
       <env name="JWT_SECRET" value="q1w2e3r4" />
       <env name="KEY_ALIAS" value="localhost" />
       <env name="KEY_PASSWORD" value="q1w2e3r4" />
