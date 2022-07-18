@@ -176,6 +176,12 @@
             <groupId>com.github.dredwardhyde</groupId>
             <artifactId>addressbook-common</artifactId>
             <version>${project.parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>dev.morphia.morphia</groupId>
+                    <artifactId>core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
