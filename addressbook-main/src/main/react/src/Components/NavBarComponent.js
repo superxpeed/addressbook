@@ -110,7 +110,7 @@ export class NavBarComponent extends React.Component {
     render() {
         return (
             <div style={{display: "inline-block"}}>
-                <Navbar.Form pullLeft style={{margin: "0px", paddingRight: "0px", paddingLeft: "0px"}}>
+                <Navbar.Form pullLeft style={{margin: "0px", padding: "0px"}}>
                     <div style={{display: "grid"}}>
                         <Label bsStyle="default" style={{marginRight: "5px", marginTop: "1px"}}>
                             Build version: {this.state.buildVersion}
