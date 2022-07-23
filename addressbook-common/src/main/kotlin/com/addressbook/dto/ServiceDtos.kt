@@ -80,3 +80,13 @@ class MenuEntryDto(menuEntry: MenuEntry? = null) : Serializable {
         this.roles = roles
     }
 }
+
+class BuildInfoDto : Serializable {
+
+    var version: String? = null
+    var artifact: String? = null
+    var group: String? = null
+    var name: String? = null
+    var time: String? = null
+
+}

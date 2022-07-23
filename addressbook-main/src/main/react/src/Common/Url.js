@@ -10,6 +10,7 @@ export const GET_BREADCRUMBS = cp + "rest/getBreadcrumbs";
 export const LOCK_RECORD = cp + "rest/lockRecord";
 export const UNLOCK_RECORD = cp + "rest/unlockRecord";
 export const GET_USER_INFO = cp + "rest/getUserInfo";
+export const GET_BUILD_INFO = cp + "rest/getBuildInfo";
 export const LOGOUT = cp + "rest/logout";
 export const CHECK_IF_PAGE_EXISTS = cp + "rest/checkIfPageExists";
 export const AUTH = cp + "auth";

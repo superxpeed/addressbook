@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Label, Modal} from "react-bootstrap";
+import {Button, Label, Modal, Navbar} from "react-bootstrap";
 import * as url from "../Common/Url";
 import {ifNoAuthorizedRedirect} from "../Pages/UniversalListActions";
 import {connect} from "react-redux";
@@ -13,11 +13,13 @@ import {AuthTokenUtils} from "../Common/Utils";
         dispatch
     ),
 }))
-export class UserComponent extends React.Component {
+export class NavBarComponent extends React.Component {
     state = {
         username: "",
         roles: [],
         show: false,
+        buildVersion: "",
+        buildTime: ""
     };
 
     constructor(props) {
@@ -60,8 +62,37 @@ export class UserComponent extends React.Component {
             });
     };
 
+    updateBuildInfo = () => {
+        let isOk = false;
+        let headers = new Headers();
+        AuthTokenUtils.addAuthToken(headers);
+        headers.append("Accept", "application/json");
+        headers.append("Content-Type", "application/json; charset=utf-8");
+        fetch(url.GET_BUILD_INFO, {
+            method: "get",
+            headers: headers,
+        })
+            .then((response) => {
+                ifNoAuthorizedRedirect(response);
+                isOk = response.ok;
+                return response.text();
+            })
+            .then((text) => {
+                if (isOk) {
+                    let buildInfo = JSON.parse(text);
+                    this.setState({
+                        buildVersion: buildInfo.version,
+                        buildTime: buildInfo.time,
+                    });
+                } else {
+                    this.props.showCommonErrorAlert(text);
+                }
+            });
+    };
+
     componentDidMount() {
         this.updatePersonInfo();
+        this.updateBuildInfo();
     }
 
     getRoles = () => {
@@ -79,6 +110,16 @@ export class UserComponent extends React.Component {
     render() {
         return (
             <div style={{display: "inline-block"}}>
+                <Navbar.Form pullLeft style={{margin: "0px", paddingRight: "0px", paddingLeft: "0px"}}>
+                    <div style={{display: "grid"}}>
+                        <Label bsStyle="default" style={{marginRight: "5px", marginTop: "1px"}}>
+                            Build version: {this.state.buildVersion}
+                        </Label>
+                        <Label bsStyle="default" style={{marginRight: "5px", marginTop: "1px"}}>
+                            Build time: {this.state.buildTime}
+                        </Label>
+                    </div>
+                </Navbar.Form>
                 <Button
                     style={{maxWidth: "100px", overflowX: "hidden", marginRight: "5px"}}
                     onClick={this.handleShow}

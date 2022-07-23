@@ -13,7 +13,7 @@ import * as TableActions from "../Table/TableActions";
 import * as MenuActions from "./MenuFormActions";
 import {OrganizationComponent} from "../Components/OrganizationComponent";
 import {PersonComponent} from "../Components/PersonComponent";
-import {UserComponent} from "../Components/UserComponent";
+import {NavBarComponent} from "../Components/NavBarComponent";
 
 @connect(
     (state) => ({
@@ -323,7 +323,7 @@ export default class UniversalListForm extends React.Component {
                             >
                                 Create person
                             </Button>
-                            <UserComponent/>
+                            <NavBarComponent/>
                             <Button onClick={() => this.props.logout()}>Logout</Button>
                         </Nav>
                     </Navbar.Collapse>

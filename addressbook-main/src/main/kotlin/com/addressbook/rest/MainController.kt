@@ -11,11 +11,14 @@ import com.addressbook.security.AppUserDetails
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.info.BuildProperties
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.web.bind.annotation.*
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -28,6 +31,9 @@ class MainController {
 
     @Autowired
     lateinit var dao: DaoClient
+
+    @Autowired
+    lateinit var buildProperties: BuildProperties
 
     @PostMapping("/getList4UniversalListForm")
     fun getList(@RequestParam(value = "start") start: Int,
@@ -145,5 +151,20 @@ class MainController {
         val user = dao.getUserByLogin(((authentication.principal as AppUserDetails).username))
         user?.password = ""
         return user
+    }
+
+    @GetMapping("/getBuildInfo")
+    fun getBuildInfo(): BuildInfoDto? {
+        val buildInfoDto = BuildInfoDto()
+        with(buildInfoDto){
+            version = buildProperties.version
+            artifact = buildProperties.artifact
+            group = buildProperties.group
+            name = buildProperties.name
+            time = DateTimeFormatter.ofPattern("dd.MM.yyyy HH.mm.ss")
+                    .withZone(ZoneId.systemDefault())
+                    .format(buildProperties.time)
+        }
+        return buildInfoDto
     }
 }

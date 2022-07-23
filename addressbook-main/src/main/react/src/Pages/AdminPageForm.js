@@ -4,7 +4,7 @@ import {bindActionCreators} from "redux";
 import * as MenuActions from "./MenuFormActions";
 import {Breadcrumb, Button, Label, Nav, Navbar, Table} from "react-bootstrap";
 import {HashUtils} from "../Common/Utils";
-import {UserComponent} from "../Components/UserComponent";
+import {NavBarComponent} from "../Components/NavBarComponent";
 import {EventSourcePolyfill} from "event-source-polyfill";
 
 @connect(
@@ -90,7 +90,7 @@ export default class AdminPageForm extends React.Component {
                             <Breadcrumb>{breads}</Breadcrumb>
                         </Nav>
                         <Nav pullRight>
-                            <UserComponent/>
+                            <NavBarComponent/>
                             <Button onClick={() => this.props.logout()}>Logout</Button>
                         </Nav>
                     </Navbar.Collapse>

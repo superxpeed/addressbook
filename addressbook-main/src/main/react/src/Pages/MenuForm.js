@@ -5,7 +5,7 @@ import * as MenuActions from "./MenuFormActions";
 import {Breadcrumb, Button, Nav, Navbar} from "react-bootstrap";
 import {AlertList} from "react-bs-notifier";
 import {AuthTokenUtils, HashUtils} from "../Common/Utils";
-import {UserComponent} from "../Components/UserComponent";
+import {NavBarComponent} from "../Components/NavBarComponent";
 import * as url from "../Common/Url";
 import {ifNoAuthorizedRedirect} from "./UniversalListActions";
 
@@ -127,7 +127,7 @@ export default class MenuForm extends React.Component {
                             <Breadcrumb>{breads}</Breadcrumb>
                         </Nav>
                         <Nav pullRight>
-                            <UserComponent/>
+                            <NavBarComponent/>
                             <Button onClick={() => this.props.logout()}>Logout</Button>
                         </Nav>
                     </Navbar.Collapse>
