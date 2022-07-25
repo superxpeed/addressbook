@@ -13,6 +13,9 @@
     <profiles>
         <profile>
             <id>build-distrib</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
