@@ -10,6 +10,7 @@
         <module>ignite-server</module>
         <module>mongo-server</module>
         <module>postgre-server</module>
+        <module>build-distrib</module>
     </modules>
 
     <groupId>com.github.dredwardhyde</groupId>
