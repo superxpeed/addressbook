@@ -1,0 +1,14 @@
+- hosts: localhost
+  become: no
+  gather_facts: False
+  strategy: free
+  serial: 10
+  connection: local
+  vars_files:
+    - vars/variables.yaml
+  vars:
+    - dev: true
+  roles:
+    - { role: delete_web, tags: web }
+    - { role: delete_ignite, tags: ignite }
+    - { role: delete_eureka, tags: eureka }

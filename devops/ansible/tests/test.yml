@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - deploy_eureka
+    - deploy_ignite
+    - deploy_web
+    - delete_web
+    - delete_ignite
+    - delete_eureka

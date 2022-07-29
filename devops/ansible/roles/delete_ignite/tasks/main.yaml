@@ -1,0 +1,25 @@
+- name: "Get files from {{ path_to_templates }}/ignite"
+  find:
+    paths: "{{ path_to_templates }}/ignite"
+    patterns: "*.y*ml"
+    recurse: no
+    file_type: file
+  register: found_directories
+
+- name: Get files path only
+  set_fact:
+    files_list: "{{ files_list|default([]) + [ {'path': item.path} ] }}"
+  loop: "{{ found_directories.files }}"
+  no_log: true
+
+- name: Delete .yaml from k8s
+  k8s:
+    state: absent
+    definition: "{{ lookup('template', '{{ item.path }}') | from_yaml }}"
+    host: "{{ kubernetes_host_api }}"
+    namespace: "{{ namespace }}"
+    api_key: "{{ k8s_auth_api_key }}"
+    delete_options:
+      gracePeriodSeconds: 0
+  register: result
+  with_items: "{{ files_list }}"

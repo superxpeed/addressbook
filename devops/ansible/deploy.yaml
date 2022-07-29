@@ -1,0 +1,14 @@
+- hosts: localhost
+  become: no
+  gather_facts: False
+  strategy: free
+  serial: 10
+  connection: local
+  vars_files:
+    - vars/variables.yaml
+  vars:
+    - dev: true
+  roles:
+    - { role: deploy_eureka, tags: eureka }
+    - { role: deploy_ignite, tags: ignite }
+    - { role: deploy_web, tags: web }
