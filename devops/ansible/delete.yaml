@@ -10,5 +10,5 @@
     - dev: true
   roles:
 #    - { role: delete_web, tags: web }
-#    - { role: delete_ignite, tags: ignite }
+    - { role: delete_ignite, tags: ignite }
     - { role: delete_eureka, tags: eureka }

@@ -1,9 +1,9 @@
 server:
-  port: 10000
+  port: ${ignite_server_port}
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_HOST}
+      defaultZone: ${eureka_host}
   instance:
     lease-renewal-interval-in-seconds: 1
     lease-expiration-duration-in-seconds: 2

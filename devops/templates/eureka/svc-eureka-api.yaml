@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-eureka-api
+  namespace: "{{namespace}}"
+  labels:
+    app: {{namespace}}-eureka
+    deleteLabel: {{namespace}}-eureka
+    product: eureka
+    type: application
+spec:
+  ports:
+    - name: "tcp-{{eureka_server_port}}"
+      protocol: TCP
+      port: {{eureka_server_port}}
+      targetPort: "tcp-{{eureka_server_port}}"
+  selector:
+    app: {{namespace}}-eureka
+  type: ClusterIP
+  sessionAffinity: None

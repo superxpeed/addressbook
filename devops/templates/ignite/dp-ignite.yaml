@@ -1,18 +1,18 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: dp-eureka-app
+  name: dp-ignite-app
   labels:
-    app: {{namespace}}-eureka
+    app: {{namespace}}-ignite
 spec:
-  replicas: {{eureka_replica_count}}
+  replicas: {{ignite_replica_count}}
   selector:
     matchLabels:
-      app: {{namespace}}-eureka
+      app: {{namespace}}-ignite
   template:
     metadata:
       labels:
-        app: {{namespace}}-eureka
+        app: {{namespace}}-ignite
     spec:
       restartPolicy: Always
       schedulerName: default-scheduler
@@ -21,17 +21,17 @@ spec:
       containers:
         - resources:
             limits:
-              cpu: {{eureka_cpu_limit}}
-              memory: {{eureka_mem_limit}}
+              cpu: {{ignite_cpu_limit}}
+              memory: {{ignite_mem_limit}}
             requests:
-              cpu: {{eureka_cpu_req}}
-              memory: {{eureka_mem_req}}
+              cpu: {{ignite_cpu_req}}
+              memory: {{ignite_mem_req}}
           readinessProbe:
             exec:
               command:
                 - "sh"
                 - "-c"
-                - "curl localhost:{{eureka_server_port}}/actuator/health/readiness"
+                - "curl localhost:{{ignite_server_port}}/actuator/health/readiness"
             initialDelaySeconds: 60
             timeoutSeconds: 2
             periodSeconds: 10
@@ -42,7 +42,7 @@ spec:
               command:
                 - "sh"
                 - "-c"
-                - "curl localhost:{{eureka_server_port}}/actuator/health/readiness"
+                - "curl localhost:{{ignite_server_port}}/actuator/health/readiness"
             initialDelaySeconds: 60
             timeoutSeconds: 2
             periodSeconds: 10
@@ -53,19 +53,19 @@ spec:
               command:
                 - "sh"
                 - "-c"
-                - "curl localhost:{{eureka_server_port}}/actuator/health/readiness"
+                - "curl localhost:{{ignite_server_port}}/actuator/health/readiness"
             failureThreshold: 30
             periodSeconds: 10
           terminationMessagePath: /dev/termination-log
-          name: eureka-app
+          name: ignite-app
           securityContext:
-            readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: false
           envFrom:
             - configMapRef:
-                name: cm-eureka-app-settings
+                name: cm-ignite-app-settings
           ports:
-            - name: tcp-{{eureka_server_port}}
-              containerPort: {{eureka_server_port}}
+            - name: tcp-{{ignite_server_port}}
+              containerPort: {{ignite_server_port}}
               protocol: TCP
           imagePullPolicy: Never
           volumeMounts:
@@ -75,13 +75,13 @@ spec:
               readOnly: true
               mountPath: /mnt/
           terminationMessagePolicy: File
-          image: {{eureka_image}}
+          image: {{ignite_image}}
       dnsPolicy: ClusterFirst
       volumes:
         - name: logback
           configMap:
             defaultMode: 256
-            name: cm-eureka-logback
+            name: cm-ignite-logback
             items:
               - key: logback.xml
                 path: logback.xml

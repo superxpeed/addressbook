@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: cm-eureka-app-settings
   labels:
-    app: {{namespace}}-addressbook
+    app: {{namespace}}-eureka
 data:
   eureka_server_port: "{{eureka_server_port}}"
   eureka_hostname: "{{eureka_hostname}}"
