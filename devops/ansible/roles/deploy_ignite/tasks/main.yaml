@@ -19,5 +19,6 @@
     host: "{{ kubernetes_host_api }}"
     namespace: "{{ namespace }}"
     api_key: "{{ k8s_auth_api_key }}"
+    validate_certs: "{{ validate_certs }}"
   register: result
   with_items: "{{ files_list }}"

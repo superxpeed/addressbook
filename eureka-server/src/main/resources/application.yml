@@ -1,10 +1,10 @@
 server:
-  port: 7777
+  port: ${eureka_server_port}
 eureka:
   server:
     renewal-percent-threshold: 0.85
   instance:
-    hostname: localhost
+    hostname: ${eureka_hostname}
   client:
     register-with-eureka: false
     fetch-registry: false

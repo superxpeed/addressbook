@@ -5,6 +5,9 @@ services:
     build: eureka-server/.
     ports:
       - "7777:7777"
+    environment:
+      - eureka_server_port=7777
+      - eureka_hostname=localhost
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:7777/actuator/health 2>&1 | grep UP || exit 1"]
       interval: 20s

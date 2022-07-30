@@ -1,0 +1,96 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: dp-eureka-app
+  labels:
+    app: {{namespace}}-addressbook
+spec:
+  replicas: {{eureka_replica_count}}
+  selector:
+    matchLabels:
+      app: {{namespace}}-addressbook
+  template:
+    metadata:
+      labels:
+        app: {{namespace}}-addressbook
+    spec:
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 60
+      securityContext: {}
+      containers:
+        - resources:
+            limits:
+              cpu: {{eureka_cpu_limit}}
+              memory: {{eureka_mem_limit}}
+            requests:
+              cpu: {{eureka_cpu_req}}
+              memory: {{eureka_mem_req}}
+          readinessProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "curl localhost:{{eureka_server_port}}/actuator/health/readiness"
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "curl localhost:{{eureka_server_port}}/actuator/health/readiness"
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 6
+          startupProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "curl localhost:{{eureka_server_port}}/actuator/health/readiness"
+            failureThreshold: 30
+            periodSeconds: 10
+          terminationMessagePath: /dev/termination-log
+          name: eureka-app
+          securityContext:
+            readOnlyRootFilesystem: true
+          envFrom:
+            - configMapRef:
+                name: cm-eureka-app-settings
+          ports:
+            - name: tcp-{{eureka_server_port}}
+              containerPort: {{eureka_server_port}}
+              protocol: TCP
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: logsshare
+              mountPath: /mnt/logs
+            - name: logback
+              readOnly: true
+              mountPath: /mnt/
+          terminationMessagePolicy: File
+          image: {{eureka_image}}
+      dnsPolicy: ClusterFirst
+      volumes:
+        - name: logback
+          configMap:
+            defaultMode: 256
+            name: cm-eureka-logback
+            items:
+              - key: logback.xml
+                path: logback.xml
+        - name: logsshare
+          emptyDir: {}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 25%
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 600
