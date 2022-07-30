@@ -1,5 +1,5 @@
 server:
-  port: 9000
+  port: ${web_server_port}
   http2:
     enabled: true
   compression:

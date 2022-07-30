@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-web-app-settings
+  labels:
+    app: {{namespace}}-web
+data:
+  eureka_host: "{{eureka_client_host}}"
+  web_server_port: "{{web_server_port}}"
+  keystore_path: "{{web_keystore_path}}"
+  truststore_path: "{{web_truststore_path}}"
+  dao_implementation: "{{web_dao_implementation}}"

@@ -11,4 +11,4 @@
   roles:
     - { role: deploy_eureka, tags: eureka }
     - { role: deploy_ignite, tags: ignite }
-#    - { role: deploy_web, tags: web }
+    - { role: deploy_web, tags: web }
