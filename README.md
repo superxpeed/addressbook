@@ -1,4 +1,4 @@
-# Spring Ecosystem Single Page Application Example
+# Spring Ecosystem Backbone Single Page Application
 ### Spring Boot/Cloud/Eureka/Netflix/MVC using React/Redux for UI and MongoDB/PostgreSQL/Apache Ignite for data persistence
 
 #### Back-end:
