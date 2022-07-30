@@ -43,7 +43,7 @@ kubectl apply -f dashboard-adminuser.yml
 kubectl apply -f admin-role-binding.yml
 ```
 
-### Create token:
+### Create token and [add it here](https://github.com/dredwardhyde/addressbook/blob/master/devops/ansible/vars/variables.yaml#L5):
 ```shell
 kubectl -n kubernetes-dashboard create token admin-user
 ```
