@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
   eureka:
-    build: eureka-server/.
+    build: ../eureka-server/.
     ports:
       - "7777:7777"
     environment:
@@ -13,36 +13,58 @@ services:
       interval: 20s
       timeout: 5s
       retries: 5
+    volumes:
+      - type: bind
+        source: /var/lib/docker/volumes/logback/_data
+        target: /mnt/
+      - type: bind
+        source: /var/lib/docker/volumes/logs/_data
+        target: /mnt/logs
   ignite:
-    build: ignite-server/.
+    build: ../ignite-server/.
     ports:
       - "11000:10000"
     environment:
-      - EUREKA_HOST=http://eureka:7777/eureka
+      - ignite_server_port=10000
+      - eureka_host=http://eureka:7777/eureka
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:10000/actuator/health 2>&1 | grep UP || exit 1"]
       interval: 20s
       timeout: 5s
       retries: 5
+    volumes:
+      - type: bind
+        source: /var/lib/docker/volumes/logback/_data
+        target: /mnt/
+      - type: bind
+        source: /var/lib/docker/volumes/logs/_data
+        target: /mnt/logs
   web:
-    build: addressbook-main/.
+    build: ../addressbook-main/.
     ports:
       - "10000:9000"
     environment:
-      - DAO_IMPLEMENTATION=IGNITE-SERVER
-      - JWT_SECRET=q1w2e3r4
-      - KEY_ALIAS=localhost
-      - KEYSTORE_PASSWORD=q1w2e3r4
-      - KEYSTORE_PATH=/mnt/certs/keystore.jks
-      - TRUSTSTORE_PASSWORD=q1w2e3r4
-      - TRUSTSTORE_PATH=/mnt/certs/truststore.jks
-      - KEY_PASSWORD=q1w2e3r4
-      - EUREKA_HOST=http://eureka:7777/eureka
+      - web_server_port=9000
+      - dao_implementation=IGNITE-SERVER
+      - jwt_secret=q1w2e3r4
+      - key_alias=localhost
+      - keystore_password=q1w2e3r4
+      - keystore_path=/mnt/certs/keystore.jks
+      - truststore_password=q1w2e3r4
+      - truststore_path=/mnt/certs/truststore.jks
+      - key_password=q1w2e3r4
+      - eureka_host=http://eureka:7777/eureka
     restart: on-failure
     volumes:
       - type: bind
         source: /var/lib/docker/volumes/certs/_data
         target: /mnt/certs
+      - type: bind
+        source: /var/lib/docker/volumes/logback/_data
+        target: /mnt/
+      - type: bind
+        source: /var/lib/docker/volumes/logs/_data
+        target: /mnt/logs
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:9000/actuator/health 2>&1 | grep UP || exit 1"]
       interval: 20s
