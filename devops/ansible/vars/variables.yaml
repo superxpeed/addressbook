@@ -14,9 +14,9 @@ eureka_mem_limit: 6000Mi
 eureka_cpu_req: 2
 eureka_mem_req: 6000Mi
 eureka_image: addressbook_eureka:latest
-
 eureka_client_host: http://svc-eureka-api:7777/eureka
 
+# Ignite server settings
 ignite_server_port: 10000
 ignite_replica_count: 1
 ignite_cpu_limit: 3
@@ -25,6 +25,7 @@ ignite_cpu_req: 3
 ignite_mem_req: 8000Mi
 ignite_image: addressbook_db:latest
 
+# Web application settings
 web_server_port: 9000
 web_replica_count: 1
 web_cpu_limit: 2
