@@ -1,4 +1,5 @@
 FROM adoptopenjdk/openjdk8:alpine-jre
+RUN apk update && apk add curl
 WORKDIR /opt/app
 ARG JAR_FILE=target/mongo-server.jar
 COPY ${JAR_FILE} app.jar

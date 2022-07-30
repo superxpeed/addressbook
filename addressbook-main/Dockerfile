@@ -1,4 +1,5 @@
 FROM adoptopenjdk/openjdk8:alpine-jre as builder
+RUN apk update && apk add curl
 WORKDIR application
 ARG JAR_FILE=target/addressbook.jar
 COPY ${JAR_FILE} application.jar
@@ -11,4 +12,4 @@ COPY --from=builder application/dependencies/ ./
 COPY --from=builder application/spring-boot-loader/ ./
 COPY --from=builder application/snapshot-dependencies/ ./
 COPY --from=builder application/application/ ./
-ENTRYPOINT ["java", "-Xms2048m", "-Xmx4096m", "-DIGNITE_NO_SHUTDOWN_HOOK=true", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "-Xms2048m", "-Xmx4096m", "-Dfile.encoding=UTF-8", "-Djava.io.tmpdir=/mnt/logs", "-Dlogging.config=/mnt/logback.xml", "-DIGNITE_NO_SHUTDOWN_HOOK=true", "org.springframework.boot.loader.JarLauncher"]
