@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-web-api
+  namespace: "{{namespace}}"
+  labels:
+    app: {{namespace}}-web
+    deleteLabel: {{namespace}}-web
+    product: eureka
+    type: application
+spec:
+  ports:
+    - name: "tcp-{{web_server_port}}"
+      protocol: TCP
+      port: {{web_server_port}}
+      targetPort: "tcp-{{web_server_port}}"
+  selector:
+    app: {{namespace}}-web
+  type: ClusterIP
+  sessionAffinity: None
