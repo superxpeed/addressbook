@@ -18,12 +18,12 @@
     -   [Service registration](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-common/src/main/kotlin/com/addressbook/AddressBookDAO.kt) with **Spring Eureka**
     -   [Service location](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/dao/DaoClient.kt) using **Spring Feign** and **Netflix Ribbon**
 4. [**Spring Web**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html):
-    -   [Exception handler for all back-end exceptions](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/rest/MainController.kt#L125)
+    -   [Exception handler for all back-end exceptions](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/rest/MainController.kt#L132)
     -   [404 page & 401 handlers](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/rest/ErrorWebController.kt)  
     -   [Automatic JSON marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configurations/RootConfiguration.kt)
 5.  [**Spring Flux**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html) for [reactive updates on front-end](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/services/JVMStateService.kt)
 6.  [**Spring Doc**](https://springfox.github.io/springfox/docs/current/) [configuration](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configurations/RootConfiguration.kt#L20) 
-7.  [**Apache Ignite**](https://apacheignite.readme.io/docs) [server configuration](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L37), [SQL queries](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L276), [transactions](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L111), [binary marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-common/src/main/kotlin/com/addressbook/model/Organization.kt)
+7.  [**Apache Ignite**](https://apacheignite.readme.io/docs) [server configuration](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L37), [generic SQL queries](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L262), [transactions](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L109), [binary marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-common/src/main/kotlin/com/addressbook/model/AddressBookEntities.kt#L17)
 8.  [**MongoDB with Morphia ORM**](https://github.com/dredwardhyde/addressbook/blob/master/mongo-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt)  
 9.  [**PostgreSQL with Spring JPA**](https://github.com/dredwardhyde/addressbook/blob/master/postgre-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt)  
 
@@ -36,6 +36,16 @@
 6.  User notifications of all back-end and front-end events (+ exception handling) using react-bs-notifier
 7.  Hierarchical menu with breadcrumbs and role-dependent feature availability
 8.  Dynamically added/removed components using Maps
+
+#### DevOps:
+1.  [Ansible playbook](https://github.com/dredwardhyde/addressbook/tree/master/devops/ansible)  
+2.  [Kubernetes templates:](https://github.com/dredwardhyde/addressbook/tree/master/devops/templates)
+    - [External logback configuration](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-logback.yaml)
+    - [Secret as Volume](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-logback.yaml)
+    - [ConfigMap](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-app-settings.yaml)
+    - [Service](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/svc-web-api.yaml)
+    - [Ingress](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/web-ingress.yaml)
+3.  [docker-compose](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose-ignite.yml)
 
 #### PostgreSQL setup:
 ```sql
