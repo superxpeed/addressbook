@@ -37,7 +37,7 @@
 7.  Hierarchical menu with breadcrumbs and role-dependent feature availability
 8.  Dynamically added/removed components using Maps
 
-#### DevOps:
+#### [DevOps](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md):
 1.  [Ansible playbook](https://github.com/dredwardhyde/addressbook/tree/master/devops/ansible)  
 2.  [Kubernetes templates:](https://github.com/dredwardhyde/addressbook/tree/master/devops/templates)
     - [External logback configuration](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-logback.yaml)
