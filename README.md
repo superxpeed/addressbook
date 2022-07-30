@@ -3,8 +3,8 @@
 
 #### Back-end:
 1. [**Spring Boot**](https://spring.io/projects/spring-boot): 
-    -   [Maven dependency management for Spring & Kotlin & Java & NPM](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml)
-    -   [Single executable **.jar** assembly (with UI static files)](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml)
+    -   [Maven dependency management for Spring & Kotlin & NPM](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml)
+    -   [Single layered executable **.jar** assembly (with UI static files)](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml)
     -   [Resource compression](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/resources/application.yml#L5)  
     -   [Static resource handler](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configurations/WebConfiguration.kt)
 2.  [**Spring Security with JWT**](https://spring.io/projects/spring-security):
@@ -22,98 +22,25 @@
     -   [404 page & 401 handlers](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/rest/ErrorWebController.kt)  
     -   [Automatic JSON marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configurations/RootConfiguration.kt)
 5.  [**Spring Flux**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html) for [reactive updates on front-end](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/services/JVMStateService.kt)
-6.  [**Spring Fox**](https://springfox.github.io/springfox/docs/current/) [configuration](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configurations/SpringFoxConfiguration.kt) with Swagger2
+6.  [**Spring Doc**](https://springfox.github.io/springfox/docs/current/) [configuration](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configurations/RootConfiguration.kt#L20) 
 7.  [**Apache Ignite**](https://apacheignite.readme.io/docs) [server configuration](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L37), [SQL queries](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L276), [transactions](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L111), [binary marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-common/src/main/kotlin/com/addressbook/model/Organization.kt)
 8.  [**MongoDB with Morphia ORM**](https://github.com/dredwardhyde/addressbook/blob/master/mongo-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt)  
 9.  [**PostgreSQL with Spring JPA**](https://github.com/dredwardhyde/addressbook/blob/master/postgre-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt)  
 
 #### Front-end:
-1.  Complex user interface with multiple dynamically added tables/tabs/custom forms, user-input validation and more
+1.  User interface with multiple dynamically added tables/tabs/custom forms, input validation and more
 2.  [**react v15.3.1**](https://reactjs.org/blog/2016/04/07/react-v15.html), [**redux v3.6.0**](https://react-redux.js.org/), [**react-router v4.0.0**](https://reacttraining.com/react-router/web/guides/quick-start), component lifecycle, integration with Spring Security for REST-API
 3.  [**react-bootstrap-table**](http://allenfang.github.io/react-bootstrap-table/) & [**react-bootstrap**](https://react-bootstrap.github.io/components/table/) components
 4.  Webpack-dev-server & npm configuration & assembly (+ multiplatform maven configs)
-5.  Heavy usage of HTTP Statuses & handling JS exceptions
-6.  User notifications about all back-end and front-end events (+ exception handling) using react-bs-notifier
+5.  Handling HTTP Statuses & JS exceptions
+6.  User notifications of all back-end and front-end events (+ exception handling) using react-bs-notifier
 7.  Hierarchical menu with breadcrumbs and role-dependent feature availability
 8.  Dynamically added/removed components using Maps
 
-#### Tested by JUnit & Selenium (Chrome)
-
-#### Deployment:
-Build the following Docker images (Intellij Idea profiles available):
-
-Build Spring Boot Web Application:
-```sh
-cd addressbook-main
-docker build -t addressbook_web .
-```
-Build Spring Boot DPL Application with Apache Ignite Server:
-```sh
-cd ignite-server
-docker build -t addressbook_ignite .
-```
-Build Spring Boot DPL Application with PostgreSQL:
-```sh
-cd postgre-server
-docker build -t addressbook_postgre .
-```
-Build Spring Boot DPL Application with MongoDB:
-```sh
-cd mongo-server
-docker build -t addressbook_mongo .
-```
-Build Spring Boot with Eureka Server:
-```sh
-cd eureka-server
-docker build -t addressbook_eureka .
-```
-Start all:
-```sh
-cd ..
-docker-compose -f docker-compose.yml up -d
-```
-
-#### PostgreSQL preparation:
+#### PostgreSQL setup:
 ```sql
 CREATE SCHEMA IF NOT EXISTS test;
 CREATE USER test WITH PASSWORD 'test';
 GRANT ALL ON SCHEMA test TO test;
 ```
 
-#### WebApp host: http://localhost:10000/  (user/userPass, admin/adminPass)
-#### Eureka host: http://localhost:7777/  
-
-### Docker Apps:
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/deployment.png" width="900"/>  
-  
-### Eureka Services:
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/eureka.png" width="900"/>  
-
-### Swagger2 WebApp: http://localhost:10000/swagger-ui.html
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/swagger-web.png" width="700"/>  
-
-### Swagger2 DPL: http://localhost:11000/swagger-ui.html
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/swagger-dao.png" width="700"/>  
-
-
-### How to use CDS:
-
-```sh
-"C:\Java\BellSoft\LibericaJDK-14\bin\java.exe" -Xlog:cds=debug -Xshare:off -XX:DumpLoadedClassList=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka.lst -jar C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-server\target\eureka-server.jar com.addressbook.eureka.EurekaMain
-```
-```sh
-"C:\Java\BellSoft\LibericaJDK-14\bin\java.exe" -Xlog:cds=debug -Xshare:dump -XX:SharedClassListFile=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka.lst -XX:SharedArchiveFile=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka.jsa -jar C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-server\target\eureka-server.jar com.addressbook.eureka.EurekaMain
-```
-```sh
-"C:\Java\BellSoft\LibericaJDK-14\bin\java.exe" -Xlog:cds=debug -Xshare:on -XX:SharedArchiveFile=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka.jsa -XX:ArchiveClassesAtExit=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-ext.jsa -jar C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-server\target\eureka-server.jar com.addressbook.eureka.EurekaMain 
-```
-```sh
-"C:\Java\BellSoft\LibericaJDK-14\bin\java.exe" -Xlog:cds=debug -Xshare:on -XX:SharedArchiveFile=C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-ext.jsa -jar C:\Users\edwardhyde\IdeaProjects\addressbook\eureka-server\target\eureka-server.jar com.addressbook.eureka.EurekaMain 
-```
-
-### How CDS affects statup time:  
-#### Before
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/cds-without.PNG" width="900"/>  
-
-#### After
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/cds-with.PNG" width="900"/>  
