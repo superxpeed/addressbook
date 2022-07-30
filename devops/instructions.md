@@ -1,6 +1,6 @@
-## Dashboard installation
+## Kubernetes installation
 
-### Install Docker Desktop for Mac
+### Install Docker Desktop
 ```shell
 https://www.docker.com/products/docker-desktop/
 ```
