@@ -26,7 +26,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 ```
 #### NOTE: With Ingress configured in the default mode X509 client authentication for Spring doesn't work
 #### Or you can enable SSL passthrough:
-```
+```shell
 https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough
 ```
 ### Create user:
