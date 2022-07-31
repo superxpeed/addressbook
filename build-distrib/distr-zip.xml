@@ -91,5 +91,18 @@
                 <include>README.md</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>${basedir}/../devops/</directory>
+            <outputDirectory>./deploy</outputDirectory>
+            <includes>
+                <include>ansible/**</include>
+                <include>templates/**</include>
+                <include>admin-role-binding.yml</include>
+                <include>dashboard-adminuser.yml</include>
+                <include>docker-compose.yml</include>
+                <include>docker-compose-ignite.yml</include>
+                <include>instructions.md</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly>

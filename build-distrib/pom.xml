@@ -30,7 +30,7 @@
                                     <goal>single</goal>
                                 </goals>
                                 <configuration>
-                                    <finalName>addressbook-${version}</finalName>
+                                    <finalName>addressbook-${project.version}</finalName>
                                     <appendAssemblyId>false</appendAssemblyId>
                                     <attach>false</attach>
                                     <descriptors>
