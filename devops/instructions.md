@@ -67,6 +67,23 @@ https://demo.localdev.me/#/
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/client_auth.png" width="900"/> 
 
+## Docker installation
+
+### Install Docker Desktop
+```shell
+https://www.docker.com/products/docker-desktop/
+```
+
+### Deploy project
+```shell
+docker-compose -f addressbook/devops/docker-compose.yml up -d
+```
+or 
+```shell
+docker-compose -f addressbook/devops/docker-compose-ignite.yml up -d
+```
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/docker.png" width="900"/>
+
 ### UI with Docker
 ```shell
 https://localhost:10000/#/
