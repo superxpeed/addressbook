@@ -52,8 +52,8 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 ### Deploy project
 ```shell
 cd $PROJECT_ROOT/devops/ansible
-ansible-playbook delete.yaml
-ansible-playbook deploy.yaml
+ansible-playbook delete.yaml --tags "eureka, ignite, web"
+ansible-playbook deploy.yaml --tags "eureka, ignite, web"
 ```  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ansible_wsl2.png" width="900"/>  
 
