@@ -13,7 +13,7 @@ class SpringDocConfiguration {
     fun springAddressBookOpenAPI(): OpenAPI? {
         return OpenAPI()
                 .info(Info().title("Apache Ignite Data Persistence Layer REST API")
-                        .description("Spring Ecosystem Single Page Application Example")
+                        .description("Spring Ecosystem Backbone Single Page Application")
                         .version("v1.0")
                         .license(License().name("Apache 2.0").url("http://springdoc.org")))
                 .externalDocs(ExternalDocumentation()
