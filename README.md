@@ -41,7 +41,7 @@ https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-b
 1.  User interface with multiple dynamically added tables/tabs/custom forms, input validation and more
 2.  [**react v15.3.1**](https://reactjs.org/blog/2016/04/07/react-v15.html), [**redux v3.6.0**](https://react-redux.js.org/), [**react-router v4.0.0**](https://reacttraining.com/react-router/web/guides/quick-start), component lifecycle, integration with Spring Security for REST API
 3.  [**react-bootstrap-table**](http://allenfang.github.io/react-bootstrap-table/) & [**react-bootstrap**](https://react-bootstrap.github.io/components/table/) components
-4.  **webpack-dev-server** & **npm** configuration & assembly with compression (+ multiplatform **Maven** configuration)
+4.  [**webpack-dev-server**](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/react/package.json#L7) & **npm** configuration & assembly with [compression](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/react/webpack.prod.config.js#L4) (+ multiplatform **Maven** configuration)
 5.  Handling HTTP Statuses & JS exceptions
 6.  User notifications of all back-end and front-end events (+ exception handling) using **react-bs-notifier**
 7.  Hierarchical menu with breadcrumbs and role-dependent feature availability
