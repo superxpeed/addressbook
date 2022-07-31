@@ -74,6 +74,16 @@ https://demo.localdev.me/#/
 https://www.docker.com/products/docker-desktop/
 ```
 
+### Create Volumes
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/volumes.png" width="900"/>  
+
+### Copy keystore.jks, truststore.jks, logback.xml to the Volume folders
+```shell
+\\wsl$\docker-desktop-data\version-pack-data\community\docker\volumes
+```
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/logback_volume.png" width="900"/>
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/certs_volume.png" width="900"/>  
+
 ### Deploy project
 ```shell
 docker-compose -f addressbook/devops/docker-compose.yml up -d
