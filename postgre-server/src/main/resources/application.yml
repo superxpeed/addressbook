@@ -1,9 +1,9 @@
 server:
-  port: 12000
+  port: ${postgres_server_port}
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_HOST}
+      defaultZone: ${eureka_host}
   instance:
     lease-renewal-interval-in-seconds: 1
     lease-expiration-duration-in-seconds: 2
@@ -18,7 +18,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        default_schema: ${POSTGRES_USER}
+        default_schema: ${postgres_user}
         jdbc:
           batch_size: 20
         cache:
@@ -29,9 +29,9 @@ spring:
     generate-ddl: true
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://${postgres_host}:${postgres_port}/${postgres_db}
+    username: ${postgres_user}
+    password: ${postgres_password}
   sql:
     init:
       platform: postgres

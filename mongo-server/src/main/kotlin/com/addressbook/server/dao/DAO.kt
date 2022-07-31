@@ -29,7 +29,7 @@ class DAO : AddressBookDAO {
 
     @PostConstruct
     fun startClient() {
-        mongoClient = MongoClient(System.getenv("MONGO_HOST"), Integer.parseInt(System.getenv("MONGO_PORT")))
+        mongoClient = MongoClient(System.getenv("mongo_host"), Integer.parseInt(System.getenv("mongo_port")))
         dataStore = Morphia()
                 .also { it.mapPackage("com.addressbook.model") }
                 .createDatastore(mongoClient, "addressbook")

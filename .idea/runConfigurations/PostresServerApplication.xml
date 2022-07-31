@@ -2,12 +2,13 @@
   <configuration default="false" name="PostresServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" />
     <envs>
-      <env name="POSTGRES_DB" value="postgres" />
-      <env name="POSTGRES_HOST" value="localhost" />
-      <env name="POSTGRES_PASSWORD" value="test" />
-      <env name="POSTGRES_PORT" value="5432" />
-      <env name="POSTGRES_USER" value="test" />
-      <env name="EUREKA_HOST" value="http://localhost:7777/eureka" />
+      <env name="eureka_host" value="http://localhost:7777/eureka" />
+      <env name="postgres_db" value="postgres" />
+      <env name="postgres_host" value="localhost" />
+      <env name="postgres_password" value="test" />
+      <env name="postgres_port" value="5432" />
+      <env name="postgres_user" value="test" />
+      <env name="postgres_server_port" value="12000" />
     </envs>
     <module name="postgre-server" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.server.ServerApplication" />
