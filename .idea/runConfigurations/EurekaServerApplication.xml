@@ -7,12 +7,6 @@
     </envs>
     <module name="eureka-server" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.eureka.EurekaApplication" />
-    <extension name="coverage">
-      <pattern>
-        <option name="PATTERN" value="com.addressbook.eureka.*" />
-        <option name="ENABLED" value="true" />
-      </pattern>
-    </extension>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
