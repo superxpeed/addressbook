@@ -54,7 +54,12 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 cd $PROJECT_ROOT/devops/ansible
 ansible-playbook delete.yaml
 ansible-playbook deploy.yaml
-```
+```  
+
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/deployments.png" width="900"/>  
+
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/pods.png" width="900"/>  
+
 ### UI with Kubernetes
 ```shell
 https://demo.localdev.me/#/
