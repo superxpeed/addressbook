@@ -55,6 +55,7 @@ cd $PROJECT_ROOT/devops/ansible
 ansible-playbook delete.yaml
 ansible-playbook deploy.yaml
 ```  
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ansible_wsl2.png" width="900"/>  
 
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/deployments.png" width="900"/>  
 
