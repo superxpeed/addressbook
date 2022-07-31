@@ -4,8 +4,6 @@
 ```shell
 https://www.docker.com/products/docker-desktop/
 ```
-### Enable Kubernetes and give it at least 12 cores and 24GB ram
-
 ### Install ansible using brew/apt 
 ```shell
 brew install ansible
