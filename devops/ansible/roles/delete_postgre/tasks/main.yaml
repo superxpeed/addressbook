@@ -1,6 +1,6 @@
-- name: "Get files from {{ path_to_templates }}/web"
+- name: "Get files from {{ path_to_templates }}/postgre"
   find:
-    paths: "{{ path_to_templates }}/web"
+    paths: "{{ path_to_templates }}/postgre"
     patterns: "*.y*ml"
     recurse: no
     file_type: file
@@ -8,7 +8,7 @@
 
 - name: Get files path only
   set_fact:
-    files_list_web: "{{ files_list_web|default([]) + [ {'path': item.path} ] }}"
+    files_list_postgre: "{{ files_list_postgre|default([]) + [ {'path': item.path} ] }}"
   loop: "{{ found_directories.files }}"
   no_log: "{{ without_debug }}"
 
@@ -21,4 +21,4 @@
     api_key: "{{ k8s_auth_api_key }}"
     validate_certs: "{{ validate_certs }}"
   register: result
-  with_items: "{{ files_list_web }}"
+  with_items: "{{ files_list_postgre }}"

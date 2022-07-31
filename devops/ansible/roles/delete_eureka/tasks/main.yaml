@@ -8,7 +8,7 @@
 
 - name: Get files path only
   set_fact:
-    files_list: "{{ files_list|default([]) + [ {'path': item.path} ] }}"
+    files_list_eureka: "{{ files_list_eureka|default([]) + [ {'path': item.path} ] }}"
   loop: "{{ found_directories.files }}"
   no_log: "{{ without_debug }}"
 
@@ -20,7 +20,5 @@
     namespace: "{{ namespace }}"
     api_key: "{{ k8s_auth_api_key }}"
     validate_certs: "{{ validate_certs }}"
-    delete_options:
-      gracePeriodSeconds: 0
   register: result
-  with_items: "{{ files_list }}"
+  with_items: "{{ files_list_eureka }}"

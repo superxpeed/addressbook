@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-postgre-app-settings
+  labels:
+    app: {{namespace}}-postgre
+data:
+  eureka_host: "{{eureka_client_host}}"
+  postgres_server_port: "{{postgres_server_port}}"
+  postgres_host: "{{postgres_host}}"
+  postgres_port: "{{postgres_port}}"
+  postgres_db: "{{postgres_db}}"

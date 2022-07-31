@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-mongo-app-settings
+  labels:
+    app: {{namespace}}-mongo
+data:
+  eureka_host: "{{eureka_client_host}}"
+  mongo_server_port: "{{mongo_server_port}}"
+  mongo_host: "{{mongo_db_host}}"
+  mongo_port: "{{mongo_db_port}}"

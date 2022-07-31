@@ -1,0 +1,98 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: dp-postgre-app
+  labels:
+    app: {{namespace}}-postgre
+spec:
+  replicas: {{postgres_replica_count}}
+  selector:
+    matchLabels:
+      app: {{namespace}}-postgre
+  template:
+    metadata:
+      labels:
+        app: {{namespace}}-postgre
+    spec:
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 60
+      securityContext: {}
+      containers:
+        - resources:
+            limits:
+              cpu: {{postgres_cpu_limit}}
+              memory: {{postgres_mem_limit}}
+            requests:
+              cpu: {{postgres_cpu_req}}
+              memory: {{postgres_mem_req}}
+          readinessProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "curl localhost:{{postgres_server_port}}/actuator/health/readiness"
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "curl localhost:{{postgres_server_port}}/actuator/health/readiness"
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 6
+          startupProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "curl localhost:{{postgres_server_port}}/actuator/health/readiness"
+            failureThreshold: 30
+            periodSeconds: 10
+          terminationMessagePath: /dev/termination-log
+          name: postgre-app
+          securityContext:
+            readOnlyRootFilesystem: false
+          envFrom:
+            - configMapRef:
+                name: cm-postgre-app-settings
+            - secretRef:
+                name: secret-postgres-app
+          ports:
+            - name: tcp-{{postgres_server_port}}
+              containerPort: {{postgres_server_port}}
+              protocol: TCP
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: logsshare
+              mountPath: /mnt/logs
+            - name: logback
+              readOnly: true
+              mountPath: /mnt/
+          terminationMessagePolicy: File
+          image: {{postgres_image}}
+      dnsPolicy: ClusterFirst
+      volumes:
+        - name: logback
+          configMap:
+            defaultMode: 256
+            name: cm-postgre-logback
+            items:
+              - key: logback.xml
+                path: logback.xml
+        - name: logsshare
+          emptyDir: {}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 25%
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 600

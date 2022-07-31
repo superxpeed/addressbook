@@ -10,5 +10,7 @@
     - dev: true
   roles:
     - { role: delete_web, tags: web }
+    - { role: delete_mongo, tags: mongo }
+    - { role: delete_postgre, tags: postgre }
     - { role: delete_ignite, tags: ignite }
     - { role: delete_eureka, tags: eureka }

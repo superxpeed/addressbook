@@ -1,0 +1,36 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-mongo-logback
+  namespace: {{namespace}}
+  labels:
+    product: mongo
+    type: application
+data:
+  logback.xml: |-
+    <configuration debug="false" scan="true" scanPeriod="10 seconds">
+    <property name="logging.loggingDir" value="/mnt/logs/" />
+    <property name="logging.loggingFile" value="application.log" />
+       <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+       <file>{{'$'+'{'}}logging.loggingDir}/{{'$'+'{'}}logging.loggingFile}</file>
+         <encoder>
+              <charset>UTF-8</charset>
+              <pattern>%d{ISO8601} [%t] [%level] \(%c\) [%C::%M:%L] mdc:\(%mdc\)| %m%n</pattern>
+         </encoder>
+          <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+              <fileNamePattern>{{'$'+'{'}}loggingDir}/{{'$'+'{'}}loggingFile}_%d{yyyy-MM-dd}_%i.zip</fileNamePattern>
+              <maxFileSize>10MB</maxFileSize>
+              <maxHistory>5</maxHistory>
+              <totalSizeCap>50MB</totalSizeCap>
+            </rollingPolicy>
+         </appender>
+         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+             <encoder>
+               <pattern>%d{ISO8601} [%t] [%level] \(%c\) [%C::%M:%L] | %m%n</pattern>
+             </encoder>
+         </appender>
+        <root level="info">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="FILE"/>
+        </root>
+        </configuration>

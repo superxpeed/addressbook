@@ -1,3 +1,4 @@
+# General settings
 kubernetes_host_api: "https://localhost:6443"
 namespace: "default"
 validate_certs: false
@@ -23,7 +24,30 @@ ignite_cpu_limit: 3
 ignite_mem_limit: 8000Mi
 ignite_cpu_req: 3
 ignite_mem_req: 8000Mi
-ignite_image: addressbook_db:latest
+ignite_image: addressbook_ignite:latest
+
+# Mongo server settings
+mongo_server_port: 13000
+mongo_replica_count: 1
+mongo_cpu_limit: 2
+mongo_mem_limit: 4000Mi
+mongo_cpu_req: 2
+mongo_mem_req: 4000Mi
+mongo_image: addressbook_mongo:latest
+mongo_db_host: host.docker.internal
+mongo_db_port: 27017
+
+# PostgreSQL server settings
+postgres_server_port: 12000
+postgres_replica_count: 1
+postgres_cpu_limit: 2
+postgres_mem_limit: 4000Mi
+postgres_cpu_req: 2
+postgres_mem_req: 4000Mi
+postgres_image: addressbook_postgre:latest
+postgres_port: 5432
+postgres_host: host.docker.internal
+postgres_db: postgres
 
 # Web application settings
 web_server_port: 9000
