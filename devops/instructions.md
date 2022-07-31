@@ -55,3 +55,13 @@ cd $PROJECT_ROOT/devops/ansible
 ansible-playbook delete.yaml
 ansible-playbook deploy.yaml
 ```
+### UI with Kubernetes
+```shell
+https://demo.localdev.me/#/
+```
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/client_auth.png" width="900"/> 
+
+### UI with Docker
+```shell
+https://localhost:10000/#/
+```
