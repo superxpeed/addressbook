@@ -77,7 +77,7 @@ https://www.docker.com/products/docker-desktop/
 ### Create Volumes
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/volumes.png" width="900"/>  
 
-### Copy keystore.jks, truststore.jks, logback.xml to the Volume folders
+### Copy [keystore.jks](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/certs/keystore.jks), [truststore.jks](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/certs/truststore.jks), [logback.xml](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/resources/logback.xml) to the Volume folders
 ```shell
 \\wsl$\docker-desktop-data\version-pack-data\community\docker\volumes
 ```
