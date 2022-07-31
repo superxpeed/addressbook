@@ -2,7 +2,8 @@
   <configuration default="false" name="IgniteServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" />
     <envs>
-      <env name="EUREKA_HOST" value="http://localhost:7777/eureka" />
+      <env name="eureka_host" value="http://localhost:7777/eureka" />
+      <env name="ignite_server_port" value="10000" />
     </envs>
     <module name="ignite-server" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.server.ServerApplication" />

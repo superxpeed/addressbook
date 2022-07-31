@@ -1,6 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="EurekaServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" />
+    <envs>
+      <env name="eureka_server_port" value="7777" />
+      <env name="eureka_hostname" value="localhost" />
+    </envs>
     <module name="eureka-server" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.eureka.EurekaApplication" />
     <extension name="coverage">
