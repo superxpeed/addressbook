@@ -1,7 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="LoginLogoutWithRolesTest.stage1_loginLogoutWithRoles" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
+  <configuration default="false" name="LoginLogoutWithRolesTest" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
     <module name="addressbook-main" />
-    <useClassPathOnly />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.addressbook.test.*" />
@@ -10,9 +9,8 @@
     </extension>
     <option name="PACKAGE_NAME" value="com.addressbook.test" />
     <option name="MAIN_CLASS_NAME" value="com.addressbook.test.LoginLogoutWithRolesTest" />
-    <option name="METHOD_NAME" value="stage1_loginLogoutWithRoles" />
-    <option name="TEST_OBJECT" value="method" />
-    <option name="PARAMETERS" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="class" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
