@@ -4,7 +4,7 @@
     <useClassPathOnly />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.addressbook.test.*" />
+        <option name="PATTERN" value="com.addressbook.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

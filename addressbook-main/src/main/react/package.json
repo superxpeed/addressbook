@@ -4,7 +4,7 @@
   "description": "Address Book",
   "main": "index.js",
   "scripts": {
-    "webpack-dev-server": "node_modules/.bin/webpack-dev-server --colors --config ./webpack.config.js --port 7070",
+    "webpack-dev-server": "webpack-dev-server --colors --config ./webpack.config.js --port 7070",
     "dev-build": "webpack --progress --colors",
     "dev-build-and-watch": "webpack --progress --colors --watch",
     "build": "webpack --progress --colors --config ./webpack.prod.config.js",
