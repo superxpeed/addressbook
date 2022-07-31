@@ -38,15 +38,16 @@
 8.  Dynamic collections of child components
 
 #### [DevOps](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md):
-1.  [Ansible playbook](https://github.com/dredwardhyde/addressbook/tree/master/devops/ansible)  
-2.  [Kubernetes templates:](https://github.com/dredwardhyde/addressbook/tree/master/devops/templates)
-    - [External logback configuration](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-logback.yaml)
-    - [Secret as Volume](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-logback.yaml)
-    - [ConfigMap](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-app-settings.yaml)
-    - [Service](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/svc-web-api.yaml)
-    - [Ingress](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/web-ingress.yaml)
-3.  [docker-compose](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose-ignite.yml)
-4.  [Artifact assembly](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/pom.xml#L23)
+1.  [**Ansible** playbook](https://github.com/dredwardhyde/addressbook/tree/master/devops/ansible)  
+2.  [**Kubernetes** templates:](https://github.com/dredwardhyde/addressbook/tree/master/devops/templates)
+    - [External **logback** configuration](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-logback.yaml)
+    - [**Secret** as **Volume**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-logback.yaml)
+    - [**ConfigMap**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-app-settings.yaml)
+    - [**Service**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/svc-web-api.yaml)
+    - [**Ingress**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/web-ingress.yaml)
+3.  [**docker-compose**](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose-ignite.yml)
+4.  [**.zip** artifact assembly](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/pom.xml#L23)
+5.  [**Dockerfile** for layered Spring Boot .jar](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/Dockerfile)
 #### PostgreSQL setup:
 ```sql
 CREATE SCHEMA IF NOT EXISTS test;
