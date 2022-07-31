@@ -1,6 +1,16 @@
 # Spring Ecosystem Backbone Single Page Application
 ### Spring Boot/Cloud/Eureka/Netflix/MVC using React/Redux for UI and MongoDB/PostgreSQL/Apache Ignite for data persistence
 
+
+https://user-images.githubusercontent.com/8986329/182024391-09657aa1-cce6-49a0-9f12-16876dcb965e.mp4
+
+
+https://user-images.githubusercontent.com/8986329/182024425-df9b40ad-7304-4a23-b63b-b021cd8f1593.mp4
+
+
+https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-be04-9a646f945483.mp4
+
+
 #### Back-end:
 1. [**Spring Boot**](https://spring.io/projects/spring-boot): 
     -   [Maven dependency management for Spring & Kotlin & NPM](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml)
