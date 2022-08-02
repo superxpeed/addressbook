@@ -6,7 +6,6 @@ RUN java -Djarmode=layertools -jar application.jar extract
 RUN java -version
 
 FROM adoptopenjdk/openjdk8:alpine-jre
-RUN apk update && apk add curl
 WORKDIR application
 COPY --from=builder application/dependencies/ ./
 COPY --from=builder application/spring-boot-loader/ ./

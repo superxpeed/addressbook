@@ -1,5 +1,4 @@
 FROM adoptopenjdk/openjdk8:alpine-jre
-RUN apk update && apk add curl
 RUN mkdir -p /opt/app/ignite/work
 RUN chmod -R 0755 /opt/app/ignite/work
 WORKDIR /opt/app

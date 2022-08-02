@@ -35,5 +35,7 @@ management:
   endpoint:
     health:
       enabled: true
+      probes:
+        enabled: true
 jwt:
   secret: ${jwt_secret}

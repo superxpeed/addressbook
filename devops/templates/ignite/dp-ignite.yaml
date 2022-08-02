@@ -27,33 +27,30 @@ spec:
               cpu: {{ignite_cpu_req}}
               memory: {{ignite_mem_req}}
           readinessProbe:
-            exec:
-              command:
-                - "sh"
-                - "-c"
-                - "curl localhost:{{ignite_server_port}}/actuator/health/readiness"
+            httpGet:
+              path: /actuator/health/readiness
+              port: {{ignite_server_port}}
+              scheme: HTTP
             initialDelaySeconds: 60
             timeoutSeconds: 2
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3
           livenessProbe:
-            exec:
-              command:
-                - "sh"
-                - "-c"
-                - "curl localhost:{{ignite_server_port}}/actuator/health/readiness"
+            httpGet:
+              path: /actuator/health/liveness
+              port: {{ignite_server_port}}
+              scheme: HTTP
             initialDelaySeconds: 60
             timeoutSeconds: 2
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 6
           startupProbe:
-            exec:
-              command:
-                - "sh"
-                - "-c"
-                - "curl localhost:{{ignite_server_port}}/actuator/health/readiness"
+            httpGet:
+              path: /actuator/health/readiness
+              port: {{ignite_server_port}}
+              scheme: HTTP
             failureThreshold: 30
             periodSeconds: 10
           terminationMessagePath: /dev/termination-log
