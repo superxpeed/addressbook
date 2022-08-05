@@ -17,3 +17,8 @@ management:
       enabled: true
       probes:
         enabled: true
+mongo:
+  host: ${mongo_host}
+  port: ${mongo_port}
+  user: ${mongo_user}
+  password: ${mongo_password}

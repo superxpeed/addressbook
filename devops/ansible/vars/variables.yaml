@@ -36,6 +36,8 @@ mongo_mem_req: 4000Mi
 mongo_image: addressbook_mongo:latest
 mongo_db_host: host.docker.internal
 mongo_db_port: 27017
+mongo_user: user
+mongo_password: q1w2e3r4
 
 # PostgreSQL server settings
 postgres_server_port: 12000

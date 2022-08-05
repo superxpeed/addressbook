@@ -47,6 +47,8 @@ services:
       - mongo_server_port=13000
       - mongo_host=host.docker.internal
       - mongo_port=27017
+      - mongo_user=user
+      - mongo_password=q1w2e3r4
       - eureka_host=http://eureka:7777/eureka
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:10000/actuator/health 2>&1 | grep UP || exit 1"]

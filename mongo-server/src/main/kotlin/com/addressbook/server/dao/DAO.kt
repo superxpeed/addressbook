@@ -5,11 +5,16 @@ import com.addressbook.FieldDescriptor
 import com.addressbook.dto.*
 import com.addressbook.model.*
 import com.mongodb.MongoClient
+import com.mongodb.MongoClientOptions
+import com.mongodb.MongoCredential
+import com.mongodb.ServerAddress
 import dev.morphia.Datastore
 import dev.morphia.Morphia
 import dev.morphia.query.FindOptions
 import dev.morphia.query.Query
 import dev.morphia.query.Sort
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
@@ -27,9 +32,16 @@ class DAO : AddressBookDAO {
     private lateinit var mongoClient: MongoClient
     private lateinit var dataStore: Datastore
 
+    @Autowired
+    lateinit var env: Environment
+
     @PostConstruct
     fun startClient() {
-        mongoClient = MongoClient(System.getenv("mongo_host"), Integer.parseInt(System.getenv("mongo_port")))
+        val creds = MongoCredential.createScramSha1Credential(requireNotNull(env.getProperty("mongo.user")),
+                "addressbook", requireNotNull(env.getProperty("mongo.password")).toCharArray())
+        mongoClient = MongoClient(ServerAddress(requireNotNull(env.getProperty("mongo.host")),
+                Integer.parseInt(requireNotNull(env.getProperty("mongo.port")))),
+                creds, MongoClientOptions.builder().build())
         dataStore = Morphia()
                 .also { it.mapPackage("com.addressbook.model") }
                 .createDatastore(mongoClient, "addressbook")

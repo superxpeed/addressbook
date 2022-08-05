@@ -66,4 +66,11 @@ CREATE SCHEMA IF NOT EXISTS test;
 CREATE USER test WITH PASSWORD 'test';
 GRANT ALL ON SCHEMA test TO test;
 ```
+#### MongoDB setup:
+```mongodb-json-query
+use addressbook
+db.createUser({
+    user: "user", pwd: "q1w2e3r4", roles: [{role: "readWrite", db: "addressbook"}]
+})
+```
 
