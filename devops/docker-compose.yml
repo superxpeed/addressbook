@@ -70,6 +70,12 @@ services:
       - postgres_user=test
       - postgres_password=test
       - eureka_host=http://eureka:7777/eureka
+      - postgres_min_pool_size=2
+      - postgres_max_pool_size=5
+      - postgres_max_idle_time=180
+      - postgres_idle_connection_test_period=10
+      - postgres_test_connection_on_checkout=true
+      - postgres_preferred_test_query=select 1
     ports:
       - "13000:10000"
     healthcheck:
