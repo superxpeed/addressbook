@@ -27,14 +27,21 @@ spring:
           use_structured_entries: false
           use_minimal_puts: false
     generate-ddl: true
-  datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${postgres_host}:${postgres_port}/${postgres_db}
-    username: ${postgres_user}
-    password: ${postgres_password}
   sql:
     init:
       platform: postgres
+datasource:
+  main:
+    class: org.postgresql.Driver
+    url: jdbc:postgresql://${postgres_host}:${postgres_port}/${postgres_db}
+    user: ${postgres_user}
+    password: ${postgres_password}
+    min-pool-size: 2
+    max-pool-size: 5
+    max-idle-time: 180
+    idle-connection-test-period: 10
+    test-connection-on-checkout: true
+    preferred-test-query: select 1
 management:
   endpoint:
     health:
