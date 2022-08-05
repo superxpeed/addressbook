@@ -12,6 +12,7 @@
       <env name="truststore_password" value="q1w2e3r4" />
       <env name="truststore_path" value="$PROJECT_DIR$/../addressbook\addressbook-main\certs\truststore.jks" />
       <env name="web_server_port" value="9000" />
+      <env name="web_ssl_enabled" value="true" />
     </envs>
     <module name="addressbook-main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.AddressBookApplication" />

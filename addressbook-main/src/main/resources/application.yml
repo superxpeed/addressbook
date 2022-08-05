@@ -7,7 +7,7 @@ server:
     mime-types: text/html,text/plain,text/css,application/javascript,application/json
     min-response-size: 1024
   ssl:
-    enabled: true
+    enabled: ${web_ssl_enabled}
     key-store: ${keystore_path}
     key-store-password: ${keystore_password}
     key-password: ${key_password}
