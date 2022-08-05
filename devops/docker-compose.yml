@@ -107,6 +107,7 @@ services:
       - truststore_path=/mnt/certs/truststore.jks
       - key_password=q1w2e3r4
       - eureka_host=http://eureka:7777/eureka
+      - web_ssl_enabled=true
     restart: on-failure
     volumes:
       - type: bind
