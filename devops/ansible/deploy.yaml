@@ -15,3 +15,4 @@
     - { role: deploy_ignite, tags: ignite }
     - { role: deploy_web, tags: web }
     - { role: deploy_ingress, tags: ingress }
+    - { role: deploy_egress, tags: egress }

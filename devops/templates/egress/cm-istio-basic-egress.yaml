@@ -40,4 +40,4 @@ data:
   meshNetworks: 'networks: {}'
 kind: ConfigMap
 metadata:
-  name: cm-istio-basic-ingress
+  name: cm-istio-basic-egress

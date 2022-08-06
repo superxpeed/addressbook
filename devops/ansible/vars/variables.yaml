@@ -71,12 +71,19 @@ web_image: addressbook_web:latest
 web_dao_implementation: IGNITE-SERVER
 web_route_host: demo.localdev.me
 
-#Istio ingress settings
+#Istio Ingress & Egress settings
+istio_cp_main: istiod
+istio_control_plane: istio-system
+proxy_image: docker.io/istio/proxyv2:1.14.3
+
 ingressgateway_name: dp-addressbook-app-ingress
 ingressgateway_certs_secret_name: secret-ingressgateway-certs
 ingressgateway_ca_certs_secret_name: secret-ingressgateway-ca-certs
 ingressgateway_certs_mount_path: /etc/istio/ingressgateway-certs
 ingressgateway_ca_certs_mount_path: /etc/istio/ingressgateway-ca-certs
-istio_cp_main: istiod
-istio_control_plane: istio-system
-proxy_image: docker.io/istio/proxyv2:1.14.3
+
+egressgateway_name: dp-addressbook-app-egress
+egressgateway_certs_secret_name: secret-egressgateway-certs
+egressgateway_ca_certs_secret_name: secret-egressgateway-ca-certs
+egressgateway_certs_mount_path: /etc/istio/egressgateway-certs
+egressgateway_ca_certs_mount_path: /etc/istio/egressgateway-ca-certs
