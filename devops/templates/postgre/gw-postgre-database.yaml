@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: gw-postgre-database
+spec:
+  selector:
+    istio: {{namespace}}-egress
+  servers:
+    - hosts:
+        - {{postgres_host}}
+      port:
+        name: tcp-15432
+        number: 15432
+        protocol: TCP

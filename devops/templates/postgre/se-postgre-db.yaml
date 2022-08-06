@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: se-postgre-db
+spec:
+  addresses:
+    - {{postgres_ip}}
+  endpoints:
+    - address: {{postgres_ip}}
+  exportTo:
+    - .
+  hosts:
+    - {{postgres_host}}
+  location: MESH_EXTERNAL
+  ports:
+    - name: tcp
+      number: {{postgres_port}}
+      protocol: TCP
+    - name: internal
+      number: {{int_postgres_port}}
+      protocol: TCP
+  resolution: STATIC

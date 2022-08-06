@@ -47,8 +47,11 @@ postgres_mem_limit: 4000Mi
 postgres_cpu_req: 2
 postgres_mem_req: 4000Mi
 postgres_image: addressbook_postgre:latest
+postgres_url: jdbc:postgresql://host.docker.internal:54321/postgres
 postgres_port: 5432
+int_postgres_port: "54321"
 postgres_host: host.docker.internal
+postgres_ip: 192.168.65.2
 postgres_db: postgres
 postgres_min_pool_size: 2
 postgres_max_pool_size: 5
@@ -87,3 +90,8 @@ egressgateway_certs_secret_name: secret-egressgateway-certs
 egressgateway_ca_certs_secret_name: secret-egressgateway-ca-certs
 egressgateway_certs_mount_path: /etc/istio/egressgateway-certs
 egressgateway_ca_certs_mount_path: /etc/istio/egressgateway-ca-certs
+
+sidecar_cpu_istio_req: 100m
+sidecar_cpu_istio_lim: 100m
+sidecar_mem_istio_req: 1000Mi
+sidecar_mem_istio_lim: 1000Mi

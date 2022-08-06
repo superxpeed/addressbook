@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: vs-postgre-database
+spec:
+  exportTo:
+    - .
+  gateways:
+    - gw-postgre-database
+    - mesh
+  hosts:
+    - {{postgres_host}}
+  tcp:
+    - match:
+        - gateways:
+            - mesh
+          port: {{int_postgres_port}}
+      route:
+        - destination:
+            host: svc-addressbook-egress
+            port:
+              number: 15432
+          weight: 100
+    - match:
+        - gateways:
+            - gw-postgre-database
+          port: 15432
+      route:
+        - destination:
+            host: {{postgres_host}}
+            port:
+              number: {{postgres_port}}
+          weight: 100

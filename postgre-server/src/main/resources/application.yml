@@ -33,7 +33,7 @@ spring:
 datasource:
   main:
     class: org.postgresql.Driver
-    url: jdbc:postgresql://${postgres_host}:${postgres_port}/${postgres_db}
+    url: ${postgres_url}
     user: ${postgres_user}
     password: ${postgres_password}
     min-pool-size: ${postgres_min_pool_size}

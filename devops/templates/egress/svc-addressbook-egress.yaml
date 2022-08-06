@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-addressbook-egress
+  labels:
+    app: {{namespace}}-egress
+    product: addressbook-egress
+    type: istio-edge
+spec:
+  ports:
+    - name: http-15432
+      protocol: TCP
+      port: 15432
+      targetPort: 15432
+  selector:
+    app: {{namespace}}-egress
