@@ -14,3 +14,4 @@
     - { role: deploy_postgre, tags: postgre }
     - { role: deploy_ignite, tags: ignite }
     - { role: deploy_web, tags: web }
+    - { role: deploy_ingress, tags: ingress }

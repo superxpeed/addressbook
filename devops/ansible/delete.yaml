@@ -9,6 +9,7 @@
   vars:
     - dev: true
   roles:
+    - { role: delete_ingress, tags: ingress }
     - { role: delete_web, tags: web }
     - { role: delete_mongo, tags: mongo }
     - { role: delete_postgre, tags: postgre }

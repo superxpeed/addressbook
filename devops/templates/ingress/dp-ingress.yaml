@@ -1,0 +1,242 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{namespace}}-ingress
+    istio: {{namespace}}-ingress
+  name: {{ingressgateway_name}}
+spec:
+  progressDeadlineSeconds: 1200
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{namespace}}-ingress
+      istio: {{namespace}}-ingress
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: 'false'
+      labels:
+        app: {{namespace}}-ingress
+        istio: {{namespace}}-ingress
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: beta.kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+              weight: 2
+            - preference:
+                matchExpressions:
+                  - key: beta.kubernetes.io/arch
+                    operator: In
+                    values:
+                      - ppc64le
+              weight: 2
+            - preference:
+                matchExpressions:
+                  - key: beta.kubernetes.io/arch
+                    operator: In
+                    values:
+                      - s390x
+              weight: 2
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: beta.kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+                      - ppc64le
+                      - s390x
+      containers:
+        - args:
+            - proxy
+            - router
+            - --domain
+            - $(POD_NAMESPACE).svc.cluster.local
+            - --proxyLogLevel=warning
+            - --proxyComponentLogLevel=misc:error
+            - --log_output_level=default:info
+            - --serviceCluster
+            - {{namespace}}-ingress
+            - --trust-domain=cluster.local
+          env:
+            - name: ISTIO_META_UNPRIVILEGED_POD
+              value: 'true'
+            - name: JWT_POLICY
+              value: third-party-jwt
+            - name: PILOT_CERT_PROVIDER
+              value: istiod
+            - name: CA_ADDR
+              value: {{istio_cp_main}}.{{istio_control_plane}}.svc:15012
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: INSTANCE_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+            - name: SERVICE_ACCOUNT
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.serviceAccountName
+            - name: CANONICAL_SERVICE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.labels['service.istio.io/canonical-name']
+            - name: CANONICAL_REVISION
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.labels['service.istio.io/canonical-revision']
+            - name: ISTIO_META_WORKLOAD_NAME
+              value: {{ingressgateway_name}}
+            - name: ISTIO_META_OWNER
+              value: kubernetes://apis/apps/v1/namespaces/{{namespace}}/deployments/{{ingressgateway_name}}
+            - name: ISTIO_META_MESH_ID
+              value: cluster.local
+            - name: ISTIO_META_ROUTER_MODE
+              value: sni-dnat
+            - name: ISTIO_META_CLUSTER_ID
+              value: Kubernetes
+          image: {{proxy_image}}
+          imagePullPolicy: Always
+          name: istio-proxy
+          securityContext:
+            readOnlyRootFilesystem: true
+          ports:
+            - containerPort: 8443
+              name: tcp-8443
+              protocol: TCP
+            - containerPort: 8444
+              name: tcp-8444
+              protocol: TCP
+            - containerPort: 5443
+              name: tcp-5443
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /healthz/ready
+              port: 15021
+              scheme: HTTP
+            initialDelaySeconds: 1
+            periodSeconds: 2
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 600m
+              memory: 900Mi
+            requests:
+              cpu: 400m
+              memory: 700Mi
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+            - name: workload-socket
+              mountPath: /var/run/secrets/workload-spiffe-uds
+            - name: workload-certs
+              mountPath: /var/run/secrets/workload-spiffe-credentials
+            - mountPath: /etc/istio/proxy
+              name: istio-envoy
+            - name: istio-token
+              readOnly: true
+              mountPath: /var/run/secrets/tokens
+            - mountPath: /etc/istio/config
+              name: config-volume
+            - mountPath: /var/run/secrets/istio
+              name: istiod-ca-cert
+            - mountPath: /etc/istio/pod
+              name: podinfo
+            - mountPath: {{ingressgateway_certs_mount_path}}
+              name: ingressgateway-certs
+              readOnly: true
+            - mountPath: {{ingressgateway_ca_certs_mount_path}}
+              name: ingressgateway-ca-certs
+              readOnly: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: default
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: workload-socket
+          emptyDir: { }
+        - name: workload-certs
+          emptyDir: { }
+        - name: tempdir
+          emptyDir: {}
+        - configMap:
+            defaultMode: 256
+            name: istio-ca-root-cert
+          name: istiod-ca-cert
+        - downwardAPI:
+            defaultMode: 256
+            items:
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.labels
+                path: labels
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.annotations
+                path: annotations
+          name: podinfo
+        - emptyDir: {}
+          name: istio-envoy
+        - configMap:
+            defaultMode: 256
+            name: cm-istio-basic-ingress
+            optional: true
+          name: config-volume
+        - name: istio-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: istio-ca
+                  expirationSeconds: 43200
+                  path: istio-token
+            defaultMode: 420
+        - name: ingressgateway-certs
+          secret:
+            defaultMode: 256
+            optional: true
+            secretName: {{ingressgateway_certs_secret_name}}
+        - name: ingressgateway-ca-certs
+          secret:
+            defaultMode: 256
+            optional: true
+            secretName: {{ingressgateway_ca_certs_secret_name}}

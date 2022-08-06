@@ -1,0 +1,27 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: istio-ca-root-cert
+  namespace: {{namespace}}
+  labels:
+    istio.io/config: 'true'
+data:
+  root-cert.pem: |
+    -----BEGIN CERTIFICATE-----
+    MIIC/DCCAeSgAwIBAgIQRxpsurE5+bHTunaERJaBEzANBgkqhkiG9w0BAQsFADAY
+    MRYwFAYDVQQKEw1jbHVzdGVyLmxvY2FsMB4XDTIyMDgwNjE3MTU1NFoXDTMyMDgw
+    MzE3MTU1NFowGDEWMBQGA1UEChMNY2x1c3Rlci5sb2NhbDCCASIwDQYJKoZIhvcN
+    AQEBBQADggEPADCCAQoCggEBAKVzqbhaaWp32ai+WGHS0Hv6HO6StKgBtZFHFg03
+    tuahp+BjooQGYlPs54QcRIa4jToz2Z6cQ5rOj2Lsc7PbNp23RtVCN6fZcQEk3egk
+    HdV7VouvrkAJtwk8TaFPNpH9uUD9OTOBiZLvEXPgAo8XWpBsXIDlufKfj1DPx8LG
+    Ow2+Ykh3cAM7p9lkh5EzB8P8oBjqmbra+1xRGZirKl9wnoMQBpItqdjeQ6Vj+XZf
+    /pM3NlSoKF7N9eWk2yghWzGbfSRESsSOtRk/xaHsNjRfj0477KPe+3Q60EXiWx/0
+    5lD90GaDOAAqKOT+8MPyGut1l9Cx77M3sUiWjaI1ZqdgjMUCAwEAAaNCMEAwDgYD
+    VR0PAQH/BAQDAgIEMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFMdBd6b6LAuW
+    vU5YzXYCfogKw6T3MA0GCSqGSIb3DQEBCwUAA4IBAQCjFNvkO4o32guztikCd+dM
+    7eTGoP+OU8X/855kFpjMTwEVNQGwWF7cLwfdlGL+wS5VW+WBdsjsoqpajIXRuedV
+    5/TxVSYb2+ZWhFfjePCDwXprBepK++hSQ8GPDDjuB2fQsXukotVAqxrIWMMt0gvY
+    XlsiOUujm7Snq4S+VWqDy7v0VXQ+33btTJ590KMF6pM61L0cpiFb49BjWikTENLU
+    jS1dRM2qkPX4ymc1j85Wc4ZJEB1IJyyOV4UNovoMO2PNOHxvNSXoyllDchtCp4VG
+    jgvH2AVT1uJR6LKI/hxGqlacKiG8XcU1hlAGbkP+XKc3yGPG8h6ls45AUH9fJuQl
+    -----END CERTIFICATE-----
