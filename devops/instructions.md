@@ -47,11 +47,33 @@ kubectl proxy
 ```shell
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
 ```
-### Deploy project
+
+### Install Istio:
+```shell
+# Download latest Istio
+https://github.com/istio/istio/releases
+
+# Unpack and add istio-1.14.3\bin to the $PATH
+PATH=istio-1.14.3/bin:$PATH
+
+# Install Istio
+istioctl install -y --set profile=demo --set meshConfig.outboundTrafficPolicy.mode=REGISTRY_ONLY
+```
+
+### Deploy project:
 ```shell
 cd $PROJECT_ROOT/devops/ansible
-ansible-playbook delete.yaml --tags "eureka, ignite, web"
-ansible-playbook deploy.yaml --tags "eureka, ignite, web"
+# Ingress, Egress, Eureka, Ignite, WebApp 
+ansible-playbook delete.yaml --tags "ingress, egress, eureka, ignite, web"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web"
+
+# Ingress, Egress, Eureka, Mongo, WebApp
+ansible-playbook delete.yaml --tags "ingress, egress, eureka, mongo, web"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web"
+
+# Ingress, Egress, Eureka, PostgreSQL, WebApp
+ansible-playbook delete.yaml --tags "ingress, egress, eureka, postgre, web"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web"
 ```  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ansible_wsl2.png" width="900"/>  
 
@@ -61,7 +83,7 @@ ansible-playbook deploy.yaml --tags "eureka, ignite, web"
 
 ### UI with Kubernetes
 ```shell
-https://demo.localdev.me/#/
+https://http.localdev.me/#/
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/client_auth.png" width="900"/> 
 
