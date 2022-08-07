@@ -70,12 +70,12 @@ web_cpu_limit: 2
 web_mem_limit: 5000Mi
 web_cpu_req: 2
 web_mem_req: 5000Mi
-web_ssl_enabled: true
+web_ssl_enabled: false
 web_keystore_path:  /opt/certs/web/keystore.jks
 web_truststore_path:  /opt/certs/web/truststore.jks
 web_image: addressbook_web:latest
-web_dao_implementation: MONGO-SERVER
-web_route_host: demo.localdev.me
+web_dao_implementation: POSTGRE-SERVER
+web_route_host: http.localdev.me
 
 #Istio Ingress & Egress settings
 istio_cp_main: istiod
