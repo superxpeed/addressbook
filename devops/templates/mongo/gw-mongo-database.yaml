@@ -9,6 +9,6 @@ spec:
     - hosts:
         - {{mongo_db_host}}
       port:
-        name: tcp-15433
-        number: 15433
+        name: tcp-11112
+        number: 11112
         protocol: TCP

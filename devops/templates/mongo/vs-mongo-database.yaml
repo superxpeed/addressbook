@@ -19,12 +19,12 @@ spec:
         - destination:
             host: svc-addressbook-egress
             port:
-              number: 15433
+              number: 11112
           weight: 100
     - match:
         - gateways:
             - gw-mongo-database
-          port: 15433
+          port: 11112
       route:
         - destination:
             host: {{mongo_db_host}}

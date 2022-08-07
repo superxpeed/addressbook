@@ -8,13 +8,13 @@ metadata:
     type: istio-edge
 spec:
   ports:
-    - name: http-15432
+    - name: http-11111
       protocol: TCP
-      port: 15432
-      targetPort: 15432
-    - name: http-15433
+      port: 11111
+      targetPort: 11111
+    - name: http-11112
       protocol: TCP
-      port: 15433
-      targetPort: 15433
+      port: 11112
+      targetPort: 11112
   selector:
     app: {{namespace}}-egress
