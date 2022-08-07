@@ -47,9 +47,8 @@ postgres_mem_limit: 4000Mi
 postgres_cpu_req: 2
 postgres_mem_req: 4000Mi
 postgres_image: addressbook_postgre:latest
-postgres_url: jdbc:postgresql://host.docker.internal:54321/postgres
-postgres_port: 5432
-int_postgres_port: "54321"
+external_postgres_port: 5432
+postgres_port: 54321
 postgres_host: host.docker.internal
 postgres_ip: 192.168.65.2
 postgres_db: postgres

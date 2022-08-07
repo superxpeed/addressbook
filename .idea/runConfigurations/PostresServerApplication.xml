@@ -3,16 +3,18 @@
     <option name="ACTIVE_PROFILES" />
     <envs>
       <env name="eureka_host" value="http://localhost:7777/eureka" />
-      <env name="postgres_idle_connection_test_period" value="10" />
-      <env name="postgres_max_idle_time" value="180" />
-      <env name="postgres_max_pool_size" value="5" />
-      <env name="postgres_min_pool_size" value="2" />
+      <env name="postgres_db" value="postgres" />
+      <env name="postgres_host" value="localhost" />
       <env name="postgres_password" value="test" />
-      <env name="postgres_preferred_test_query" value="select 1" />
-      <env name="postgres_server_port" value="12000" />
-      <env name="postgres_test_connection_on_checkout" value="true" />
+      <env name="postgres_port" value="5432" />
       <env name="postgres_user" value="test" />
-      <env name="postgres_url" value="jdbc:postgresql://host.docker.internal:5432/postgres" />
+      <env name="postgres_server_port" value="12000" />
+      <env name="postgres_min_pool_size" value="2" />
+      <env name="postgres_max_pool_size" value="5" />
+      <env name="postgres_max_idle_time" value="180" />
+      <env name="postgres_idle_connection_test_period" value="10" />
+      <env name="postgres_test_connection_on_checkout" value="true" />
+      <env name="postgres_preferred_test_query" value="select 1" />
     </envs>
     <module name="postgre-server" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.server.ServerApplication" />

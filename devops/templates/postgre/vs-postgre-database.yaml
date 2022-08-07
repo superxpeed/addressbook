@@ -14,7 +14,7 @@ spec:
     - match:
         - gateways:
             - mesh
-          port: {{int_postgres_port}}
+          port: {{postgres_port}}
       route:
         - destination:
             host: svc-addressbook-egress
@@ -29,5 +29,5 @@ spec:
         - destination:
             host: {{postgres_host}}
             port:
-              number: {{postgres_port}}
+              number: {{external_postgres_port}}
           weight: 100

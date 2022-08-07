@@ -7,7 +7,9 @@ metadata:
 data:
   eureka_host: "{{eureka_client_host}}"
   postgres_server_port: "{{postgres_server_port}}"
-  postgres_url: "{{postgres_url}}"
+  postgres_host: "{{postgres_host}}"
+  postgres_port: "{{postgres_port}}"
+  postgres_db: "{{postgres_db}}"
   postgres_min_pool_size: "{{postgres_min_pool_size}}"
   postgres_max_pool_size: "{{postgres_max_pool_size}}"
   postgres_max_idle_time: "{{postgres_max_idle_time}}"
