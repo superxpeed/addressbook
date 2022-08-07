@@ -4,6 +4,12 @@ metadata:
   name: dp-eureka-app
   labels:
     app: {{namespace}}-eureka
+  annotations:
+    sidecar.istio.io/inject: 'true'
+    sidecar.istio.io/proxyCPU: {{sidecar_cpu_istio_req}}
+    sidecar.istio.io/proxyCPULimit: {{sidecar_cpu_istio_lim}}
+    sidecar.istio.io/proxyMemory: {{sidecar_mem_istio_req}}
+    sidecar.istio.io/proxyMemoryLimit: {{sidecar_mem_istio_lim}}
 spec:
   replicas: {{eureka_replica_count}}
   selector:

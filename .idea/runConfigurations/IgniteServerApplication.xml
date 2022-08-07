@@ -4,6 +4,8 @@
     <envs>
       <env name="eureka_host" value="http://localhost:7777/eureka" />
       <env name="ignite_server_port" value="10000" />
+      <env name="ignite_server_hostname" value="localhost" />
+      <env name="eureka_prefer_ip" value="false" />
     </envs>
     <module name="ignite-server" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.server.ServerApplication" />

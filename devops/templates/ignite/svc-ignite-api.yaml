@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-ignite-api
+  namespace: "{{namespace}}"
+  labels:
+    app: {{namespace}}-ignite
+    deleteLabel: {{namespace}}-ignite
+    product: eureka
+    type: application
+spec:
+  ports:
+    - name: "tcp-{{ignite_server_port}}"
+      protocol: TCP
+      port: {{ignite_server_port}}
+      targetPort: "tcp-{{ignite_server_port}}"
+  selector:
+    app: {{namespace}}-ignite
+  type: ClusterIP
+  sessionAffinity: None

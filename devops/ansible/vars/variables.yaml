@@ -20,6 +20,7 @@ eureka_prefer_ip: false
 
 # Ignite server settings
 ignite_server_port: 10000
+ignite_server_hostname: svc-ignite-api
 ignite_replica_count: 1
 ignite_cpu_limit: 3
 ignite_mem_limit: 8000Mi
