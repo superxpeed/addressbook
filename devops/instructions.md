@@ -79,19 +79,24 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web"
 ansible-playbook delete.yaml --tags "ingress, egress, eureka, postgre, web"
 ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web"
 ```  
+### Ansible project deployment:  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ansible_wsl2.png" width="900"/>  
 
+### Deployments:  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/deployments.png" width="900"/>  
 
+### Pods:  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/pods.png" width="900"/>  
 
+### Envoy sidecar logs:  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_proxy.png" width="900"/>  
 
+### Egress logs:
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/egress.png" width="900"/>  
 
-### UI with Kubernetes
+### X.509 Authentication with web_ssl_enabled enabled
 ```shell
-https://http.localdev.me/#/
+https://simple-https.localdev.me/#/
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/client_auth.png" width="900"/> 
 
