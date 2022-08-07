@@ -74,7 +74,7 @@ web_ssl_enabled: true
 web_keystore_path:  /opt/certs/web/keystore.jks
 web_truststore_path:  /opt/certs/web/truststore.jks
 web_image: addressbook_web:latest
-web_dao_implementation: POSTGRE-SERVER
+web_dao_implementation: IGNITE-SERVER
 web_route_host: simple-https.localdev.me
 web_istio_route_host: istio-https.localdev.me
 
@@ -90,10 +90,6 @@ ingressgateway_certs_mount_path: /etc/istio/ingressgateway-certs
 ingressgateway_ca_certs_mount_path: /etc/istio/ingressgateway-ca-certs
 
 egressgateway_name: dp-addressbook-app-egress
-egressgateway_certs_secret_name: secret-egressgateway-certs
-egressgateway_ca_certs_secret_name: secret-egressgateway-ca-certs
-egressgateway_certs_mount_path: /etc/istio/egressgateway-certs
-egressgateway_ca_certs_mount_path: /etc/istio/egressgateway-ca-certs
 
 sidecar_cpu_istio_req: 100m
 sidecar_cpu_istio_lim: 100m
