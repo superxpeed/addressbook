@@ -136,12 +136,6 @@ spec:
               name: istiod-ca-cert
             - mountPath: /etc/istio/pod
               name: podinfo
-            - mountPath: {{egressgateway_certs_mount_path}}
-              name: egressgateway-certs
-              readOnly: true
-            - mountPath: {{egressgateway_ca_certs_mount_path}}
-              name: egressgateway-ca-certs
-              readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
@@ -187,13 +181,3 @@ spec:
                   expirationSeconds: 43200
                   path: istio-token
             defaultMode: 420
-        - name: egressgateway-certs
-          secret:
-            defaultMode: 256
-            optional: true
-            secretName: {{egressgateway_certs_secret_name}}
-        - name: egressgateway-ca-certs
-          secret:
-            defaultMode: 256
-            optional: true
-            secretName: {{egressgateway_ca_certs_secret_name}}
