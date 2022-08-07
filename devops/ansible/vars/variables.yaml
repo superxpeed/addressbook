@@ -16,6 +16,7 @@ eureka_cpu_req: 2
 eureka_mem_req: 6000Mi
 eureka_image: addressbook_eureka:latest
 eureka_client_host: http://svc-eureka-api:7777/eureka
+eureka_prefer_ip: false
 
 # Ignite server settings
 ignite_server_port: 10000
@@ -41,6 +42,7 @@ external_mongo_db_port: 27017
 
 # PostgreSQL server settings
 postgres_server_port: 12000
+postgres_server_hostname: svc-postgre-api
 postgres_replica_count: 1
 postgres_cpu_limit: 2
 postgres_mem_limit: 4000Mi
@@ -70,7 +72,7 @@ web_ssl_enabled: true
 web_keystore_path:  /opt/certs/web/keystore.jks
 web_truststore_path:  /opt/certs/web/truststore.jks
 web_image: addressbook_web:latest
-web_dao_implementation: IGNITE-SERVER
+web_dao_implementation: POSTGRE-SERVER
 web_route_host: demo.localdev.me
 
 #Istio Ingress & Egress settings

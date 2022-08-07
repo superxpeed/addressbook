@@ -6,7 +6,9 @@ metadata:
     app: {{namespace}}-postgre
 data:
   eureka_host: "{{eureka_client_host}}"
+  eureka_prefer_ip: "{{eureka_prefer_ip}}"
   postgres_server_port: "{{postgres_server_port}}"
+  postgres_server_hostname: "{{postgres_server_hostname}}"
   postgres_host: "{{postgres_host}}"
   postgres_port: "{{postgres_port}}"
   postgres_db: "{{postgres_db}}"

@@ -3,6 +3,8 @@
     <option name="ACTIVE_PROFILES" />
     <envs>
       <env name="eureka_host" value="http://localhost:7777/eureka" />
+      <env name="postgres_server_hostname" value="localhost" />
+      <env name="eureka_prefer_ip" value="false" />
       <env name="postgres_db" value="postgres" />
       <env name="postgres_host" value="localhost" />
       <env name="postgres_password" value="test" />

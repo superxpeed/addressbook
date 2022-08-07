@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-postgre-api
+  namespace: "{{namespace}}"
+  labels:
+    app: {{namespace}}-postgre
+    deleteLabel: {{namespace}}-postgre
+    product: eureka
+    type: application
+spec:
+  ports:
+    - name: "tcp-{{postgres_server_port}}"
+      protocol: TCP
+      port: {{postgres_server_port}}
+      targetPort: "tcp-{{postgres_server_port}}"
+  selector:
+    app: {{namespace}}-postgre
+  type: ClusterIP
+  sessionAffinity: None

@@ -7,7 +7,8 @@ eureka:
   instance:
     lease-renewal-interval-in-seconds: 1
     lease-expiration-duration-in-seconds: 2
-    prefer-ip-address: true
+    prefer-ip-address: ${eureka_prefer_ip}
+    hostname: ${postgres_server_hostname}
 spring:
   application:
     name: postgre-server
