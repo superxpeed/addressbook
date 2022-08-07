@@ -94,13 +94,13 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, isti
 ### Egress logs:
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/egress.png" width="900"/>  
 
-### X.509 Authentication with web_ssl_enabled enabled
+### X.509 Authentication with web_ssl_enabled set to true:
 ```shell
 https://simple-https.localdev.me/#/
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/client_auth.png" width="900"/> 
 
-### TLS with web_ssl_enabled set to false
+### TLS with web_ssl_enabled set to false:
 ```shell
 https://istio-https.localdev.me/#/
 ```
