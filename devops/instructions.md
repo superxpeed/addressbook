@@ -81,6 +81,10 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web"
 
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/pods.png" width="900"/>  
 
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_proxy.png" width="900"/>  
+
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/egress.png" width="900"/>  
+
 ### UI with Kubernetes
 ```shell
 https://http.localdev.me/#/
