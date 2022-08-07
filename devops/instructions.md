@@ -58,6 +58,9 @@ PATH=istio-1.14.3/bin:$PATH
 
 # Install Istio
 istioctl install -y --set profile=demo --set meshConfig.outboundTrafficPolicy.mode=REGISTRY_ONLY
+
+# Turn on Envoy sidecar injection for default namespace
+kubectl label namespace default istio-injection=enabled
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_installation.png" width="700"/>  
 
