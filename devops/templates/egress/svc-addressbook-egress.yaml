@@ -12,5 +12,9 @@ spec:
       protocol: TCP
       port: 15432
       targetPort: 15432
+    - name: http-15433
+      protocol: TCP
+      port: 15433
+      targetPort: 15433
   selector:
     app: {{namespace}}-egress

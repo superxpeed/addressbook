@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: se-mongo-db
+spec:
+  addresses:
+    - {{mongo_db_ip}}
+  endpoints:
+    - address: {{mongo_db_ip}}
+  exportTo:
+    - .
+  hosts:
+    - {{mongo_db_host}}
+  location: MESH_EXTERNAL
+  ports:
+    - name: tcp
+      number: {{external_mongo_db_port}}
+      protocol: TCP
+    - name: internal
+      number: {{mongo_db_port}}
+      protocol: TCP
+  resolution: STATIC

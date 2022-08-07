@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: gw-mongo-database
+spec:
+  selector:
+    istio: {{namespace}}-egress
+  servers:
+    - hosts:
+        - {{mongo_db_host}}
+      port:
+        name: tcp-15433
+        number: 15433
+        protocol: TCP

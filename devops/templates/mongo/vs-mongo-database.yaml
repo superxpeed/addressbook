@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: vs-mongo-database
+spec:
+  exportTo:
+    - .
+  gateways:
+    - gw-mongo-database
+    - mesh
+  hosts:
+    - {{mongo_db_host}}
+  tcp:
+    - match:
+        - gateways:
+            - mesh
+          port: {{mongo_db_port}}
+      route:
+        - destination:
+            host: svc-addressbook-egress
+            port:
+              number: 15433
+          weight: 100
+    - match:
+        - gateways:
+            - gw-mongo-database
+          port: 15433
+      route:
+        - destination:
+            host: {{mongo_db_host}}
+            port:
+              number: {{external_mongo_db_port}}
+          weight: 100
