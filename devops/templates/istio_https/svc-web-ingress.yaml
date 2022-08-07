@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-web-ingress
+  labels:
+    app: {{namespace}}-istio
+    deleteLabel: web-istio-gateway
+    istio: {{namespace}}-ingress
+    type: istio-edge
+spec:
+  ports:
+    - name: https-5443
+      protocol: TCP
+      port: 5443
+      targetPort: 5443
+  selector:
+    app: {{namespace}}-ingress
+  type: ClusterIP
+  sessionAffinity: None

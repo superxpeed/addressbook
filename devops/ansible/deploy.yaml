@@ -16,3 +16,4 @@
     - { role: deploy_web, tags: web }
     - { role: deploy_ingress, tags: ingress }
     - { role: deploy_egress, tags: egress }
+    - { role: deploy_istio_https, tags: istio_https, when: not web_ssl_enabled | bool }

@@ -16,3 +16,4 @@
     - { role: delete_postgre, tags: postgre }
     - { role: delete_ignite, tags: ignite }
     - { role: delete_eureka, tags: eureka }
+    - { role: delete_istio_https, tags: istio_https, when: not web_ssl_enabled | bool }

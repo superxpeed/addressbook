@@ -68,16 +68,16 @@ kubectl label namespace default istio-injection=enabled
 ```shell
 cd $PROJECT_ROOT/devops/ansible
 # Ingress, Egress, Eureka, Ignite, WebApp 
-ansible-playbook delete.yaml --tags "ingress, egress, eureka, ignite, web"
-ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web"
+ansible-playbook delete.yaml --tags "ingress, egress, eureka, ignite, web, istio_https"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web, istio_https"
 
 # Ingress, Egress, Eureka, Mongo, WebApp
-ansible-playbook delete.yaml --tags "ingress, egress, eureka, mongo, web"
-ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web"
+ansible-playbook delete.yaml --tags "ingress, egress, eureka, mongo, web, istio_https"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web, istio_https"
 
 # Ingress, Egress, Eureka, PostgreSQL, WebApp
-ansible-playbook delete.yaml --tags "ingress, egress, eureka, postgre, web"
-ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web"
+ansible-playbook delete.yaml --tags "ingress, egress, eureka, postgre, web, istio_https"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, istio_https"
 ```  
 ### Ansible project deployment:  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ansible_wsl2.png" width="900"/>  
@@ -99,6 +99,19 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web"
 https://simple-https.localdev.me/#/
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/client_auth.png" width="900"/> 
+
+### TLS with web_ssl_enabled set to false
+```shell
+https://istio-https.localdev.me/#/
+```
+### Ingress logs:
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ingress.png" width="900"/>  
+
+### Envoy sidecar logs:
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_proxy_web.png" width="900"/> 
+
+### Certificate:
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_https.png" width="900"/> 
 
 ## Docker installation
 
