@@ -13,10 +13,10 @@ spec:
     - {{mongo_db_host}}
   location: MESH_EXTERNAL
   ports:
-    - name: tcp
+    - name: tcp-{{external_mongo_db_port}}
       number: {{external_mongo_db_port}}
       protocol: TCP
-    - name: internal
+    - name: internal-{{mongo_db_port}}
       number: {{mongo_db_port}}
       protocol: TCP
   resolution: STATIC

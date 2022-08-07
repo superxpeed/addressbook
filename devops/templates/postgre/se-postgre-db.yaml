@@ -13,10 +13,10 @@ spec:
     - {{postgres_host}}
   location: MESH_EXTERNAL
   ports:
-    - name: tcp
+    - name: tcp-{{external_postgres_port}}
       number: {{external_postgres_port}}
       protocol: TCP
-    - name: internal
+    - name: internal-{{postgres_port}}
       number: {{postgres_port}}
       protocol: TCP
   resolution: STATIC

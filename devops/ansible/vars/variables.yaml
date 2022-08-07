@@ -35,7 +35,7 @@ mongo_cpu_req: 2
 mongo_mem_req: 4000Mi
 mongo_image: addressbook_mongo:latest
 mongo_db_host: host.docker.internal
-mongo_db_port: 37017
+mongo_db_port: 11112
 mongo_db_ip: 192.168.65.2
 external_mongo_db_port: 27017
 
@@ -48,7 +48,7 @@ postgres_cpu_req: 2
 postgres_mem_req: 4000Mi
 postgres_image: addressbook_postgre:latest
 external_postgres_port: 5432
-postgres_port: 54321
+postgres_port: 11111
 postgres_host: host.docker.internal
 postgres_ip: 192.168.65.2
 postgres_db: postgres
