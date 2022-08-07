@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-mongo-api
+  namespace: "{{namespace}}"
+  labels:
+    app: {{namespace}}-mongo
+    deleteLabel: {{namespace}}-mongo
+    product: eureka
+    type: application
+spec:
+  ports:
+    - name: "tcp-{{mongo_server_port}}"
+      protocol: TCP
+      port: {{mongo_server_port}}
+      targetPort: "tcp-{{mongo_server_port}}"
+  selector:
+    app: {{namespace}}-mongo
+  type: ClusterIP
+  sessionAffinity: None

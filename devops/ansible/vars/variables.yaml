@@ -29,6 +29,7 @@ ignite_image: addressbook_ignite:latest
 
 # Mongo server settings
 mongo_server_port: 13000
+mongo_server_hostname: svc-mongo-api
 mongo_replica_count: 1
 mongo_cpu_limit: 2
 mongo_mem_limit: 4000Mi
@@ -72,7 +73,7 @@ web_ssl_enabled: true
 web_keystore_path:  /opt/certs/web/keystore.jks
 web_truststore_path:  /opt/certs/web/truststore.jks
 web_image: addressbook_web:latest
-web_dao_implementation: POSTGRE-SERVER
+web_dao_implementation: MONGO-SERVER
 web_route_host: demo.localdev.me
 
 #Istio Ingress & Egress settings

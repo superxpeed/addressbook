@@ -6,6 +6,8 @@ metadata:
     app: {{namespace}}-mongo
 data:
   eureka_host: "{{eureka_client_host}}"
+  eureka_prefer_ip: "{{eureka_prefer_ip}}"
+  mongo_server_hostname: "{{mongo_server_hostname}}"
   mongo_server_port: "{{mongo_server_port}}"
   mongo_host: "{{mongo_db_host}}"
   mongo_port: "{{mongo_db_port}}"
