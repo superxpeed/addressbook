@@ -27,6 +27,8 @@ services:
     environment:
       - ignite_server_port=10000
       - eureka_host=http://eureka:7777/eureka
+      - eureka_prefer_ip=true
+      - ignite_server_hostname=ignite
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:10000/actuator/health 2>&1 | grep UP || exit 1"]
       interval: 20s
@@ -50,6 +52,8 @@ services:
       - mongo_user=user
       - mongo_password=q1w2e3r4
       - eureka_host=http://eureka:7777/eureka
+      - eureka_prefer_ip=true
+      - mongo_server_hostname=mongo
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:10000/actuator/health 2>&1 | grep UP || exit 1"]
       interval: 20s
@@ -78,6 +82,8 @@ services:
       - postgres_idle_connection_test_period=10
       - postgres_test_connection_on_checkout=true
       - postgres_preferred_test_query=select 1
+      - eureka_prefer_ip=true
+      - postgres_server_hostname=postgres
     ports:
       - "13000:10000"
     healthcheck:

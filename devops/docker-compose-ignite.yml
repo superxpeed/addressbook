@@ -27,6 +27,8 @@ services:
     environment:
       - ignite_server_port=10000
       - eureka_host=http://eureka:7777/eureka
+      - eureka_prefer_ip=true
+      - ignite_server_hostname=ignite
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:10000/actuator/health 2>&1 | grep UP || exit 1"]
       interval: 20s
