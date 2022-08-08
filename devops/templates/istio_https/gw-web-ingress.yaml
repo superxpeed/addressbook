@@ -3,17 +3,14 @@ kind: Gateway
 metadata:
   name: gw-web-ingress
   namespace: {{namespace}}
-  labels:
-    product: web
-    type: application
 spec:
   selector:
-    app: {{namespace}}-ingress
+    istio: {{namespace}}-ingress
   servers:
     - hosts:
         - {{web_istio_route_host}}
       port:
-        name: https-5443
+        name: tcp-5443
         number: 5443
         protocol: HTTPS
       tls:

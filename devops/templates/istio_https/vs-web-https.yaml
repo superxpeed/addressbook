@@ -9,7 +9,6 @@ spec:
   exportTo:
     - .
   gateways:
-    - {{namespace}}-ingress
     - gw-web-ingress
   hosts:
     - {{web_istio_route_host}}

@@ -74,7 +74,7 @@ web_ssl_enabled: false
 web_keystore_path:  /opt/certs/web/keystore.jks
 web_truststore_path:  /opt/certs/web/truststore.jks
 web_image: addressbook_web:latest
-web_dao_implementation: IGNITE-SERVER
+web_dao_implementation: POSTGRE-SERVER
 web_route_host: simple-https.localdev.me
 web_istio_route_host: istio-https.localdev.me
 
