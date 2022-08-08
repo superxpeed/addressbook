@@ -47,6 +47,27 @@ https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-b
 7.  Hierarchical menu with breadcrumbs and role-dependent feature availability
 8.  Dynamic collections of child components
 
+### Project deployment:
+```shell
+cd $PROJECT_ROOT/devops/ansible
+# Ingress, Egress, Eureka, Ignite, WebApp 
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web, istio_https"
+```
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ignite_kiali.png" width="900"/>  
+
+```shell
+# Ingress, Egress, Eureka, Mongo, WebApp
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web, istio_https"
+```
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_kiali.png" width="900"/>  
+
+```shell
+# Ingress, Egress, Eureka, PostgreSQL, WebApp
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, istio_https"
+```
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgre_kiali.png" width="900"/>  
+
+
 #### [DevOps](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md):
 1.  [**Ansible** playbook](https://github.com/dredwardhyde/addressbook/tree/master/devops/ansible)  
 2.  [**Kubernetes** templates:](https://github.com/dredwardhyde/addressbook/tree/master/devops/templates)
