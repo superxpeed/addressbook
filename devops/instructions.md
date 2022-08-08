@@ -48,7 +48,7 @@ kubectl proxy
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
 ```
 
-### Install Istio:
+### Install Istio, Prometheus, and Kiali:
 ```shell
 # Download latest Istio
 https://github.com/istio/istio/releases
@@ -61,7 +61,22 @@ istioctl install -y --set profile=demo --set meshConfig.outboundTrafficPolicy.mo
 
 # Turn on Envoy sidecar injection for default namespace
 kubectl label namespace default istio-injection=enabled
+
+# Install Prometheus
+kubectl apply -f ${ISTIO_HOME}/samples/addons/prometheus.yaml
+
+# Install Kiali
+kubectl apply -f ${ISTIO_HOME}/samples/addons/kiali.yaml
 ```
+### Enable access to the Kiali UI:
+```shell
+kubectl port-forward svc/kiali 20001:20001 -n istio-system
+```
+### Kiali UI:
+```shell
+http://localhost:20001/
+```
+
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_installation.png" width="700"/>  
 
 ### Deploy project:
