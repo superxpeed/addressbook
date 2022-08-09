@@ -1,0 +1,63 @@
+# General settings
+kubernetes_host_api: "https://localhost:6443"
+# Target k8s namespace
+namespace: "default"
+# k8s token to access namespace
+k8s_auth_api_key: <<insert token here>>
+
+# Eureka settings
+eureka_server_port: 7777
+# URL to the addressbook_eureka image
+eureka_image: addressbook_eureka:latest
+# URL that will be used by client applications to connect to Eureka
+eureka_client_host: http://svc-eureka-api:7777/eureka
+
+# Ignite server settings
+ignite_server_port: 10000
+# URL to the addressbook_ignite image
+ignite_image: addressbook_ignite:latest
+
+# Mongo server settings
+mongo_server_port: 13000
+# URL to the addressbook_mongo image
+mongo_image: addressbook_mongo:latest
+# MongoDB host name as it's visible from k8s cluster
+mongo_db_host: host.docker.internal
+# Internal MongoDB port inside namespace
+mongo_db_port: 11112
+# MongoDB ip as it's visible from k8s cluster
+mongo_db_ip: 192.168.65.2
+# External MongoDB port on target server
+external_mongo_db_port: 27017
+
+# PostgreSQL server settings
+postgres_server_port: 12000
+# URL to the addressbook_postgre image
+postgres_image: addressbook_postgre:latest
+# External PostgreSQL port on target server
+external_postgres_port: 5432
+# Internal MongoDB port inside namespace
+postgres_port: 11111
+# PostgreSQL host name as it's visible from k8s cluster
+postgres_host: host.docker.internal
+# PostgreSQL ip as it's visible from k8s cluster
+postgres_ip: 192.168.65.2
+# PostgreSQL database name
+postgres_db: postgres
+
+# Web application settings
+web_server_port: 9000
+# URL to the addressbook_web image
+web_image: addressbook_web:latest
+# DAO implementation: POSTGRE-SERVER / MONGO-SERVER / IGNITE-SERVER
+web_dao_implementation: POSTGRE-SERVER
+# Route for http or https when web_ssl_enabled set to true
+web_route_host: simple-https.localdev.me
+# Route for https when web_ssl_enabled set to false
+web_istio_route_host: istio-https.localdev.me
+
+#Istio Ingress & Egress settings
+# Istio control plane address
+istio_cp_main: istiod
+istio_control_plane: istio-system
+proxy_image: docker.io/istio/proxyv2:1.14.3

@@ -6,6 +6,7 @@
   connection: local
   vars_files:
     - vars/variables.yaml
+    - vars/user-variables.yaml
   vars:
     - dev: true
   roles:

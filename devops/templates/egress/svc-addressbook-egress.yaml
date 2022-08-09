@@ -8,13 +8,13 @@ metadata:
     type: istio-edge
 spec:
   ports:
-    - name: http-11111
+    - name: http-{{postgres_port}}
       protocol: TCP
-      port: 11111
-      targetPort: 11111
-    - name: http-11112
+      port: {{postgres_port}}
+      targetPort: {{postgres_port}}
+    - name: http-{{mongo_db_port}}
       protocol: TCP
-      port: 11112
-      targetPort: 11112
+      port: {{mongo_db_port}}
+      targetPort: {{mongo_db_port}}
   selector:
     app: {{namespace}}-egress

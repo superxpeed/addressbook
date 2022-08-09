@@ -9,6 +9,6 @@ spec:
     - hosts:
         - {{postgres_host}}
       port:
-        name: tcp-11111
-        number: 11111
+        name: tcp-{{postgres_port}}
+        number: {{postgres_port}}
         protocol: TCP

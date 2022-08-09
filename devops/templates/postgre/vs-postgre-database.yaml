@@ -19,12 +19,12 @@ spec:
         - destination:
             host: svc-addressbook-egress
             port:
-              number: 11111
+              number: {{postgres_port}}
           weight: 100
     - match:
         - gateways:
             - gw-postgre-database
-          port: 11111
+          port: {{postgres_port}}
       route:
         - destination:
             host: {{postgres_host}}
