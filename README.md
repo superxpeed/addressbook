@@ -47,7 +47,7 @@ https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-b
 7.  Hierarchical menu with breadcrumbs and role-dependent feature availability
 8.  Dynamic collections of child components
 
-### Project deployment:
+### [Project deployment](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project):
 ```shell
 cd $PROJECT_ROOT/devops/ansible
 # Ingress, Egress, Eureka, Ignite, WebApp 
