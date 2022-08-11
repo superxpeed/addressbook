@@ -32,7 +32,7 @@ spec:
             - router
             - --domain
             - $(POD_NAMESPACE).svc.cluster.local
-            - --proxyLogLevel=warning
+            - --proxyLogLevel=info
             - --proxyComponentLogLevel=misc:error
             - --log_output_level=default:info
             - --serviceCluster
