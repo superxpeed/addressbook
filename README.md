@@ -82,6 +82,7 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, isti
     - [**VirtualService**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/postgre/vs-postgre-database.yaml)
     - [**Egress Gateway**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/egress/dp-addressbook-egress.yaml)
     - [**Ingress Gateway**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/ingress/dp-addressbook-ingress.yaml)
+    - [**mTLS inside namespace**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/istio_https/pa-mtls.yaml)  
 3.  [**docker-compose-ignite**](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose-ignite.yml)
 4.  [**docker-compose**](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose.yml)
 5.  [**.zip**](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/distr-zip.xml) artifact [assembly](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/pom.xml#L23)
