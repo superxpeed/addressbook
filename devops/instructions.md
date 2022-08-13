@@ -22,8 +22,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/a
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
 ```
-#### NOTE: With Ingress configured in the default mode X509 client authentication for Spring doesn't work
-#### Or you can enable SSL passthrough:
+#### Enable SSL passthrough:
 ```shell
 https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough
 ```
