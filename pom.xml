@@ -23,6 +23,7 @@
         <spring.boot.maven.plugin.version>2.7.1</spring.boot.maven.plugin.version>
         <exec.maven.plugin.version>1.6.0</exec.maven.plugin.version>
         <antrun.maven.plugin.version>1.6</antrun.maven.plugin.version>
+        <docker.maven.plugin.version>1.4.13</docker.maven.plugin.version>
         <spring.version>5.3.21</spring.version>
         <spring.boot.version>2.7.1</spring.boot.version>
         <spring.cloud.version>2021.0.3</spring.cloud.version>
