@@ -87,6 +87,7 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, isti
 4.  [**docker-compose**](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose.yml)
 5.  [**.zip**](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/distr-zip.xml) artifact [assembly](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/pom.xml#L23)
 6.  [**Dockerfile** for layered Spring Boot .jar](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/Dockerfile)
+7.  [**Building Docker images with Maven**](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml#L426)  
 #### PostgreSQL setup:
 ```sql
 CREATE SCHEMA IF NOT EXISTS test;
