@@ -136,6 +136,16 @@ https://istio-https.localdev.me/#/
 ### Certificate:
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_https.png" width="900"/> 
 
+### istio-proxy logging level:
+```shell
+curl -X POST localhost:15000/logging?level=debug
+```
+
+### mTLS status:
+```shell
+istioctl x describe pod <<podname>>
+```
+
 ## Docker installation
 
 ### Install Docker Desktop
