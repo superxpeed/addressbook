@@ -51,10 +51,12 @@ web_server_port: 9000
 web_image: addressbook_web:latest
 # DAO implementation: POSTGRE-SERVER / MONGO-SERVER / IGNITE-SERVER
 web_dao_implementation: POSTGRE-SERVER
-# Route for http or https when web_ssl_enabled set to true
+# Route for http or https when web_ssl_enabled set to true (works only when "istio_x509" role deployed)
 web_route_host: simple-https.localdev.me
-# Route for https when web_ssl_enabled set to false
+# Route for https when web_ssl_enabled set to false (works only when "istio_https" role deployed)
 web_istio_route_host: istio-https.localdev.me
+# Enable or disable X509 auth (works only when "istio_x509" role deployed)
+web_ssl_enabled: false
 
 #Istio Ingress & Egress settings
 # Istio control plane address
