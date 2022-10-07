@@ -1,6 +1,4 @@
 # Spring Ecosystem Backbone SPA With k8s/Istio Support
-### Spring Boot/Cloud/Eureka/Netflix/MVC using React/Redux for UI and MongoDB/PostgreSQL/Apache Ignite for data persistence
-
 
 
 https://user-images.githubusercontent.com/8986329/182024391-09657aa1-cce6-49a0-9f12-16876dcb965e.mp4
@@ -48,27 +46,6 @@ https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-b
 7.  Hierarchical menu with breadcrumbs and role-dependent feature availability
 8.  Dynamic collections of child components
 
-### [Project deployment](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project):
-```shell
-cd $PROJECT_ROOT/devops/ansible
-# Ingress, Egress, Eureka, Ignite, WebApp 
-ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web, istio_https"
-```
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ignite_kiali.png" width="900"/>  
-
-```shell
-# Ingress, Egress, Eureka, Mongo, WebApp
-ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web, istio_https"
-```
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_kiali.png" width="900"/>  
-
-```shell
-# Ingress, Egress, Eureka, PostgreSQL, WebApp
-ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, istio_https"
-```
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgre_kiali.png" width="900"/>  
-
-
 #### [DevOps](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md):
 1.  [**Ansible** playbook](https://github.com/dredwardhyde/addressbook/tree/master/devops/ansible)  
 2.  [**Kubernetes** templates:](https://github.com/dredwardhyde/addressbook/tree/master/devops/templates)
@@ -91,6 +68,28 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, isti
 5.  [**.zip**](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/distr-zip.xml) artifact [assembly](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/pom.xml#L23)
 6.  [**Dockerfile** for layered Spring Boot .jar](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/Dockerfile)
 7.  [**Building Docker images with Maven**](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml#L426)  
+
+### [Project deployment](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project):
+```shell
+cd $PROJECT_ROOT/devops/ansible
+# Ingress, Egress, Eureka, Ignite, WebApp 
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web, istio_https"
+```
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ignite_kiali.png" width="900"/>  
+
+```shell
+# Ingress, Egress, Eureka, Mongo, WebApp
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web, istio_https"
+```
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_kiali.png" width="900"/>  
+
+```shell
+# Ingress, Egress, Eureka, PostgreSQL, WebApp
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, istio_https"
+```
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgre_kiali.png" width="900"/>  
+
+
 #### PostgreSQL setup:
 ```sql
 CREATE SCHEMA IF NOT EXISTS test;
