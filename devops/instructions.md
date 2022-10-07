@@ -133,8 +133,15 @@ https://istio-https.localdev.me/#/
 ### Envoy sidecar logs:
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_proxy_web.png" width="900"/> 
 
+### Fluent Bit sidecar logs with <ins>fluent_bit_enabled</ins> set to <ins>true</ins> and <ins>fluent_bit_web</ins> role deployed:
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/fluent_bit.png" width="900"/> 
+
 ### Certificate:
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_https.png" width="900"/> 
+
+### Web application logs in Elastic with <ins>fluent_bit_enabled</ins> set to <ins>true</ins> and <ins>fluent_bit_web</ins> role deployed:
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/fluent_bit_elastic.png" width="900"/> 
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/fluent_bit_elastic_expanded.png" width="900"/> 
 
 ### istio-proxy logging level:
 ```shell
