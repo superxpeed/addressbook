@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: ServiceEntry
 metadata:
-  name: se-postgre-db
+  name: se-postgre-database
 spec:
   addresses:
     - {{postgres_ip}}

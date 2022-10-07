@@ -77,7 +77,7 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, isti
     - [**ConfigMap**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-app-settings.yaml)
     - [**Service**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/svc-web-api.yaml)
     - [**Ingress**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/web-ingress.yaml)
-    - [**ServiceEntry**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/postgre/se-postgre-db.yaml)
+    - [**ServiceEntry**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/postgre/se-postgre-database.yaml)
     - [**Gateway**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/postgre/gw-postgre-database.yaml)
     - [**VirtualService**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/postgre/vs-postgre-database.yaml)
     - [**Egress Gateway**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/egress/dp-addressbook-egress.yaml)
