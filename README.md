@@ -1,4 +1,4 @@
-# Spring Ecosystem Backbone Single Page Application With k8s/Istio Mesh Support
+# Spring Ecosystem Backbone SPA With k8s/Istio Support
 ### Spring Boot/Cloud/Eureka/Netflix/MVC using React/Redux for UI and MongoDB/PostgreSQL/Apache Ignite for data persistence
 
 
