@@ -46,7 +46,7 @@
         Replace_Dots On
         Suppress_Type_Name On
         Index addressbook
-        Trace_Error on
+        Trace_Error On
         Retry_Limit False
     parsers.conf: |-
       [PARSER]
