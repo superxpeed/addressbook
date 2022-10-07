@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: gw-fluent-bit
+spec:
+  selector:
+    istio: {{namespace}}-egress
+  servers:
+    - hosts:
+        - {{fluent_elasticsearch_host}}
+      port:
+        name: tcp-{{fluent_elasticsearch_port}}
+        number: {{fluent_elasticsearch_port}}
+        protocol: TCP

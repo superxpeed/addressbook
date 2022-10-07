@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: vs-fluent-bit
+spec:
+  exportTo:
+    - .
+  gateways:
+    - gw-fluent-bit
+    - mesh
+  hosts:
+    - {{fluent_elasticsearch_host}}
+  tcp:
+    - match:
+        - gateways:
+            - mesh
+          port: {{fluent_elasticsearch_port}}
+      route:
+        - destination:
+            host: svc-addressbook-egress
+            port:
+              number: {{fluent_elasticsearch_port}}
+          weight: 100
+    - match:
+        - gateways:
+            - gw-fluent-bit
+          port: {{fluent_elasticsearch_port}}
+      route:
+        - destination:
+            host: {{fluent_elasticsearch_host}}
+            port:
+              number: {{external_fluent_elasticsearch_port}}
+          weight: 100

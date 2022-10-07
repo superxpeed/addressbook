@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: se-fluent-bit
+spec:
+  addresses:
+    - {{fluent_elasticsearch_ip}}
+  endpoints:
+    - address: {{fluent_elasticsearch_ip}}
+  exportTo:
+    - .
+  hosts:
+    - {{fluent_elasticsearch_host}}
+  location: MESH_EXTERNAL
+  ports:
+    - name: tcp-{{external_fluent_elasticsearch_port}}
+      number: {{external_fluent_elasticsearch_port}}
+      protocol: TCP
+    - name: internal-{{fluent_elasticsearch_port}}
+      number: {{fluent_elasticsearch_port}}
+      protocol: TCP
+  resolution: STATIC

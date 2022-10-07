@@ -1,0 +1,65 @@
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: cm-web-fluent-bit
+    namespace: {{namespace}}
+    labels:
+      app: fluent-bit
+      product: web
+      type: application
+  data:
+    fluent-bit.conf: |-
+      [SERVICE]
+        Flush        1
+        Daemon       Off
+        Parsers_File /fluent-bit/etc/parsers.conf
+        Log_Level debug
+      [INPUT]
+        Name tail
+        Path /mnt/logs/application.log
+        Mem_Buf_Limit 5MB
+        Multiline On
+        Parser_Firstline loggermod_head
+        Parser_1 loggermod
+      
+      @INCLUDE es.conf
+      
+      [FILTER]
+        Name modify
+        Match *
+        Add namespace ${namespace}
+        Add service ${service}
+        Add application ${application}
+        Add pod ${pod}      
+        Add message -
+      
+      [OUTPUT]
+        Name stdout
+        Match *
+    es.conf: |-
+      [OUTPUT]
+        Name es
+        Match *
+        Host {{fluent_elasticsearch_host}}
+        Port {{fluent_elasticsearch_port}}
+        Logstash_Format Off
+        Replace_Dots On
+        Suppress_Type_Name On
+        Index addressbook
+        Trace_Error on
+        Retry_Limit False
+    parsers.conf: |-
+      [PARSER]
+        Name loggermod_head
+        Format regex
+        Regex ^(?<time>[^ ]* {1,2}[^ ]*) \[(?<threadName>[^ ]*)\] \[(?<levelStr>[^ ]*)\] \((?<loggerName>[^ ]*)\) \[(?<callerClass>[^:]*)\:\:(?<callerMethod>[^:]*)\:(?<callerLine>[^ ]*)\](\s+mdc:)(?<mdc>[^|]*)(\|\s+)(?<message>.*)
+        Time_Key time
+        Time_Format %Y-%m-%d %H:%M:%S,%L
+        Time_Keep On
+      [PARSER]
+        Name loggermod
+        Format regex
+        Regex (?m-ix)^(?<time>[^ ]* {1,2}[^ ]*) \[(?<threadName>[^ ]*)\] \[(?<levelStr>[^ ]*)\] \((?<loggerName>[^ ]*)\) \[(?<callerClass>[^:]*)\:\:(?<callerMethod>[^:]*)\:(?<callerLine>[^ ]*)\](\s+mdc:)(?<mdc>[^|]*)(\|\s+)(?<message>.*)
+        Time_Key time
+        Time_Format %Y-%m-%d %H:%M:%S,%L
+        Time_Keep On

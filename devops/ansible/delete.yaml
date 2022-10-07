@@ -7,8 +7,6 @@
   vars_files:
     - vars/variables.yaml
     - vars/user-variables.yaml
-  vars:
-    - dev: true
   roles:
     - { role: delete_ingress, tags: ingress }
     - { role: delete_egress, tags: egress }
@@ -19,3 +17,4 @@
     - { role: delete_eureka, tags: eureka }
     - { role: delete_istio_https, tags: istio_https, when: not web_ssl_enabled | bool }
     - { role: delete_istio_x509, tags: istio_x509, when: web_ssl_enabled | bool }
+    - { role: delete_fluent_bit_web, tags: fluent_bit_web, when: fluent_bit_enabled | bool }

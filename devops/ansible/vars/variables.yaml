@@ -60,7 +60,14 @@ ingressgateway_ca_certs_mount_path: /etc/istio/ingressgateway-ca-certs
 
 egressgateway_name: dp-addressbook-app-egress
 
+# Istio Proxy sidecar resource settings
 sidecar_cpu_istio_req: 100m
 sidecar_cpu_istio_lim: 100m
 sidecar_mem_istio_req: 1000Mi
 sidecar_mem_istio_lim: 1000Mi
+
+# Fluent Bit sidecar resource settings
+cpu_fb_limit: 200m
+mem_fb_limit: 32Mi
+cpu_fb_req: 200m
+mem_fb_req: 32Mi

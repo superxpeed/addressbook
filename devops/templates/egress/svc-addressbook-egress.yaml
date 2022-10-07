@@ -16,5 +16,9 @@ spec:
       protocol: TCP
       port: {{mongo_db_port}}
       targetPort: {{mongo_db_port}}
+    - name: http-{{fluent_elasticsearch_port}}
+      protocol: TCP
+      port: {{fluent_elasticsearch_port}}
+      targetPort: {{fluent_elasticsearch_port}}
   selector:
     app: {{namespace}}-egress

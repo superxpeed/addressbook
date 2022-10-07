@@ -7,10 +7,9 @@
   vars_files:
     - vars/variables.yaml
     - vars/user-variables.yaml
-  vars:
-    - dev: true
   roles:
     - { role: deploy_eureka, tags: eureka }
+    - { role: deploy_fluent_bit_web, tags: fluent_bit_web, when: fluent_bit_enabled | bool }
     - { role: deploy_mongo, tags: mongo }
     - { role: deploy_postgre, tags: postgre }
     - { role: deploy_ignite, tags: ignite }

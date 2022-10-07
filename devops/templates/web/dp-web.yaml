@@ -96,6 +96,43 @@ spec:
               mountPath: /mnt/
           terminationMessagePolicy: File
           image: {{web_image}}
+{% if fluent_bit_enabled %}
+        - name: fluent-bit
+          securityContext:
+            readOnlyRootFilesystem: true
+          image: {{fluentbit_image}}
+          env:
+            - name: pod
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: namespace
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: service
+              value: web-app
+            - name: application
+              value: addressbook
+          resources:
+            limits:
+              cpu: {{cpu_fb_limit}}
+              memory: {{mem_fb_limit}}
+            requests:
+              cpu: {{cpu_fb_req}}
+              memory: {{mem_fb_req}}
+          volumeMounts:
+            - name: logsshare
+              mountPath: /mnt/logs
+            - name: fluent-bit-conf
+              readOnly: true
+              mountPath: /fluent-bit/etc
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+{% endif %}
       dnsPolicy: ClusterFirst
       volumes:
         - name: logback
@@ -116,6 +153,19 @@ spec:
               - key: truststore.jks
                 path: truststore.jks
             defaultMode: 256
+{% if fluent_bit_enabled %}
+        - name: fluent-bit-conf
+          configMap:
+            name: cm-web-fluent-bit
+            items:
+              - key: fluent-bit.conf
+                path: fluent-bit.conf
+              - key: parsers.conf
+                path: parsers.conf
+              - key: es.conf
+                path: es.conf
+            defaultMode: 256
+{% endif %}
   strategy:
     type: RollingUpdate
     rollingUpdate:
