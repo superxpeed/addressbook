@@ -22,32 +22,32 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/a
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
 ```
-#### Enable SSL passthrough:
+#### Enable SSL passthrough
 ```shell
 https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough
 ```
-### Create user:
+### Create user
 ```shell
 kubectl apply -f dashboard-adminuser.yml
 ```
-### Create role binding:
+### Create role binding
 ```shell
 kubectl apply -f admin-role-binding.yml
 ```
-### Create token and [add it here](https://github.com/dredwardhyde/addressbook/blob/master/devops/ansible/vars/user-variables.yaml#L6):
+### Create token and [add it here](https://github.com/dredwardhyde/addressbook/blob/master/devops/ansible/vars/user-variables.yaml#L6)
 ```shell
 kubectl -n kubernetes-dashboard create token admin-user
 ```
-### Start Kubernetes Dashboard proxy:
+### Start Kubernetes Dashboard proxy
 ```shell
 kubectl proxy
 ```
-### Kubernetes Dashboard URL:
+### Kubernetes Dashboard URL
 ```shell
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
 ```
 
-### Install Istio, Prometheus, and Kiali:
+### Install Istio, Prometheus, and Kiali
 ```shell
 # Download latest Istio
 https://github.com/istio/istio/releases
@@ -67,18 +67,18 @@ kubectl apply -f ${ISTIO_HOME}/samples/addons/prometheus.yaml
 # Install Kiali
 kubectl apply -f ${ISTIO_HOME}/samples/addons/kiali.yaml
 ```
-### Enable access to the Kiali UI:
+### Enable access to the Kiali UI
 ```shell
 kubectl port-forward svc/kiali 20001:20001 -n istio-system
 ```
-### Kiali UI:
+### Kiali UI
 ```shell
 http://localhost:20001/
 ```
 
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_installation.png" width="700"/>  
 
-### Deploy project:
+### Deploy project
 ```shell
 cd $PROJECT_ROOT/devops/ansible
 # Ingress, Egress, Eureka, Ignite, WebApp 
@@ -102,57 +102,57 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, isti
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgre_kiali.png" width="900"/>  
 
 
-### Ansible project deployment:  
+### Ansible project deployment  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ansible_wsl2.png" width="900"/>  
 
-### Deployments:  
+### Deployments  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/deployments.png" width="900"/>  
 
-### Pods:  
+### Pods  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/pods.png" width="900"/>  
 
-### Envoy sidecar logs:  
+### Envoy sidecar logs  
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_proxy.png" width="900"/>  
 
-### Egress logs:
+### Egress logs
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/egress.png" width="900"/>  
 
-### X.509 Authentication with <ins>web_ssl_enabled</ins> set to <ins>true</ins> and <ins>istio_x509</ins> role deployed:
+### X.509 Authentication with <ins>web_ssl_enabled</ins> set to <ins>true</ins> and <ins>istio_x509</ins> role deployed
 ```shell
 https://simple-https.localdev.me/#/
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/client_auth.png" width="900"/> 
 
-### TLS with <ins>web_ssl_enabled</ins> set to <ins>false</ins> and <ins>istio_https</ins> role deployed:
+### TLS with <ins>web_ssl_enabled</ins> set to <ins>false</ins> and <ins>istio_https</ins> role deployed
 ```shell
 https://istio-https.localdev.me/#/
 ```
-### Ingress logs:
+### Ingress logs
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ingress.png" width="900"/>  
 
-### Envoy sidecar logs:
+### Envoy sidecar logs
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_proxy_web.png" width="900"/> 
 
-### Fluent Bit sidecar logs with <ins>fluent_bit_enabled</ins> set to <ins>true</ins> and <ins>fluent_bit_web</ins> role deployed:
+### Fluent Bit sidecar logs with <ins>fluent_bit_enabled</ins> set to <ins>true</ins> and <ins>fluent_bit_web</ins> role deployed
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/fluent_bit.png" width="900"/> 
 
-### Certificate:
+### Certificate
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_https.png" width="900"/> 
 
-### Web application logs in Elastic with <ins>fluent_bit_enabled</ins> set to <ins>true</ins> and <ins>fluent_bit_web</ins> role deployed:
+### Web application logs in Elastic with <ins>fluent_bit_enabled</ins> set to <ins>true</ins> and <ins>fluent_bit_web</ins> role deployed
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/fluent_bit_elastic.png" width="900"/> 
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/fluent_bit_elastic_expanded.png" width="900"/> 
 
-### istio-proxy logging level:
+### istio-proxy logging level
 ```shell
 curl -X POST localhost:15000/logging?level=debug
 ```
 
-### mTLS status:
+### mTLS status
 ```shell
 istioctl x describe pod <<podname>>
 ```
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mtls.png" width="650"/> 
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mtls.png" width="500"/> 
 
 ## Docker installation
 
