@@ -152,6 +152,7 @@ curl -X POST localhost:15000/logging?level=debug
 ```shell
 istioctl x describe pod <<podname>>
 ```
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mtls.png" width="650"/> 
 
 ## Docker installation
 
