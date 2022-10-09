@@ -1,6 +1,6 @@
 ## Kubernetes installation
 
-### Install Docker Desktop
+### Install Docker Desktop and enable Kubernetes
 ```shell
 https://www.docker.com/products/docker-desktop/
 ```
