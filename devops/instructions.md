@@ -19,7 +19,7 @@ pip3 install openshift
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/aio/deploy/recommended.yaml
 ```
 
-### Add aliases for <ins>host.docker.internal</ins>
+### Add aliases for <ins>host.docker.internal</ins> and restart WSL/Docker/Kubernetes
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/hosts.png" width="500"/>  
 
 ### Ingress NGINX server
