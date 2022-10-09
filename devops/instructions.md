@@ -18,6 +18,10 @@ pip3 install openshift
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/aio/deploy/recommended.yaml
 ```
+
+### Add aliases for <ins>host.docker.internal</ins>
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/hosts.png" width="500"/>  
+
 ### Ingress NGINX server
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml

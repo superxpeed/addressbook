@@ -66,8 +66,8 @@ proxy_image: docker.io/istio/proxyv2:1.14.3
 
 # Fluent Bit settings for web application
 # Works only when "fluent_bit_web" role deployed
-fluent_bit_enabled: false
-fluent_elasticsearch_host: host.docker.internal
+fluent_bit_enabled: true
+fluent_elasticsearch_host: host.docker.internal1
 fluent_elasticsearch_ip: 192.168.65.2
 external_fluent_elasticsearch_port: 9200
 fluent_elasticsearch_port: 33333
