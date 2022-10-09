@@ -22,7 +22,7 @@ mongo_server_port: 13000
 # URL to the addressbook_mongo image
 mongo_image: addressbook_mongo:latest
 # MongoDB host name as it's visible from k8s cluster
-mongo_db_host: host.docker.internal
+mongo_db_host: host.docker.internal2
 # Internal MongoDB port inside namespace
 mongo_db_port: 11112
 # MongoDB ip as it's visible from k8s cluster
