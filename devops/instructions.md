@@ -134,7 +134,7 @@ https://istio-https.localdev.me/#/
 ### Ingress logs
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ingress.png" width="900"/>  
 
-### Envoy sidecar logs
+### Web application envoy sidecar logs
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/istio_proxy_web.png" width="900"/> 
 
 ### Fluent Bit sidecar logs with <ins>fluent_bit_enabled</ins> set to <ins>true</ins> and <ins>fluent_bit_web</ins> role deployed
