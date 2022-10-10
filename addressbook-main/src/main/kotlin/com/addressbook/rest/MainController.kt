@@ -9,6 +9,7 @@ import com.addressbook.model.Person
 import com.addressbook.model.User
 import com.addressbook.security.AppUserDetails
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.micrometer.core.annotation.Timed
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.info.BuildProperties
@@ -23,6 +24,7 @@ import java.util.concurrent.CompletableFuture
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+@Timed
 @RestController
 @RequestMapping(path = ["/rest"])
 class MainController {

@@ -32,6 +32,10 @@ spring:
 dao:
   implementation: ${dao_implementation}
 management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
   endpoint:
     health:
       enabled: true
