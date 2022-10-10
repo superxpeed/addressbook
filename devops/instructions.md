@@ -85,23 +85,23 @@ http://localhost:20001/
 ### Deploy project
 ```shell
 cd $PROJECT_ROOT/devops/ansible
-# Ingress, Egress, Eureka, Ignite, WebApp 
-ansible-playbook delete.yaml --tags "ingress, egress, eureka, ignite, web, istio_https"
-ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web, istio_https"
+# Ingress, Egress, Eureka, Ignite, WebApp, Fluent Bit 
+ansible-playbook delete.yaml --tags "ingress, egress, eureka, ignite, web, istio_https, fluent_bit_web"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web, istio_https, fluent_bit_web"
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ignite_kiali.png" width="900"/>  
 
 ```shell
-# Ingress, Egress, Eureka, Mongo, WebApp
-ansible-playbook delete.yaml --tags "ingress, egress, eureka, mongo, web, istio_https"
-ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web, istio_https"
+# Ingress, Egress, Eureka, Mongo, WebApp, Fluent Bit
+ansible-playbook delete.yaml --tags "ingress, egress, eureka, mongo, web, istio_https, fluent_bit_web"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web, istio_https, fluent_bit_web"
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_kiali.png" width="900"/>  
 
 ```shell
-# Ingress, Egress, Eureka, PostgreSQL, WebApp
-ansible-playbook delete.yaml --tags "ingress, egress, eureka, postgre, web, istio_https"
-ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, istio_https"
+# Ingress, Egress, Eureka, PostgreSQL, WebApp, Fluent Bit
+ansible-playbook delete.yaml --tags "ingress, egress, eureka, postgre, web, istio_https, fluent_bit_web"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, istio_https, fluent_bit_web"
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgre_kiali.png" width="900"/>  
 
