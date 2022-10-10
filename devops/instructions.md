@@ -147,6 +147,13 @@ https://istio-https.localdev.me/#/
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/fluent_bit_elastic.png" width="900"/> 
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/fluent_bit_elastic_expanded.png" width="900"/> 
 
+### Metrics (Grafana Dashboard #10280)
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/metrics.png" width="900"/> 
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/metrics_rest.png" width="900"/> 
+
+### Prometheus Job Config
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/prometheus_config.png" width="700"/>  
+
 ### istio-proxy logging level
 ```shell
 curl -X POST localhost:15000/logging?level=debug
