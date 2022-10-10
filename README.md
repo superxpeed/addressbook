@@ -56,7 +56,7 @@ https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-b
     - [**Secret**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/secret-web-app.yaml) as [**ConfigMap**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/dp-web.yaml#L66)
     - [**ConfigMap**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-app-settings.yaml)
     - [**Service**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/svc-web-api.yaml)
-    - [**Ingress**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/web-ingress.yaml)
+    - [**Ingress**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/istio_x509/web-ingress.yaml)
     - [**ServiceEntry**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/postgre/se-postgre-database.yaml)
     - [**Gateway**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/postgre/gw-postgre-database.yaml)
     - [**VirtualService**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/postgre/vs-postgre-database.yaml)
