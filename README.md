@@ -1,6 +1,5 @@
 # Spring Ecosystem Backbone SPA With k8s/Istio Support
 
-### Demo
 
 https://user-images.githubusercontent.com/8986329/182024391-09657aa1-cce6-49a0-9f12-16876dcb965e.mp4
 
@@ -70,7 +69,7 @@ https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-b
 4.  [**docker-compose**](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose.yml)
 5.  [**.zip**](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/distr-zip.xml) artifact [assembly](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/pom.xml#L23)
 6.  [**Dockerfile** for layered Spring Boot .jar](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/Dockerfile)
-7.  [**Building Docker images with Maven**](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml#L426)  
+7.  [**Building Docker images with Maven**](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml#L430)  
 
 ### [Project deployment](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project)
 ```shell
