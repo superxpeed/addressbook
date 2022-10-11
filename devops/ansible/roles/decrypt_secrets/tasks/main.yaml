@@ -1,0 +1,29 @@
+- name: Decrypt secret-ingressgateway-certs.yaml
+  copy:
+    src: ../secrets/secret-ingressgateway-certs.yaml
+    dest: ../templates/ingress/secret-ingressgateway-certs.yaml
+
+- name: Decrypt secret-ingressgateway-ca-certs.yaml
+  copy:
+    src: ../secrets/secret-ingressgateway-ca-certs.yaml
+    dest: ../templates/ingress/secret-ingressgateway-ca-certs.yaml
+
+- name: Decrypt secret-mongo-app.yaml
+  copy:
+    src: ../secrets/secret-mongo-app.yaml
+    dest: ../templates/mongo/secret-mongo-app.yaml
+
+- name: Decrypt secret-postgres-app.yaml
+  copy:
+    src: ../secrets/secret-postgres-app.yaml
+    dest: ../templates/postgre/secret-postgres-app.yaml
+
+- name: Decrypt secret-web-app.yaml
+  copy:
+    src: ../secrets/secret-web-app.yaml
+    dest: ../templates/web/secret-web-app.yaml
+
+- name: Decrypt web-secret.yaml
+  copy:
+    src: ../secrets/web-secret.yaml
+    dest: ../templates/web/web-secret.yaml

@@ -8,6 +8,7 @@
     - vars/variables.yaml
     - vars/user-variables.yaml
   roles:
+    - { role: decrypt_secrets, tags: always }
     - { role: delete_ingress, tags: ingress }
     - { role: delete_egress, tags: egress }
     - { role: delete_web, tags: web }
