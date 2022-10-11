@@ -75,19 +75,19 @@ https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-b
 ```shell
 cd $PROJECT_ROOT/devops/ansible
 # Ingress, Egress, Eureka, Ignite, WebApp, Fluent Bit 
-ansible-playbook deploy.yaml --vault-password-file ./password_file --tags "ingress, egress, eureka, ignite, web, istio_https, fluent_bit_web"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web, istio_https, fluent_bit_web"
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ignite_kiali.png" width="900"/>  
 
 ```shell
 # Ingress, Egress, Eureka, Mongo, WebApp, Fluent Bit 
-ansible-playbook deploy.yaml --vault-password-file ./password_file --tags "ingress, egress, eureka, mongo, web, istio_https, fluent_bit_web"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web, istio_https, fluent_bit_web"
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_kiali.png" width="900"/>  
 
 ```shell
 # Ingress, Egress, Eureka, PostgreSQL, WebApp, Fluent Bit 
-ansible-playbook deploy.yaml --vault-password-file ./password_file --tags "ingress, egress, eureka, postgre, web, istio_https, fluent_bit_web"
+ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, istio_https, fluent_bit_web"
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgre_kiali.png" width="900"/>  
 
