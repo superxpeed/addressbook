@@ -52,8 +52,9 @@ https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-b
 1.  [**Ansible** playbook](https://github.com/dredwardhyde/addressbook/tree/master/devops/ansible)  
 2.  [**Kubernetes** templates:](https://github.com/dredwardhyde/addressbook/tree/master/devops/templates)
     - [External **logback** configuration](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-logback.yaml)
-    - [**Secret**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/web-secret.yaml) as [**Volume**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/dp-web.yaml#L95)
-    - [**Secret**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/secret-web-app.yaml) as [**ConfigMap**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/dp-web.yaml#L66)
+    - **Secret** as [**Volume**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/dp-web.yaml#L89)
+    - **Secret** as [**ConfigMap**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/dp-web.yaml#L81)
+    - **[Secrets](https://github.com/dredwardhyde/addressbook/tree/master/devops/secrets) encryption  using ansible-vault** 
     - [**ConfigMap**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/cm-web-app-settings.yaml)
     - [**Service**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/svc-web-api.yaml)
     - [**Ingress**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/istio_x509/web-ingress.yaml)
@@ -74,19 +75,19 @@ https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-b
 ### [Project deployment](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project)
 ```shell
 cd $PROJECT_ROOT/devops/ansible
-# Ingress, Egress, Eureka, Ignite, WebApp 
+# Ingress, Egress, Eureka, Ignite, WebApp, Fluent Bit 
 ansible-playbook deploy.yaml --vault-password-file ./password_file --tags "ingress, egress, eureka, ignite, web, istio_https, fluent_bit_web"
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/ignite_kiali.png" width="900"/>  
 
 ```shell
-# Ingress, Egress, Eureka, Mongo, WebApp
+# Ingress, Egress, Eureka, Mongo, WebApp, Fluent Bit 
 ansible-playbook deploy.yaml --vault-password-file ./password_file --tags "ingress, egress, eureka, mongo, web, istio_https, fluent_bit_web"
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_kiali.png" width="900"/>  
 
 ```shell
-# Ingress, Egress, Eureka, PostgreSQL, WebApp
+# Ingress, Egress, Eureka, PostgreSQL, WebApp, Fluent Bit 
 ansible-playbook deploy.yaml --vault-password-file ./password_file --tags "ingress, egress, eureka, postgre, web, istio_https, fluent_bit_web"
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgre_kiali.png" width="900"/>  
