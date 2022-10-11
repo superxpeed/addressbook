@@ -1,0 +1,29 @@
+- name: Delete secret-ingressgateway-certs.yaml
+  file:
+    path: ../templates/ingress/secret-ingressgateway-certs.yaml
+    state: absent
+
+- name: Delete secret-ingressgateway-ca-certs.yaml
+  file:
+    path: ../templates/ingress/secret-ingressgateway-ca-certs.yaml
+    state: absent
+
+- name: Delete secret-mongo-app.yaml
+  file:
+    path: ../templates/mongo/secret-mongo-app.yaml
+    state: absent
+
+- name: Delete secret-postgres-app.yaml
+  file:
+    path: ../templates/postgre/secret-postgres-app.yaml
+    state: absent
+
+- name: Delete secret-web-app.yaml
+  file:
+    path: ../templates/web/secret-web-app.yaml
+    state: absent
+
+- name: Delete web-secret.yaml
+  file:
+    path: ../templates/web/web-secret.yaml
+    state: absent
