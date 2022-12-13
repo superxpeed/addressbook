@@ -114,6 +114,7 @@ services:
       - key_password=q1w2e3r4
       - eureka_host=http://eureka:7777/eureka
       - web_ssl_enabled=true
+      - java_opts=-Xms1g -Xmx4g -XX:MaxMetaspaceSize=512m -XX:MetaspaceSize=256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:InitiatingHeapOccupancyPercent=60 -XX:G1HeapRegionSize=32m -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/mnt/logs -Dlogging.config=/mnt/logback.xml -DIGNITE_NO_SHUTDOWN_HOOK=true
     restart: on-failure
     volumes:
       - type: bind
