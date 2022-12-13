@@ -57,6 +57,23 @@ web_route_host: simple-https.localdev.me
 web_istio_route_host: istio-https.localdev.me
 # Enable or disable X509 auth (works only when "istio_x509" role deployed)
 web_ssl_enabled: false
+# JVM options
+web_java_opts: > 
+  -Xms1g 
+  -Xmx4g 
+  -XX:MaxMetaspaceSize=512m 
+  -XX:MetaspaceSize=256m 
+  -XX:+UseG1GC 
+  -XX:MaxGCPauseMillis=200 
+  -XX:+UseStringDeduplication 
+  -XX:+AlwaysPreTouch 
+  -XX:+DisableExplicitGC 
+  -XX:InitiatingHeapOccupancyPercent=60 
+  -XX:G1HeapRegionSize=32m 
+  -Dfile.encoding=UTF-8 
+  -Djava.io.tmpdir=/mnt/logs 
+  -Dlogging.config=/mnt/logback.xml 
+  -DIGNITE_NO_SHUTDOWN_HOOK=true
 
 #Istio Ingress & Egress settings
 # Istio control plane address

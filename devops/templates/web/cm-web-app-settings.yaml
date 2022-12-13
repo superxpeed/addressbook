@@ -11,3 +11,4 @@ data:
   truststore_path: "{{web_truststore_path}}"
   dao_implementation: "{{web_dao_implementation}}"
   web_ssl_enabled: "{{web_ssl_enabled}}"
+  java_opts: "{{web_java_opts}}"
