@@ -4,6 +4,15 @@
 ```shell
 https://www.docker.com/products/docker-desktop/
 ```
+### Enable file permissions for WSL and restart Docker/Kubernetes
+```shell
+sudo vim /etc/wsl.conf
+...
+[automount]
+options = "metadata"
+enabled = true
+...
+```
 ### Install ansible using brew/apt 
 ```shell
 brew install ansible
@@ -91,6 +100,9 @@ http://localhost:20001/
 ### Deploy project
 ```shell
 cd $PROJECT_ROOT/devops/ansible
+sudo chmod o-w .
+chmod -x password_file
+
 # Ingress, Egress, Eureka, Ignite, WebApp, Fluent Bit 
 ansible-playbook delete.yaml --tags "ingress, egress, eureka, ignite, web, istio_https, fluent_bit_web"
 ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web, istio_https, fluent_bit_web"
