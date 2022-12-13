@@ -7,3 +7,4 @@ metadata:
 data:
   eureka_server_port: "{{eureka_server_port}}"
   eureka_hostname: "{{eureka_hostname}}"
+  java_opts: "{{eureka_java_opts}}"

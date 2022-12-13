@@ -94,6 +94,9 @@
                 <version>${spring.boot.maven.plugin.version}</version>
                 <configuration>
                     <mainClass>com.addressbook.eureka.EurekaApplication</mainClass>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                 </configuration>
                 <executions>
                     <execution>

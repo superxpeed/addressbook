@@ -23,7 +23,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/a
 ```shell
 docker run -it --rm alpine nslookup host.docker.internal
 ```
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/nslookup.png" width="700"/>  
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/nslookup.png" width="500"/>  
 
 ### Add aliases for <ins>host.docker.internal</ins> and restart WSL/Docker/Kubernetes
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/hosts.png" width="500"/>  

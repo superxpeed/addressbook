@@ -253,6 +253,9 @@
                 <version>${spring.boot.maven.plugin.version}</version>
                 <configuration>
                     <mainClass>com.addressbook.server.ServerApplication</mainClass>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                 </configuration>
                 <executions>
                     <execution>
