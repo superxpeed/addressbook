@@ -41,6 +41,7 @@ class SecurityConfiguration {
                 .antMatchers("/rest/admin/**").hasRole("ADMIN")
                 .antMatchers("/rest/**").hasRole("USER")
                 .antMatchers("/auth").permitAll()
+                .antMatchers("/rotateToken").permitAll()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
         return http.build()

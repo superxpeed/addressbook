@@ -55,4 +55,11 @@ class IndexWebController {
             return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
         return ResponseEntity(AuthResponse(jwtProvider.generateToken(request.login)), HttpStatus.OK)
     }
+
+    @PostMapping("/rotateToken")
+    fun renewToken(@RequestBody request: AuthResponse): ResponseEntity<Any> {
+        if(!jwtProvider.validateToken(request.token))
+            return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
+        return ResponseEntity(AuthResponse(jwtProvider.generateToken(jwtProvider.getLoginFromToken(request.token))), HttpStatus.OK)
+    }
 }
