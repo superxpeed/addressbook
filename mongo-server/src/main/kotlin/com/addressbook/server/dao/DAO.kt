@@ -179,7 +179,7 @@ class DAO : AddressBookDAO {
                 ?.equal(url)
                 ?.find()
                 ?.toList()
-        return if (entries != null && entries.isNotEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
+        return if (!entries.isNullOrEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
     }
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {

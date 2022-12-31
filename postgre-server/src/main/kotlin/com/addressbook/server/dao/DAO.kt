@@ -158,7 +158,7 @@ class DAO : AddressBookDAO {
     fun checkIfMenuExists(url: String): List<MenuEntry> {
         val results = entityManager.createQuery("SELECT u FROM MenuEntry u WHERE u.url=:url", MenuEntry::class.java)
                 .also { it?.setParameter("url", url) }?.resultList
-        return if (results != null && results.isNotEmpty()) results else throw IllegalArgumentException("Menu with url: $url doesn't exist")
+        return if (!results.isNullOrEmpty()) results else throw IllegalArgumentException("Menu with url: $url doesn't exist")
     }
 
     @Transactional

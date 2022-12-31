@@ -35,10 +35,10 @@ class IndexWebController {
 
     @GetMapping("/")
     fun start(httpServletRequest: HttpServletRequest, httpServletResponse: HttpServletResponse): String {
-        httpServletRequest.getAttribute("javax.servlet.request.X509Certificate")?.let { it ->
+        httpServletRequest.getAttribute("javax.servlet.request.X509Certificate")?.let {
             if ((it as Array<*>).isNotEmpty()) {
                 val cookies = httpServletRequest.cookies?.filter { cookie -> cookie.name.equals(JwtFilter.AUTHORIZATION) }
-                if (cookies == null || cookies.isEmpty()) {
+                if (cookies.isNullOrEmpty()) {
                     httpServletResponse.addCookie(Cookie(JwtFilter.AUTHORIZATION,
                             jwtProvider.generateToken((it[0] as X509Certificate).subjectX500Principal.name.replace("CN=", ""))))
                 }

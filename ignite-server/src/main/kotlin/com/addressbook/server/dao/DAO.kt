@@ -202,7 +202,7 @@ class DAO : AddressBookDAO {
 
     private fun checkIfMenuExists(menuCache: IgniteCache<String, MenuEntry>?, url: String): List<Cache.Entry<String, MenuEntry>> {
         val entries = menuCache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "url = ?").setArgs(url))?.all
-        return if (entries != null && entries.isNotEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
+        return if (!entries.isNullOrEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
     }
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
