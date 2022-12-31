@@ -9,6 +9,7 @@ import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.io.Serializable
 import java.sql.Timestamp
 import java.util.*
+import javax.persistence.Column
 import javax.persistence.Embeddable
 
 @javax.persistence.Entity
@@ -19,9 +20,11 @@ class Organization constructor(id: String?, name: String?, addr: Address?, type:
     @dev.morphia.annotations.Id
     @javax.persistence.Id
     @QuerySqlField(index = true)
+    @Column(length = 100)
     var id: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 500)
     var name: String? = null
 
     @QuerySqlField(index = true)
@@ -72,21 +75,27 @@ class Person : Serializable {
     @dev.morphia.annotations.Id
     @javax.persistence.Id
     @QuerySqlField(index = true)
+    @Column(length = 100)
     var id: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 100)
     var orgId: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 500)
     var firstName: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 500)
     var lastName: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 2000)
     var resume: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 100)
     var salary: String? = null
 
     constructor(org: Organization, firstName: String, lastName: String, salary: String, resume: String) : this() {
@@ -112,9 +121,11 @@ class Person : Serializable {
 class Address(street: String?, zip: String?) : Binarylizable {
 
     @QuerySqlField(index = true)
+    @Column(length = 500)
     var street: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 100)
     var zip: String? = null
 
     constructor() : this(null, null)
@@ -138,16 +149,17 @@ class Address(street: String?, zip: String?) : Binarylizable {
 @javax.persistence.Entity
 @javax.persistence.Table(name = "contacts")
 @dev.morphia.annotations.Entity("contacts")
-class Contact(@QuerySqlField(index = true) var personId: String?,
+class Contact(@QuerySqlField(index = true) @Column(length = 100) var personId: String?,
               @QuerySqlField(index = true) var type: ContactType?,
-              @QuerySqlField(index = true) var data: String?,
-              @QuerySqlField(index = true) var description: String?) {
+              @QuerySqlField(index = true) @Column(length = 2000) var data: String?,
+              @QuerySqlField(index = true) @Column(length = 1000) var description: String?) {
 
     constructor() : this(null, null, null, null)
 
     @dev.morphia.annotations.Id
     @javax.persistence.Id
     @QuerySqlField(index = true)
+    @Column(length = 100)
     var contactId: String? = null
 
     @QuerySqlField(index = true)

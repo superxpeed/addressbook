@@ -3,6 +3,7 @@ package com.addressbook.model
 import org.apache.ignite.cache.query.annotations.QuerySqlField
 import java.io.Serializable
 import java.util.*
+import javax.persistence.Column
 import javax.persistence.ElementCollection
 
 @javax.persistence.Entity
@@ -10,9 +11,9 @@ import javax.persistence.ElementCollection
 @dev.morphia.annotations.Entity("addressbook_users")
 class User(@javax.persistence.Id
            @dev.morphia.annotations.Id
-           @QuerySqlField(index = true) var login: String,
-           @QuerySqlField(index = true) var password: String,
-           @ElementCollection var roles: List<String>) : Serializable {
+           @QuerySqlField(index = true) @Column(length = 100) var login: String,
+           @QuerySqlField(index = true) @Column(length = 100) var password: String,
+           @ElementCollection @Column(length = 2000) var roles: List<String>) : Serializable {
 
     constructor() : this("", "", Collections.emptyList<String>())
 }
@@ -22,8 +23,8 @@ class User(@javax.persistence.Id
 @dev.morphia.annotations.Entity("locks")
 class Lock(@javax.persistence.Id
            @dev.morphia.annotations.Id
-           @QuerySqlField(index = true) var id: String?,
-           @QuerySqlField(index = true) var login: String?) : Serializable {
+           @QuerySqlField(index = true) @Column(length = 500) var id: String?,
+           @QuerySqlField(index = true) @Column(length = 100) var login: String?) : Serializable {
 
     constructor() : this(null, null)
 
@@ -54,18 +55,23 @@ class MenuEntry {
     @dev.morphia.annotations.Id
     @javax.persistence.Id
     @QuerySqlField(index = true)
+    @Column(length = 100)
     var id: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 100)
     var parentId: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 255)
     var url: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 255)
     var name: String? = null
 
     @ElementCollection
+    @Column(length = 2000)
     var roles: List<String>? = null
 
     init {
