@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.net.InetAddress
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
@@ -163,6 +164,7 @@ class MainController {
             artifact = buildProperties.artifact
             group = buildProperties.group
             name = buildProperties.name
+            serverHost = InetAddress.getLocalHost().hostName
             time = DateTimeFormatter.ofPattern("dd.MM.yyyy HH.mm.ss")
                     .withZone(ZoneId.systemDefault())
                     .format(buildProperties.time)

@@ -85,6 +85,7 @@ class BuildInfoDto : Serializable {
 
     var version: String? = null
     var artifact: String? = null
+    var serverHost: String? = null
     var group: String? = null
     var name: String? = null
     var time: String? = null
