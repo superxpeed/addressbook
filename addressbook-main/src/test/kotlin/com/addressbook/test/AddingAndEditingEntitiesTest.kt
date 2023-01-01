@@ -36,7 +36,7 @@ class AddingAndEditingEntitiesTest {
             }
         }.start()
         // Open login page
-        driver.get("https://localhost:9000")
+        driver.get("http://localhost:9000")
         // Wait until page is loaded
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]")))
         // Locate login input field
@@ -189,7 +189,7 @@ class AddingAndEditingEntitiesTest {
             }
         }.start()
         // Open login page
-        driver.get("https://localhost:9000")
+        driver.get("http://localhost:9000")
         // Wait until page is loaded
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]")))
         // Locate login input field
