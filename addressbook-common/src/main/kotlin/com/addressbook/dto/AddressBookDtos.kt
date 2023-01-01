@@ -4,6 +4,9 @@ import com.addressbook.model.Contact
 import com.addressbook.model.Organization
 import com.addressbook.model.Person
 import java.io.Serializable
+import java.text.SimpleDateFormat
+
+val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
 class ContactDto constructor(contact: Contact? = null) : Serializable {
     var personId: String? = null
@@ -40,7 +43,7 @@ class OrganizationDto(id: String?,
             organization?.addr?.street,
             organization?.addr?.zip,
             organization?.type?.eng,
-            organization?.lastUpdated.toString())
+            dateFormatter.format(organization?.lastUpdated))
 
     init {
         this.id = id

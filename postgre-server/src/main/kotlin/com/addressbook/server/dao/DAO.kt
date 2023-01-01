@@ -109,7 +109,7 @@ class DAO : AddressBookDAO {
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         if (lock) {
             val userLocked = entityManager.find(Lock::class.java, key)
-            return if(userLocked == null) {
+            return if (userLocked == null) {
                 entityManager.persist(Lock(key, user))
                 true
             } else true
@@ -204,7 +204,12 @@ class DAO : AddressBookDAO {
                     "NumberFilter" -> {
                         addSql = it.name + getComparator(it) + Integer.parseInt(it.value)
                     }
-                    "TextFilter" -> addSql = it.name + " like '%" + it.value?.replace("'", "''") + "%'"
+
+                    "TextFilter" -> {
+                        if(it.name == "type") it.value = it.value?.uppercase()
+                        addSql = it.name + " like '%" + it.value?.replace("'", "''") + "%'"
+                    }
+
                     "DateFilter" -> {
                         it.value = it.value?.substring(0, 10)
                         val tailLower = " 00:00:00.00000'"
@@ -214,18 +219,23 @@ class DAO : AddressBookDAO {
                             "=" -> {
                                 addSql = it.name + " BETWEEN TO_TIMESTAMP('" + it.value + tailLower + " , " + format + ") AND TO_TIMESTAMP('" + it.value + tailUpper + " , " + format + ")"
                             }
+
                             "!=" -> {
                                 addSql = it.name + " < TO_TIMESTAMP('" + it.value + tailLower + " , " + format + ") AND " + it.name + " > TO_TIMESTAMP('" + it.value + tailUpper + " , " + format + ")"
                             }
+
                             ">" -> {
                                 addSql = it.name + " > TO_TIMESTAMP('" + it.value + tailUpper + " , " + format + ")"
                             }
+
                             ">=" -> {
                                 addSql = it.name + " > TO_TIMESTAMP('" + it.value + tailLower + " , " + format + ")"
                             }
+
                             "<=" -> {
                                 addSql = it.name + " < TO_TIMESTAMP('" + it.value + tailUpper + " , " + format + ")"
                             }
+
                             "<" -> {
                                 addSql = it.name + " < TO_TIMESTAMP('" + it.value + tailLower + " , " + format + ")"
                             }

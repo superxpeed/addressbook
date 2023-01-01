@@ -11,6 +11,8 @@ import java.sql.Timestamp
 import java.util.*
 import javax.persistence.Column
 import javax.persistence.Embeddable
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 
 @javax.persistence.Entity
 @javax.persistence.Table(name = "organizations")
@@ -33,6 +35,7 @@ class Organization constructor(id: String?, name: String?, addr: Address?, type:
     var addr: Address? = null
 
     @QuerySqlField(index = true)
+    @Enumerated(EnumType.STRING)
     var type: OrganizationType? = null
 
     @QuerySqlField(index = true)
