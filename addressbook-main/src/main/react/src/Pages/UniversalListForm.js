@@ -58,7 +58,7 @@ export default class UniversalListForm extends React.Component {
 
     componentDidMount() {
         let currentUrl = window.location.hash;
-        this.refreshTable(1, 10, "id", "desc", [], Caches.ORGANIZATION_CACHE);
+        this.refreshTable(1, 15, "id", "desc", [], Caches.ORGANIZATION_CACHE);
         this.props.getBreadcrumbs(HashUtils.cleanHash(currentUrl));
     }
 
@@ -77,7 +77,7 @@ export default class UniversalListForm extends React.Component {
                 comparator: "",
                 type: "TextFilter",
             });
-            this.refreshTable(1, 10, "id", "desc", converted, Caches.PERSON_CACHE);
+            this.refreshTable(1, 15, "id", "desc", converted, Caches.PERSON_CACHE);
             this.setState({
                 selectedRowsOrgId: nextProps.selectedRowsOrganization[0].id,
             });

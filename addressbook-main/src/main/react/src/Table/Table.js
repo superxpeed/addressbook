@@ -20,7 +20,7 @@ export class Table extends React.Component {
         prevFilterResultLength: 0,
         sortName: "id",
         sortOrder: "desc",
-        sizePerPage: 10,
+        sizePerPage: 15,
         page: 1,
         filterObj: {},
     };
@@ -176,7 +176,7 @@ export class Table extends React.Component {
         }
 
         const options = {
-            sizePerPageList: [10, 25, 50],
+            sizePerPageList: [10, 15, 25, 50],
             sizePerPage: this.state.sizePerPage,
             paginationShowsTotal: renderShowsTotal,
             noDataText: "No data to display",
