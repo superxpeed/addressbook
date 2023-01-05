@@ -65,6 +65,7 @@ class DAO : AddressBookDAO {
             name = organizationDto.name
             addr = Address(organizationDto.street, organizationDto.zip)
         }
+        organizationDto.lastUpdated = dateFormatter.format(organization.lastUpdated)
         dataStore.save(organization)
         return organizationDto
     }

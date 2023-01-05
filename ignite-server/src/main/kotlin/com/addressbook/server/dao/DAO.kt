@@ -84,6 +84,7 @@ class DAO : AddressBookDAO {
             name = organizationDto.name
             addr = Address(organizationDto.street, organizationDto.zip)
         }
+        organizationDto.lastUpdated = dateFormatter.format(organization.lastUpdated)
         cacheOrganization?.put(organization.id, organization)
         return organizationDto
     }

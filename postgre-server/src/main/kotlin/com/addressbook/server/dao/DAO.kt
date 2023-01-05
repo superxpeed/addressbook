@@ -28,6 +28,7 @@ class DAO : AddressBookDAO {
             addr = Address(organizationDto.street, organizationDto.zip)
         }
         entityManager.persist(organization)
+        organizationDto.lastUpdated = dateFormatter.format(organization.lastUpdated)
         return organizationDto
     }
 
