@@ -89,6 +89,12 @@ class DAO : AddressBookDAO {
         return organizationDto
     }
 
+    override fun getOrganizationById(id: String): OrganizationDto? {
+        val cacheOrganization: IgniteCache<String, Organization>? = ignite.getOrCreateCache(FieldDescriptor.ORGANIZATION_CACHE)
+        val organization = cacheOrganization?.get(id) ?: return null
+        return OrganizationDto(organization)
+    }
+
     override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
         val cachePerson: IgniteCache<String, Person>? = ignite.getOrCreateCache(FieldDescriptor.PERSON_CACHE)
         val person = personDto.id?.let { cachePerson?.get(personDto.id) } ?: Person().also { personDto.id = it.id }
@@ -101,6 +107,12 @@ class DAO : AddressBookDAO {
         }
         cachePerson?.put(person.id, person)
         return personDto
+    }
+
+    override fun getPersonById(id: String): PersonDto? {
+        val cachePerson: IgniteCache<String, Person>? = ignite.getOrCreateCache(FieldDescriptor.PERSON_CACHE)
+        val person = cachePerson?.get(id) ?: return null
+        return PersonDto(person)
     }
 
     override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, targetPersonId: String): List<ContactDto> {

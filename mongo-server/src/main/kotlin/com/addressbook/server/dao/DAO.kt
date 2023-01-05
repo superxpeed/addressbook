@@ -70,6 +70,11 @@ class DAO : AddressBookDAO {
         return organizationDto
     }
 
+    override fun getOrganizationById(id: String): OrganizationDto? {
+        val organization = getById("id", id, Organization::class.java) ?: return null
+        return OrganizationDto(organization)
+    }
+
     override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
         val person = personDto.id?.let { getById("id", personDto.id, Person::class.java) }
                 ?: Person().also { personDto.id = it.id }
@@ -82,6 +87,11 @@ class DAO : AddressBookDAO {
         }
         dataStore.save(person)
         return personDto
+    }
+
+    override fun getPersonById(id: String): PersonDto? {
+        val person = getById("id", id, Person::class.java) ?: return null
+        return PersonDto(person)
     }
 
     override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, targetPersonId: String): List<ContactDto> {
@@ -240,6 +250,7 @@ class DAO : AddressBookDAO {
                             "<" -> temp = tempFieldEnd?.lessThan(query)
                         }
                     }
+
                     "TextFilter" -> temp = temp?.field(it.name)?.containsIgnoreCase(it.value)
                     "DateFilter" -> {
                         it.value = it.value?.substring(0, 10)
@@ -250,18 +261,23 @@ class DAO : AddressBookDAO {
                             "=" -> {
                                 temp = temp?.field(it.name)?.greaterThan(Timestamp(dateBefore.time))?.field(it.name)?.lessThan(Timestamp(dateAfter.time))
                             }
+
                             "!=" -> {
                                 temp = temp?.field(it.name)?.lessThan(Timestamp(dateBefore.time))?.field(it.name)?.greaterThan(Timestamp(dateAfter.time))
                             }
+
                             ">" -> {
                                 temp = temp?.field(it.name)?.greaterThan(Timestamp(dateOther.time))
                             }
+
                             ">=" -> {
                                 temp = temp?.field(it.name)?.greaterThanOrEq(Timestamp(dateOther.time))
                             }
+
                             "<=" -> {
                                 temp = temp?.field(it.name)?.lessThanOrEq(Timestamp(dateOther.time))
                             }
+
                             "<" -> {
                                 temp = temp?.field(it.name)?.lessThan(Timestamp(dateOther.time))
                             }

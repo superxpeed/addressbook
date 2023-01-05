@@ -33,6 +33,12 @@ class DAO : AddressBookDAO {
     }
 
     @Transactional
+    override fun getOrganizationById(id: String): OrganizationDto? {
+        val organization = entityManager.find(Organization::class.java, id) ?: return null
+        return OrganizationDto(organization)
+    }
+
+    @Transactional
     override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
         val person = personDto.id?.let { entityManager.find(Person::class.java, personDto.id) }
                 ?: Person().also { personDto.id = it.id }
@@ -45,6 +51,12 @@ class DAO : AddressBookDAO {
         }
         entityManager.persist(person)
         return personDto
+    }
+
+    @Transactional
+    override fun getPersonById(id: String): PersonDto? {
+        val person = entityManager.find(Person::class.java, id) ?: return null
+        return PersonDto(person)
     }
 
     @Transactional
@@ -207,7 +219,7 @@ class DAO : AddressBookDAO {
                     }
 
                     "TextFilter" -> {
-                        if(it.name == "type") it.value = it.value?.uppercase()
+                        if (it.name == "type") it.value = it.value?.uppercase()
                         addSql = it.name + " like '%" + it.value?.replace("'", "''") + "%'"
                     }
 

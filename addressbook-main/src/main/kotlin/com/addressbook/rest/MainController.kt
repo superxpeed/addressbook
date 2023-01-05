@@ -67,6 +67,20 @@ class MainController {
         }
     }
 
+    @GetMapping("/getOrganizationById")
+    fun getOrganizationById(@RequestParam id: String): CompletableFuture<PageDataDto<OrganizationDto>> {
+        return CompletableFuture.supplyAsync {
+            return@supplyAsync PageDataDto(dao.getOrganizationById(id))
+        }
+    }
+
+    @GetMapping("/getPersonById")
+    fun getPersonById(@RequestParam id: String): CompletableFuture<PageDataDto<PersonDto>> {
+        return CompletableFuture.supplyAsync {
+            return@supplyAsync PageDataDto(dao.getPersonById(id))
+        }
+    }
+
     @PostMapping("/saveOrCreateOrganization")
     fun saveOrCreateOrganization(@RequestBody organizationDto: OrganizationDto, authentication: Authentication): CompletableFuture<PageDataDto<OrganizationDto>> {
         val login = (authentication.principal as AppUserDetails).username
@@ -159,7 +173,7 @@ class MainController {
     @GetMapping("/getBuildInfo")
     fun getBuildInfo(): BuildInfoDto? {
         val buildInfoDto = BuildInfoDto()
-        with(buildInfoDto){
+        with(buildInfoDto) {
             version = buildProperties.version
             artifact = buildProperties.artifact
             group = buildProperties.group

@@ -1,5 +1,6 @@
 package com.addressbook
 
+import com.addressbook.annotations.LoggedGetRequest
 import com.addressbook.annotations.LoggedPostRequest
 import com.addressbook.dto.*
 import com.addressbook.model.User
@@ -13,8 +14,14 @@ interface AddressBookDAO {
     @LoggedPostRequest("/createOrUpdateOrganization")
     fun createOrUpdateOrganization(@RequestBody organizationDto: OrganizationDto, @RequestParam user: String): OrganizationDto
 
+    @LoggedGetRequest("/getOrganizationById")
+    fun getOrganizationById(@RequestParam id: String): OrganizationDto?
+
     @LoggedPostRequest("/createOrUpdatePerson")
     fun createOrUpdatePerson(@RequestBody personDto: PersonDto, @RequestParam user: String): PersonDto
+
+    @LoggedGetRequest("/getPersonById")
+    fun getPersonById(@RequestParam id: String): PersonDto?
 
     @LoggedPostRequest("/createOrUpdateContacts")
     fun createOrUpdateContacts(@RequestBody contactDtos: List<ContactDto>, @RequestParam user: String, @RequestParam targetPersonId: String): List<ContactDto>
