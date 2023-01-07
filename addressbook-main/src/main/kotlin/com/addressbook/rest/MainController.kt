@@ -50,7 +50,7 @@ class MainController {
         }
     }
 
-    @PostMapping("/getContactList")
+    @GetMapping("/getContactList")
     fun getContactList(@RequestParam(value = "personId") id: String): CompletableFuture<PageDataDto<TableDataDto<ContactDto>>> {
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(TableDataDto(dao.getContactsByPersonId(id)))

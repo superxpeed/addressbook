@@ -65,7 +65,7 @@ export class PersonComponent extends React.Component {
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
         fetch(url.GET_CONTACT_LIST + "?personId=" + id, {
-            method: "post",
+            method: "get",
             headers: headers,
         })
             .then((response) => {
