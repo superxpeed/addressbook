@@ -74,9 +74,10 @@ export class ContactContainer extends React.Component {
 
     deleteContact = (params) => {
         let contacts = new Map(this.state.contacts);
+        let conRefs = new Map(this.state.conRefs);
         contacts.delete(params.id + "");
-        this.state.conRefs.delete(params.id);
-        this.setState({contacts: contacts});
+        conRefs.delete(params.id);
+        this.setState({contacts: contacts, conRefs});
     };
 
     render() {
