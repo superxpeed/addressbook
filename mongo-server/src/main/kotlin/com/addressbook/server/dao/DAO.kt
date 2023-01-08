@@ -95,7 +95,6 @@ class DAO : AddressBookDAO {
     }
 
     override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, targetPersonId: String): List<ContactDto> {
-        if (contactDtos.isEmpty()) return contactDtos
         val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         contactDtos.forEach {
             it.personId = targetPersonId

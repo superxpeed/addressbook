@@ -116,7 +116,6 @@ class DAO : AddressBookDAO {
     }
 
     override fun createOrUpdateContacts(contactDtos: List<ContactDto>, user: String, targetPersonId: String): List<ContactDto> {
-        if (contactDtos.isEmpty()) return contactDtos
         val cacheContacts: IgniteCache<String, Contact>? = ignite.getOrCreateCache(FieldDescriptor.CONTACT_CACHE)
         val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         val tx = ignite.transactions()?.txStart()
