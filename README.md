@@ -4,7 +4,11 @@
 
 ### [Android client application](https://github.com/dredwardhyde/addressbook-android-app)
 
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/screenshots/all_panels.png" width="1000"/>  
+#### Light Theme
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/screenshots/all_panels_light.png" width="1000"/>  
+
+#### Dark Theme
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/screenshots/all_panels_dark.png" width="1000"/>  
 
 ### Web client application
 https://user-images.githubusercontent.com/8986329/182024391-09657aa1-cce6-49a0-9f12-16876dcb965e.mp4
