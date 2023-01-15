@@ -14,6 +14,13 @@ export var Caches = {
     PERSON_CACHE: "com.addressbook.model.Person",
 };
 
+export const organizationTypes = {
+    0: 'Non profit',
+    1: 'Private',
+    2: 'Government',
+    3: 'Public'
+};
+
 export class OrgTypes {
     static getEngType = (type) => {
         if (type === "Non profit") return "0";

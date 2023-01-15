@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
 import * as TableActions from "./TableActions";
+import * as Utils from "../Common/Utils";
 
 export const FILTER_REF = "filter_";
 
@@ -82,6 +83,15 @@ export class Table extends React.Component {
                         value: filterObj[key].value,
                         comparator: "",
                         type: filterObj[key].type,
+                    });
+                }
+
+                if (filterObj[key].type === "SelectFilter") {
+                    converted.push({
+                        name: key,
+                        value: filterObj[key].value,
+                        comparator: "",
+                        type: "TextFilter",
                     });
                 }
             }
@@ -190,6 +200,11 @@ export class Table extends React.Component {
         };
 
         const getFilterByType = (info) => {
+            if (info.name === "type")
+                return {
+                    type: "SelectFilter",
+                    options: Utils.organizationTypes,
+                };
             if (info.type === "java.lang.String")
                 return {
                     type: "TextFilter",
