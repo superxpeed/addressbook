@@ -94,12 +94,12 @@ class DAO : AddressBookDAO {
     }
 
     @Transactional
-    override fun ifOrganizationExists(key: String): Boolean {
+    override fun ifOrganizationExists(key: String?): Boolean {
         return entityManager.find(Organization::class.java, key) != null
     }
 
     @Transactional
-    override fun ifPersonExists(key: String): Boolean {
+    override fun ifPersonExists(key: String?): Boolean {
         return entityManager.find(Person::class.java, key) != null
     }
 

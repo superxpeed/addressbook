@@ -63,10 +63,10 @@ interface AddressBookDAO {
     fun notLockedByUser(@RequestParam key: String, @RequestParam user: String): Boolean
 
     @LoggedPostRequest("/ifOrganizationExists")
-    fun ifOrganizationExists(@RequestParam key: String): Boolean
+    fun ifOrganizationExists(@RequestParam key: String?): Boolean
 
     @LoggedPostRequest("/ifPersonExists")
-    fun ifPersonExists(@RequestParam key: String): Boolean
+    fun ifPersonExists(@RequestParam key: String?): Boolean
 
     @LoggedPostRequest("/ifContactExists")
     fun ifContactExists(@RequestParam key: String): Boolean

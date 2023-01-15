@@ -153,12 +153,12 @@ class DAO : AddressBookDAO {
         return user != userLocked.login
     }
 
-    override fun ifOrganizationExists(key: String): Boolean {
+    override fun ifOrganizationExists(key: String?): Boolean {
         val cacheOrganization: IgniteCache<String, Organization>? = ignite.getOrCreateCache(FieldDescriptor.ORGANIZATION_CACHE)
         return cacheOrganization?.get(key) != null
     }
 
-    override fun ifPersonExists(key: String): Boolean {
+    override fun ifPersonExists(key: String?): Boolean {
         val cachePerson: IgniteCache<String, Person>? = ignite.getOrCreateCache(FieldDescriptor.PERSON_CACHE)
         return cachePerson?.get(key) != null
     }
@@ -259,8 +259,46 @@ class DAO : AddressBookDAO {
                 var addSql = ""
                 when (it.type) {
                     "NumberFilter" -> addSql = it.name + getComparator(it) + Integer.parseInt(it.value)
-                    "TextFilter" -> addSql = it.name + " like '%" + it.value?.replace("'", "''") + "%'"
-                    "DateFilter" -> addSql = it.name + getComparator(it) + "'" + it.value + "'"
+                    "TextFilter" -> if (it.name == "type") {
+                        it.value?.let { typeOrdinal ->
+                            if (typeOrdinal.isNotBlank() && typeOrdinal.toInt() >= 0 && typeOrdinal.toInt() < OrganizationType.values().size)
+                                addSql = it.name + " like '%" + OrganizationType.values()[typeOrdinal.toInt()].name + "%'"
+                        }
+                    } else {
+                        addSql = it.name + " like '%" + it.value?.replace("'", "''") + "%'"
+                    }
+
+                    "DateFilter" -> {
+                        it.value = it.value?.substring(0, 10)
+                        val tailLower = " 00:00:00.000'"
+                        val tailUpper = " 23:59:59.999'"
+                        val format = "'yyyy-MM-dd HH:ss:SSS'"
+                        when (it.comparator) {
+                            "=" -> {
+                                addSql = it.name + " BETWEEN PARSEDATETIME('" + it.value + tailLower + " , " + format + ") AND PARSEDATETIME('" + it.value + tailUpper + " , " + format + ")"
+                            }
+
+                            "!=" -> {
+                                addSql = it.name + " < PARSEDATETIME('" + it.value + tailLower + " , " + format + ") AND " + it.name + " > PARSEDATETIME('" + it.value + tailUpper + " , " + format + ")"
+                            }
+
+                            ">" -> {
+                                addSql = it.name + " > PARSEDATETIME('" + it.value + tailUpper + " , " + format + ")"
+                            }
+
+                            ">=" -> {
+                                addSql = it.name + " > PARSEDATETIME('" + it.value + tailLower + " , " + format + ")"
+                            }
+
+                            "<=" -> {
+                                addSql = it.name + " < PARSEDATETIME('" + it.value + tailUpper + " , " + format + ")"
+                            }
+
+                            "<" -> {
+                                addSql = it.name + " < PARSEDATETIME('" + it.value + tailLower + " , " + format + ")"
+                            }
+                        }
+                    }
                 }
                 if (filterDto.indexOf(it) == 0) baseSql.append(" where ")
                 baseSql.append(addSql)

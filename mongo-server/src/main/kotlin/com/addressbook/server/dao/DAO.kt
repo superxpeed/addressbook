@@ -125,11 +125,11 @@ class DAO : AddressBookDAO {
         return user != userLocked.login
     }
 
-    override fun ifOrganizationExists(key: String): Boolean {
+    override fun ifOrganizationExists(key: String?): Boolean {
         return getById("id", key, Organization::class.java) != null
     }
 
-    override fun ifPersonExists(key: String): Boolean {
+    override fun ifPersonExists(key: String?): Boolean {
         return getById("id", key, Person::class.java) != null
     }
 
