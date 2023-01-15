@@ -42,7 +42,7 @@ class OrganizationDto(id: String?,
             organization?.name,
             organization?.addr?.street,
             organization?.addr?.zip,
-            organization?.type?.eng,
+            "" + organization?.type?.ordinal,
             dateFormatter.format(organization?.lastUpdated))
 
     init {

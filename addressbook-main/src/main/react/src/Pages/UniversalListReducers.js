@@ -23,6 +23,11 @@ export default function universalListReducer(
 ) {
     switch (action.type) {
         case types.GET_LIST + Caches.ORGANIZATION_CACHE + types.SUCCESS:
+            if(action.data.data != null){
+                action.data.data.forEach(
+                    x => x.type = OrgTypes.getNumType(x.type)
+                )
+            }
             return Object.assign({}, state, {
                 tableDataOrganization: action.data,
                 fieldDescriptionMapOrganization: action.fieldDescriptionMap,
