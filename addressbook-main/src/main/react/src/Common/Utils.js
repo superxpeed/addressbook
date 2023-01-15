@@ -10,16 +10,18 @@ export const DISMISS_ALERT = "DISMISS_ALERT";
 export const CLEAR_ALERTS = "CLEAR_ALERTS";
 
 export var Caches = {
-    ORGANIZATION_CACHE: "com.addressbook.model.Organization",
-    PERSON_CACHE: "com.addressbook.model.Person",
+    ORGANIZATION_CACHE: "com.addressbook.model.Organization", PERSON_CACHE: "com.addressbook.model.Person",
 };
 
 export const organizationTypes = {
-    0: 'Non profit',
-    1: 'Private',
-    2: 'Government',
-    3: 'Public'
+    0: "Non profit", 1: "Private", 2: "Government", 3: "Public"
 };
+
+export const currencies = ["AED", "ALL", "ARS", "AUD", "BAM", "BGN", "BHD", "BOB", "BRL", "BYN", "CAD", "CHF", "CLP",
+    "CNY", "COP", "CRC", "CSD", "CUP", "CZK", "DKK", "DOP", "DZD", "EGP", "EUR", "GBP", "GTQ", "HKD", "HNL", "HRK",
+    "HUF", "IDR", "ILS", "INR", "IQD", "ISK", "JOD", "JPY", "KRW", "KWD", "LBP", "LYD", "MAD", "MKD", "MXN", "MYR",
+    "NIO", "NOK", "NZD", "OMR", "PAB", "PEN", "PHP", "PLN", "PYG", "QAR", "RON", "RSD", "RUB", "SAR", "SDG", "SEK",
+    "SGD", "SVC", "SYP", "THB", "TND", "TRY", "TWD", "UAH", "USD", "UYU", "VES", "VND", "YER", "ZAR"]
 
 export class OrgTypes {
     static getEngType = (type) => {
@@ -55,7 +57,7 @@ export class HashUtils {
 export class AuthTokenUtils {
     static addAuthToken = (headers) => {
         let auth = Cookies.get("Authorization")
-        if(auth != null && auth !== window.sessionStorage.getItem("auth-token")){
+        if (auth != null && auth !== window.sessionStorage.getItem("auth-token")) {
             window.sessionStorage.clear();
             window.sessionStorage.setItem("auth-token", auth);
         }
@@ -68,8 +70,7 @@ export class TitleConverter {
         let title = "";
         let result = field.split(/(?=[A-Z])/);
         result.forEach(function (value, index) {
-            if (index === 0) title += value[0].toUpperCase() + value.substr(1) + " ";
-            else title += value.toLowerCase() + " ";
+            if (index === 0) title += value[0].toUpperCase() + value.substr(1) + " "; else title += value.toLowerCase() + " ";
         });
         return title;
     };
@@ -81,11 +82,8 @@ export class TitleConverter {
 
 export class Generator {
     static uuidv4() {
-        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (
-            c
-        ) {
-            let r = (Math.random() * 16) | 0,
-                v = c === "x" ? r : (r & 0x3) | 0x8;
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+            let r = (Math.random() * 16) | 0, v = c === "x" ? r : (r & 0x3) | 0x8;
             return v.toString(16);
         });
     }

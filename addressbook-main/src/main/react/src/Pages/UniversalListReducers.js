@@ -5,28 +5,16 @@ import * as tableActions from "../Table/TableActions";
 const initialState = {
     tableDataOrganization: {
         data: [],
-    },
-    fieldDescriptionMapOrganization: {},
-    totalDataSizeOrganization: 0,
-    tableDataPerson: {
+    }, fieldDescriptionMapOrganization: {}, totalDataSizeOrganization: 0, tableDataPerson: {
         data: [],
-    },
-    fieldDescriptionMapPerson: {},
-    totalDataSizePerson: 0,
-    selectedRowsPerson: [],
-    selectedRowsOrganization: [],
+    }, fieldDescriptionMapPerson: {}, totalDataSizePerson: 0, selectedRowsPerson: [], selectedRowsOrganization: [],
 };
 
-export default function universalListReducer(
-    state = initialState,
-    action = {}
-) {
+export default function universalListReducer(state = initialState, action = {}) {
     switch (action.type) {
         case types.GET_LIST + Caches.ORGANIZATION_CACHE + types.SUCCESS:
-            if(action.data.data != null){
-                action.data.data.forEach(
-                    x => x.type = OrgTypes.getNumType(x.type)
-                )
+            if (action.data.data != null) {
+                action.data.data.forEach(x => x.type = OrgTypes.getNumType(x.type))
             }
             return Object.assign({}, state, {
                 tableDataOrganization: action.data,
@@ -43,17 +31,11 @@ export default function universalListReducer(
             if (action.isSelected) {
                 if (undefined === action.ctrlKey) {
                     return Object.assign({}, state, {
-                        selectedRowsOrganization: [
-                            ...state.selectedRowsOrganization,
-                            action.row,
-                        ],
+                        selectedRowsOrganization: [...state.selectedRowsOrganization, action.row,],
                     });
                 } else if (action.ctrlKey) {
                     return Object.assign({}, state, {
-                        selectedRowsOrganization: [
-                            ...state.selectedRowsOrganization,
-                            action.row,
-                        ],
+                        selectedRowsOrganization: [...state.selectedRowsOrganization, action.row,],
                     });
                 } else {
                     return Object.assign({}, state, {
@@ -62,9 +44,7 @@ export default function universalListReducer(
                 }
             } else {
                 return Object.assign({}, state, {
-                    selectedRowsOrganization: state.selectedRowsOrganization.filter(
-                        (it) => it.id !== action.row.id
-                    ),
+                    selectedRowsOrganization: state.selectedRowsOrganization.filter((it) => it.id !== action.row.id),
                 });
             }
         case tableActions.ON_SELECT_ROW + Caches.PERSON_CACHE:
@@ -84,27 +64,19 @@ export default function universalListReducer(
                 }
             } else {
                 return Object.assign({}, state, {
-                    selectedRowsPerson: state.selectedRowsPerson.filter(
-                        (it) => it.id !== action.row.id
-                    ),
+                    selectedRowsPerson: state.selectedRowsPerson.filter((it) => it.id !== action.row.id),
                 });
             }
 
         case tableActions.UPDATE_ROW_IN_TABLE + Caches.PERSON_CACHE: {
-            let newSelected = state.selectedRowsPerson.filter(
-                (it) => it.id !== action.row.id
-            );
-            let newTableData = state.tableDataPerson.data.filter(
-                (it) => it.id !== action.row.id
-            );
+            let newSelected = state.selectedRowsPerson.filter((it) => it.id !== action.row.id);
+            let newTableData = state.tableDataPerson.data.filter((it) => it.id !== action.row.id);
             newSelected.push(action.row);
             newTableData.push(action.row);
             return Object.assign({}, state, {
                 tableDataPerson: {
-                    data: newTableData,
-                    totalDataSize: state.tableDataPerson.totalDataSize,
-                },
-                selectedRowsPerson: newSelected,
+                    data: newTableData, totalDataSize: state.tableDataPerson.totalDataSize,
+                }, selectedRowsPerson: newSelected,
             });
         }
 
@@ -115,24 +87,19 @@ export default function universalListReducer(
             newSelected.push(action.row);
             newTableData.push(action.row);
             return Object.assign({}, state, {
-                tableDataPerson: {data: newTableData, totalDataSize: prevSize + 1},
-                selectedRowsPerson: newSelected,
+                tableDataPerson: {data: newTableData, totalDataSize: prevSize + 1}, selectedRowsPerson: newSelected,
             });
         }
 
         case tableActions.UPDATE_ROW_IN_TABLE + Caches.ORGANIZATION_CACHE: {
-            let newTableData = state.tableDataOrganization.data.filter(
-                (it) => it.id !== action.row.id
-            );
+            let newTableData = state.tableDataOrganization.data.filter((it) => it.id !== action.row.id);
             let org = Object.assign({}, action.row);
             org["type"] = OrgTypes.getNumType(action.row["type"]);
             newTableData.push(org);
             return Object.assign({}, state, {
                 tableDataOrganization: {
-                    data: newTableData,
-                    totalDataSize: state.tableDataOrganization.totalDataSize,
-                },
-                selectedRowsOrganization: [org],
+                    data: newTableData, totalDataSize: state.tableDataOrganization.totalDataSize,
+                }, selectedRowsOrganization: [org],
             });
         }
 
@@ -144,10 +111,8 @@ export default function universalListReducer(
             newTableData.push(org);
             return Object.assign({}, state, {
                 tableDataOrganization: {
-                    data: newTableData,
-                    totalDataSize: prevSize + 1,
-                },
-                selectedRowsOrganization: [org],
+                    data: newTableData, totalDataSize: prevSize + 1,
+                }, selectedRowsOrganization: [org],
             });
         }
 
@@ -158,25 +123,17 @@ export default function universalListReducer(
                 });
             } else {
                 return Object.assign({}, state, {
-                    selectedRowsPerson: state.selectedRowsPerson.filter(
-                        (x) => action.rows.indexOf(x) < 0
-                    ),
+                    selectedRowsPerson: state.selectedRowsPerson.filter((x) => action.rows.indexOf(x) < 0),
                 });
             }
-        case tableActions.ON_SELECT_ALL_ROWS_ON_CURRENT_PAGE +
-        Caches.ORGANIZATION_CACHE:
+        case tableActions.ON_SELECT_ALL_ROWS_ON_CURRENT_PAGE + Caches.ORGANIZATION_CACHE:
             if (action.isSelected) {
                 return Object.assign({}, state, {
-                    selectedRowsOrganization: [
-                        ...state.selectedRowsOrganization,
-                        ...action.rows,
-                    ],
+                    selectedRowsOrganization: [...state.selectedRowsOrganization, ...action.rows,],
                 });
             } else {
                 return Object.assign({}, state, {
-                    selectedRowsOrganization: state.selectedRowsOrganization.filter(
-                        (x) => action.rows.indexOf(x) < 0
-                    ),
+                    selectedRowsOrganization: state.selectedRowsOrganization.filter((x) => action.rows.indexOf(x) < 0),
                 });
             }
         default:

@@ -1,7 +1,7 @@
 {
   "name": "addressbook",
   "version": "1.0.0",
-  "description": "Address Book",
+  "description": "Addressbook",
   "main": "index.js",
   "scripts": {
     "webpack-dev-server": "webpack-dev-server --colors --config ./webpack.config.js --port 7070",

@@ -1,11 +1,5 @@
 import {
-    ADD_ALERT,
-    AuthTokenUtils,
-    CLEAR_ALERTS,
-    DISMISS_ALERT,
-    GET_BREADCRUMBS,
-    GET_MENU,
-    SUCCESS
+    ADD_ALERT, AuthTokenUtils, CLEAR_ALERTS, DISMISS_ALERT, GET_BREADCRUMBS, GET_MENU, SUCCESS
 } from "../Common/Utils";
 import {asyncCommonCatch, ifNoAuthorizedRedirect,} from "./UniversalListActions";
 import * as url from "../Common/Url";
@@ -19,8 +13,7 @@ export function getNextLevelMenus(currentUrl) {
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
         fetch(url.GET_NEXT_LEVEL_MENUS + "?currentUrl=" + currentUrl, {
-            method: "get",
-            headers: headers,
+            method: "get", headers: headers,
         })
             .then((response) => {
                 ifNoAuthorizedRedirect(response);
@@ -30,13 +23,11 @@ export function getNextLevelMenus(currentUrl) {
             .then((text) => {
                 if (isOk) {
                     dispatch({
-                        type: GET_MENU + SUCCESS,
-                        data: JSON.parse(text).data,
+                        type: GET_MENU + SUCCESS, data: JSON.parse(text).data,
                     });
                 } else {
                     dispatch({
-                        type: ADD_ALERT,
-                        alert: JSON.parse(text),
+                        type: ADD_ALERT, alert: JSON.parse(text),
                     });
                 }
             })
@@ -49,8 +40,15 @@ export function getNextLevelMenus(currentUrl) {
 export function showCommonErrorAlert(text) {
     return (dispatch) => {
         dispatch({
-            type: ADD_ALERT,
-            alert: JSON.parse(text),
+            type: ADD_ALERT, alert: JSON.parse(text),
+        });
+    };
+}
+
+export function showCommonAlert(headline) {
+    return (dispatch) => {
+        dispatch({
+            type: ADD_ALERT, alert: {type: "success", headline: headline},
         });
     };
 }
@@ -63,8 +61,7 @@ export function getBreadcrumbs(currentUrl) {
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
         fetch(url.GET_BREADCRUMBS + "?currentUrl=" + currentUrl, {
-            method: "get",
-            headers: headers,
+            method: "get", headers: headers,
         })
             .then((response) => {
                 ifNoAuthorizedRedirect(response);
@@ -74,13 +71,11 @@ export function getBreadcrumbs(currentUrl) {
             .then((text) => {
                 if (isOk) {
                     dispatch({
-                        type: GET_BREADCRUMBS + SUCCESS,
-                        data: JSON.parse(text).data,
+                        type: GET_BREADCRUMBS + SUCCESS, data: JSON.parse(text).data,
                     });
                 } else {
                     dispatch({
-                        type: ADD_ALERT,
-                        alert: JSON.parse(text),
+                        type: ADD_ALERT, alert: JSON.parse(text),
                     });
                 }
             })
@@ -102,8 +97,7 @@ export function lockUnlockRecord(type, id, action, callback) {
         let headers = new Headers();
         AuthTokenUtils.addAuthToken(headers);
         fetch(targetUrl + "?type=" + type + "&id=" + id, {
-            method: "get",
-            headers: headers,
+            method: "get", headers: headers,
         })
             .then((response) => {
                 ifNoAuthorizedRedirect(response);
@@ -113,14 +107,12 @@ export function lockUnlockRecord(type, id, action, callback) {
             .then((text) => {
                 if (isOk) {
                     dispatch({
-                        type: ADD_ALERT,
-                        alert: JSON.parse(text).data,
+                        type: ADD_ALERT, alert: JSON.parse(text).data,
                     });
                     if (callback) callback(JSON.parse(text).data.type);
                 } else {
                     dispatch({
-                        type: ADD_ALERT,
-                        alert: JSON.parse(text),
+                        type: ADD_ALERT, alert: JSON.parse(text),
                     });
                 }
             })
@@ -136,8 +128,7 @@ export function logout() {
         let headers = new Headers();
         AuthTokenUtils.addAuthToken(headers);
         fetch(url.LOGOUT, {
-            method: "get",
-            headers: headers,
+            method: "get", headers: headers,
         }).then((response) => {
             isOk = response.ok;
             if (isOk) {
@@ -152,8 +143,7 @@ export function logout() {
 export function dismissAlert(alert) {
     return (dispatch) => {
         dispatch({
-            type: DISMISS_ALERT,
-            alert: alert,
+            type: DISMISS_ALERT, alert: alert,
         });
     };
 }

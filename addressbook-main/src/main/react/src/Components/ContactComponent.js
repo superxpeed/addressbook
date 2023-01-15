@@ -29,29 +29,22 @@ export class ContactComponent extends React.Component {
     }
 
     getFormControl(field) {
-        return (
-            <FormControl
+        return (<FormControl
                 style={{marginTop: "5px"}}
                 type="text"
                 value={this.state[field]}
                 placeholder={"Enter " + field}
                 id={field}
-                onChange={this.handleChange}
-            />
-        );
+                onChange={this.handleChange}/>);
     }
 
     render() {
-        return (
-            <Panel style={{marginBottom: "5px"}}>
+        return (<Panel style={{marginBottom: "5px"}}>
                 <Panel.Heading>
                     <Panel.Title
                         style={{display: "inline-block", width: "calc(100% - 25px)"}}
-                        toggle
-                    >
-                        {this.props.data.type === undefined
-                            ? "New contact"
-                            : ContactTypes.getEngType(this.props.data.type)}
+                        toggle>
+                        {this.props.data.type === undefined ? "New contact" : ContactTypes.getEngType(this.props.data.type)}
                     </Panel.Title>
                     <Button
                         style={{
@@ -63,8 +56,7 @@ export class ContactComponent extends React.Component {
                             position: "relative",
                             padding: "6px",
                         }}
-                        onClick={this.props.deleteContact.bind(null, {id: this.props.id})}
-                    >
+                        onClick={this.props.deleteContact.bind(null, {id: this.props.id})}>
                         X
                     </Button>
                 </Panel.Heading>
@@ -75,8 +67,7 @@ export class ContactComponent extends React.Component {
                         componentClass="select"
                         value={this.state.type}
                         placeholder="1"
-                        onChange={this.handleChange}
-                    >
+                        onChange={this.handleChange}>
                         <option value="0">Mobile phone</option>
                         <option value="1">Home phone</option>
                         <option value="2">Address</option>
@@ -85,7 +76,6 @@ export class ContactComponent extends React.Component {
                     {this.getFormControl("data")}
                     {this.getFormControl("description")}
                 </Panel.Body>
-            </Panel>
-        );
+            </Panel>);
     }
 }

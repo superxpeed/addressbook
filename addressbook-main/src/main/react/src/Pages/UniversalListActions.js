@@ -5,23 +5,17 @@ export const GET_LIST = "GET_LIST";
 
 export function asyncCommonCatch(action, error, dispatch) {
     const newAlert = {
-        id: new Date().getTime(),
-        type: "danger",
-        headline: "Error occurred!",
-        message: error.message,
+        id: new Date().getTime(), type: "danger", headline: "Error occurred!", message: error.message,
     };
     dispatch({
-        type: ADD_ALERT,
-        alert: newAlert,
+        type: ADD_ALERT, alert: newAlert,
     });
 }
 
 export function clearPersonSelection(rows) {
     return (dispatch) => {
         dispatch({
-            type: tableActions.ON_SELECT_ROW + Caches.PERSON_CACHE,
-            row: rows,
-            isSelected: false,
+            type: tableActions.ON_SELECT_ROW + Caches.PERSON_CACHE, row: rows, isSelected: false,
         });
     };
 }
@@ -34,9 +28,7 @@ export function getList(url, filterDto = null, cacheName) {
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
         fetch(url, {
-            method: "post",
-            headers: headers,
-            body: JSON.stringify(filterDto),
+            method: "post", headers: headers, body: JSON.stringify(filterDto),
         })
             .then((response) => {
                 ifNoAuthorizedRedirect(response);
@@ -53,8 +45,7 @@ export function getList(url, filterDto = null, cacheName) {
                     });
                 } else {
                     dispatch({
-                        type: ADD_ALERT,
-                        alert: JSON.parse(text),
+                        type: ADD_ALERT, alert: JSON.parse(text),
                     });
                 }
             })

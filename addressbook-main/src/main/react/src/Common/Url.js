@@ -16,10 +16,5 @@ export const CHECK_IF_PAGE_EXISTS = cp + "rest/checkIfPageExists";
 export const AUTH = cp + "auth";
 
 export function getContextPath() {
-    return (
-        window.location.pathname.substring(
-            0,
-            window.location.pathname.indexOf("/", 2)
-        ) + "/"
-    );
+    return (window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2)) + "/");
 }
