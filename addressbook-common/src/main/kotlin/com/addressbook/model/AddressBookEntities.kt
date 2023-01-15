@@ -35,7 +35,7 @@ class Organization constructor(id: String?, name: String?, addr: Address?, type:
     var addr: Address? = null
 
     @QuerySqlField(index = true)
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     var type: OrganizationType? = null
 
     @QuerySqlField(index = true)
