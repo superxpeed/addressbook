@@ -110,7 +110,7 @@ export class PersonComponent extends React.Component {
 
     savePerson = () => {
         let savedPerson;
-        let creation = this.state.person.id === undefined;
+        let creation = this.state.person.id == null;
         let headers = new Headers();
         AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
@@ -155,7 +155,7 @@ export class PersonComponent extends React.Component {
     };
 
     componentDidMount() {
-        if (this.state.person["id"] !== undefined && this.props.forUpdate) {
+        if (this.state.person["id"] != null && this.props.forUpdate) {
             this.getContactList(this.state.person["id"]);
             this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "lock", this.lockCallback);
         } else {
@@ -169,27 +169,22 @@ export class PersonComponent extends React.Component {
     }
 
     getValidationState(field) {
-        if (this.state.person[field] === undefined || this.state.person[field] === null) {
+        if (field === "salary") {
+            if (this.state.person["salary"] == null || this.state.person["salary"].length === 3 || this.state.person["salary"].length === 4) {
+                this.state.invalidFields.add(field);
+                return "error";
+            }
+        } else if (this.state.person[field] == null || this.state.person[field].length === 0) {
             this.state.invalidFields.add(field);
             return "error";
         }
-        const length = this.state.person[field].length;
-        if (length > 10) {
-            this.state.invalidFields.delete(field);
-            return "success";
-        } else if (length > 5) {
-            this.state.invalidFields.delete(field);
-            return "warning";
-        } else if (length >= 0) {
-            this.state.invalidFields.add(field);
-            return "error";
-        }
-        return null;
+        this.state.invalidFields.delete(field);
+        return "success";
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.person !== this.state.person) {
-            if (this.state.person !== undefined) {
+            if (this.state.person != null) {
                 this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "unlock");
             }
             let newResume = nextProps.person["resume"] == null ? "" : nextProps.person["resume"];

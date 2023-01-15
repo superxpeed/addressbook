@@ -237,7 +237,7 @@ class AddingAndEditingEntitiesTest {
         Thread.sleep(1_000)
         driver.findElement(By.xpath("//*[@id=\"firstName\"]")).sendKeys("First name")
         driver.findElement(By.xpath("//*[@id=\"lastName\"]")).sendKeys("Last name")
-        driver.findElement(By.xpath("//*[@id=\"salary\"]")).sendKeys("10000$/m")
+        driver.findElement(By.xpath("//*[@id=\"salary\"]")).sendKeys("10000")
 
         driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[1]/div[2]/div[1]/button/span")).click()
         Thread.sleep(300)
@@ -325,13 +325,13 @@ class AddingAndEditingEntitiesTest {
         Assert.assertEquals(targetTds?.get(3)?.findElement(By.xpath("./div"))?.text, "First name")
         Assert.assertEquals(targetTds?.get(4)?.findElement(By.xpath("./div"))?.text, "Last name")
         Assert.assertEquals(targetTds?.get(5)?.findElement(By.xpath("./div"))?.text, "First point Second point")
-        Assert.assertEquals(targetTds?.get(6)?.findElement(By.xpath("./div"))?.text, "10000$/m")
+        Assert.assertEquals(targetTds?.get(6)?.findElement(By.xpath("./div"))?.text, "10000 USD")
 
         driver.findElement(By.xpath("//*[@id=\"tables-tab-3\"]")).click()
 
         Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"firstName\"]")).getAttribute("value"), "First name")
         Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"lastName\"]")).getAttribute("value"), "Last name")
-        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"salary\"]")).getAttribute("value"), "10000$/m")
+        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"salary\"]")).getAttribute("value"), "10000")
         Thread.sleep(300)
         Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[2]/div/div/div/div/div[1]/div/span/span")).text, "First point")
         Thread.sleep(300)

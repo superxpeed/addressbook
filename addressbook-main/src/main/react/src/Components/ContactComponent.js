@@ -4,10 +4,10 @@ import {ContactTypes} from "../Common/Utils";
 
 export class ContactComponent extends React.Component {
     state = {
-        data: this.props.data.data !== undefined ? this.props.data.data : "",
-        description: this.props.data.description !== undefined ? this.props.data.description : "",
-        type: this.props.data.type !== undefined ? this.props.data.type : "0",
-        personId: this.props.data.personId !== undefined ? this.props.data.personId : "",
+        data: this.props.data.data != null ? this.props.data.data : "",
+        description: this.props.data.description != null ? this.props.data.description : "",
+        type: this.props.data.type != null ? this.props.data.type : "0",
+        personId: this.props.data.personId != null ? this.props.data.personId : "",
     };
 
     constructor(props) {
@@ -44,7 +44,7 @@ export class ContactComponent extends React.Component {
                     <Panel.Title
                         style={{display: "inline-block", width: "calc(100% - 25px)"}}
                         toggle>
-                        {this.props.data.type === undefined ? "New contact" : ContactTypes.getEngType(this.props.data.type)}
+                        {this.props.data.type == null ? "New contact" : ContactTypes.getEngType(this.props.data.type)}
                     </Panel.Title>
                     <Button
                         style={{

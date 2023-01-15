@@ -18,13 +18,13 @@ import * as MenuActions from "../Pages/MenuFormActions";
 }))
 export class OrganizationComponent extends React.Component {
     state = {
-        organization: {}, create: false, locked: true,
+        organization: {}, create: false, locked: true
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            organization: props.organization,
+            organization: props.organization, invalidFields: new Set()
         };
     }
 
@@ -35,10 +35,13 @@ export class OrganizationComponent extends React.Component {
     }
 
     getValidationState(field) {
-        if (this.state.organization[field] === undefined || this.state.organization[field] === null) return "error";
-        const length = this.state.organization[field].length;
-        if (length > 10) return "success"; else if (length > 5) return "warning"; else if (length > 0) return "error";
-        return null;
+        if (this.state.organization[field] == null || this.state.organization[field].length === 0) {
+            this.state.invalidFields.add(field);
+            return "error";
+        } else {
+            this.state.invalidFields.delete(field);
+            return "success";
+        }
     }
 
     lockCallback = (result) => {
@@ -51,10 +54,10 @@ export class OrganizationComponent extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.organization !== this.state.organization) {
-            if (this.state.organization["id"] !== undefined && this.state.create === false) {
+            if (this.state.organization["id"] != null && this.state.create === false) {
                 this.props.lockUnlockRecord(Caches.ORGANIZATION_CACHE, this.state.organization["id"], "unlock");
             }
-            if (nextProps.organization["id"] === undefined) {
+            if (nextProps.organization["id"] == null) {
                 this.setState({
                     organization: {
                         name: "", street: "", id: Generator.uuidv4(), zip: "", type: "2",
@@ -104,14 +107,15 @@ export class OrganizationComponent extends React.Component {
 
     getButton() {
         if (this.state.create) {
-            return (<Button style={{width: "100%"}} onClick={() => this.saveOrganization(this.state.create)}>
+            return (<Button style={{width: "100%"}} disabled={this.state.invalidFields.size !== 0}
+                            onClick={() => this.saveOrganization(this.state.create)}>
                 Create organization
             </Button>);
         } else {
             return (<Button
                 style={{width: "100%"}}
                 onClick={() => this.saveOrganization(this.state.create)}
-                disabled={!this.state.locked}
+                disabled={this.state.invalidFields.size !== 0 || !this.state.locked}
             >
                 Save organization
             </Button>);

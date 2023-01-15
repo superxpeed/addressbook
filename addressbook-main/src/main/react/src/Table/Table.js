@@ -165,7 +165,7 @@ export class Table extends React.Component {
 
         let columns = null;
 
-        if ((this.props.fieldDescriptionMap !== null && this.props.fieldDescriptionMap !== undefined && Object.keys(this.props.fieldDescriptionMap).length !== 0) || this.props.fieldDescriptionMap.constructor !== Object) {
+        if ((this.props.fieldDescriptionMap != null && Object.keys(this.props.fieldDescriptionMap).length !== 0) || this.props.fieldDescriptionMap.constructor !== Object) {
             columns = Object.keys(this.props.fieldDescriptionMap).map((key) => (<TableHeaderColumn
                     ref={FILTER_REF + key}
                     dataSort={true}
