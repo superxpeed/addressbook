@@ -250,12 +250,19 @@ class DAO : AddressBookDAO {
                         }
                     }
 
-                    "TextFilter" -> temp = temp?.field(it.name)?.containsIgnoreCase(it.value)
+                    "TextFilter" -> if (it.name == "type") {
+                        it.value?.let { typeOrdinal ->
+                            if (typeOrdinal.isNotBlank() && typeOrdinal.toInt() >= 0 && typeOrdinal.toInt() < OrganizationType.values().size)
+                                temp = temp?.field(it.name)?.containsIgnoreCase(OrganizationType.values()[typeOrdinal.toInt()].name)
+                        }
+                    } else {
+                        temp = temp?.field(it.name)?.containsIgnoreCase(it.value)
+                    }
+
                     "DateFilter" -> {
                         it.value = it.value?.substring(0, 10)
                         val dateBefore = dateFormatEqual.parse(it.value + "T00:00:00")
                         val dateAfter = dateFormatEqual.parse(it.value + "T23:59:59")
-                        val dateOther = dateFormatOther.parse(it.value)
                         when (it.comparator) {
                             "=" -> {
                                 temp = temp?.field(it.name)?.greaterThan(Timestamp(dateBefore.time))?.field(it.name)?.lessThan(Timestamp(dateAfter.time))
@@ -266,19 +273,19 @@ class DAO : AddressBookDAO {
                             }
 
                             ">" -> {
-                                temp = temp?.field(it.name)?.greaterThan(Timestamp(dateOther.time))
+                                temp = temp?.field(it.name)?.greaterThan(Timestamp(dateAfter.time))
                             }
 
                             ">=" -> {
-                                temp = temp?.field(it.name)?.greaterThanOrEq(Timestamp(dateOther.time))
+                                temp = temp?.field(it.name)?.greaterThanOrEq(Timestamp(dateBefore.time))
                             }
 
                             "<=" -> {
-                                temp = temp?.field(it.name)?.lessThanOrEq(Timestamp(dateOther.time))
+                                temp = temp?.field(it.name)?.lessThanOrEq(Timestamp(dateAfter.time))
                             }
 
                             "<" -> {
-                                temp = temp?.field(it.name)?.lessThan(Timestamp(dateOther.time))
+                                temp = temp?.field(it.name)?.lessThan(Timestamp(dateBefore.time))
                             }
                         }
                     }

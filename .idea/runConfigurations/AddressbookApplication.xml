@@ -2,7 +2,7 @@
   <configuration default="false" name="AddressbookApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" />
     <envs>
-      <env name="dao_implementation" value="IGNITE-SERVER" />
+      <env name="dao_implementation" value="MONGO-SERVER" />
       <env name="eureka_host" value="http://localhost:7777/eureka" />
       <env name="jwt_secret" value="q1w2e3r4" />
       <env name="key_alias" value="localhost" />
@@ -12,7 +12,7 @@
       <env name="truststore_password" value="q1w2e3r4" />
       <env name="truststore_path" value="$PROJECT_DIR$/../addressbook\addressbook-main\certs\truststore.jks" />
       <env name="web_server_port" value="9000" />
-      <env name="web_ssl_enabled" value="true" />
+      <env name="web_ssl_enabled" value="false" />
     </envs>
     <module name="addressbook-main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.AddressBookApplication" />
