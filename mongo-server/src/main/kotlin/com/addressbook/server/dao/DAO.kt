@@ -235,7 +235,7 @@ class DAO : AddressBookDAO {
         if (filterDto.isNotEmpty()) {
             filterDto.forEach {
                 if (it.name == "street" || it.name == "zip") {
-                    it.name = "addr.$it.name"
+                    it.name = "addr." + it.name
                 }
                 when (it.type) {
                     "NumberFilter" -> {
@@ -269,7 +269,7 @@ class DAO : AddressBookDAO {
                             }
 
                             "!=" -> {
-                                temp = temp?.field(it.name)?.lessThan(Timestamp(dateBefore.time))?.field(it.name)?.greaterThan(Timestamp(dateAfter.time))
+                                temp?.or(temp?.criteria(it.name)?.lessThan(Timestamp(dateBefore.time)), temp?.criteria(it.name)?.greaterThan(Timestamp(dateAfter.time)))
                             }
 
                             ">" -> {

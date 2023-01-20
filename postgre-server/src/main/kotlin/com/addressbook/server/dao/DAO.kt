@@ -233,7 +233,7 @@ class DAO : AddressBookDAO {
                             }
 
                             "!=" -> {
-                                addSql = it.name + " < TO_TIMESTAMP('" + it.value + tailLower + " , " + format + ") AND " + it.name + " > TO_TIMESTAMP('" + it.value + tailUpper + " , " + format + ")"
+                                addSql = it.name + " < TO_TIMESTAMP('" + it.value + tailLower + " , " + format + ") OR " + it.name + " > TO_TIMESTAMP('" + it.value + tailUpper + " , " + format + ")"
                             }
 
                             ">" -> {

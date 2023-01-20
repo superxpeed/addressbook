@@ -279,7 +279,7 @@ class DAO : AddressBookDAO {
                             }
 
                             "!=" -> {
-                                addSql = it.name + " < PARSEDATETIME('" + it.value + tailLower + " , " + format + ") AND " + it.name + " > PARSEDATETIME('" + it.value + tailUpper + " , " + format + ")"
+                                addSql = it.name + " < PARSEDATETIME('" + it.value + tailLower + " , " + format + ") OR " + it.name + " > PARSEDATETIME('" + it.value + tailUpper + " , " + format + ")"
                             }
 
                             ">" -> {
