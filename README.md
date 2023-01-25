@@ -11,13 +11,10 @@
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/screenshots/all_panels_dark.png" width="1000"/>  
 
 ### Web client application
-https://user-images.githubusercontent.com/8986329/182024391-09657aa1-cce6-49a0-9f12-16876dcb965e.mp4
 
+https://user-images.githubusercontent.com/8986329/214672525-88fae87e-af63-44cd-91fa-c1796079915f.mp4
 
-https://user-images.githubusercontent.com/8986329/182024425-df9b40ad-7304-4a23-b63b-b021cd8f1593.mp4
-
-
-https://user-images.githubusercontent.com/8986329/182024427-297a0bd4-55e8-4b7c-be04-9a646f945483.mp4
+https://user-images.githubusercontent.com/8986329/214672562-d8fb0405-f70c-4cb6-bdd8-501f1ca051b9.mp4
 
 ## Architecture
 
