@@ -174,7 +174,7 @@ https://istio-https.localdev.me/#/
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/metrics_rest.png" width="900"/> 
 
 ### Prometheus Job Config
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/prometheus_config.png" width="700"/>  
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/prometheus_config.png" width="600"/>  
 
 ### istio-proxy logging level
 ```shell
