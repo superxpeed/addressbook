@@ -1,35 +1,52 @@
 import React from "react";
-import * as url from "../Common/Url";
-import {Button, FormControl, Label, Panel} from "react-bootstrap";
+import {
+    Alert,
+    Box,
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    FormControl,
+    Grid,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    OutlinedInput,
+    TextField,
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import * as MenuActions from "./MenuFormActions";
 import Cookies from "js-cookie";
+import Button from "@mui/material/Button";
+import DialogContent from "@mui/material/DialogContent";
+import * as MenuActions from "./MenuFormActions";
+import * as url from "../Common/Url";
 
-@connect(null, (dispatch) => ({
-    clearAlerts: bindActionCreators(MenuActions.clearAlerts, dispatch),
-}))
-export default class LoginForm extends React.Component {
+export class LoginFormRaw extends React.Component {
     state = {
         login: "", password: "", invalidLoginPassword: false,
+        showPassword: false,
     };
 
-    constructor(props) {
-        super(props);
-    }
+    handleClickShowPassword = () => this.setState({showPassword: !this.state.showPassword});
 
     keyDownTextField = (e) => {
-        let parent = this;
-        let keyCode = e.keyCode;
+        const parent = this;
+        const {keyCode} = e;
         if (keyCode === 13) {
             parent.login();
         }
     };
 
+    handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
     componentDidMount() {
-        setTimeout(function () {
+        setTimeout(() => {
             this.props.clearAlerts();
-        }.bind(this), 500);
+        }, 500);
         document.addEventListener("keydown", this.keyDownTextField, false);
     }
 
@@ -43,13 +60,13 @@ export default class LoginForm extends React.Component {
 
     login = () => {
         let status;
-        let headers = new Headers();
-        let credentials = {
-            "login": this.state.login, "password": this.state.password
-        }
+        const headers = new Headers();
+        const credentials = {
+            login: this.state.login, password: this.state.password,
+        };
         headers.append("Content-Type", "application/json; charset=utf-8");
         fetch(url.AUTH, {
-            method: "post", headers: headers, body: JSON.stringify(credentials),
+            method: "post", headers, body: JSON.stringify(credentials),
         }).then((response) => {
             status = response.status;
             return response.text();
@@ -58,7 +75,7 @@ export default class LoginForm extends React.Component {
                 this.setState({invalidLoginPassword: true});
             }
             if (status === 200) {
-                Cookies.remove("Authorization")
+                Cookies.remove("Authorization");
                 window.sessionStorage.clear();
                 window.sessionStorage.setItem("auth-token", JSON.parse(text).token);
                 window.location.hash = "#/";
@@ -68,61 +85,67 @@ export default class LoginForm extends React.Component {
 
     getWarning = () => {
         if (this.state.invalidLoginPassword) {
-            return (<Label
-                style={{
-                    width: "500px",
-                    display: "inline-block",
-                    position: "absolute",
-                    left: "calc(50% - 250px)",
-                    top: "calc(50% - 120px)",
-                }}
-                bsStyle="danger"
-            >
-                Invalid login or password
-            </Label>);
-        } else return <div/>;
+            return (
+                <Alert severity="error" sx={{mb: 1}}>
+                    Invalid login or password
+                </Alert>
+            );
+        }
+        return <div/>;
     };
 
     render() {
-        return (<div>
-            {this.getWarning()}
-            <Panel
-                style={{
-                    width: "500px",
-                    height: "200px",
-                    position: "absolute",
-                    left: "calc(50% - 250px)",
-                    top: "calc(50% - 100px)",
-                }}
-            >
-                <Panel.Heading>
-                    <Panel.Title>Please login</Panel.Title>
-                </Panel.Heading>
-                <Panel.Body>
-                    <FormControl
-                        style={{marginTop: "5px"}}
-                        type="text"
-                        value={this.state.login}
-                        placeholder={"Enter login"}
-                        id="login"
-                        onChange={this.handleChange}
-                    />
-                    <FormControl
-                        style={{marginTop: "5px"}}
-                        type="password"
-                        value={this.state.password}
-                        placeholder={"Enter password"}
-                        id="password"
-                        onChange={this.handleChange}
-                    />
-                    <Button
-                        style={{marginTop: "5px", width: "100%"}}
-                        onClick={this.login}
-                    >
-                        Login
-                    </Button>
-                </Panel.Body>
-            </Panel>
-        </div>);
+        return (
+            <div>
+                <Dialog fullWidth maxWidth="sm" open={true}>
+                    <DialogTitle>Please login</DialogTitle>
+                    <DialogContent>
+                        <Box sx={{display: "grid", gridTemplateRows: "repeat(2 1fr)"}}>
+                            {this.getWarning()}
+                            <TextField
+                                id="login"
+                                type="text"
+                                label="Enter login"
+                                variant="outlined"
+                                autoComplete="off"
+                                sx={{mt: 1}}
+                                onChange={this.handleChange}
+                            />
+                            <FormControl sx={{mt: 2}} variant="outlined">
+                                <InputLabel htmlFor="password">Enter password</InputLabel>
+                                <OutlinedInput
+                                    id="password"
+                                    label="Enter password"
+                                    type={this.state.showPassword ? "text" : "password"}
+                                    autoComplete="off"
+                                    onChange={this.handleChange}
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={this.handleClickShowPassword}
+                                                onMouseDown={this.handleMouseDownPassword}
+                                            >
+                                                {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    }
+                                />
+                            </FormControl>
+                        </Box>
+                    </DialogContent>
+                    <DialogActions>
+                        <Grid container sx={{justifyContent: "center"}}>
+                            <Button sx={{ml: 2, mr: 2, mb: 2, width: "100%"}} variant="contained"
+                                    onClick={this.login}>Login</Button>
+                        </Grid>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
     }
 }
+
+export const LoginForm = connect(null, (dispatch) => ({
+    clearAlerts: bindActionCreators(MenuActions.clearAlerts, dispatch),
+}), null, {withRef: true})(LoginFormRaw);

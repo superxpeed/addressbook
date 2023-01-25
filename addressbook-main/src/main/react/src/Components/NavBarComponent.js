@@ -1,18 +1,19 @@
 import React from "react";
-import {Button, Label, Modal, Navbar} from "react-bootstrap";
-import * as url from "../Common/Url";
-import {ifNoAuthorizedRedirect} from "../Pages/UniversalListActions";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import {Checkbox, Chip, FormControlLabel, FormGroup} from "@mui/material";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
+import * as url from "../Common/Url";
+import * as CommonActions from "../Pages/UniversalListActions";
 import * as MenuActions from "../Pages/MenuFormActions";
 import {AuthTokenUtils} from "../Common/Utils";
 
-@connect(null, (dispatch) => ({
-    showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
-}))
-export class NavBarComponent extends React.Component {
+export class NavBarComponentRaw extends React.Component {
     state = {
-        username: "", roles: [], show: false, buildVersion: "", buildTime: ""
+        username: "", roles: [], show: false, buildVersion: "", buildTime: "",
     };
 
     constructor(props) {
@@ -29,21 +30,21 @@ export class NavBarComponent extends React.Component {
 
     updatePersonInfo = () => {
         let isOk = false;
-        let headers = new Headers();
+        const headers = new Headers();
         AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
         fetch(url.GET_USER_INFO, {
-            method: "get", headers: headers,
+            method: "get", headers,
         })
             .then((response) => {
-                ifNoAuthorizedRedirect(response);
+                CommonActions.ifNoAuthorizedRedirect(response);
                 isOk = response.ok;
                 return response.text();
             })
             .then((text) => {
                 if (isOk) {
-                    let currentUser = JSON.parse(text);
+                    const currentUser = JSON.parse(text);
                     this.setState({
                         username: currentUser.login, roles: currentUser.roles,
                     });
@@ -55,21 +56,21 @@ export class NavBarComponent extends React.Component {
 
     updateBuildInfo = () => {
         let isOk = false;
-        let headers = new Headers();
+        const headers = new Headers();
         AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
         fetch(url.GET_BUILD_INFO, {
-            method: "get", headers: headers,
+            method: "get", headers,
         })
             .then((response) => {
-                ifNoAuthorizedRedirect(response);
+                CommonActions.ifNoAuthorizedRedirect(response);
                 isOk = response.ok;
                 return response.text();
             })
             .then((text) => {
                 if (isOk) {
-                    let buildInfo = JSON.parse(text);
+                    const buildInfo = JSON.parse(text);
                     this.setState({
                         buildVersion: buildInfo.version, buildTime: buildInfo.time,
                     });
@@ -85,39 +86,79 @@ export class NavBarComponent extends React.Component {
     }
 
     getRoles = () => {
-        let allRoles = [];
-        this.state.roles.forEach((value) => {
-            allRoles.push(<Label bsStyle="primary" style={{marginRight: "5px"}} key={value}>
-                {value}
-            </Label>);
+        const allRoles = [];
+        this.state.roles.forEach((value, index) => {
+            if (index === 0)
+                allRoles.push(<Chip key={value} label={value} variant="outlined"/>);
+            else
+                allRoles.push(<Chip key={value} label={value} variant="outlined" sx={{ml: 1}}/>);
         });
         return allRoles;
     };
 
     render() {
-        return (<div style={{display: "inline-block"}}>
-            <Navbar.Form pullLeft style={{margin: "0px", padding: "0px"}}>
-                <div style={{display: "grid"}}>
-                    <Label bsStyle="default" style={{marginRight: "5px", marginTop: "1px"}}>
-                        Build version: {this.state.buildVersion}
-                    </Label>
-                    <Label bsStyle="default" style={{marginRight: "5px", marginTop: "1px"}}>
-                        Build time: {this.state.buildTime}
-                    </Label>
+        return (
+            <div>
+                <div>
+                    <Button
+                        variant="contained"
+                        edge="end"
+                        onClick={this.handleShow}
+                    >
+                        {this.state.username}
+                    </Button>
                 </div>
-            </Navbar.Form>
-            <Button
-                style={{maxWidth: "100px", overflowX: "hidden", marginRight: "5px"}}
-                onClick={this.handleShow}
-            >
-                {this.state.username}
-            </Button>
-            <Modal show={this.state.show} onHide={this.handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Roles for {this.state.username}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>{this.getRoles()}</Modal.Body>
-            </Modal>
-        </div>);
+                <Dialog
+                    onClose={this.handleClose}
+                    aria-labelledby="roles-dialog-title"
+                    open={this.state.show}
+                >
+                    <DialogTitle id="roles-dialog-title" onClose={this.handleClose}>
+                        Roles for
+                        {" "}
+                        {this.state.username}
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        {this.getRoles()}
+                    </DialogContent>
+                    <DialogContent dividers>
+                        <Chip
+                            edge="end"
+                            color="info"
+                            size="small"
+                            key="build_version"
+                            label={`Build version: ${this.state.buildVersion}`}
+                            variant="outlined"
+                        />
+                        <Chip
+                            edge="end"
+                            color="info"
+                            size="small"
+                            key="build_time"
+                            label={`Build time: ${this.state.buildTime}`}
+                            variant="outlined"
+                            sx={{ml: 1}}
+                        />
+                    </DialogContent>
+                    <DialogContent dividers>
+                        <FormGroup>
+                            <FormControlLabel control={<Checkbox checked={this.props.showNotification}
+                                                                 onChange={(e, v) => {
+                                                                     this.props.changeShowNotification(v)
+                                                                 }}
+                                                                 inputProps={{'aria-label': 'controlled'}}/>}
+                                              label="Show lock notifications"/>
+                        </FormGroup>
+                    </DialogContent>
+                </Dialog>
+            </div>
+        );
     }
 }
+
+export const NavBarComponent = connect((state) => ({
+    showNotification: state.universalListReducer.showNotification,
+}), (dispatch) => ({
+    showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
+    changeShowNotification: bindActionCreators(CommonActions.changeShowNotification, dispatch),
+}), null, {withRef: true})(NavBarComponentRaw);

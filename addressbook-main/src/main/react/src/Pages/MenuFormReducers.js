@@ -8,13 +8,9 @@ const initialState = {
 export default function menuReducer(state = initialState, action = {}) {
     switch (action.type) {
         case types.GET_MENU + types.SUCCESS:
-            return Object.assign({}, state, {
-                menus: action.data,
-            });
+            return {...state, menus: action.data};
         case types.GET_BREADCRUMBS + types.SUCCESS:
-            return Object.assign({}, state, {
-                breadcrumbs: action.data,
-            });
+            return {...state, breadcrumbs: action.data};
         case ADD_ALERT: {
             const newAlert = {
                 id: new Date().getTime(),
@@ -22,19 +18,13 @@ export default function menuReducer(state = initialState, action = {}) {
                 headline: action.alert.headline,
                 message: action.alert.message,
             };
-            return Object.assign({}, state, {
-                alerts: [...state.alerts, newAlert],
-            });
+            return {...state, alerts: [...state.alerts, newAlert]};
         }
         case DISMISS_ALERT: {
-            return Object.assign({}, state, {
-                alerts: state.alerts.filter((it) => it.id !== action.alert.id),
-            });
+            return {...state, alerts: state.alerts.filter((it) => it.id !== action.alert.id)};
         }
         case CLEAR_ALERTS: {
-            return Object.assign({}, state, {
-                alerts: [],
-            });
+            return {...state, alerts: []};
         }
         default:
             return state;

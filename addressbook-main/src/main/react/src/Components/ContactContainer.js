@@ -1,11 +1,12 @@
 import React from "react";
 import {ContactComponent} from "./ContactComponent";
-import {Button, Modal} from "react-bootstrap";
+import Button from "@mui/material/Button";
+import {Dialog, DialogActions, DialogContentText, DialogTitle} from "@mui/material";
+import DialogContent from "@mui/material/DialogContent";
 
 export class ContactContainer extends React.Component {
     state = {
-        contacts: new Map(), conRefs: new Map(),
-        show: false
+        contacts: new Map(), conRefs: new Map(), show: false
     };
 
     constructor(props) {
@@ -50,7 +51,7 @@ export class ContactContainer extends React.Component {
                 this.state.conRefs.set(id, input);
             }}
             id={id}
-            deleteContact={this.deleteContact}
+            deleteContact={this.showConfirmationDialog}
         />);
         contacts.set(newCon.key, newCon);
         this.setState({contacts: contacts});
@@ -86,21 +87,27 @@ export class ContactContainer extends React.Component {
 
     render() {
         return (<div>
-            <Button
-                style={{width: "100%", marginBottom: "5px", marginTop: "-10px"}}
-                onClick={this.addEmptyContact}>
+            <Button sx={{mt: 1, width: "100%", height: "56px", marginBottom: "30px"}} variant="outlined"
+                    onClick={this.addEmptyContact}>
                 Add contact
             </Button>
-            {this.state.contacts}
-            <Modal show={this.state.show} onHide={this.closeConfirmationDialog}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Delete this contact?</Modal.Title>
-                </Modal.Header>
-                <Modal.Footer>
+            {Array.from(this.state.contacts.values())}
+            <Dialog
+                open={this.state.show}
+                onClose={() => this.closeConfirmationDialog()}
+                aria-describedby="confirmation-modal-description"
+            >
+                <DialogTitle>Confirm contact deletion</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="confirmation-modal-description">
+                        Delete this contact?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
                     <Button onClick={this.closeConfirmationDialog}>Cancel</Button>
-                    <Button bsStyle="danger" onClick={this.deleteContact}>Delete</Button>
-                </Modal.Footer>
-            </Modal>
+                    <Button variant="outlined" color="error" onClick={this.deleteContact}>Delete</Button>
+                </DialogActions>
+            </Dialog>
         </div>);
     }
 }

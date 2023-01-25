@@ -1,30 +1,28 @@
-import {Button, ControlLabel, FormControl, FormGroup} from "react-bootstrap";
+require("../Common/style.css");
+
 import update from "react-addons-update";
 import React from "react";
 import {ContactContainer} from "./ContactContainer";
 import {ifNoAuthorizedRedirect} from "../Pages/UniversalListActions";
 import * as url from "../Common/Url";
-import {AuthTokenUtils, Caches, TitleConverter, currencies} from "../Common/Utils";
-import RichTextEditor from "react-rte";
+import {AuthTokenUtils, Caches, currencies} from "../Common/Utils";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as MenuActions from "../Pages/MenuFormActions";
+import {FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
+import {ContentState, convertFromHTML, convertToRaw} from "draft-js"
+import {stateToHTML} from "draft-js-export-html"
+import Button from "@mui/material/Button";
+import MUIRichTextEditor from "mui-rte";
 
-@connect(null, (dispatch) => ({
-    showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
-    showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),
-    lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch),
-}))
-export class PersonComponent extends React.Component {
+export class PersonComponentRaw extends React.Component {
     state = {
-        person: {}, contactList: {
-            data: [],
-        }, resume: RichTextEditor.createEmptyValue(), locked: true, salary: null, currency: null
+        locked: true,
     };
 
     constructor(props) {
         super(props);
-        let resume = props.person["resume"] == null ? "" : props.person["resume"];
+        let resume = props.person["resume"] == null ? "<div/>" : props.person["resume"];
         let salaryPerson = props.person["salary"] == null ? "" : props.person["salary"].substring(0, props.person["salary"].length - 4)
         let currencyPerson = props.person["salary"] == null ? "USD" : props.person["salary"].substring(props.person["salary"].length - 3)
         this.state = {
@@ -35,22 +33,27 @@ export class PersonComponent extends React.Component {
             invalidFields: new Set(),
             salary: salaryPerson,
             currency: currencyPerson,
-            resume: RichTextEditor.createValueFromString(resume, "html"),
+            resume: this.convertHtmlToMarkUp(resume),
         };
+        this.editor = React.createRef();
     }
 
-    handleChange(e, v) {
-        this.setState(update(this.state, {person: {[e]: {$set: v.currentTarget.value}}}));
+    handleChange = (e) => {
+        this.setState(update(this.state, {person: {[e.target.id]: {$set: e.target.value}}}));
     }
 
     clearContactList = () => {
         this.setState(update(this.state, {contactList: {data: {$set: undefined}}}));
     };
 
-    onChangeResume = (value) => {
-        this.setState(update(this.state, {
-            person: {resume: {$set: value.toString("html")}}, resume: {$set: value},
-        }));
+    convertHtmlToMarkUp = (sourceHtml) => {
+        const contentHTML = convertFromHTML(sourceHtml)
+        const state = ContentState.createFromBlockArray(contentHTML.contentBlocks, contentHTML.entityMap)
+        return JSON.stringify(convertToRaw(state))
+    }
+
+    onChangeResume = (_editorState) => {
+        this._editorState = _editorState
     };
 
     getContactList = (id) => {
@@ -96,7 +99,7 @@ export class PersonComponent extends React.Component {
                         person: {$set: savedPerson}, contactList: {data: {$set: JSON.parse(text).data}},
                     }));
                     if (creation) {
-                        this.props.lockUnlockRecord(Caches.PERSON_CACHE, personId, "unlock");
+                        this.props.lockUnlockRecord(Caches.PERSON_CACHE, personId, "unlock", this.props.showNotification);
                         this.props.showCommonAlert("Person created!")
                     } else {
                         this.props.showCommonAlert("Changes saved!")
@@ -109,15 +112,18 @@ export class PersonComponent extends React.Component {
     };
 
     savePerson = () => {
+        this.editor.current.save()
+        let targetPerson = this.state.person
+        targetPerson.resume = this.htmlResume
         let savedPerson;
-        let creation = this.state.person.id == null;
+        let creation = targetPerson.id == null;
         let headers = new Headers();
         AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
         let isOk = false;
         fetch(url.SAVE_PERSON, {
-            method: "post", headers: headers, body: JSON.stringify(this.state.person),
+            method: "post", headers: headers, body: JSON.stringify(targetPerson),
         })
             .then((response) => {
                 ifNoAuthorizedRedirect(response);
@@ -127,9 +133,9 @@ export class PersonComponent extends React.Component {
             .then((text) => {
                 if (isOk) {
                     savedPerson = JSON.parse(text).data;
-                    let personId = creation ? savedPerson.id : this.state.person.id;
+                    let personId = creation ? savedPerson.id : targetPerson.id;
                     if (creation) {
-                        this.props.lockUnlockRecord(Caches.PERSON_CACHE, personId, "lock", (result) => {
+                        this.props.lockUnlockRecord(Caches.PERSON_CACHE, personId, "lock", this.props.showNotification, (result) => {
                             if (result === "success") {
                                 this.setState({locked: true});
                                 this.saveContacts(creation, personId, savedPerson);
@@ -157,7 +163,7 @@ export class PersonComponent extends React.Component {
     componentDidMount() {
         if (this.state.person["id"] != null && this.props.forUpdate) {
             this.getContactList(this.state.person["id"]);
-            this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "lock", this.lockCallback);
+            this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "lock", this.props.showNotification, this.lockCallback);
         } else {
             this.clearContactList();
             this.setState({locked: true});
@@ -165,111 +171,90 @@ export class PersonComponent extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.props.forUpdate) this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "unlock");
+        if (this.props.forUpdate) this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "unlock", this.props.showNotification);
     }
 
     getValidationState(field) {
         if (field === "salary") {
             if (this.state.person["salary"] == null || this.state.person["salary"].length === 3 || this.state.person["salary"].length === 4) {
                 this.state.invalidFields.add(field);
-                return "error";
+                return false;
             }
-        } else if (this.state.person[field] == null || this.state.person[field].length === 0) {
+        } else if (this.state.person[field] == null || this.state.person[field].trim().length === 0) {
             this.state.invalidFields.add(field);
-            return "error";
+            return false;
         }
         this.state.invalidFields.delete(field);
-        return "success";
+        return true;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.person !== this.state.person) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.person !== prevProps.person) {
             if (this.state.person != null) {
-                this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "unlock");
+                this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "unlock", this.props.showNotification);
             }
-            let newResume = nextProps.person["resume"] == null ? "" : nextProps.person["resume"];
-            let salaryPerson = nextProps.person["salary"] == null ? "" : nextProps.person["salary"].substring(0, nextProps.person["salary"].length - 4)
-            let currencyPerson = nextProps.person["salary"] == null ? "USD" : nextProps.person["salary"].substring(nextProps.person["salary"].length - 3)
-            this.getContactList(nextProps.person["id"]);
+            let newResume = this.props.person["resume"] == null ? "<div/>" : this.props.person["resume"];
+            let salaryPerson = this.props.person["salary"] == null ? "" : this.props.person["salary"].substring(0, this.props.person["salary"].length - 4)
+            let currencyPerson = this.props.person["salary"] == null ? "USD" : this.props.person["salary"].substring(this.props.person["salary"].length - 3)
+            this.getContactList(this.props.person["id"]);
             this.setState({
-                person: nextProps.person,
-                resume: RichTextEditor.createValueFromString(newResume, "html"),
+                person: this.props.person,
+                resume: this.convertHtmlToMarkUp(newResume),
                 salary: salaryPerson,
                 currency: currencyPerson
             });
-            this.props.lockUnlockRecord(Caches.PERSON_CACHE, nextProps.person["id"], "lock", this.lockCallback);
+            this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.props.person["id"], "lock", this.props.showNotification, this.lockCallback);
         }
-    }
-
-    getFieldFormControl(field, fieldType) {
-        if (fieldType === "text") {
-            return (<FormControl
-                type="text"
-                value={this.state.person[field]}
-                placeholder={"Enter " + TitleConverter.preparePlaceHolder(TitleConverter.prepareTitle(field))}
-                onChange={this.handleChange.bind(this, field)}
-            />);
-        }
-    }
-
-    getFieldForm(field, fieldType) {
-        return (<form>
-            <FormGroup
-                controlId={field}
-                validationState={this.getValidationState(field)}
-            >
-                <ControlLabel>{TitleConverter.prepareTitle(field)}</ControlLabel>
-                {this.getFieldFormControl(field, fieldType)}
-                <FormControl.Feedback/>
-            </FormGroup>
-        </form>);
     }
 
     getCurrencyOptions() {
         let opts = []
-        currencies.forEach(currency => opts.push(<option value={currency}>{currency}</option>))
+        currencies.forEach(currency => opts.push(<MenuItem key={currency} value={currency}>{currency}</MenuItem>))
         return opts
     }
 
     getSalaryForm() {
-        return (<div>
-            <form style={{width: "80%", display: "inline-block"}}>
-                <FormGroup
-                    controlId="salary"
-                    validationState={this.getValidationState("salary")}>
-                    <ControlLabel>Annual salary</ControlLabel>
-                    <FormControl
-                        type="text"
-                        value={this.state.salary}
-                        placeholder="Enter annual salary"
+        return (<div style={{height: "95px"}}>
+            <div style={{width: "80%", display: "inline-block", height: "100%"}}>
+                <TextField
+                    error={!this.getValidationState("salary")}
+                    id="salary"
+                    type="text"
+                    label="Enter annual salary"
+                    variant="outlined"
+                    autoComplete="off"
+                    sx={{mt: 1, display: "flex", height: "80px"}}
+                    value={this.state.salary}
+                    helperText={!this.getValidationState("salary") ? "Required field!" : ""}
+                    onChange={e => {
+                        const re = /^[0-9\b]+$/;
+                        if (e.currentTarget.value === "" || re.test(e.currentTarget.value)) {
+                            let currentPerson = Object.assign({}, this.state.person)
+                            currentPerson["salary"] = e.currentTarget.value + " " + this.state.currency
+                            this.setState({salary: e.currentTarget.value, person: currentPerson})
+                        }
+                    }}
+                />
+            </div>
+            <div style={{width: "20%", display: "inline-block", paddingLeft: "5px", height: "100%"}}>
+                <FormControl fullWidth={true} sx={{mt: 1, display: "flex", height: "100%"}}>
+                    <InputLabel id="currency-label">Currency</InputLabel>
+                    <Select
+                        labelId="currency-label"
+                        id="currency"
+                        name="currency"
+                        value={this.state.currency}
+                        label="Currency"
                         onChange={e => {
-                            const re = /^[0-9\b]+$/;
-                            if (e.currentTarget.value === '' || re.test(e.currentTarget.value)) {
-                                let currentPerson = Object.assign({}, this.state.person)
-                                currentPerson["salary"] = e.currentTarget.value + " " + this.state.currency
-                                this.setState({salary: e.currentTarget.value, person: currentPerson})
-                            }
-                        }}/>
-                    <FormControl.Feedback/>
-                </FormGroup>
-            </form>
-            <form style={{width: "20%", display: "inline-block", paddingLeft: "5px"}}>
-                <FormGroup
-                    controlId="currency">
-                    <ControlLabel>Currency</ControlLabel>
-                    <FormControl componentClass="select"
-                                 value={this.state.currency}
-                                 placeholder="Enter salary currency"
-                                 onChange={e => {
-                                     let currentPerson = Object.assign({}, this.state.person)
-                                     currentPerson["salary"] = this.state.salary + " " + e.currentTarget.value
-                                     this.setState({currency: e.currentTarget.value, person: currentPerson})
-                                 }}>
+                            let currentPerson = Object.assign({}, this.state.person)
+                            currentPerson["salary"] = this.state.salary + " " + e.target.value
+                            this.setState({currency: e.target.value, person: currentPerson})
+                        }}
+                    >
                         {this.getCurrencyOptions()}
-                    </FormControl>
-                    <FormControl.Feedback/>
-                </FormGroup>
-            </form>
+                    </Select>
+                </FormControl>
+            </div>
         </div>);
     }
 
@@ -280,20 +265,48 @@ export class PersonComponent extends React.Component {
                     width: "50%", display: "inline-block", verticalAlign: "top", paddingLeft: "5px",
                 }}
             >
-                {this.getFieldForm("firstName", "text")}
-                {this.getFieldForm("lastName", "text")}
+                <TextField
+                    error={!this.getValidationState("firstName")}
+                    id="firstName"
+                    type="text"
+                    label="Enter first name"
+                    value={this.state.person["firstName"]}
+                    variant="outlined"
+                    autoComplete="off"
+                    sx={{mt: 1, display: "flex", height: "80px"}}
+                    helperText={!this.getValidationState("firstName") ? "Required field!" : ""}
+                    onChange={this.handleChange}
+                />
+                <TextField
+                    error={!this.getValidationState("lastName")}
+                    id="lastName"
+                    type="text"
+                    label="Enter last name"
+                    value={this.state.person["lastName"]}
+                    variant="outlined"
+                    autoComplete="off"
+                    sx={{mt: 1, display: "flex", height: "80px"}}
+                    helperText={!this.getValidationState("lastName") ? "Required field!" : ""}
+                    onChange={this.handleChange}
+                />
                 {this.getSalaryForm()}
-                <RichTextEditor
-                    placeholder="Resume"
-                    editorStyle={{minHeight: 220}}
-                    value={this.state.resume}
+                <MUIRichTextEditor
+                    label="Resume"
+                    ref={this.editor}
+                    controls={["title", "bold", "italic", "underline", "strikethrough", "highlight", "undo",
+                        "redo", "link", "media", "numberList", "bulletList", "quote", "code", "clear"]}
                     onChange={this.onChangeResume}
+                    value={this.state.resume}
+                    onSave={() => {
+                        this.htmlResume = stateToHTML(this._editorState.getCurrentContent())
+                    }}
                 />
                 <Button
+                    variant="contained" sx={{mt: 4, width: "100%", height: "56px"}}
                     onClick={this.savePerson}
                     disabled={this.state.invalidFields.size !== 0 || !this.state.locked}
                 >
-                    Save contacts
+                    Save data
                 </Button>
             </div>
             <div
@@ -301,7 +314,6 @@ export class PersonComponent extends React.Component {
                     width: "calc(50% - 10px)",
                     display: "inline-block",
                     verticalAlign: "top",
-                    marginTop: "35px",
                     marginLeft: "5px",
                     marginRight: "5px",
                 }}
@@ -317,3 +329,12 @@ export class PersonComponent extends React.Component {
         </div>);
     }
 }
+
+
+export const PersonComponent = connect((state) => ({
+    showNotification: state.universalListReducer.showNotification,
+}), (dispatch) => ({
+    showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
+    showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),
+    lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch),
+}), null, {withRef: true})(PersonComponentRaw);

@@ -17,7 +17,6 @@ object FieldDescriptor {
 
     private const val STRING_MODEL_TYPE = "java.lang.String"
     private const val DATE_MODEL_TYPE = "java.util.Date"
-    private const val STANDARD_COLUMN_WIDTH = "170px"
 
     val fieldDescriptionMapOrganization = LinkedHashMap<String, FieldDescriptionDto>()
     val fieldDescriptionMapPerson = LinkedHashMap<String, FieldDescriptionDto>()
@@ -26,19 +25,19 @@ object FieldDescriptor {
     private val dtoClasses = LinkedHashMap<String, Class<*>>()
 
     init {
-        fieldDescriptionMapOrganization["id"] = FieldDescriptionDto("id", "ID", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapOrganization["name"] = FieldDescriptionDto("name", "Name", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapOrganization["street"] = FieldDescriptionDto("street", "Street", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapOrganization["zip"] = FieldDescriptionDto("zip", "Zip", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapOrganization["type"] = FieldDescriptionDto("type", "Type", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapOrganization["lastUpdated"] = FieldDescriptionDto("lastUpdated", "Last updated", STANDARD_COLUMN_WIDTH, DATE_MODEL_TYPE)
+        fieldDescriptionMapOrganization["id"] = FieldDescriptionDto("id", "ID", "300", STRING_MODEL_TYPE)
+        fieldDescriptionMapOrganization["name"] = FieldDescriptionDto("name", "Name", "200", STRING_MODEL_TYPE)
+        fieldDescriptionMapOrganization["street"] = FieldDescriptionDto("street", "Street", "200", STRING_MODEL_TYPE)
+        fieldDescriptionMapOrganization["zip"] = FieldDescriptionDto("zip", "Zip", "200", STRING_MODEL_TYPE)
+        fieldDescriptionMapOrganization["type"] = FieldDescriptionDto("type", "Type", "100", STRING_MODEL_TYPE)
+        fieldDescriptionMapOrganization["lastUpdated"] = FieldDescriptionDto("lastUpdated", "Last updated", "200", DATE_MODEL_TYPE)
 
-        fieldDescriptionMapPerson["id"] = FieldDescriptionDto("id", "ID", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapPerson["orgId"] = FieldDescriptionDto("orgId", "Organization", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapPerson["firstName"] = FieldDescriptionDto("firstName", "First name", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapPerson["lastName"] = FieldDescriptionDto("lastName", "Last name", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapPerson["resume"] = FieldDescriptionDto("resume", "Resume", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
-        fieldDescriptionMapPerson["salary"] = FieldDescriptionDto("salary", "Salary", STANDARD_COLUMN_WIDTH, STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["id"] = FieldDescriptionDto("id", "ID", "300", STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["orgId"] = FieldDescriptionDto("orgId", "Organization", "300", STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["firstName"] = FieldDescriptionDto("firstName", "First name", "200", STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["lastName"] = FieldDescriptionDto("lastName", "Last name", "200", STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["resume"] = FieldDescriptionDto("resume", "Resume", "200", STRING_MODEL_TYPE)
+        fieldDescriptionMapPerson["salary"] = FieldDescriptionDto("salary", "Salary", "150", STRING_MODEL_TYPE)
 
         fieldDescriptionMaps[ORGANIZATION_CACHE] = fieldDescriptionMapOrganization
         fieldDescriptionMaps[PERSON_CACHE] = fieldDescriptionMapPerson

@@ -19,4 +19,5 @@
     - { role: deploy_egress, tags: egress }
     - { role: deploy_istio_https, tags: istio_https, when: not web_ssl_enabled | bool }
     - { role: deploy_istio_x509, tags: istio_x509, when: web_ssl_enabled | bool }
+    - { role: deploy_metrics_http, tags: always }
     - { role: delete_secrets, tags: always }

@@ -1,19 +1,27 @@
 const webpack = require('webpack');
 
 const webpackConfig = require('./webpack.config.js');
-const CompressionPlugin = require('compression-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = Object.assign({}, webpackConfig, {
+    mode: 'production',
+    devtool: 'source-map',
     plugins: webpackConfig.plugins.concat([
-        new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify('production')
             }
-        }),
-        new webpack.optimize.OccurrenceOrderPlugin(true),
-        new webpack.optimize.UglifyJsPlugin({sourceMap: true}),
-        new webpack.optimize.AggressiveMergingPlugin(),
-        new CompressionPlugin()
-    ])
+        })
+    ]),
+    optimization: {
+        minimizer: [(compiler) => {
+            new TerserPlugin({
+                terserOptions: {
+                    compress: true,
+                    sourceMap: true,
+                    keep_fnames: true
+                }
+            }).apply(compiler);
+        },],
+    },
 });

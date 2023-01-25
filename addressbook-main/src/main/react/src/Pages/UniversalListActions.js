@@ -1,4 +1,4 @@
-import {ADD_ALERT, AuthTokenUtils, Caches, SUCCESS} from "../Common/Utils";
+import {ADD_ALERT, AuthTokenUtils, Caches, FAIL, REQUEST, SHOW_NOTIFICATION_CHANGE, SUCCESS} from "../Common/Utils";
 import * as tableActions from "../Table/TableActions";
 
 export const GET_LIST = "GET_LIST";
@@ -20,15 +20,26 @@ export function clearPersonSelection(rows) {
     };
 }
 
+export function changeShowNotification(showNotification) {
+    return (dispatch) => {
+        dispatch({
+            type: SHOW_NOTIFICATION_CHANGE, showNotification: showNotification
+        });
+    };
+}
+
 export function getList(url, filterDto = null, cacheName) {
     let isOk = false;
     return function (dispatch) {
-        let headers = new Headers();
+        dispatch({
+            type: GET_LIST + cacheName + REQUEST,
+        });
+        const headers = new Headers();
         AuthTokenUtils.addAuthToken(headers);
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
         fetch(url, {
-            method: "post", headers: headers, body: JSON.stringify(filterDto),
+            method: "post", headers, body: JSON.stringify(filterDto),
         })
             .then((response) => {
                 ifNoAuthorizedRedirect(response);
@@ -37,13 +48,16 @@ export function getList(url, filterDto = null, cacheName) {
             })
             .then((text) => {
                 if (isOk) {
-                    let json = JSON.parse(text);
+                    const json = JSON.parse(text);
                     dispatch({
                         type: GET_LIST + cacheName + SUCCESS,
                         data: json.data,
                         fieldDescriptionMap: json.fieldDescriptionMap,
                     });
                 } else {
+                    dispatch({
+                        type: GET_LIST + cacheName + FAIL,
+                    });
                     dispatch({
                         type: ADD_ALERT, alert: JSON.parse(text),
                     });

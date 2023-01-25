@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: gw-web-ingress
+  namespace: {{namespace}}
+spec:
+  selector:
+    istio: {{namespace}}-ingress
+  servers:
+    - hosts:
+        - {{web_istio_route_host}}
+      port:
+        name: tcp-8443
+        number: 8443
+        protocol: HTTPS
+      tls:
+        caCertificates: /etc/istio/ingressgateway-ca-certs/ca.pem
+        mode: SIMPLE
+        privateKey: /etc/istio/ingressgateway-certs/tls.key
+        serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+    - hosts:
+        - {{web_istio_service_route_host}}
+      port:
+        name: tcp-8444
+        number: 8444
+        protocol: HTTP

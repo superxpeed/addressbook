@@ -1,5 +1,5 @@
 import * as types from "../Common/Utils";
-import {Caches, OrgTypes} from "../Common/Utils";
+import {Caches, fillCustomFns, OrgTypes} from "../Common/Utils";
 import * as tableActions from "../Table/TableActions";
 
 const initialState = {
@@ -7,7 +7,24 @@ const initialState = {
         data: [],
     }, fieldDescriptionMapOrganization: {}, totalDataSizeOrganization: 0, tableDataPerson: {
         data: [],
-    }, fieldDescriptionMapPerson: {}, totalDataSizePerson: 0, selectedRowsPerson: [], selectedRowsOrganization: [],
+    },
+    fieldDescriptionMapPerson: {},
+    totalDataSizePerson: 0,
+    selectedRowsPerson: [],
+    selectedRowsOrganization: [],
+    tableDataOrganizationLoading: false,
+    tableDataPersonLoading: false,
+    sortNameOrganization: "id",
+    sortOrderOrganization: "desc",
+    paginationOrganization: {pageIndex: 0, pageSize: 10},
+    filterObjOrganization: [],
+    sortNamePerson: "id",
+    sortOrderPerson: "desc",
+    paginationPerson: {pageIndex: 0, pageSize: 10},
+    filterObjPerson: [],
+    customFilterFnsOrganization: {},
+    customFilterFnsPerson: {},
+    showNotification: false
 };
 
 export default function universalListReducer(state = initialState, action = {}) {
@@ -20,122 +37,92 @@ export default function universalListReducer(state = initialState, action = {}) 
                 tableDataOrganization: action.data,
                 fieldDescriptionMapOrganization: action.fieldDescriptionMap,
                 totalDataSizeOrganization: action.data.totalDataSize,
+                tableDataOrganizationLoading: false,
+                customFilterFnsOrganization: fillCustomFns(action.fieldDescriptionMap, state.customFilterFnsOrganization)
+            });
+        case types.GET_LIST + Caches.ORGANIZATION_CACHE + types.FAIL:
+            return Object.assign({}, state, {
+                tableDataOrganizationLoading: false
+            });
+        case types.GET_LIST + Caches.ORGANIZATION_CACHE + types.REQUEST:
+            return Object.assign({}, state, {
+                tableDataOrganizationLoading: true
+            });
+        case tableActions.ON_CUSTOM_FILTER_FUNCTION_CHANGE + Caches.ORGANIZATION_CACHE:
+            return Object.assign({}, state, {
+                customFilterFnsOrganization: action.customFns
+            });
+        case tableActions.ON_CUSTOM_FILTER_FUNCTION_CHANGE + Caches.PERSON_CACHE:
+            return Object.assign({}, state, {
+                customFilterFnsPerson: action.customFns
             });
         case types.GET_LIST + Caches.PERSON_CACHE + types.SUCCESS:
             return Object.assign({}, state, {
                 tableDataPerson: action.data,
                 fieldDescriptionMapPerson: action.fieldDescriptionMap,
                 totalDataSizePerson: action.data.totalDataSize,
+                tableDataPersonLoading: false,
+                customFilterFnsPerson: fillCustomFns(action.fieldDescriptionMap, state.customFilterFnsPerson)
+            });
+        case types.GET_LIST + Caches.PERSON_CACHE + types.FAIL:
+            return Object.assign({}, state, {
+                tableDataPersonLoading: false
+            });
+        case types.SHOW_NOTIFICATION_CHANGE:
+            return Object.assign({}, state, {
+                showNotification: action.showNotification
+            });
+        case types.GET_LIST + Caches.PERSON_CACHE + types.REQUEST:
+            return Object.assign({}, state, {
+                tableDataPersonLoading: true
             });
         case tableActions.ON_SELECT_ROW + Caches.ORGANIZATION_CACHE:
-            if (action.isSelected) {
-                if (undefined === action.ctrlKey) {
-                    return Object.assign({}, state, {
-                        selectedRowsOrganization: [...state.selectedRowsOrganization, action.row,],
-                    });
-                } else if (action.ctrlKey) {
-                    return Object.assign({}, state, {
-                        selectedRowsOrganization: [...state.selectedRowsOrganization, action.row,],
-                    });
-                } else {
-                    return Object.assign({}, state, {
-                        selectedRowsOrganization: [action.row],
-                    });
-                }
-            } else {
-                return Object.assign({}, state, {
-                    selectedRowsOrganization: state.selectedRowsOrganization.filter((it) => it.id !== action.row.id),
-                });
-            }
+            return Object.assign({}, state, {
+                selectedRowsOrganization: state.tableDataOrganization.data.filter(item => Object.keys(action.row).includes(item.id))
+            });
         case tableActions.ON_SELECT_ROW + Caches.PERSON_CACHE:
-            if (action.isSelected) {
-                if (undefined === action.ctrlKey) {
-                    return Object.assign({}, state, {
-                        selectedRowsPerson: [...state.selectedRowsPerson, action.row],
-                    });
-                } else if (action.ctrlKey) {
-                    return Object.assign({}, state, {
-                        selectedRowsPerson: [...state.selectedRowsPerson, action.row],
-                    });
-                } else {
-                    return Object.assign({}, state, {
-                        selectedRowsPerson: [action.row],
-                    });
-                }
-            } else {
-                return Object.assign({}, state, {
-                    selectedRowsPerson: state.selectedRowsPerson.filter((it) => it.id !== action.row.id),
-                });
-            }
-
+            return Object.assign({}, state, {
+                selectedRowsPerson: state.tableDataPerson.data.filter(item => Object.keys(action.row).includes(item.id))
+            });
         case tableActions.UPDATE_ROW_IN_TABLE + Caches.PERSON_CACHE: {
             let newSelected = state.selectedRowsPerson.filter((it) => it.id !== action.row.id);
-            let newTableData = state.tableDataPerson.data.filter((it) => it.id !== action.row.id);
             newSelected.push(action.row);
-            newTableData.push(action.row);
-            return Object.assign({}, state, {
-                tableDataPerson: {
-                    data: newTableData, totalDataSize: state.tableDataPerson.totalDataSize,
-                }, selectedRowsPerson: newSelected,
-            });
+            return Object.assign({}, state, {selectedRowsPerson: newSelected});
         }
 
-        case tableActions.ADD_ROW_TO_TABLE + Caches.PERSON_CACHE: {
-            let newSelected = state.selectedRowsPerson;
-            let prevSize = state.tableDataPerson.totalDataSize;
-            let newTableData = state.tableDataPerson.data;
-            newSelected.push(action.row);
-            newTableData.push(action.row);
+        case tableActions.ON_PAGINATION_CHANGE + Caches.PERSON_CACHE: {
+            return Object.assign({}, state, {paginationPerson: action.pagination});
+        }
+
+        case tableActions.ON_PAGINATION_CHANGE + Caches.ORGANIZATION_CACHE: {
+            return Object.assign({}, state, {paginationOrganization: action.pagination});
+        }
+
+        case tableActions.ON_FILTER_CHANGE + Caches.PERSON_CACHE: {
+            return Object.assign({}, state, {filterObjPerson: action.filter});
+        }
+
+        case tableActions.ON_FILTER_CHANGE + Caches.ORGANIZATION_CACHE: {
+            return Object.assign({}, state, {filterObjOrganization: action.filter});
+        }
+
+        case tableActions.ON_SORTING_CHANGE + Caches.PERSON_CACHE: {
+            return Object.assign({}, state, {sortNamePerson: action.sortName, sortOrderPerson: action.sortOrder});
+        }
+
+        case tableActions.ON_SORTING_CHANGE + Caches.ORGANIZATION_CACHE: {
             return Object.assign({}, state, {
-                tableDataPerson: {data: newTableData, totalDataSize: prevSize + 1}, selectedRowsPerson: newSelected,
+                sortNameOrganization: action.sortName,
+                sortOrderOrganization: action.sortOrder
             });
         }
 
         case tableActions.UPDATE_ROW_IN_TABLE + Caches.ORGANIZATION_CACHE: {
-            let newTableData = state.tableDataOrganization.data.filter((it) => it.id !== action.row.id);
             let org = Object.assign({}, action.row);
             org["type"] = OrgTypes.getNumType(action.row["type"]);
-            newTableData.push(org);
-            return Object.assign({}, state, {
-                tableDataOrganization: {
-                    data: newTableData, totalDataSize: state.tableDataOrganization.totalDataSize,
-                }, selectedRowsOrganization: [org],
-            });
+            return Object.assign({}, state, {selectedRowsOrganization: [org]});
         }
 
-        case tableActions.ADD_ROW_TO_TABLE + Caches.ORGANIZATION_CACHE: {
-            let prevSize = state.tableDataOrganization.totalDataSize;
-            let newTableData = state.tableDataOrganization.data;
-            let org = Object.assign({}, action.row);
-            org["type"] = OrgTypes.getNumType(action.row["type"]);
-            newTableData.push(org);
-            return Object.assign({}, state, {
-                tableDataOrganization: {
-                    data: newTableData, totalDataSize: prevSize + 1,
-                }, selectedRowsOrganization: [org],
-            });
-        }
-
-        case tableActions.ON_SELECT_ALL_ROWS_ON_CURRENT_PAGE + Caches.PERSON_CACHE:
-            if (action.isSelected) {
-                return Object.assign({}, state, {
-                    selectedRowsPerson: [...state.selectedRowsPerson, ...action.rows],
-                });
-            } else {
-                return Object.assign({}, state, {
-                    selectedRowsPerson: state.selectedRowsPerson.filter((x) => action.rows.indexOf(x) < 0),
-                });
-            }
-        case tableActions.ON_SELECT_ALL_ROWS_ON_CURRENT_PAGE + Caches.ORGANIZATION_CACHE:
-            if (action.isSelected) {
-                return Object.assign({}, state, {
-                    selectedRowsOrganization: [...state.selectedRowsOrganization, ...action.rows,],
-                });
-            } else {
-                return Object.assign({}, state, {
-                    selectedRowsOrganization: state.selectedRowsOrganization.filter((x) => action.rows.indexOf(x) < 0),
-                });
-            }
         default:
             return state;
     }

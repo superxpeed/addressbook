@@ -14,6 +14,10 @@ spec:
       protocol: TCP
       port: {{web_server_port}}
       targetPort: "tcp-{{web_server_port}}"
+    - name: "tcp-{{web_service_port}}"
+      protocol: TCP
+      port: {{web_service_port}}
+      targetPort: "tcp-{{web_service_port}}"
   selector:
     app: {{namespace}}-web
   type: ClusterIP

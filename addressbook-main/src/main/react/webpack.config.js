@@ -1,54 +1,70 @@
-var webpack = require('webpack');
+const path = require('path');
+const babelConfig = require('./babel.config');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
+    mode: 'development',
     devtool: 'source-map',
     entry: [
         './src/index.js'
     ],
     output: {
-        filename: '../resources/static/bundle.js',
+        path: path.resolve(__dirname, '../resources/static'),
+        filename: 'bundle.js',
     },
     module: {
-        loaders: [
+        rules: [
             {
-                test: /\.jsx?$/,
-                include: /(src)/,
-                loader: ['babel-loader', 'eslint-loader'],
-                exclude: /disposables/
+                test: /\.(js|ts)x?$/,
+                include: [
+                    path.resolve(__dirname, 'src'),
+                ],
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: babelConfig
+                    },
+                ],
             },
             {
                 test: /\.less$/,
-                include: /(src)/,
-                loader: 'style-loader!css-loader!autoprefixer-loader!less-loader'
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'postcss-loader',
+                    'less-loader',
+                ],
             },
             {
                 test: /\.css$/,
-                include: /(src)/,
-                loader: 'style-loader!css-loader'
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'postcss-loader',
+                ],
             },
             {
                 test: /\.png$/,
-                loader: 'url-loader'
+                use: ['url-loader'],
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|gif)$/,
-                loader: 'url-loader'
-            }
-        ]
+                use: ['url-loader'],
+            },
+        ],
     },
     devServer: {
         port: 7070,
         proxy: {
-            '**': {
-                target: 'http://localhost:9000',
-                secure: false,
-                changeOrigin: true
-            }
+            '/bundle.js': {
+                target: 'http://localhost:7070'
+            },
+            '**': 'http://localhost:9000',
         },
-        publicPath: '/',
-        contentBase: '../resources/static',
-        hot: true
+        client: {
+            overlay: false,
+        },
     },
-    plugins: []
+    plugins: [new ESLintPlugin()]
 };
 

@@ -14,8 +14,8 @@ eureka_image: addressbook_eureka:latest
 eureka_client_host: http://svc-eureka-api:7777/eureka
 # JVM options
 eureka_java_opts: >
-  -Xms1g 
-  -Xmx4g 
+  -XX:InitialRAMPercentage=10 
+  -XX:MaxRAMPercentage=75 
   -XX:MaxMetaspaceSize=512m 
   -XX:MetaspaceSize=256m 
   -XX:+UseG1GC 
@@ -36,8 +36,8 @@ ignite_server_port: 10000
 ignite_image: addressbook_ignite:latest
 # JVM options
 ignite_java_opts: >
-  -Xms2g 
-  -Xmx6g 
+  -XX:InitialRAMPercentage=40 
+  -XX:MaxRAMPercentage=75 
   -XX:MaxMetaspaceSize=512m 
   -XX:MetaspaceSize=256m 
   -XX:+UseG1GC 
@@ -66,8 +66,8 @@ mongo_db_ip: 192.168.65.2
 external_mongo_db_port: 27017
 # JVM options
 mongo_java_opts: >
-  -Xms1g 
-  -Xmx4g 
+  -XX:InitialRAMPercentage=10 
+  -XX:MaxRAMPercentage=75 
   -XX:MaxMetaspaceSize=512m 
   -XX:MetaspaceSize=256m 
   -XX:+UseG1GC 
@@ -98,8 +98,8 @@ postgres_ip: 192.168.65.2
 postgres_db: postgres
 # JVM options
 postgres_java_opts: >
-  -Xms1g 
-  -Xmx4g 
+  -XX:InitialRAMPercentage=10 
+  -XX:MaxRAMPercentage=75 
   -XX:MaxMetaspaceSize=512m 
   -XX:MetaspaceSize=256m 
   -XX:+UseG1GC 
@@ -116,6 +116,10 @@ postgres_java_opts: >
 
 # Web application settings
 web_server_port: 9000
+# Route for http metrics
+web_istio_service_route_host: metrics-http.localdev.me
+# Port for metrics & probes
+web_service_port: 8081
 # URL to the addressbook_web image
 web_image: addressbook_web:latest
 # DAO implementation: POSTGRE-SERVER / MONGO-SERVER / IGNITE-SERVER
@@ -128,8 +132,8 @@ web_istio_route_host: istio-https.localdev.me
 web_ssl_enabled: false
 # JVM options
 web_java_opts: > 
-  -Xms1g 
-  -Xmx4g 
+  -XX:InitialRAMPercentage=10 
+  -XX:MaxRAMPercentage=75 
   -XX:MaxMetaspaceSize=512m 
   -XX:MetaspaceSize=256m 
   -XX:+UseG1GC 

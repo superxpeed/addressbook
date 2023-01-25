@@ -35,12 +35,8 @@ spec:
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
-              port: {{web_server_port}}
-{% if web_ssl_enabled %}
-              scheme: HTTPS
-{% else %}
+              port: {{web_service_port}}
               scheme: HTTP
-{% endif %}
             initialDelaySeconds: 60
             timeoutSeconds: 2
             periodSeconds: 10
@@ -49,12 +45,8 @@ spec:
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
-              port: {{web_server_port}}
-{% if web_ssl_enabled %}
-              scheme: HTTPS
-{% else %}
+              port: {{web_service_port}}
               scheme: HTTP
-{% endif %}
             initialDelaySeconds: 60
             timeoutSeconds: 2
             periodSeconds: 10
@@ -63,12 +55,8 @@ spec:
           startupProbe:
             httpGet:
               path: /actuator/health/readiness
-              port: {{web_server_port}}
-{% if web_ssl_enabled %}
-              scheme: HTTPS
-{% else %}
+              port: {{web_service_port}}
               scheme: HTTP
-{% endif %}
             failureThreshold: 30
             periodSeconds: 10
           terminationMessagePath: /dev/termination-log
@@ -83,6 +71,9 @@ spec:
           ports:
             - name: tcp-{{web_server_port}}
               containerPort: {{web_server_port}}
+              protocol: TCP
+            - name: tcp-{{web_service_port}}
+              containerPort: {{web_service_port}}
               protocol: TCP
           imagePullPolicy: Never
           volumeMounts:

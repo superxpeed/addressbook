@@ -1,20 +1,19 @@
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
 import * as TableActions from "./TableActions";
+import MaterialReactTable from "material-react-table";
+import {Box, TextField} from "@mui/material";
+import Button from "@mui/material/Button";
+import {ExportToCsv} from "export-to-csv";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import {DatePicker} from "@mui/x-date-pickers/DatePicker";
+import {DateComparators} from "../Common/Utils";
 import * as Utils from "../Common/Utils";
 
-export const FILTER_REF = "filter_";
-
-@connect(null, (dispatch) => ({
-    onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
-    onSelectAllRowsOnCurrentPage: bindActionCreators(TableActions.onSelectAllRowsOnCurrentPage, dispatch),
-}), null, {withRef: true})
-export class Table extends React.Component {
-    state = {
-        prevFilterResultLength: 0, sortName: "id", sortOrder: "desc", sizePerPage: 15, page: 1, filterObj: {},
-    };
+export class TableRaw extends React.Component {
 
     static html2text = (html) => {
         let tag = document.createElement("div");
@@ -22,183 +21,244 @@ export class Table extends React.Component {
         return tag.innerText;
     };
 
-    static sameCellFormatter = (cell) => {
-        return <div title={cell}>{cell}</div>;
+    onSortChange = (sortingState) => {
+        let newSortName = "id"
+        let newSortOrder = "desc"
+        if (sortingState() != null && sortingState().length !== 0) {
+            newSortName = sortingState()[0].id
+            newSortOrder = sortingState()[0].desc ? "desc" : "asc"
+            if (this.props.sortName === newSortName && this.props.sortOrder === newSortOrder) return
+        }
+        this.props.onSortingChange(newSortName, newSortOrder, this.props.cache);
+        this.props.refreshTable(this.props.pagination.pageIndex + 1, this.props.pagination.pageSize, newSortName, newSortOrder, Utils.convertFilterObj(this.props.filterObj, this.props.customFilterFns), this.props.cache);
     };
 
-    static resumeCellFormatter = (cell, row) => {
-        return <div title={Table.html2text(cell)}>{Table.html2text(cell)}</div>;
-    };
+    componentDidMount() {
+        this.props.refreshTable(this.props.pagination.pageIndex + 1, this.props.pagination.pageSize, this.props.sortName, this.props.sortOrder, Utils.convertFilterObj(this.props.filterObj, this.props.customFilterFns), this.props.cache);
+    }
 
-    onSortChange = (sortName, sortOrder) => {
-        if (this.state.sortName !== sortName || this.state.sortOrder !== sortOrder) {
-            this.setState({sortName, sortOrder});
-            this.props.refreshTable(this.state.page, this.state.sizePerPage, sortName, sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
+    onFilterChange = (updater) => {
+        this.props.onFilterChange(updater(this.props.filterObj), this.props.cache);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (JSON.stringify(this.props.filterObj) !== JSON.stringify(prevProps.filterObj)) {
+            this.props.refreshTable(this.props.pagination.pageIndex + 1, this.props.pagination.pageSize, this.props.sortName, this.props.sortOrder, Utils.convertFilterObj(this.props.filterObj, this.props.customFilterFns), this.props.cache);
+        }
+    }
+
+    onPaginationChange = (updater) => {
+        const nextState = updater(this.props.pagination);
+        if (this.props.pagination.pageIndex !== nextState.pageIndex || this.props.pagination.pageSize !== nextState.pageSize) {
+            this.props.onPaginationChange({
+                pageIndex: nextState.pageIndex,
+                pageSize: nextState.pageSize
+            }, this.props.cache);
+            this.props.refreshTable(nextState.pageIndex + 1, nextState.pageSize, this.props.sortName, this.props.sortOrder, Utils.convertFilterObj(this.props.filterObj, this.props.customFilterFns), this.props.cache);
         }
     };
 
-    convertFilterObj = (filterObj) => {
-        let converted = [];
-        for (const key of Object.keys(filterObj)) {
-            if (filterObj.hasOwnProperty(key)) {
-                if (filterObj[key].type === "DateFilter") {
-                    converted.push({
-                        name: key,
-                        value: filterObj[key].value.date,
-                        comparator: filterObj[key].value.comparator,
-                        type: filterObj[key].type,
-                    });
-                }
-                if (filterObj[key].type === "NumberFilter") {
-                    converted.push({
-                        name: key,
-                        value: filterObj[key].value.number,
-                        comparator: filterObj[key].value.comparator,
-                        type: filterObj[key].type,
-                    });
-                }
-                if (filterObj[key].type === "TextFilter") {
-                    converted.push({
-                        name: key, value: filterObj[key].value, comparator: "", type: filterObj[key].type,
-                    });
-                }
+    onSelectTableRow = (updater) => {
+        const nextState = updater(this.props.selectedRows.map((x) => x.id).reduce((a, v) => ({...a, [v]: true}), {}));
+        this.props.onSelectRow(nextState, this.props.cache);
+    };
 
-                if (filterObj[key].type === "SelectFilter") {
-                    converted.push({
-                        name: key, value: filterObj[key].value, comparator: "", type: "TextFilter",
-                    });
-                }
+    getCellFormatter = (fieldName) => {
+        if (fieldName === "resume")
+            return function Formatter({cell}) {
+                return <div title={Table.html2text(cell.getValue())}>{Table.html2text(cell.getValue())}</div>
+            }
+        if (fieldName === "salary")
+            return function Formatter({cell}) {
+                return <Box
+                    sx={(theme) => ({
+                        backgroundColor: theme.palette.success.dark,
+                        borderRadius: "0.25rem",
+                        color: "#fff",
+                        p: "0.25rem",
+                    })}
+                >
+                    {cell.getValue()}
+                </Box>
+            }
+        return function Formatter({cell}) {
+            return <div title={cell.getValue()}>{cell.getValue()}</div>
+        }
+    }
+
+    getColumnDefinition = (columnMetaData) => {
+
+        if (columnMetaData.name === "type") {
+            return {
+                accessorKey: columnMetaData.name,
+                header: columnMetaData.displayName,
+                minSize: columnMetaData.width,
+                maxSize: columnMetaData.width,
+                Cell: this.getCellFormatter(columnMetaData.name),
+                columnFilterModeOptions: ["equals"],
+                filterFn: "equals",
+                filterVariant: "select",
+                filterSelectOptions: [{text: "Non profit", value: "0"},
+                    {text: "Private", value: "1"},
+                    {text: "Government", value: "2"},
+                    {text: "Public", value: "3"}]
             }
         }
-        return converted;
-    };
 
-    onFilterChange = (filterObj) => {
-        this.setState({filterObj});
-        this.props.refreshTable(this.state.page, this.state.sizePerPage, this.state.sortName, this.state.sortOrder, this.convertFilterObj(filterObj), this.props.cache);
-    };
-
-    onSizePerPageList = (sizePerPage) => {
-        if (this.state.sizePerPage !== sizePerPage) {
-            this.setState({sizePerPage});
-            this.props.refreshTable(this.state.page, sizePerPage, this.state.sortName, this.state.sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
+        if (columnMetaData.type === "java.lang.String") {
+            return {
+                accessorKey: columnMetaData.name,
+                header: columnMetaData.displayName,
+                minSize: columnMetaData.width,
+                maxSize: columnMetaData.width,
+                Cell: this.getCellFormatter(columnMetaData.name),
+                filterFn: "contains",
+                columnFilterModeOptions: ["contains"]
+            }
         }
-    };
 
-    onPageChange = (page, sizePerPage) => {
-        if (this.state.page !== page) {
-            this.setState({page});
-            this.props.refreshTable(page, this.state.sizePerPage, this.state.sortName, this.state.sortOrder, this.convertFilterObj(this.state.filterObj), this.props.cache);
+        if (columnMetaData.type === "java.util.Date") {
+            return {
+                accessorKey: columnMetaData.name,
+                header: columnMetaData.displayName,
+                minSize: columnMetaData.width,
+                maxSize: columnMetaData.width,
+                filterFn: "equals",
+                Cell: this.getCellFormatter(columnMetaData.name),
+                columnFilterModeOptions: ["equals", "notEquals", "greaterThan", "greaterThanOrEqualTo", "lessThan", "lessThanOrEqualTo"],
+                Filter: ({column}) => (
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            onChange={(newValue) => {
+                                column.setFilterValue(newValue);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    sx={{mt: 1, minWidth: "110px"}}
+                                    helperText={"Filter Mode: " + DateComparators.getEngType(column.getFilterFn().name)}
+                                    variant="outlined"
+                                />
+                            )}
+                            value={column.getFilterValue()}
+                        />
+                    </LocalizationProvider>
+                )
+            }
         }
-    };
 
-    onSelectTableRow = (row, isSelected, e = {}) => {
-        this.props.onSelectRow(row, isSelected, e, this.props.cache);
-    };
-
-    onSelectTableAllRowsOnCurrentPage = (isSelected, rows) => {
-        this.props.onSelectAllRowsOnCurrentPage(isSelected, rows, this.props.cache);
-    };
+        return {
+            accessorKey: columnMetaData.name,
+            header: columnMetaData.displayName,
+            size: columnMetaData.width,
+            Cell: this.getCellFormatter(columnMetaData.name)
+        }
+    }
 
     render() {
-        const renderShowsTotal = (start, to, total) => {
-            return (<p
-                    style={{
-                        position: "relative", left: "90%", display: "inline-block",
-                    }}
-                >
-                    From {start} to {to} total {total}
-                </p>);
-        };
-
-        let selectRowProp;
-        if (this.props.selectMode === "multi") {
-            selectRowProp = {
-                mode: "checkbox",
-                bgColor: "#98CAF1",
-                onSelect: this.onSelectTableRow,
-                clickToSelect: true,
-                onSelectAll: this.onSelectTableAllRowsOnCurrentPage,
-                selected: this.props.selectedRows.map((x) => x.id),
-                onlyUnselectVisible: true,
-            };
-        }
-        if (this.props.selectMode === "single") {
-            selectRowProp = {
-                mode: "radio",
-                bgColor: "#98CAF1",
-                onSelect: this.onSelectTableRow,
-                clickToSelect: true,
-                selected: this.props.selectedRows.map((x) => x.id),
-                onlyUnselectVisible: true,
-            };
-        }
-
-        const options = {
-            sizePerPageList: [10, 15, 25, 50],
-            sizePerPage: this.state.sizePerPage,
-            paginationShowsTotal: renderShowsTotal,
-            noDataText: "No data to display",
-            sortName: this.state.sortName,
-            sortOrder: this.state.sortOrder,
-            onSortChange: this.onSortChange,
-            onPageChange: this.onPageChange,
-            onFilterChange: this.onFilterChange,
-            onSizePerPageList: this.onSizePerPageList,
-            page: this.state.page,
-        };
-
-        const getFilterByType = (info) => {
-            if (info.name === "type") return {
-                type: "SelectFilter", options: Utils.organizationTypes,
-            };
-            if (info.type === "java.lang.String") return {
-                type: "TextFilter", delay: 1000,
-            };
-            if (info.type === "java.lang.Long") return {
-                type: "NumberFilter", delay: 1000, numberComparators: ["=", ">", "<="],
-            };
-            if (info.type === "java.util.Date") return {
-                type: "DateFilter",
-            };
-        };
-
         let columns = null;
-
         if ((this.props.fieldDescriptionMap != null && Object.keys(this.props.fieldDescriptionMap).length !== 0) || this.props.fieldDescriptionMap.constructor !== Object) {
-            columns = Object.keys(this.props.fieldDescriptionMap).map((key) => (<TableHeaderColumn
-                    ref={FILTER_REF + key}
-                    dataSort={true}
-                    filter={getFilterByType(this.props.fieldDescriptionMap[key])}
-                    width={this.props.fieldDescriptionMap[key].width}
-                    dataField={this.props.fieldDescriptionMap[key].name}
-                    key={this.props.fieldDescriptionMap[key].name}
-                    isKey={this.props.fieldDescriptionMap[key].name === "id"}
-                    dataFormat={this.props.fieldDescriptionMap[key].name === "resume" ? Table.resumeCellFormatter : Table.sameCellFormatter}
-                    hidden={this.props.fieldDescriptionMap[key].hidden}
-                >
-                    {this.props.fieldDescriptionMap[key].displayName}
-                </TableHeaderColumn>));
+            columns = Object.keys(this.props.fieldDescriptionMap).map((key) => this.getColumnDefinition(this.props.fieldDescriptionMap[key]));
         }
         let bootstrapTable;
         if (columns != null) {
-            bootstrapTable = (<BootstrapTable
-                    data={this.props.data}
-                    hover
-                    pagination
-                    condensed
-                    ref="bootstrap_table"
-                    fetchInfo={{dataTotalSize: this.props.totalDataSize}}
-                    remote={true}
-                    tableHeaderClass="list-form-table-header"
-                    selectRow={selectRowProp}
-                    options={options}
-                >
-                    {columns}
-                </BootstrapTable>);
+            const csvOptions = {
+                fieldSeparator: ",",
+                quoteStrings: "\"",
+                decimalSeparator: ".",
+                showLabels: true,
+                useBom: true,
+                useKeysAsHeaders: false,
+                headers: columns.map((c) => c.header),
+            };
+            const csvExporter = new ExportToCsv(csvOptions);
+            bootstrapTable = (<MaterialReactTable
+                data={this.props.data}
+                columns={columns}
+                enableRowSelection
+                enableMultiRowSelection={this.props.selectMode === "multi"}
+                onColumnFiltersChange={this.onFilterChange}
+                onPaginationChange={this.onPaginationChange}
+                onSortingChange={this.onSortChange}
+                manualPagination
+                manualSorting
+                manualFiltering
+                enableClickToCopy={true}
+                enableGlobalFilter={false}
+                getRowId={(originalRow) => originalRow.id}
+                enableMultiSort={false}
+                enableHiding={false}
+                positionToolbarAlertBanner="bottom"
+                enableFullScreenToggle={false}
+                enableColumnFilterModes={true}
+                onColumnFilterFnsChange={(updater) => {
+                    this.props.onCustomFilterFn(updater(this.props.customFilterFns), this.props.cache)
+                }}
+                onRowSelectionChange={this.onSelectTableRow}
+                rowCount={this.props.totalDataSize}
+                renderTopToolbarCustomActions={({table}) => (
+                    <Box
+                        sx={{display: "flex", gap: "1rem", p: "0.5rem", flexWrap: "wrap"}}
+                    >
+                        <Button
+                            disabled={table.getRowModel().rows.length === 0}
+                            onClick={() => csvExporter.generateCsv(table.getRowModel().rows.map((row) => row.original))}
+                            startIcon={<FileDownloadIcon/>}
+                            variant="contained"
+                        >
+                            Export Page Rows
+                        </Button>
+                        <Button
+                            disabled={
+                                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                            }
+                            onClick={() => csvExporter.generateCsv(table.getSelectedRowModel().rows.map((row) => row.original))}
+                            startIcon={<FileDownloadIcon/>}
+                            variant="contained"
+                        >
+                            Export Selected Rows
+                        </Button>
+                    </Box>
+                )}
+                muiTablePaginationProps={{
+                    rowsPerPageOptions: [10, 15, 25, 50],
+                    showFirstButton: true,
+                    showLastButton: true,
+                }}
+                muiTableHeadCellFilterTextFieldProps={{
+                    sx: {m: "0.5rem 0", width: "100%"},
+                    variant: "outlined",
+                }}
+                muiTableBodyRowProps={({row}) => ({
+                    onClick: row.getToggleSelectedHandler(),
+                    sx: {cursor: "pointer"},
+                })}
+                state={{
+                    columnFilterFns: this.props.customFilterFns,
+                    columnFilters: this.props.filterObj,
+                    sorting: [{id: this.props.sortName, desc: this.props.sortOrder === "desc"}],
+                    pagination: this.props.pagination,
+                    rowSelection: this.props.selectedRows.map((x) => x.id).reduce((a, v) => ({...a, [v]: true}), {}),
+                    showProgressBars: this.props.isLoading
+                }}
+                initialState={{
+                    density: "compact",
+                    showColumnFilters: true,
+                    pagination: this.props.pagination,
+                    sorting: [{id: this.props.sortName, desc: this.props.sortOrder === "desc"}]
+                }}
+            />);
         } else {
             bootstrapTable = <div/>;
         }
         return <div>{bootstrapTable}</div>;
     }
 }
+
+export const Table = connect(null, (dispatch) => ({
+    onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
+    onPaginationChange: bindActionCreators(TableActions.onPaginationChange, dispatch),
+    onFilterChange: bindActionCreators(TableActions.onFilterChange, dispatch),
+    onSortingChange: bindActionCreators(TableActions.onSortingChange, dispatch),
+    onCustomFilterFn: bindActionCreators(TableActions.onCustomFilterFn, dispatch)
+}), null, {withRef: true})(TableRaw);

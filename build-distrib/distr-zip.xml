@@ -96,11 +96,14 @@
             <outputDirectory>./deploy</outputDirectory>
             <includes>
                 <include>ansible/**</include>
+                <include>secrets/**</include>
+                <include>readme/**</include>
                 <include>templates/**</include>
                 <include>admin-role-binding.yml</include>
                 <include>dashboard-adminuser.yml</include>
                 <include>docker-compose.yml</include>
                 <include>docker-compose-ignite.yml</include>
+                <include>Addressbook_dashboard.json</include>
                 <include>instructions.md</include>
             </includes>
         </fileSet>

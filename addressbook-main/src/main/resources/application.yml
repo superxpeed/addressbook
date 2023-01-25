@@ -36,6 +36,10 @@ management:
     web:
       exposure:
         include: "*"
+  server:
+    port: 8081
+    ssl:
+      enabled: false
   endpoint:
     health:
       enabled: true

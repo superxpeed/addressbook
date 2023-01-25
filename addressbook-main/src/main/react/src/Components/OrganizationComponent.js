@@ -1,4 +1,3 @@
-import {Button, ControlLabel, FormControl, FormGroup} from "react-bootstrap";
 import update from "react-addons-update";
 import React from "react";
 import * as url from "../Common/Url";
@@ -8,39 +7,34 @@ import {bindActionCreators} from "redux";
 import * as TableActions from "../Table/TableActions";
 import {AuthTokenUtils, Caches, Generator, OrgTypes} from "../Common/Utils";
 import * as MenuActions from "../Pages/MenuFormActions";
+import {FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
+import Button from "@mui/material/Button";
 
-@connect(null, (dispatch) => ({
-    updateRow: bindActionCreators(TableActions.updateRow, dispatch),
-    addRow: bindActionCreators(TableActions.addRow, dispatch),
-    showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
-    showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),
-    lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch),
-}))
-export class OrganizationComponent extends React.Component {
+export class OrganizationComponentRaw extends React.Component {
     state = {
-        organization: {}, create: false, locked: true
+        create: false, locked: true
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            organization: props.organization, invalidFields: new Set()
+            organization: {}, invalidFields: new Set()
         };
     }
 
-    handleChange(e, v) {
+    handleChange = (e) => {
         this.setState(update(this.state, {
-            organization: {[e]: {$set: v.currentTarget.value}},
+            organization: {[e.target.id]: {$set: e.target.value}},
         }));
     }
 
     getValidationState(field) {
         if (this.state.organization[field] == null || this.state.organization[field].length === 0) {
             this.state.invalidFields.add(field);
-            return "error";
+            return false;
         } else {
             this.state.invalidFields.delete(field);
-            return "success";
+            return true;
         }
     }
 
@@ -52,23 +46,39 @@ export class OrganizationComponent extends React.Component {
         }
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.organization !== this.state.organization) {
-            if (this.state.organization["id"] != null && this.state.create === false) {
-                this.props.lockUnlockRecord(Caches.ORGANIZATION_CACHE, this.state.organization["id"], "unlock");
-            }
-            if (nextProps.organization["id"] == null) {
-                this.setState({
-                    organization: {
-                        name: "", street: "", id: Generator.uuidv4(), zip: "", type: "2",
-                    }, create: true, locked: true,
-                });
-            } else {
-                this.props.lockUnlockRecord(Caches.ORGANIZATION_CACHE, nextProps.organization["id"], "lock", this.lockCallback);
-                let org = Object.assign({}, nextProps.organization);
-                org["type"] = OrgTypes.getEngType(nextProps.organization["type"]);
-                this.setState({organization: org, create: false});
-            }
+    componentWillUnmount() {
+        if (this.state.organization["id"] != null && this.state.create === false) {
+            this.props.lockUnlockRecord(Caches.ORGANIZATION_CACHE, this.state.organization["id"], "unlock", this.props.showNotification);
+        }
+    }
+
+    updateData = () => {
+        if (this.state.organization["id"] != null && this.state.create === false) {
+            this.props.lockUnlockRecord(Caches.ORGANIZATION_CACHE, this.state.organization["id"], "unlock", this.props.showNotification);
+        }
+        if (this.props.organization["id"] == null) {
+            this.setState({
+                organization: {
+                    name: "", street: "", id: Generator.uuidv4(), zip: "", type: "2",
+                }, create: true, locked: true,
+            });
+        } else {
+            this.props.lockUnlockRecord(Caches.ORGANIZATION_CACHE, this.props.organization["id"], "lock", this.props.showNotification, this.lockCallback);
+            let org = Object.assign({}, this.props.organization);
+            org["type"] = OrgTypes.getEngType(this.props.organization["type"]);
+            this.setState({organization: org, create: false});
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.organization !== null) {
+            this.updateData();
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.organization !== prevProps.organization) {
+            this.updateData();
         }
     }
 
@@ -88,6 +98,7 @@ export class OrganizationComponent extends React.Component {
             })
             .then((text) => {
                 if (isOk) {
+                    this.props.onSuccess()
                     this.props.updateRow(this.state.organization, Caches.ORGANIZATION_CACHE);
                     if (toCreate)
                         this.props.showCommonAlert("Organization created!")
@@ -107,12 +118,13 @@ export class OrganizationComponent extends React.Component {
 
     getButton() {
         if (this.state.create) {
-            return (<Button style={{width: "100%"}} disabled={this.state.invalidFields.size !== 0}
+            return (<Button variant="contained" style={{width: "100%"}} disabled={this.state.invalidFields.size !== 0}
                             onClick={() => this.saveOrganization(this.state.create)}>
                 Create organization
             </Button>);
         } else {
             return (<Button
+                variant="contained"
                 style={{width: "100%"}}
                 onClick={() => this.saveOrganization(this.state.create)}
                 disabled={this.state.invalidFields.size !== 0 || !this.state.locked}
@@ -129,76 +141,76 @@ export class OrganizationComponent extends React.Component {
                     width: "50%", display: "inline-block", verticalAlign: "top", paddingRight: "5px",
                 }}
             >
-                <form>
-                    <FormGroup
-                        controlId="name"
-                        validationState={this.getValidationState("name")}
-                    >
-                        <ControlLabel>Organization name</ControlLabel>
-                        <FormControl
-                            type="text"
-                            value={this.state.organization["name"]}
-                            placeholder="Enter name"
-                            onChange={this.handleChange.bind(this, "name")}
-                        />
-                        <FormControl.Feedback/>
-                    </FormGroup>
-                </form>
-                <form>
-                    <FormGroup
-                        controlId="street"
-                        validationState={this.getValidationState("street")}
-                    >
-                        <ControlLabel>Address street</ControlLabel>
-                        <FormControl
-                            type="text"
-                            value={this.state.organization["street"]}
-                            placeholder="Enter address street"
-                            onChange={this.handleChange.bind(this, "street")}
-                        />
-                        <FormControl.Feedback/>
-                    </FormGroup>
-                </form>
+                <TextField
+                    error={!this.getValidationState("name")}
+                    id="name"
+                    type="text"
+                    label="Enter name"
+                    variant="outlined"
+                    autoComplete="off"
+                    sx={{mt: 1, display: "flex", height: "80px"}}
+                    value={this.state.organization["name"] ? this.state.organization["name"] : ""}
+                    helperText={!this.getValidationState("name") ? "Required field!" : ""}
+                    onChange={this.handleChange}
+                />
+
+                <TextField
+                    error={!this.getValidationState("street")}
+                    id="street"
+                    type="text"
+                    label="Enter address street"
+                    variant="outlined"
+                    autoComplete="off"
+                    sx={{mt: 1, display: "flex", height: "90px"}}
+                    value={this.state.organization["street"] ? this.state.organization["street"] : ""}
+                    helperText={!this.getValidationState("street") ? "Required field!" : ""}
+                    onChange={this.handleChange}
+                />
             </div>
             <div
                 style={{
                     width: "50%", display: "inline-block", verticalAlign: "top", paddingLeft: "5px",
                 }}
             >
-                <form>
-                    <FormGroup
-                        controlId="zip"
-                        validationState={this.getValidationState("zip")}
+                <TextField
+                    error={!this.getValidationState("zip")}
+                    id="zip"
+                    type="text"
+                    label="Enter address zip"
+                    variant="outlined"
+                    autoComplete="off"
+                    sx={{mt: 1, display: "flex", height: "80px"}}
+                    value={this.state.organization["zip"] ? this.state.organization["zip"] : ""}
+                    helperText={!this.getValidationState("zip") ? "Required field!" : ""}
+                    onChange={this.handleChange}
+                />
+                <FormControl sx={{mt: 1, display: "flex", height: "90px"}}>
+                    <InputLabel id="type-label">Type</InputLabel>
+                    <Select
+                        labelId="type-label"
+                        name="type"
+                        defaultValue=""
+                        value={this.state.organization["type"] ? this.state.organization["type"] : "2"}
+                        label="Type"
+                        onChange={this.handleTypeChange}
                     >
-                        <ControlLabel>Address zip</ControlLabel>
-                        <FormControl
-                            type="text"
-                            value={this.state.organization["zip"]}
-                            placeholder="Enter address zip"
-                            onChange={this.handleChange.bind(this, "zip")}
-                        />
-                        <FormControl.Feedback/>
-                    </FormGroup>
-                </form>
-                <form>
-                    <FormGroup>
-                        <ControlLabel>Type</ControlLabel>
-                        <FormControl
-                            id="organizationType"
-                            name="type"
-                            componentClass="select"
-                            value={this.state.organization["type"]}
-                            onChange={this.handleTypeChange}
-                        >
-                            <option value="0">Non profit</option>
-                            <option value="1">Private</option>
-                            <option value="2">Government</option>
-                            <option value="3">Public</option>
-                        </FormControl>
-                    </FormGroup>
-                </form>
+                        <MenuItem value="0">Non profit</MenuItem>
+                        <MenuItem value="1">Private</MenuItem>
+                        <MenuItem value="2">Government</MenuItem>
+                        <MenuItem value="3">Public</MenuItem>
+                    </Select>
+                </FormControl>
             </div>
             {this.getButton()}
         </div>);
     }
 }
+
+export const OrganizationComponent = connect((state) => ({
+    showNotification: state.universalListReducer.showNotification,
+}), (dispatch) => ({
+    updateRow: bindActionCreators(TableActions.updateRow, dispatch),
+    showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
+    showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),
+    lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch),
+}), null, {withRef: true})(OrganizationComponentRaw);

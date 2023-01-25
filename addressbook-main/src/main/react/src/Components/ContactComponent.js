@@ -1,6 +1,18 @@
 import React from "react";
-import {Button, FormControl, Panel} from "react-bootstrap";
 import {ContactTypes} from "../Common/Utils";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Button from "@mui/material/Button";
 
 export class ContactComponent extends React.Component {
     state = {
@@ -15,7 +27,7 @@ export class ContactComponent extends React.Component {
     }
 
     handleChange = (e) => {
-        this.setState({[e.target.id]: e.target.value});
+        this.setState({[e.target.name]: e.target.value});
     };
 
     toJson() {
@@ -28,54 +40,60 @@ export class ContactComponent extends React.Component {
         });
     }
 
-    getFormControl(field) {
-        return (<FormControl
-                style={{marginTop: "5px"}}
-                type="text"
-                value={this.state[field]}
-                placeholder={"Enter " + field}
-                id={field}
-                onChange={this.handleChange}/>);
-    }
-
     render() {
-        return (<Panel style={{marginBottom: "5px"}}>
-                <Panel.Heading>
-                    <Panel.Title
-                        style={{display: "inline-block", width: "calc(100% - 25px)"}}
-                        toggle>
-                        {this.props.data.type == null ? "New contact" : ContactTypes.getEngType(this.props.data.type)}
-                    </Panel.Title>
-                    <Button
-                        style={{
-                            width: "32px",
-                            height: "32px",
-                            marginTop: "-10px",
-                            marginBottom: "-5px",
-                            marginRight: "-10px",
-                            position: "relative",
-                            padding: "6px",
-                        }}
-                        onClick={this.props.deleteContact.bind(null, {id: this.props.id})}>
-                        X
-                    </Button>
-                </Panel.Heading>
-                <Panel.Body collapsible>
-                    <FormControl
+
+        return (<Accordion>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon/>}
+                aria-controls="panel1a-content">
+                <Typography>{this.props.data.type == null ? "New contact" : ContactTypes.getEngType(this.props.data.type)}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <FormControl fullWidth>
+                    <InputLabel id="type-label">Type</InputLabel>
+                    <Select
+                        labelId="type-label"
                         id="type"
-                        style={{marginTop: "5px"}}
-                        componentClass="select"
+                        name="type"
                         value={this.state.type}
-                        placeholder="1"
-                        onChange={this.handleChange}>
-                        <option value="0">Mobile phone</option>
-                        <option value="1">Home phone</option>
-                        <option value="2">Address</option>
-                        <option value="3">E-mail</option>
-                    </FormControl>
-                    {this.getFormControl("data")}
-                    {this.getFormControl("description")}
-                </Panel.Body>
-            </Panel>);
+                        label="Type"
+                        onChange={this.handleChange}
+                    >
+                        <MenuItem value={0}>Mobile phone</MenuItem>
+                        <MenuItem value={1}>Home phone</MenuItem>
+                        <MenuItem value={2}>Address</MenuItem>
+                        <MenuItem value={3}>E-mail</MenuItem>
+                    </Select>
+                </FormControl>
+                <TextField
+                    id="data"
+                    type="text"
+                    name="data"
+                    value={this.state.data}
+                    label="Enter data"
+                    variant="outlined"
+                    autoComplete="off"
+                    sx={{mt: 2, display: "flex"}}
+                    onChange={this.handleChange}
+                />
+                <TextField
+                    id="description"
+                    type="text"
+                    name="description"
+                    value={this.state.description}
+                    label="Enter description"
+                    variant="outlined"
+                    autoComplete="off"
+                    sx={{mt: 2, display: "flex"}}
+                    onChange={this.handleChange}
+                />
+                <Button sx={{mt: 2, width: "100%", height: "56px"}}
+                        onClick={this.props.deleteContact.bind(null, {id: this.props.id})}
+                        variant="outlined"
+                        color="error">
+                    Delete contact
+                </Button>
+            </AccordionDetails>
+        </Accordion>)
     }
 }

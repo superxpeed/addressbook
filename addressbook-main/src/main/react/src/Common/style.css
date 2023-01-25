@@ -1,79 +1,60 @@
-.container {
-    width: 100% !important;
+#mui-rte-root {
+    display: flex;
+    min-height: 200px;
+    border: 1px solid rgba(81, 81, 81, 1);
+    border-radius: 5px;
+    padding-left: 15px;
 }
 
-.breadcrumb {
-    margin-bottom: 0 !important;
+.alert-success {
+    background-color: #388e3c;
+    color: white;
+    border-radius: 5px;
 }
 
-.navbar-default {
-    margin-bottom: 0 !important;
+.alert-danger {
+    background-color: #f44336;
+    color: black;
+    border-radius: 5px;
+    max-height: 300px;
 }
 
-.navbar-nav {
-    margin-top: 8px !important;
+.alert-warning {
+    background-color: #f57c00;
+    color: black;
+    border-radius: 5px;
+    max-height: 300px;
 }
 
-.btn-default {
-    background-color: white;
-    background-image: -webkit-linear-gradient(white, white);
-    background-repeat: repeat-y;
+.close-0-2-24 {
+    background-color: rgba(81, 81, 81, 1);
+    color: white;
+    border: 1px solid rgba(81, 81, 81, 1);
+    border-radius: 5px;
+    margin-left: 1px;
+    margin-bottom: 1px;
 }
 
-.panel-default > .panel-heading {
-    background-color: white;
-    background-image: -webkit-linear-gradient(white, white);
-    background-repeat: repeat-y;
+.MuiTableHead-root .MuiFormControl-fullWidth .MuiFormHelperText-contained {
+    margin-top: 6px;
 }
 
-.Button__root___1gz0c {
-    background: white !important;
+.MuiTableHead-root .MuiFormHelperText-root {
+    min-height: 30px;
 }
 
-a {
-    color: black !important;
+::-webkit-scrollbar {
+    right: 0;
+    width: 12px;
+    height: 12px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 8px;
+    width: 12px;
+    height: 12px;
 }
 
-.navbar-collapse {
-    padding-left: 0 !important;
-}
-
-.container {
-    padding-left: 0 !important;
-}
-
-#adminContainer {
-    width: 50%;
-    display: inline-block;
-}
-
-#adminIgniteContainer {
-    width: 50%;
-    display: inline-block;
-    vertical-align: top;
-}
-
-#adminContainer td {
-    width: 50%;
-}
-
-#adminIgniteContainer td {
-    width: 50%;
-}
-
-.alert-dismissable {
-    overflow-x: hidden;
-    max-height: 150px;
-    overflow-y: scroll;
-    font-size: 12px;
-    padding: 5px;
-}
-
-#pageDropDown {
-    display: inline-block !important;
-}
-
-.react-bs-table-sizePerPage-dropdown {
-    display: inline-block !important;
-    float: left;
+::-webkit-scrollbar-track {
+    background-color: transparent;
 }

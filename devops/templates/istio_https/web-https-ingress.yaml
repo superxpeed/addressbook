@@ -18,4 +18,4 @@ spec:
               service:
                 name: svc-web-ingress
                 port:
-                  number: 5443
+                  number: 8443

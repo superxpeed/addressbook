@@ -2,9 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
 {% if web_ssl_enabled %}
-  name: https
+  name: simple-https
 {% else %}
-  name: http
+  name: simple-http
 {% endif %}
   annotations:
     kubernetes.io/ingress.class: "nginx"

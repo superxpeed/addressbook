@@ -1,5 +1,3 @@
-require("../Common/style.css");
-
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -7,36 +5,38 @@ import {Table} from "../Table/Table";
 import {AlertList} from "react-bs-notifier";
 import * as CommonActions from "./UniversalListActions";
 import * as Url from "../Common/Url";
+import * as Utils from "../Common/Utils";
 import {Caches, HashUtils} from "../Common/Utils";
-import {Breadcrumb, Button, Nav, Navbar, Tab, Tabs} from "react-bootstrap";
 import * as TableActions from "../Table/TableActions";
 import * as MenuActions from "./MenuFormActions";
 import {OrganizationComponent} from "../Components/OrganizationComponent";
 import {PersonComponent} from "../Components/PersonComponent";
 import {NavBarComponent} from "../Components/NavBarComponent";
+import {AppBar, Box, Breadcrumbs, Container, IconButton, Tab, Tabs, Toolbar} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import Button from "@mui/material/Button";
 
-@connect((state) => ({
-    tableDataOrganization: state.universalListReducer.tableDataOrganization,
-    fieldDescriptionMapOrganization: state.universalListReducer.fieldDescriptionMapOrganization,
-    totalDataSizeOrganization: state.universalListReducer.totalDataSizeOrganization,
-    tableDataPerson: state.universalListReducer.tableDataPerson,
-    fieldDescriptionMapPerson: state.universalListReducer.fieldDescriptionMapPerson,
-    totalDataSizePerson: state.universalListReducer.totalDataSizePerson,
-    selectedRowsPerson: state.universalListReducer.selectedRowsPerson,
-    selectedRowsOrganization: state.universalListReducer.selectedRowsOrganization,
-    breadcrumbs: state.menuReducer.breadcrumbs,
-    alerts: state.menuReducer.alerts,
-}), (dispatch) => ({
-    getList: bindActionCreators(CommonActions.getList, dispatch),
-    onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
-    updateRow: bindActionCreators(TableActions.updateRow, dispatch),
-    addRow: bindActionCreators(TableActions.addRow, dispatch),
-    getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
-    clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch),
-    logout: bindActionCreators(MenuActions.logout, dispatch),
-    dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch),
-}))
-export default class UniversalListForm extends React.Component {
+function TabPanel(props) {
+    const {children, value, index, ...other} = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{p: 3}}>
+                    {children}
+                </Box>
+            )}
+        </div>
+    );
+}
+
+export class UniversalListFormRaw extends React.Component {
     constructor(props) {
         super(props);
         this.handleSelect = this.handleSelect.bind(this);
@@ -51,27 +51,33 @@ export default class UniversalListForm extends React.Component {
 
     componentDidMount() {
         let currentUrl = window.location.hash;
-        this.refreshTable(1, 15, "id", "desc", [], Caches.ORGANIZATION_CACHE);
+        this.refreshTable(this.props.paginationOrganization.pageIndex + 1,
+            this.props.paginationOrganization.pageSize,
+            this.props.sortNameOrganization,
+            this.props.sortOrderOrganization,
+            Utils.convertFilterObj(this.props.filterObjOrganization, this.props.customFilterFnsOrganization),
+            Caches.ORGANIZATION_CACHE);
         this.props.getBreadcrumbs(HashUtils.cleanHash(currentUrl));
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.selectedRowsOrganization.length === 1 && (nextProps.selectedRowsOrganization.length !== this.props.selectedRowsOrganization.length || nextProps.selectedRowsOrganization[0].id !== this.props.selectedRowsOrganization[0].id)) {
-            let converted = [];
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.selectedRowsOrganization.length === 1 && (this.props.selectedRowsOrganization.length !== prevProps.selectedRowsOrganization.length || this.props.selectedRowsOrganization[0].id !== prevProps.selectedRowsOrganization[0].id)) {
+            let converted = Utils.convertFilterObj(this.props.filterObjPerson, this.props.customFilterFnsPerson);
+            converted = converted.filter((x) => x.name !== "orgId")
             converted.push({
-                name: "orgId", value: nextProps.selectedRowsOrganization[0].id, comparator: "", type: "TextFilter",
+                name: "orgId", value: this.props.selectedRowsOrganization[0].id, comparator: "", type: "TextFilter",
             });
-            this.refreshTable(1, 15, "id", "desc", converted, Caches.PERSON_CACHE);
-            this.setState({
-                selectedRowsOrgId: nextProps.selectedRowsOrganization[0].id,
-            });
+            this.refreshTable(this.props.paginationPerson.pageIndex + 1,
+                this.props.paginationPerson.pageSize,
+                this.props.sortNamePerson,
+                this.props.sortOrderPerson, converted, Caches.PERSON_CACHE);
             for (let i = 0; i < this.props.selectedRowsPerson.length; i++) {
                 this.props.clearPersonSelection(this.props.selectedRowsPerson[i]);
             }
             this.setState({createNewPerson: false, newPerson: undefined});
         }
 
-        if (nextProps.selectedRowsOrganization.length === 0 && this.props.selectedRowsOrganization.length === 1) {
+        if (this.props.selectedRowsOrganization.length === 0 && this.props.selectedRowsOrganization.length === 1) {
             for (let i = 0; i < this.props.selectedRowsPerson.length; i++) {
                 this.props.clearPersonSelection(this.props.selectedRowsPerson[i]);
             }
@@ -86,14 +92,14 @@ export default class UniversalListForm extends React.Component {
     };
 
     refreshTable = (start, pageSize, sortName, sortOrder, filterDto, cache) => {
-        if (cache === Caches.PERSON_CACHE && this.state.selectedRowsOrgId != null && (filterDto == null || filterDto.length === 0)) {
-            if (filterDto != null) {
-                filterDto = filterDto.filter((x) => x.name === "orgId" && x.value === this.state.selectedRowsOrgId);
+        if (cache === Caches.PERSON_CACHE && this.props.selectedRowsOrganization.length === 1) {
+            if (filterDto != null && filterDto.length !== 0) {
+                filterDto = filterDto.filter((x) => x.name !== "orgId");
             } else {
                 filterDto = []
             }
             filterDto.push({
-                name: "orgId", value: this.state.selectedRowsOrgId, comparator: "", type: "TextFilter",
+                name: "orgId", value: this.props.selectedRowsOrganization[0].id, comparator: "", type: "TextFilter",
             });
         }
         this.props.getList(Url.GET_LIST_4_UNIVERSAL_LIST_FORM + "?start=" + start + "&pageSize=" + pageSize + "&sortName=" + sortName + "&sortOrder=" + sortOrder + "&cache=" + cache, filterDto, cache);
@@ -104,140 +110,120 @@ export default class UniversalListForm extends React.Component {
         this.setState({createNewPerson: false, newPerson: undefined});
     };
 
-    createdNewPerson = (person) => {
-        this.props.addRow(person, Caches.PERSON_CACHE);
-        this.setState({createNewPerson: false, newPerson: undefined});
-    };
-
-    handleSelect(key) {
-        this.setState({activeTab: key});
+    handleSelect(event, newValue) {
+        this.setState({activeTab: newValue});
     }
 
     render() {
-        let personTable;
+        let personTableTab;
+        let personTableTabPanel;
         let newPersonTab;
-        let persons = [];
-        let breads = [];
-        let breadcrumbsCount = this.props.breadcrumbs.length;
+        let newPersonTabPanel;
+        let personsTabs = [];
+        let personsTabPanels = [];
+        let breads = Utils.getBreadcrumbsList(this.props.breadcrumbs)
         let allAlerts = this.props.alerts;
-        this.props.breadcrumbs.forEach(function (element, index) {
-            breads.push(<Breadcrumb.Item
-                style={{
-                    fontWeight: index === breadcrumbsCount - 1 ? "bold" : "normal",
-                }}
-                key={element.url}
-                href={"#" + element.url}
-            >
-                {" "}
-                {element.name}{" "}
-            </Breadcrumb.Item>);
-        });
-
         if (this.props.selectedRowsOrganization.length === 1) {
-            personTable = (<Tab
+            personTableTab = (<Tab
                 key={2}
-                eventKey={2}
-                title={this.props.selectedRowsOrganization[0].name}
-            >
+                label={this.props.selectedRowsOrganization[0].name}
+                value={2}
+            />);
+            personTableTabPanel = <TabPanel value={this.state.activeTab} index={2}>
                 <Table
-                    ref="table2"
+                    customFilterFns={this.props.customFilterFnsPerson}
+                    sortName={this.props.sortNamePerson}
+                    sortOrder={this.props.sortOrderPerson}
+                    pagination={this.props.paginationPerson}
+                    filterObj={this.props.filterObjPerson}
                     selectMode="multi"
                     refreshTable={this.refreshTable}
                     cache={Caches.PERSON_CACHE}
+                    isLoading={this.props.tableDataPersonLoading}
                     selectedRows={this.props.selectedRowsPerson}
                     data={this.props.tableDataPerson.data}
                     totalDataSize={this.props.totalDataSizePerson}
                     fieldDescriptionMap={this.props.fieldDescriptionMapPerson}
                     parent={this}
                 />
-            </Tab>);
+            </TabPanel>;
             let key = 0;
             for (let i = 0; i < this.props.selectedRowsPerson.length; i++) {
                 key = i + 3;
                 let personLocal = this.props.selectedRowsPerson[i];
-                persons.push(<Tab
-                    key={key + "tab"}
-                    eventKey={key}
-                    title={<span>
-                {" "}
-                        {this.props.selectedRowsPerson[i].firstName}
-                        <Button
-                            key={key + "btn"}
-                            style={{
-                                height: "20px", width: "20px", padding: "0px", marginLeft: "5px", zIndex: 1000,
-                            }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                this.props.onSelectRow(personLocal, false, e, Caches.PERSON_CACHE);
-                                this.personTabClosed(key);
-                            }}
-                        >
-                  X
-                </Button>
-              </span>}
-                >
+                personsTabs.push(<Tab
+                    value={key}
+                    key={key}
+                    iconPosition="end"
+                    label={this.props.selectedRowsPerson[i].firstName}
+                    icon={<IconButton
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            this.props.onSelectRow(this.props.selectedRowsPerson.filter((it) => it.id !== personLocal.id).map((x) => x.id).reduce((a, v) => ({
+                                ...a,
+                                [v]: true
+                            }), {}), Caches.PERSON_CACHE);
+                            this.personTabClosed(key);
+                        }}
+                    >
+                        <CloseIcon/>
+                    </IconButton>}/>);
+                personsTabPanels.push(<TabPanel value={this.state.activeTab} index={key}>
                     <PersonComponent
-                        key={key + "person"}
                         forUpdate={true}
                         person={this.props.selectedRowsPerson[i]}
                         onUpdate={this.updateSelectedPerson}
                     />
-                </Tab>);
+                </TabPanel>);
             }
             if (this.state.createNewPerson === true) {
                 if (key === 0) key = 3; else key++;
                 newPersonTab = (<Tab
+                    value={key}
                     key={key}
-                    eventKey={key}
-                    title={<span>
-                {" "}
-                        {"New person"}
-                        <Button
-                            key={"newPersonTabBtn"}
-                            style={{
-                                height: "20px", width: "20px", padding: "0px", marginLeft: "5px", zIndex: 1000,
-                            }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                this.setState({
-                                    createNewPerson: false, newPerson: undefined,
-                                });
-                                this.personTabClosed(key);
-                            }}>
-                  X
-                </Button>
-              </span>}
-                >
+                    iconPosition="end"
+                    label={"New person"}
+                    icon={<IconButton
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            this.setState({
+                                createNewPerson: false, newPerson: undefined,
+                            });
+                            this.personTabClosed(key);
+                        }}>
+                        <CloseIcon/>
+                    </IconButton>}/>);
+                newPersonTabPanel = (<TabPanel value={this.state.activeTab} index={key}>
                     <PersonComponent
-                        key={"newPersonKey"}
                         forUpdate={false}
                         person={this.state.newPerson}
                         onUpdate={this.updateSelectedPerson}/>
-                </Tab>);
+                </TabPanel>);
             } else {
                 newPersonTab = <div/>;
+                newPersonTabPanel = <div/>;
             }
         } else {
-            personTable = <div/>;
+            personTableTab = <div/>;
+            personTableTabPanel = <div/>;
         }
 
         return (<div>
             <AlertList
                 position={"top-right"}
                 alerts={allAlerts}
-                timeout={1000}
-                dismissTitle="Begone!"
+                timeout={1500}
+                dismissTitle="Close"
                 onDismiss={this.onAlertDismissed.bind(this)}
             />
-            <Navbar>
-                <Navbar.Collapse>
-                    <Nav>
-                        <Breadcrumb>{breads}</Breadcrumb>
-                    </Nav>
-                    <Nav pullRight>
+            <AppBar position="static">
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters>
+                        <Breadcrumbs style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
                         <Button
+                            variant="outlined"
                             style={{marginRight: "5px"}}
                             disabled={this.props.selectedRowsOrganization.length !== 1}
                             onClick={() => this.setState({
@@ -249,37 +235,92 @@ export default class UniversalListForm extends React.Component {
                             Create person
                         </Button>
                         <NavBarComponent/>
-                        <Button onClick={() => this.props.logout()}>Logout</Button>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-            <Tabs
-                activeKey={this.state.activeTab}
-                onSelect={this.handleSelect}
-                id="tables"
-            >
-                <Tab key={1} eventKey={1} title="Organizations">
-                    <div style={{marginBottom: "1px", border: "1px solid #ddd", borderRadius: "5px"}}>
+                        <Button sx={{ml: 1}} variant="contained" color="error"
+                                onClick={() => this.props.logout()}>Logout</Button>
+                    </Toolbar>
+                </Container>
+            </AppBar>
+            <Box sx={{width: "100%"}}>
+                <Box sx={{borderBottom: 1, borderColor: "divider"}}>
+                    <Tabs
+                        value={this.state.activeTab}
+                        onChange={this.handleSelect}
+                        aria-label="basic tabs example"
+                        id="tables"
+                    >
+                        <Tab label="Organizations" key={1} value={1} sx={{height: "80px"}}/>
+                        {personTableTab}
+                        {personsTabs}
+                        {newPersonTab}
+                    </Tabs>
+                </Box>
+                <TabPanel value={this.state.activeTab} index={1}>
+                    <div style={{marginBottom: "1px", border: "1px solid rgba(81, 81, 81, 1)", borderRadius: "5px"}}>
                         <OrganizationComponent
+                            onSuccess={() => this.refreshTable(this.props.paginationOrganization.pageIndex + 1,
+                                this.props.paginationOrganization.pageSize,
+                                this.props.sortNameOrganization,
+                                this.props.sortOrderOrganization,
+                                Utils.convertFilterObj(this.props.filterObjOrganization, this.props.customFilterFnsOrganization),
+                                Caches.ORGANIZATION_CACHE)}
                             organization={this.props.selectedRowsOrganization.length === 1 ? this.props.selectedRowsOrganization[0] : {}}
                         />
                     </div>
                     <Table
-                        ref="table1"
+                        customFilterFns={this.props.customFilterFnsOrganization}
+                        sortName={this.props.sortNameOrganization}
+                        sortOrder={this.props.sortOrderOrganization}
+                        pagination={this.props.paginationOrganization}
+                        filterObj={this.props.filterObjOrganization}
                         refreshTable={this.refreshTable}
                         cache={Caches.ORGANIZATION_CACHE}
                         selectMode="single"
+                        isLoading={this.props.tableDataOrganizationLoading}
                         selectedRows={this.props.selectedRowsOrganization}
                         data={this.props.tableDataOrganization.data}
                         totalDataSize={this.props.totalDataSizeOrganization}
                         fieldDescriptionMap={this.props.fieldDescriptionMapOrganization}
                         parent={this}
                     />
-                </Tab>
-                {personTable}
-                {persons}
-                {newPersonTab}
-            </Tabs>
+                </TabPanel>
+                {personTableTabPanel}
+                {personsTabPanels}
+                {newPersonTabPanel}
+            </Box>
         </div>);
     }
 }
+
+
+export const UniversalListForm = connect((state) => ({
+    customFilterFnsOrganization: state.universalListReducer.customFilterFnsOrganization,
+    customFilterFnsPerson: state.universalListReducer.customFilterFnsPerson,
+    sortNameOrganization: state.universalListReducer.sortNameOrganization,
+    sortOrderOrganization: state.universalListReducer.sortOrderOrganization,
+    paginationOrganization: state.universalListReducer.paginationOrganization,
+    filterObjOrganization: state.universalListReducer.filterObjOrganization,
+    sortNamePerson: state.universalListReducer.sortNamePerson,
+    sortOrderPerson: state.universalListReducer.sortOrderPerson,
+    paginationPerson: state.universalListReducer.paginationPerson,
+    filterObjPerson: state.universalListReducer.filterObjPerson,
+    tableDataOrganization: state.universalListReducer.tableDataOrganization,
+    fieldDescriptionMapOrganization: state.universalListReducer.fieldDescriptionMapOrganization,
+    tableDataOrganizationLoading: state.universalListReducer.tableDataOrganizationLoading,
+    tableDataPersonLoading: state.universalListReducer.tableDataPersonLoading,
+    totalDataSizeOrganization: state.universalListReducer.totalDataSizeOrganization,
+    tableDataPerson: state.universalListReducer.tableDataPerson,
+    fieldDescriptionMapPerson: state.universalListReducer.fieldDescriptionMapPerson,
+    totalDataSizePerson: state.universalListReducer.totalDataSizePerson,
+    selectedRowsPerson: state.universalListReducer.selectedRowsPerson,
+    selectedRowsOrganization: state.universalListReducer.selectedRowsOrganization,
+    breadcrumbs: state.menuReducer.breadcrumbs,
+    alerts: state.menuReducer.alerts,
+}), (dispatch) => ({
+    getList: bindActionCreators(CommonActions.getList, dispatch),
+    onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
+    updateRow: bindActionCreators(TableActions.updateRow, dispatch),
+    getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
+    clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch),
+    logout: bindActionCreators(MenuActions.logout, dispatch),
+    dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch),
+}), null, {withRef: true})(UniversalListFormRaw);
