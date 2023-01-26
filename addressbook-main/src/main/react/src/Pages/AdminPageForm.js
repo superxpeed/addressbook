@@ -34,10 +34,6 @@ export class AdminPageFormRaw extends React.Component {
         jvmState: {},
     };
 
-    constructor(props) {
-        super(props);
-    }
-
     onOpen = () => {
         console.log("Connection opened for JVM state");
     };

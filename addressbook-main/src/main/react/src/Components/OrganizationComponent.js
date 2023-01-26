@@ -12,15 +12,8 @@ import Button from "@mui/material/Button";
 
 export class OrganizationComponentRaw extends React.Component {
     state = {
-        create: false, locked: true
+        create: false, locked: true, organization: {}, invalidFields: new Set()
     };
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            organization: {}, invalidFields: new Set()
-        };
-    }
 
     handleChange = (e) => {
         this.setState(update(this.state, {

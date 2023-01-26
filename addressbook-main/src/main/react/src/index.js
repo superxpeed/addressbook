@@ -23,9 +23,6 @@ const darkTheme = createTheme({
 });
 
 export default class Index extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (

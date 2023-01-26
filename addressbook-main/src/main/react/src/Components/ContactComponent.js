@@ -22,10 +22,6 @@ export class ContactComponent extends React.Component {
         personId: this.props.data.personId != null ? this.props.data.personId : "",
     };
 
-    constructor(props) {
-        super(props);
-    }
-
     handleChange = (e) => {
         this.setState({[e.target.name]: e.target.value});
     };

@@ -16,10 +16,6 @@ export class NavBarComponentRaw extends React.Component {
         username: "", roles: [], show: false, buildVersion: "", buildTime: "",
     };
 
-    constructor(props) {
-        super(props);
-    }
-
     handleClose = () => {
         this.setState({show: false});
     };

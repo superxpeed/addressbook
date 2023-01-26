@@ -16,10 +16,6 @@ export class MenuFormRaw extends React.Component {
         currentUrl: undefined,
     };
 
-    constructor(props) {
-        super(props);
-    }
-
     updateAll = () => {
         let currentUrl = window.location.hash;
         if (currentUrl === "#/") currentUrl = "/root";

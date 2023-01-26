@@ -16,9 +16,6 @@ import Button from "@mui/material/Button";
 import MUIRichTextEditor from "mui-rte";
 
 export class PersonComponentRaw extends React.Component {
-    state = {
-        locked: true,
-    };
 
     constructor(props) {
         super(props);
@@ -26,6 +23,7 @@ export class PersonComponentRaw extends React.Component {
         let salaryPerson = props.person["salary"] == null ? "" : props.person["salary"].substring(0, props.person["salary"].length - 4)
         let currencyPerson = props.person["salary"] == null ? "USD" : props.person["salary"].substring(props.person["salary"].length - 3)
         this.state = {
+            locked: true,
             person: props.person,
             contactList: {
                 data: [],

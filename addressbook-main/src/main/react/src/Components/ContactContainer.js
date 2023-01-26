@@ -9,10 +9,6 @@ export class ContactContainer extends React.Component {
         contacts: new Map(), conRefs: new Map(), show: false
     };
 
-    constructor(props) {
-        super(props);
-    }
-
     static getId() {
         return Math.floor(Math.random() * 10000);
     }
