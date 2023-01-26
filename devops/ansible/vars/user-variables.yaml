@@ -38,9 +38,8 @@ ignite_image: addressbook_ignite:latest
 ignite_work_directory: /mnt/work
 # JVM options
 ignite_java_opts: >
-  -XX:+UseContainerSupport
-  -XX:InitialRAMPercentage=40.0
-  -XX:MaxRAMPercentage=75.0
+  -XX:InitialRAMPercentage=40 
+  -XX:MaxRAMPercentage=75 
   -XX:MaxMetaspaceSize=512m 
   -XX:MetaspaceSize=256m 
   -XX:+UseG1GC 
