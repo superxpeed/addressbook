@@ -180,7 +180,16 @@ class DAO : AddressBookDAO {
 
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         val cacheLocks: IgniteCache<String, Lock>? = ignite.getOrCreateCache(FieldDescriptor.LOCK_RECORD_CACHE)
-        return if (lock) cacheLocks?.putIfAbsent(key, Lock(key, user)) as Boolean else cacheLocks?.remove(key, Lock(key, user)) as Boolean
+        if (lock) {
+            val userLocked = cacheLocks?.get(key)
+            return if (userLocked == null) {
+                cacheLocks?.put(key, Lock(key, user))
+                true
+            } else return userLocked.login == user
+        } else {
+            cacheLocks?.remove(key, Lock(key, user))
+            return true
+        }
     }
 
     override fun unlockAllRecordsForUser(user: String) {
