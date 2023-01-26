@@ -24,7 +24,9 @@ export class ContactComponent extends React.Component {
 
     handleChange = (e) => {
         this.setState({[e.target.name]: e.target.value});
-        this.props.updateContactsStatus(this.props.id + "&&" + e.target.name, e.target.value != null && e.target.value.trim().length !== 0);
+        if (e.target.name === "data" || e.target.name === "description") {
+            this.props.updateContactsStatus(this.props.id + "&&" + e.target.name, e.target.value != null && e.target.value.trim().length !== 0);
+        }
     };
 
     toJson() {
