@@ -196,7 +196,7 @@ spec:
                   audience: istio-ca
                   expirationSeconds: 43200
                   path: istio-token
-            defaultMode: 420
+            defaultMode: 256
         - name: ingressgateway-certs
           secret:
             defaultMode: 256

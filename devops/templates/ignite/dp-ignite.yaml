@@ -62,7 +62,7 @@ spec:
           terminationMessagePath: /dev/termination-log
           name: ignite-app
           securityContext:
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: true
           envFrom:
             - configMapRef:
                 name: cm-ignite-app-settings
@@ -74,6 +74,8 @@ spec:
           volumeMounts:
             - name: logsshare
               mountPath: /mnt/logs
+            - name: workdir
+              mountPath: /mnt/work
             - name: logback
               readOnly: true
               mountPath: /mnt/
@@ -89,6 +91,8 @@ spec:
               - key: logback.xml
                 path: logback.xml
         - name: logsshare
+          emptyDir: {}
+        - name: workdir
           emptyDir: {}
   strategy:
     type: RollingUpdate

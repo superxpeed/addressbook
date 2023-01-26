@@ -62,7 +62,7 @@ spec:
           terminationMessagePath: /dev/termination-log
           name: mongo-app
           securityContext:
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: true
           envFrom:
             - configMapRef:
                 name: cm-mongo-app-settings

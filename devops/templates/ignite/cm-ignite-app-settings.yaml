@@ -10,3 +10,4 @@ data:
   eureka_prefer_ip: "{{eureka_prefer_ip}}"
   ignite_server_hostname: "{{ignite_server_hostname}}"
   java_opts: "{{ignite_java_opts}}"
+  IGNITE_WORK_DIR: "{{ignite_work_directory}}"

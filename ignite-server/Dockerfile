@@ -6,8 +6,6 @@ RUN java -Djarmode=layertools -jar application.jar extract
 RUN java -version
 
 FROM adoptopenjdk/openjdk8:alpine-jre
-RUN mkdir -p application/ignite/work
-RUN chmod -R 0755 application/ignite/work
 WORKDIR application
 COPY --from=builder application/dependencies/ ./
 COPY --from=builder application/spring-boot-loader/ ./
