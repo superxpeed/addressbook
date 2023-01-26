@@ -10,6 +10,8 @@ import org.openqa.selenium.Keys
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
+import java.awt.Robot
+import java.awt.event.KeyEvent
 import java.time.Duration
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -21,8 +23,19 @@ class AddingAndEditingEntitiesTest {
         val driver = WebDriverManager.chromedriver().create()
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
+        // Dismiss certificate choice dialog
+        Thread {
+            try {
+                Thread.sleep(1_000)
+                val robot = Robot()
+                robot.keyPress(KeyEvent.VK_ESCAPE)
+                robot.keyRelease(KeyEvent.VK_ESCAPE)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }.start()
         // Open login page
-        driver.get("http://localhost:9000")
+        driver.get("https://localhost:9000")
         // Wait until page is loaded
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\":r1:\"]")))
         // Locate login input field
@@ -134,8 +147,19 @@ class AddingAndEditingEntitiesTest {
         val driver = WebDriverManager.chromedriver().create()
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
+        // Dismiss certificate choice dialog
+        Thread {
+            try {
+                Thread.sleep(1_000)
+                val robot = Robot()
+                robot.keyPress(KeyEvent.VK_ESCAPE)
+                robot.keyRelease(KeyEvent.VK_ESCAPE)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }.start()
         // Open login page
-        driver.get("http://localhost:9000")
+        driver.get("https://localhost:9000")
         // Wait until page is loaded
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\":r1:\"]")))
         // Locate login input field
