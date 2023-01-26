@@ -89,40 +89,32 @@ export default function universalListReducer(state = initialState, action = {}) 
             newSelected.push(action.row);
             return Object.assign({}, state, {selectedRowsPerson: newSelected});
         }
-
         case tableActions.ON_PAGINATION_CHANGE + Caches.PERSON_CACHE: {
             return Object.assign({}, state, {paginationPerson: action.pagination});
         }
-
         case tableActions.ON_PAGINATION_CHANGE + Caches.ORGANIZATION_CACHE: {
             return Object.assign({}, state, {paginationOrganization: action.pagination});
         }
-
         case tableActions.ON_FILTER_CHANGE + Caches.PERSON_CACHE: {
             return Object.assign({}, state, {filterObjPerson: action.filter});
         }
-
         case tableActions.ON_FILTER_CHANGE + Caches.ORGANIZATION_CACHE: {
             return Object.assign({}, state, {filterObjOrganization: action.filter});
         }
-
         case tableActions.ON_SORTING_CHANGE + Caches.PERSON_CACHE: {
             return Object.assign({}, state, {sortNamePerson: action.sortName, sortOrderPerson: action.sortOrder});
         }
-
         case tableActions.ON_SORTING_CHANGE + Caches.ORGANIZATION_CACHE: {
             return Object.assign({}, state, {
                 sortNameOrganization: action.sortName,
                 sortOrderOrganization: action.sortOrder
             });
         }
-
         case tableActions.UPDATE_ROW_IN_TABLE + Caches.ORGANIZATION_CACHE: {
             let org = Object.assign({}, action.row);
             org["type"] = OrgTypes.getNumType(action.row["type"]);
             return Object.assign({}, state, {selectedRowsOrganization: [org]});
         }
-
         default:
             return state;
     }
