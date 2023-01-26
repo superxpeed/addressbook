@@ -1,19 +1,34 @@
-require("../Common/style.css");
-
+import DialogContent from "@mui/material/DialogContent";
 import update from "react-addons-update";
 import React from "react";
-import {ContactContainer} from "./ContactContainer";
 import {ifNoAuthorizedRedirect} from "../Pages/UniversalListActions";
 import * as url from "../Common/Url";
-import {AuthTokenUtils, Caches, currencies} from "../Common/Utils";
+import {AuthTokenUtils, Caches, ContactTypes, currencies} from "../Common/Utils";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as MenuActions from "../Pages/MenuFormActions";
-import {FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Dialog,
+    DialogActions,
+    DialogContentText,
+    DialogTitle,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography
+} from "@mui/material";
 import {ContentState, convertFromHTML, convertToRaw} from "draft-js"
 import {stateToHTML} from "draft-js-export-html"
 import Button from "@mui/material/Button";
 import MUIRichTextEditor from "mui-rte";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+require("../Common/style.css");
 
 export class PersonComponentRaw extends React.Component {
 
@@ -25,13 +40,14 @@ export class PersonComponentRaw extends React.Component {
         this.state = {
             locked: true,
             person: props.person,
-            contactList: {
-                data: [],
-            },
+            contactList: [],
             invalidFields: new Set(),
             salary: salaryPerson,
             currency: currencyPerson,
             resume: this.convertHtmlToMarkUp(resume),
+            show: false,
+            expanded: "",
+            idToDelete: null
         };
         this.editor = React.createRef();
     }
@@ -41,7 +57,7 @@ export class PersonComponentRaw extends React.Component {
     }
 
     clearContactList = () => {
-        this.setState(update(this.state, {contactList: {data: {$set: undefined}}}));
+        this.setState(update(this.state, {contactList: {$set: []}}));
     };
 
     convertHtmlToMarkUp = (sourceHtml) => {
@@ -70,11 +86,29 @@ export class PersonComponentRaw extends React.Component {
             })
             .then((text) => {
                 if (isOk) {
-                    this.setState({contactList: JSON.parse(text).data});
+                    this.setState({contactList: JSON.parse(text).data.data});
                 } else {
                     this.props.showCommonErrorAlert(text);
                 }
             });
+    };
+
+    deleteContact = () => {
+        let filteredContactList = this.state.contactList.filter(contact => contact.id !== this.state.idToDelete);
+        this.state.invalidFields.delete(this.state.idToDelete + "&&data");
+        this.state.invalidFields.delete(this.state.idToDelete + "&&description");
+        this.setState({contactList: filteredContactList, idToDelete: null, show: false});
+    };
+
+    addEmptyContact = () => {
+        let newContact = {
+            id: Math.floor(Math.random() * 10000),
+            personId: null,
+            data: null,
+            description: null,
+            type: "0"
+        }
+        this.setState({contactList: [...this.state.contactList, newContact]});
     };
 
     saveContacts = (creation, personId, savedPerson) => {
@@ -84,7 +118,7 @@ export class PersonComponentRaw extends React.Component {
         headers.append("Accept", "application/json");
         headers.append("Content-Type", "application/json; charset=utf-8");
         fetch(url.SAVE_CONTACT_LIST + "?personId=" + personId, {
-            method: "post", headers: headers, body: this.container.getJson(),
+            method: "post", headers: headers, body: JSON.stringify(this.state.contactList),
         })
             .then((response) => {
                 ifNoAuthorizedRedirect(response);
@@ -94,7 +128,7 @@ export class PersonComponentRaw extends React.Component {
             .then((text) => {
                 if (isOk) {
                     if (this.props.forUpdate) this.setState(update(this.state, {
-                        person: {$set: savedPerson}, contactList: {data: {$set: JSON.parse(text).data}},
+                        person: {$set: savedPerson}, contactList: {$set: JSON.parse(text).data},
                     }));
                     if (creation) {
                         this.props.lockUnlockRecord(Caches.PERSON_CACHE, personId, "unlock", this.props.showNotification);
@@ -172,16 +206,87 @@ export class PersonComponentRaw extends React.Component {
         if (this.props.forUpdate) this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "unlock", this.props.showNotification);
     }
 
-    updateContactsStatus = (field, isValid) => {
-        let newSet = new Set(this.state.invalidFields)
-        if (isValid) {
-            newSet.delete(field);
-        } else {
-            newSet.add(field);
-        }
-        if ([...newSet].sort().join() !== [...this.state.invalidFields].sort().join()) {
-            this.setState({invalidFields: newSet})
-        }
+    handleChangeContact = (id, e) => {
+        if (this.state.contactList == null || this.state.contactList.length === 0) return
+        let filteredContacts = this.state.contactList.filter(contact => contact.id === id)
+        if (filteredContacts.length === 0) return
+        filteredContacts[0][e.target.name] = e.target.value
+        let newContactList = [...this.state.contactList]
+        newContactList[this.state.contactList.findIndex(contact => contact.id === id)] = filteredContacts[0]
+        this.setState({contactList: newContactList});
+    }
+
+    getContactComponent(contact) {
+        return (<Accordion expanded={this.state.expanded === contact.id}
+                           onChange={() => this.updateExpanded(contact.id)}>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon/>}
+                aria-controls="panel1a-content">
+                <Typography>{contact.personId == null ? "New contact" : ContactTypes.getEngType(contact.type + "")}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <FormControl fullWidth>
+                    <InputLabel id="type-label">Type</InputLabel>
+                    <Select
+                        labelId="type-label"
+                        id="type"
+                        name="type"
+                        value={contact.type}
+                        label="Type"
+                        onChange={this.handleChangeContact.bind(this, contact.id)}
+                    >
+                        <MenuItem value={0}>Mobile phone</MenuItem>
+                        <MenuItem value={1}>Home phone</MenuItem>
+                        <MenuItem value={2}>Address</MenuItem>
+                        <MenuItem value={3}>E-mail</MenuItem>
+                    </Select>
+                </FormControl>
+                <TextField
+                    error={!this.getContactValidationState("data", contact.id)}
+                    id="data"
+                    type="text"
+                    name="data"
+                    value={contact.data}
+                    label="Enter data"
+                    variant="outlined"
+                    autoComplete="off"
+                    helperText={!this.getContactValidationState("data", contact.id) ? "Required field!" : ""}
+                    sx={{mt: 5, display: "flex", height: "80px"}}
+                    onChange={this.handleChangeContact.bind(this, contact.id)}
+                />
+                <TextField
+                    error={!this.getContactValidationState("description", contact.id)}
+                    id="description"
+                    type="text"
+                    name="description"
+                    value={contact.description}
+                    label="Enter description"
+                    variant="outlined"
+                    autoComplete="off"
+                    helperText={!this.getContactValidationState("description", contact.id) ? "Required field!" : ""}
+                    sx={{mt: 2, display: "flex", height: "80px"}}
+                    onChange={this.handleChangeContact.bind(this, contact.id)}
+                />
+                <Button sx={{mt: 2, width: "100%", height: "56px"}}
+                        onClick={this.showConfirmationDialog.bind(this, contact.id)}
+                        variant="outlined"
+                        color="error">
+                    Delete contact
+                </Button>
+            </AccordionDetails>
+        </Accordion>)
+    }
+
+    closeConfirmationDialog = () => {
+        this.setState({show: false, idToDelete: null});
+    }
+
+    showConfirmationDialog = (id) => {
+        this.setState({show: true, idToDelete: id});
+    }
+
+    updateExpanded = (id) => {
+        this.setState({expanded: id})
     }
 
     getValidationState(field) {
@@ -195,6 +300,19 @@ export class PersonComponentRaw extends React.Component {
             return false;
         }
         this.state.invalidFields.delete(field);
+        return true;
+    }
+
+    getContactValidationState(field, id) {
+        if (this.state.contactList == null || this.state.contactList.length === 0) return
+        let filteredContacts = this.state.contactList.filter(contact => contact.id === id)
+        if (filteredContacts.length === 0) return
+        let targetContact = filteredContacts[0]
+        if (targetContact[field] == null || targetContact[field].trim().length === 0) {
+            this.state.invalidFields.add(id + "&&" + field);
+            return false;
+        }
+        this.state.invalidFields.delete(id + "&&" + field);
         return true;
     }
 
@@ -269,6 +387,8 @@ export class PersonComponentRaw extends React.Component {
     }
 
     render() {
+        let contacts = []
+        this.state.contactList.forEach(contact => contacts.push(this.getContactComponent(contact)))
         return (<div>
             <div
                 style={{
@@ -328,14 +448,29 @@ export class PersonComponentRaw extends React.Component {
                     marginRight: "5px",
                 }}
             >
-                <ContactContainer
-                    updateContactsStatus={this.updateContactsStatus}
-                    personId={this.state.person["id"]}
-                    ref={(input) => {
-                        this.container = input;
-                        if (input !== null) input.addFullContact(this.state.contactList.data);
-                    }}
-                />
+                <div>
+                    <Button sx={{mt: 1, width: "100%", height: "56px", marginBottom: "30px"}} variant="outlined"
+                            onClick={this.addEmptyContact}>
+                        Add contact
+                    </Button>
+                    {contacts}
+                    <Dialog
+                        open={this.state.show}
+                        onClose={() => this.closeConfirmationDialog()}
+                        aria-describedby="confirmation-modal-description"
+                    >
+                        <DialogTitle>Confirm contact deletion</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="confirmation-modal-description">
+                                Delete this contact?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.closeConfirmationDialog}>Cancel</Button>
+                            <Button variant="outlined" color="error" onClick={this.deleteContact}>Delete</Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>
             </div>
         </div>);
     }
