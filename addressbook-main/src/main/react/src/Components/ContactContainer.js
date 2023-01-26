@@ -6,30 +6,38 @@ import DialogContent from "@mui/material/DialogContent";
 
 export class ContactContainer extends React.Component {
     state = {
-        contacts: new Map(), conRefs: new Map(), show: false
+        contacts: new Map(), conRefs: new Map(), show: false, expanded: ""
     };
 
-    static getId() {
-        return Math.floor(Math.random() * 10000);
+    updateExpanded = (id) => {
+        this.setState({expanded: id})
+        this.state.conRefs.forEach(function (value) {
+            if (value !== null) value.forceUpdate();
+        });
+    }
+
+    getExpanded = () => {
+        return this.state.expanded
     }
 
     addFullContact = (contacts) => {
         if (contacts != null && contacts.length !== 0) {
-            let contactsMap = new Map();
-            let delFunc = this.showConfirmationDialog;
-            let conRefsLocal = this.state.conRefs;
-            contacts.forEach(function (element) {
+            let contactsMap = new Map(this.state.contacts);
+            for (let i = 0; i < contacts.length; i++) {
                 let newCon = (<ContactComponent
-                    key={element.id}
-                    data={element}
+                    key={contacts[i].id}
+                    data={contacts[i]}
+                    expanded={this.getExpanded}
+                    updateExpanded={this.updateExpanded}
+                    updateContactsStatus={this.props.updateContactsStatus}
                     ref={(input) => {
-                        conRefsLocal.set(element.id, input);
+                        this.state.conRefs.set(contacts[i].id, input);
                     }}
-                    id={element.id}
-                    deleteContact={delFunc}/>);
+                    id={contacts[i].id}
+                    deleteContact={this.showConfirmationDialog}/>);
                 contactsMap.set(newCon.key, newCon);
-            });
-            this.setState({contacts: contactsMap, conRefs: conRefsLocal});
+            }
+            this.setState({contacts: contactsMap, conRefs: this.state.conRefs});
         } else {
             if (this.state.contacts == null || this.state.contacts.size === 0) this.setState({
                 contacts: new Map(), conRefs: new Map()
@@ -39,9 +47,12 @@ export class ContactContainer extends React.Component {
 
     addEmptyContact = () => {
         let contacts = new Map(this.state.contacts);
-        let id = ContactContainer.getId();
+        let id = Math.floor(Math.random() * 10000);
         let newCon = (<ContactComponent
             key={id}
+            expanded={this.getExpanded}
+            updateExpanded={this.updateExpanded}
+            updateContactsStatus={this.props.updateContactsStatus}
             data={{personId: this.props.personId}}
             ref={(input) => {
                 this.state.conRefs.set(id, input);

@@ -24,6 +24,7 @@ export class ContactComponent extends React.Component {
 
     handleChange = (e) => {
         this.setState({[e.target.name]: e.target.value});
+        this.props.updateContactsStatus(this.props.id + "&&" + e.target.name, e.target.value != null && e.target.value.trim().length !== 0);
     };
 
     toJson() {
@@ -36,9 +37,19 @@ export class ContactComponent extends React.Component {
         });
     }
 
-    render() {
+    componentDidMount() {
+        this.props.updateContactsStatus(this.props.id + "&&data", this.state.data != null && this.state.data.trim().length !== 0)
+        this.props.updateContactsStatus(this.props.id + "&&description", this.state.description != null && this.state.description.trim().length !== 0)
+    }
 
-        return (<Accordion>
+    componentWillUnmount() {
+        this.props.updateContactsStatus(this.props.id + "&&data", true)
+        this.props.updateContactsStatus(this.props.id + "&&description", true)
+    }
+
+    render() {
+        return (<Accordion expanded={this.props.expanded() === this.props.id}
+                           onChange={() => this.props.updateExpanded(this.props.id)}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon/>}
                 aria-controls="panel1a-content">
@@ -62,6 +73,7 @@ export class ContactComponent extends React.Component {
                     </Select>
                 </FormControl>
                 <TextField
+                    error={this.state.data == null || this.state.data.trim().length === 0}
                     id="data"
                     type="text"
                     name="data"
@@ -69,10 +81,12 @@ export class ContactComponent extends React.Component {
                     label="Enter data"
                     variant="outlined"
                     autoComplete="off"
-                    sx={{mt: 2, display: "flex"}}
+                    helperText={this.state.data == null || this.state.data.trim().length === 0 ? "Required field!" : ""}
+                    sx={{mt: 5, display: "flex", height: "80px"}}
                     onChange={this.handleChange}
                 />
                 <TextField
+                    error={this.state.description == null || this.state.description.trim().length === 0}
                     id="description"
                     type="text"
                     name="description"
@@ -80,7 +94,8 @@ export class ContactComponent extends React.Component {
                     label="Enter description"
                     variant="outlined"
                     autoComplete="off"
-                    sx={{mt: 2, display: "flex"}}
+                    helperText={this.state.description == null || this.state.description.trim().length === 0 ? "Required field!" : ""}
+                    sx={{mt: 2, display: "flex", height: "80px"}}
                     onChange={this.handleChange}
                 />
                 <Button sx={{mt: 2, width: "100%", height: "56px"}}

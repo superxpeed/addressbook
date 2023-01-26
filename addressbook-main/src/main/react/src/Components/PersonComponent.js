@@ -172,6 +172,18 @@ export class PersonComponentRaw extends React.Component {
         if (this.props.forUpdate) this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "unlock", this.props.showNotification);
     }
 
+    updateContactsStatus = (field, isValid) => {
+        let newSet = new Set(this.state.invalidFields)
+        if (isValid) {
+            newSet.delete(field);
+        } else {
+            newSet.add(field);
+        }
+        if ([...newSet].sort().join() !== [...this.state.invalidFields].sort().join()) {
+            this.setState({invalidFields: newSet})
+        }
+    }
+
     getValidationState(field) {
         if (field === "salary") {
             if (this.state.person["salary"] == null || this.state.person["salary"].length === 3 || this.state.person["salary"].length === 4) {
@@ -317,6 +329,7 @@ export class PersonComponentRaw extends React.Component {
                 }}
             >
                 <ContactContainer
+                    updateContactsStatus={this.updateContactsStatus}
                     personId={this.state.person["id"]}
                     ref={(input) => {
                         this.container = input;
