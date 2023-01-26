@@ -146,7 +146,7 @@ export class NavBarComponentRaw extends React.Component {
                                                                  onChange={(e, v) => {
                                                                      this.props.changeShowNotification(v)
                                                                  }}
-                                                                 inputProps={{'aria-label': 'controlled'}}/>}
+                                                                 inputProps={{"aria-label": "controlled"}}/>}
                                               label="Show lock notifications"/>
                         </FormGroup>
                     </DialogContent>

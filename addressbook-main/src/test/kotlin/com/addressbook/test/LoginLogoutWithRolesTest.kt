@@ -48,13 +48,13 @@ class LoginLogoutWithRolesTest {
         // Locate user info button on navigation bar
         var userName = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/div/div/button")))
         // Check if user name is right
-        Assert.assertEquals(userName.text, "USER")
+        Assert.assertEquals("USER", userName.text)
         // Click user info button to check roles
         userName.click()
         // Locate first role
         var userRole = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[3]/div/div[1]/div/span")))
         /// This user should have only one role called USER, check that
-        Assert.assertEquals(userRole.text, "USER")
+        Assert.assertEquals("USER", userRole.text)
         // Close modal with user roles
         Thread {
             try {
@@ -77,13 +77,13 @@ class LoginLogoutWithRolesTest {
         loginButton = driver.findElement(By.xpath("/html/body/div[2]/div[3]/div/div[2]/div/button"))
         loginButton.click()
         userName = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/div/div/button")))
-        Assert.assertEquals(userName.text, "ADMIN")
+        Assert.assertEquals("ADMIN", userName.text)
         userName.click()
         userRole = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[3]/div/div[1]/div/span")))
-        Assert.assertEquals(userRole.text, "USER")
+        Assert.assertEquals("USER", userRole.text)
         val adminRole = driver.findElement(By.xpath("/html/body/div[2]/div[3]/div/div[1]/div[2]/span"))
         // Admin should also have second role called ADMIN, check that
-        Assert.assertEquals(adminRole.text, "ADMIN")
+        Assert.assertEquals("ADMIN", adminRole.text)
         // Close modal with user roles
         Thread {
             try {

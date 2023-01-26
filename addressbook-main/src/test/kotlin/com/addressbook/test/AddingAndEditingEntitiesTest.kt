@@ -7,12 +7,9 @@ import org.junit.Test
 import org.junit.runners.MethodSorters
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
-import org.openqa.selenium.WebElement
+import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.ExpectedConditions
-import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
-import java.awt.Robot
-import java.awt.event.KeyEvent
 import java.time.Duration
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -24,27 +21,16 @@ class AddingAndEditingEntitiesTest {
         val driver = WebDriverManager.chromedriver().create()
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
-        // Dismiss certificate choice dialog
-        Thread {
-            try {
-                Thread.sleep(1_000)
-                val robot = Robot()
-                robot.keyPress(KeyEvent.VK_ESCAPE)
-                robot.keyRelease(KeyEvent.VK_ESCAPE)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }.start()
         // Open login page
         driver.get("http://localhost:9000")
         // Wait until page is loaded
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]")))
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\":r1:\"]")))
         // Locate login input field
         val loginInput = driver.findElement(By.xpath("//*[@id=\"login\"]"))
         // Locate password input field
         val passwordInput = driver.findElement(By.xpath("//*[@id=\"password\"]"))
         // Locate login button
-        val loginButton = driver.findElement(By.xpath("//*[@id=\"application\"]/div/div/div[2]/div[2]/button"))
+        val loginButton = driver.findElement(By.xpath("/html/body/div[2]/div[3]/div/div[2]/div/button"))
         // Enter login for ordinary user
         loginInput.sendKeys("user")
         // Enter password
@@ -53,13 +39,13 @@ class AddingAndEditingEntitiesTest {
         loginButton.click()
         Thread.sleep(500)
         // Locate user info button on navigation bar
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/div/button")))
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/div/div/button")))
         Thread.sleep(500)
         // First level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
         Thread.sleep(500)
         // Second level 1 tile
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a[1]"))).click()
         Thread.sleep(500)
         // Third level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
@@ -68,7 +54,7 @@ class AddingAndEditingEntitiesTest {
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
         Thread.sleep(500)
         // Click first tab - Organizations
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables-tab-1\"]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables\"]/div/div/button"))).click()
         Thread.sleep(500)
         // Generate test name
         var name = "Test " + Math.random() + " Name"
@@ -77,95 +63,66 @@ class AddingAndEditingEntitiesTest {
         driver.findElement(By.xpath("//*[@id=\"street\"]")).sendKeys("Test street")
         driver.findElement(By.xpath("//*[@id=\"zip\"]")).sendKeys("Test zip")
         // Choose Private type of organization
-        driver.findElement(By.xpath("//*[@id=\"organizationType\"]")).click()
-        driver.findElement(By.xpath("//*[@id=\"organizationType\"]/option[2]")).click()
+        driver.findElement(By.xpath("//*[@id=\"mui-component-select-type\"]")).click()
+        driver.findElement(By.xpath("//*[@id=\"menu-type\"]/div[3]/ul/li[2]")).click()
         // Click Create organization button
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-1\"]/div[1]/div/button")).click()
-        // Wait until it is saved
-        Thread.sleep(2_000)
-        // Find tbody of organizations table
-        var tbody = driver.findElement(By.xpath("//*[@id=\"tables-pane-1\"]/div[2]/div/div[1]/div[2]/table/tbody"))
-        // Find first rows
-        var trs = tbody.findElements(By.xpath("./tr"))
-        var foundBeforeUpdate = false
-        // Find our new row
-        for (tr in trs) {
-            if (tr.findElements(By.xpath("./td"))[2].text == name) {
-                // Clear selection to unlock this new record
-                tr.click()
-                foundBeforeUpdate = true
-                break
-            }
-        }
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[1]/div/button")).click()
+        Thread.sleep(300)
+        // Twice sort table by "Last updated" field
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/thead/tr/th[7]/div[1]/div[1]/div")).click()
+        Thread.sleep(300)
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/thead/tr/th[7]/div[1]/div[1]/div")).click()
+        Thread.sleep(300)
+        // Find name of first record
+        var firstRow = driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/tbody/tr[1]/td[3]"))
         // Check if it was found
-        Assert.assertTrue(foundBeforeUpdate)
-
+        Assert.assertEquals(name, firstRow.text)
         // Refresh page and reread data
         driver.navigate().refresh()
-        Thread.sleep(4_000)
-
+        Thread.sleep(2000)
         // Again find our new record
-        var foundBeforeUpdateAfterRefresh = false
-        tbody = driver.findElement(By.xpath("//*[@id=\"tables-pane-1\"]/div[2]/div/div[1]/div[2]/table/tbody"))
-        trs = tbody.findElements(By.xpath("./tr"))
-        for (tr in trs) {
-            if (tr.findElements(By.xpath("./td"))[2].text == name) {
-                // select row
-                tr.click()
-                foundBeforeUpdateAfterRefresh = true
-                break
-            }
-        }
-        Assert.assertTrue(foundBeforeUpdateAfterRefresh)
-
+        // Twice sort table by "Last updated" field
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/thead/tr/th[7]/div[1]/div[1]/div")).click()
+        Thread.sleep(300)
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/thead/tr/th[7]/div[1]/div[1]/div")).click()
+        Thread.sleep(300)
+        firstRow = driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/tbody/tr[1]/td[3]"))
+        Assert.assertEquals(name, firstRow.text)
+        // Select first row
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/tbody/tr[1]/td[1]/span/input")).click()
+        Thread.sleep(300)
         // Generate new name for test record
         name = "Test " + Math.random() + " Name"
-
         // Update previously created record
-        driver.findElement(By.xpath("//*[@id=\"name\"]")).clear()
-        driver.findElement(By.xpath("//*[@id=\"name\"]")).sendKeys(name)
-        // Save it
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-1\"]/div[1]/div/button")).click()
-
-        Thread.sleep(2_000)
-
-        // Check if name in the table was changed
-        tbody = driver.findElement(By.xpath("//*[@id=\"tables-pane-1\"]/div[2]/div/div[1]/div[2]/table/tbody"))
-        trs = tbody.findElements(By.xpath("./tr"))
-        var foundAfterUpdate = false
-        for (tr in trs) {
-            if (tr.findElements(By.xpath("./td"))[2].text == name) {
-                // clear selection
-                tr.click()
-                foundAfterUpdate = true
-                break
-            }
+        val nameTextInput = driver.findElement(By.xpath("//*[@id=\"name\"]"))
+        // Clear value
+        for (v in nameTextInput.getAttribute("value")) {
+            nameTextInput.sendKeys(Keys.BACK_SPACE)
         }
-        Assert.assertTrue(foundAfterUpdate)
-
+        Thread.sleep(300)
+        driver.findElement(By.xpath("//*[@id=\"name\"]")).sendKeys(name)
+        Thread.sleep(300)
+        // Save it
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[1]/div/button")).click()
+        Thread.sleep(2_000)
+        // Check if name in the table was changed
+        firstRow = driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/tbody/tr[1]/td[3]/button/div"))
+        Assert.assertEquals(name, firstRow.text)
         // Reload page
         driver.navigate().refresh()
         Thread.sleep(2_000)
-
-        // Find updated record
-        var foundAfterUpdateAfterRefresh = false
-        tbody = driver.findElement(By.xpath("//*[@id=\"tables-pane-1\"]/div[2]/div/div[1]/div[2]/table/tbody"))
-        trs = tbody.findElements(By.xpath("./tr"))
-        for (tr in trs) {
-            if (tr.findElements(By.xpath("./td"))[2].text == name) {
-                tr.click()
-                foundAfterUpdateAfterRefresh = true
-                break
-            }
-        }
-        // Check if updated record was found
-        Assert.assertTrue(foundAfterUpdateAfterRefresh)
-
+        // Again find our new record
+        // Twice sort table by "Last updated" field
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/thead/tr/th[7]/div[1]/div[1]/div")).click()
+        Thread.sleep(300)
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/thead/tr/th[7]/div[1]/div[1]/div")).click()
+        Thread.sleep(300)
+        firstRow = driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/tbody/tr[1]/td[3]"))
+        Assert.assertEquals(name, firstRow.text)
         // Wait until all notifications disappear
         Thread.sleep(10_000)
-
         // Click logout button
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/button[2]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/button[2]"))).click()
         Thread.sleep(300)
         driver.close()
         driver.quit()
@@ -177,27 +134,16 @@ class AddingAndEditingEntitiesTest {
         val driver = WebDriverManager.chromedriver().create()
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
-        // Dismiss certificate choice dialog
-        Thread {
-            try {
-                Thread.sleep(1_000)
-                val robot = Robot()
-                robot.keyPress(KeyEvent.VK_ESCAPE)
-                robot.keyRelease(KeyEvent.VK_ESCAPE)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }.start()
         // Open login page
         driver.get("http://localhost:9000")
         // Wait until page is loaded
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]")))
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\":r1:\"]")))
         // Locate login input field
         val loginInput = driver.findElement(By.xpath("//*[@id=\"login\"]"))
         // Locate password input field
         val passwordInput = driver.findElement(By.xpath("//*[@id=\"password\"]"))
         // Locate login button
-        val loginButton = driver.findElement(By.xpath("//*[@id=\"application\"]/div/div/div[2]/div[2]/button"))
+        val loginButton = driver.findElement(By.xpath("/html/body/div[2]/div[3]/div/div[2]/div/button"))
         // Enter login for ordinary user
         loginInput.sendKeys("user")
         // Enter password
@@ -206,13 +152,13 @@ class AddingAndEditingEntitiesTest {
         loginButton.click()
         Thread.sleep(500)
         // Locate user info button on navigation bar
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/div/button")))
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/div/div/button")))
         Thread.sleep(500)
         // First level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
         Thread.sleep(500)
         // Second level 1 tile
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a[1]"))).click()
         Thread.sleep(500)
         // Third level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
@@ -221,163 +167,143 @@ class AddingAndEditingEntitiesTest {
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
         Thread.sleep(500)
         // Click first tab - Organizations
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables-tab-1\"]"))).click()
-        // Find table
-        var tbody = driver.findElement(By.xpath("//*[@id=\"tables-pane-1\"]/div[2]/div/div[1]/div[2]/table/tbody"))
-        // Select topmost record in the table
-        tbody.findElements(By.xpath("./tr"))[0].findElements(By.xpath("./td"))[2].click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables\"]/div/div/button"))).click()
+        // Twice sort table by "Last updated" field
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/thead/tr/th[7]/div[1]/div[1]/div")).click()
+        Thread.sleep(300)
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/thead/tr/th[7]/div[1]/div[1]/div")).click()
+        Thread.sleep(300)
+        // Select first row
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/tbody/tr[1]/td[1]/span/input")).click()
+        Thread.sleep(300)
         // Click second tab - Persons
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables-tab-2\"]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables\"]/div/div/button[2]"))).click()
         Thread.sleep(2_000)
         // Click create person button
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/button[1]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/button[1]"))).click()
         Thread.sleep(1_000)
         // Click third tab - New person
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables-tab-3\"]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables\"]/div/div/button[3]"))).click()
         Thread.sleep(1_000)
         driver.findElement(By.xpath("//*[@id=\"firstName\"]")).sendKeys("First name")
         driver.findElement(By.xpath("//*[@id=\"lastName\"]")).sendKeys("Last name")
         driver.findElement(By.xpath("//*[@id=\"salary\"]")).sendKeys("10000")
-
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[1]/div[2]/div[1]/button/span")).click()
+        driver.findElement(By.xpath("//*[@id=\"currency\"]")).click()
         Thread.sleep(300)
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[2]/div/div[2]/div")).sendKeys("First point", Keys.ENTER, "Second point")
+        driver.findElement(By.xpath("//*[@id=\"menu-currency\"]/div[3]/ul/li[25]")).click()
         Thread.sleep(300)
-
-
+        val rteContainer = driver.findElement(By.id("mui-rte-container"))
+        val rteLabel = rteContainer.findElement(By.xpath("//*[contains(text(), \"Resume\")]"))
+        val actions = Actions(driver)
+        actions.moveToElement(rteLabel)
+        actions.click(rteLabel)
+        actions.perform()
+        val rte_input = WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class=\"notranslate public-DraftEditor-content\" and @role=\"textbox\"]")))
+        rte_input.sendKeys("First point", Keys.ENTER, "Second point")
+        Thread.sleep(300)
         // Add contact
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/button")).click()
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/button")).click()
         Thread.sleep(300)
         // New contact header
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[1]/div[1]/div/a")).click()
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[1]")).click()
         Thread.sleep(300)
-
         //Enter mobile phone
-        var firstContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[1]/div[2]/div"))
+        var firstContactParentBody = driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[1]"))
         firstContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).sendKeys("8-999-999-99-99")
         Thread.sleep(300)
         firstContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).sendKeys("Mobile phone")
         Thread.sleep(300)
-
         // Add contact
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/button")).click()
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/button")).click()
         Thread.sleep(300)
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[2]/div[1]/div/a")).click()
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[2]")).click()
         Thread.sleep(300)
-
-        var secondContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[2]/div[2]/div"))
+        var secondContactParentBody = driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[2]"))
         Thread.sleep(300)
-
-        var role = Select(secondContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]")))
-        role.selectByValue("1")
+        secondContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]")).click()
+        driver.findElement(By.xpath("//*[@id=\"menu-type\"]/div[3]/ul/li[2]")).click()
         Thread.sleep(300)
         secondContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).sendKeys("8-888-888-88-88")
         Thread.sleep(300)
         secondContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).sendKeys("Home phone")
         Thread.sleep(300)
-
         // Add contact
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/button")).click()
-
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[3]/div[1]/div/a")).click()
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/button")).click()
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[3]")).click()
         Thread.sleep(300)
-
-        var thirdContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[3]/div[2]/div"))
+        var thirdContactParentBody = driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[3]"))
         Thread.sleep(300)
-        role = Select(thirdContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]")))
-        role.selectByValue("2")
+        thirdContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]")).click()
+        driver.findElement(By.xpath("//*[@id=\"menu-type\"]/div[3]/ul/li[3]")).click()
         Thread.sleep(300)
         thirdContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).sendKeys("NY, Fifth avenue")
         Thread.sleep(300)
         thirdContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).sendKeys("Home address")
         Thread.sleep(300)
-
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/button")).click()
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[1]/button")).click()
         Thread.sleep(2_000)
-
         driver.navigate().refresh()
-
         Thread.sleep(2_000)
-        // Find table
-        tbody = driver.findElement(By.xpath("//*[@id=\"tables-pane-1\"]/div[2]/div/div[1]/div[2]/table/tbody"))
-        // Select topmost record in the table
-        tbody.findElements(By.xpath("./tr"))[0].findElements(By.xpath("./td"))[2].click()
+        // Click first tab - Organizations
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables\"]/div/div/button"))).click()
+        // Twice sort table by "Last updated" field
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/thead/tr/th[7]/div[1]/div[1]/div")).click()
+        Thread.sleep(300)
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/thead/tr/th[7]/div[1]/div[1]/div")).click()
+        Thread.sleep(300)
+        // Select first row
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-1\"]/div/div[2]/div/div[2]/table/tbody/tr[1]/td[1]/span/input")).click()
+        Thread.sleep(300)
         // Click second tab - Persons
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables-tab-2\"]"))).click()
-
-        tbody = driver.findElement(By.xpath("//*[@id=\"tables-pane-2\"]/div/div/div[1]/div[2]/table/tbody"))
-        val trs = tbody.findElements(By.xpath("./tr"))
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables\"]/div/div/button[2]"))).click()
+        Thread.sleep(2_000)
+        Assert.assertEquals("First name", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr/td[4]/button/div")).text)
+        Assert.assertEquals("Last name", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr/td[5]/button/div")).text)
+        Assert.assertEquals("First point Second point", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr/td[6]/button/div")).text)
+        Assert.assertEquals("10000 GBP", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr/td[7]/button/div")).text)
+        // Select top row
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr/td[1]/span/input")).click()
+        // Click third tab
+        driver.findElement(By.xpath("//*[@id=\"tables\"]/div/div/button[3]")).click()
+        Assert.assertEquals("First name", driver.findElement(By.xpath("//*[@id=\"firstName\"]")).getAttribute("value"))
+        Assert.assertEquals("Last name", driver.findElement(By.xpath("//*[@id=\"lastName\"]")).getAttribute("value"))
+        Assert.assertEquals("10000", driver.findElement(By.xpath("//*[@id=\"salary\"]")).getAttribute("value"))
         Thread.sleep(300)
-        var targetTr: WebElement? = null
-        var foundNewRecord = false
-        for (tr in trs) {
-            if (trs[0].findElements(By.xpath("./td"))[3].findElement(By.xpath("./div")).text == "First name") {
-                tr.click()
-                Thread.sleep(300)
-                targetTr = tr
-                foundNewRecord = true
-                break
-            }
-        }
-
-        Assert.assertTrue(foundNewRecord)
-        val targetTds = targetTr?.findElements(By.xpath("./td"))
-        Assert.assertEquals(targetTds?.get(3)?.findElement(By.xpath("./div"))?.text, "First name")
-        Assert.assertEquals(targetTds?.get(4)?.findElement(By.xpath("./div"))?.text, "Last name")
-        Assert.assertEquals(targetTds?.get(5)?.findElement(By.xpath("./div"))?.text, "First point Second point")
-        Assert.assertEquals(targetTds?.get(6)?.findElement(By.xpath("./div"))?.text, "10000 USD")
-
-        driver.findElement(By.xpath("//*[@id=\"tables-tab-3\"]")).click()
-
-        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"firstName\"]")).getAttribute("value"), "First name")
-        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"lastName\"]")).getAttribute("value"), "Last name")
-        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"salary\"]")).getAttribute("value"), "10000")
+        Assert.assertEquals("First point", driver.findElement(By.xpath("//*[@id=\"mui-rte-editor-container\"]/div/div/div/div/div[1]/div/span/span")).text)
         Thread.sleep(300)
-        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[2]/div/div/div/div/div[1]/div/span/span")).text, "First point")
+        Assert.assertEquals("Second point", driver.findElement(By.xpath("//*[@id=\"mui-rte-editor-container\"]/div/div/div/div/div[2]/div/span/span")).text)
         Thread.sleep(300)
-        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/span/span")).text, "Second point")
-        Thread.sleep(300)
-
         // Click contact header to expand
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[1]/div[1]/div/a")).click()
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[1]")).click()
         Thread.sleep(300)
-
-        firstContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[1]/div[2]/div"))
+        firstContactParentBody = driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[1]"))
         Assert.assertEquals("8-999-999-99-99", firstContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).getAttribute("value"))
         Thread.sleep(300)
         Assert.assertEquals("Mobile phone", firstContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).getAttribute("value"))
         Thread.sleep(300)
-        Assert.assertEquals("Mobile phone", Select(firstContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]"))).firstSelectedOption.text)
-
-
+        Assert.assertEquals("Mobile phone", firstContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]")).text)
         // Click contact header to expand
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[2]/div[1]/div/a")).click()
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[2]")).click()
         Thread.sleep(300)
-
-        secondContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[2]/div[2]/div"))
+        secondContactParentBody = driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[2]"))
         Assert.assertEquals("8-888-888-88-88", secondContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).getAttribute("value"))
         Thread.sleep(300)
         Assert.assertEquals("Home phone", secondContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).getAttribute("value"))
         Thread.sleep(300)
-        Assert.assertEquals("Home phone", Select(secondContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]"))).firstSelectedOption.text)
-
+        Assert.assertEquals("Home phone", secondContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]")).text)
         // Click contact header to expand
-        driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[3]/div[1]/div/a")).click()
+        driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[3]")).click()
         Thread.sleep(300)
-
-        thirdContactParentBody = driver.findElement(By.xpath("//*[@id=\"tables-pane-3\"]/div/div[2]/div/div[3]/div[2]/div"))
+        thirdContactParentBody = driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/div[3]"))
         Assert.assertEquals("NY, Fifth avenue", thirdContactParentBody.findElement(By.xpath(".//*[@id=\"data\"]")).getAttribute("value"))
         Thread.sleep(300)
         Assert.assertEquals("Home address", thirdContactParentBody.findElement(By.xpath(".//*[@id=\"description\"]")).getAttribute("value"))
         Thread.sleep(300)
-        Assert.assertEquals("Address", Select(thirdContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]"))).firstSelectedOption.text)
-
-
+        Assert.assertEquals("Address", thirdContactParentBody.findElement(By.xpath(".//*[@id=\"type\"]")).text)
         // Wait until all notifications disappear
         Thread.sleep(10_000)
-
         // Click logout button
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/nav/div/div/ul[2]/button[2]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/button[2]"))).click()
         Thread.sleep(300)
         driver.close()
         driver.quit()
