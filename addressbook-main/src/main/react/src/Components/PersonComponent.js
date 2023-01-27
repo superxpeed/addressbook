@@ -441,11 +441,11 @@ export class PersonComponentInner extends React.Component {
             </div>
             <div
                 style={{
-                    width: "calc(50% - 10px)",
+                    width: "calc(50% - 20px)",
                     display: "inline-block",
                     verticalAlign: "top",
-                    marginLeft: "5px",
-                    marginRight: "5px",
+                    marginLeft: "10px",
+                    marginRight: "10px",
                 }}
             >
                 <div>
