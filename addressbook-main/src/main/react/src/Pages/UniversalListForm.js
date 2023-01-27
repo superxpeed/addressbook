@@ -148,14 +148,15 @@ export class UniversalListFormInner extends React.Component {
                 />
             </TabPanel>;
             let key = 0;
-            for (let i = 0; i < this.props.selectedRowsPerson.length; i++) {
+            let selectedPersonsSorted = this.props.selectedRowsPerson.sort((a, b) => a.id.localeCompare(b.id))
+            for (let i = 0; i < selectedPersonsSorted.length; i++) {
                 key = i + 3;
-                let personLocal = this.props.selectedRowsPerson[i];
+                let personLocal = selectedPersonsSorted[i];
                 personsTabs.push(<Tab
                     value={key}
                     key={key}
                     iconPosition="end"
-                    label={this.props.selectedRowsPerson[i].firstName}
+                    label={personLocal.firstName}
                     icon={<IconButton
                         onClick={(e) => {
                             e.stopPropagation();
@@ -172,7 +173,7 @@ export class UniversalListFormInner extends React.Component {
                 personsTabPanels.push(<TabPanel value={this.state.activeTab} index={key}>
                     <PersonComponent
                         forUpdate={true}
-                        person={this.props.selectedRowsPerson[i]}
+                        person={personLocal}
                         onUpdate={this.updateSelectedPerson}
                     />
                 </TabPanel>);
