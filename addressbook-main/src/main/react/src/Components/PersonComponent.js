@@ -286,7 +286,11 @@ export class PersonComponentInner extends React.Component {
     }
 
     updateExpanded = (id) => {
-        this.setState({expanded: id})
+        if (id === this.state.expanded) {
+            this.setState({expanded: ""})
+        } else {
+            this.setState({expanded: id})
+        }
     }
 
     getValidationState(field) {
