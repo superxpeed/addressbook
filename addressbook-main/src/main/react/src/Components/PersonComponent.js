@@ -437,7 +437,7 @@ export class PersonComponentInner extends React.Component {
                 <MUIRichTextEditor
                     label="Resume"
                     ref={this.editor}
-                    controls={["title", "bold", "italic", "underline", "strikethrough", "highlight", "undo",
+                    controls={["title", "bold", "italic", "underline", "strikethrough", "undo",
                         "redo", "link", "media", "numberList", "bulletList", "quote", "code", "clear"]}
                     onChange={this.onChangeResume}
                     value={this.state.resume}
