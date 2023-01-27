@@ -222,8 +222,8 @@ class AddingAndEditingEntitiesTest {
         actions.moveToElement(rteLabel)
         actions.click(rteLabel)
         actions.perform()
-        val rte_input = WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class=\"notranslate public-DraftEditor-content\" and @role=\"textbox\"]")))
-        rte_input.sendKeys("First point", Keys.ENTER, "Second point")
+        val rteInput = WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class=\"notranslate public-DraftEditor-content\" and @role=\"textbox\"]")))
+        rteInput.sendKeys("First point", Keys.ENTER, "Second point")
         Thread.sleep(300)
         // Add contact
         driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-3\"]/div/div/div[2]/div/button")).click()
@@ -281,10 +281,10 @@ class AddingAndEditingEntitiesTest {
         // Click second tab - Persons
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables\"]/div/div/button[2]"))).click()
         Thread.sleep(2_000)
-        Assert.assertEquals("First name", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr/td[4]/button/div")).text)
-        Assert.assertEquals("Last name", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr/td[5]/button/div")).text)
-        Assert.assertEquals("First point Second point", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr/td[6]/button/div")).text)
-        Assert.assertEquals("10000 GBP", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr/td[7]/button/div")).text)
+        Assert.assertEquals("First name", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr[1]/td[3]/button/div")).text)
+        Assert.assertEquals("Last name", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr[1]/td[4]/button/div")).text)
+        Assert.assertEquals("First point Second point", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr[1]/td[5]/button/div")).text)
+        Assert.assertEquals("10000 GBP", driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr[1]/td[6]/button/div")).text)
         // Select top row
         driver.findElement(By.xpath("//*[@id=\"simple-tabpanel-2\"]/div/div/div/div[2]/table/tbody/tr/td[1]/span/input")).click()
         // Click third tab

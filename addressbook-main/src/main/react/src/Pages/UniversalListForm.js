@@ -226,7 +226,7 @@ export class UniversalListFormInner extends React.Component {
                         <Button
                             variant="outlined"
                             style={{marginRight: "5px"}}
-                            disabled={this.props.selectedRowsOrganization.length !== 1}
+                            disabled={this.props.selectedRowsOrganization.length !== 1 || this.state.createNewPerson === true}
                             onClick={() => this.setState({
                                 createNewPerson: true, newPerson: {
                                     orgId: this.props.selectedRowsOrganization[0].id,

@@ -10,12 +10,14 @@
     background-color: #388e3c;
     color: white;
     border-radius: 5px;
+    width: 450px;
 }
 
 .alert-danger {
     background-color: #f44336;
     color: black;
     border-radius: 5px;
+    width: 450px;
     max-height: 300px;
 }
 
@@ -23,6 +25,7 @@
     background-color: #f57c00;
     color: black;
     border-radius: 5px;
+    width: 450px;
     max-height: 300px;
 }
 
@@ -58,4 +61,14 @@
 
 ::-webkit-scrollbar-track {
     background-color: transparent;
+}
+
+::-moz-selection {
+    color: white;
+    background: grey;
+}
+
+::selection {
+    color: white;
+    background: grey;
 }

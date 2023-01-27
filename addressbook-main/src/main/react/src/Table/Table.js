@@ -66,15 +66,15 @@ export class TableInner extends React.Component {
     getCellFormatter = (fieldName) => {
         if (fieldName === "resume")
             return function Formatter({cell}) {
-                return <div title={Table.html2text(cell.getValue())}>{Table.html2text(cell.getValue())}</div>
+                return <div style={{whiteSpace: "initial"}} title={Table.html2text(cell.getValue())}>{Table.html2text(cell.getValue())}</div>
             }
         if (fieldName === "salary")
             return function Formatter({cell}) {
                 return <Box
                     sx={(theme) => ({
-                        backgroundColor: theme.palette.success.dark,
+                        backgroundColor: "#90caf9",
                         borderRadius: "0.25rem",
-                        color: "#fff",
+                        color: "#000000",
                         p: "0.25rem",
                     })}
                 >
@@ -82,7 +82,7 @@ export class TableInner extends React.Component {
                 </Box>
             }
         return function Formatter({cell}) {
-            return <div title={cell.getValue()}>{cell.getValue()}</div>
+            return <div style={{whiteSpace: "initial"}} title={cell.getValue()}>{cell.getValue()}</div>
         }
     }
 
@@ -93,7 +93,6 @@ export class TableInner extends React.Component {
                 accessorKey: columnMetaData.name,
                 header: columnMetaData.displayName,
                 minSize: columnMetaData.width,
-                maxSize: columnMetaData.width,
                 Cell: this.getCellFormatter(columnMetaData.name),
                 columnFilterModeOptions: ["equals"],
                 filterFn: "equals",
@@ -110,7 +109,6 @@ export class TableInner extends React.Component {
                 accessorKey: columnMetaData.name,
                 header: columnMetaData.displayName,
                 minSize: columnMetaData.width,
-                maxSize: columnMetaData.width,
                 Cell: this.getCellFormatter(columnMetaData.name),
                 filterFn: "contains",
                 columnFilterModeOptions: ["contains"]
@@ -122,13 +120,13 @@ export class TableInner extends React.Component {
                 accessorKey: columnMetaData.name,
                 header: columnMetaData.displayName,
                 minSize: columnMetaData.width,
-                maxSize: columnMetaData.width,
                 filterFn: "equals",
                 Cell: this.getCellFormatter(columnMetaData.name),
                 columnFilterModeOptions: ["equals", "notEquals", "greaterThan", "greaterThanOrEqualTo", "lessThan", "lessThanOrEqualTo"],
                 Filter: ({column}) => (
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
+                            inputFormat="YYYY-MM-DD"
                             onChange={(newValue) => {
                                 column.setFilterValue(newValue);
                             }}
@@ -150,7 +148,7 @@ export class TableInner extends React.Component {
         return {
             accessorKey: columnMetaData.name,
             header: columnMetaData.displayName,
-            size: columnMetaData.width,
+            minSize: columnMetaData.width,
             Cell: this.getCellFormatter(columnMetaData.name)
         }
     }
@@ -158,13 +156,14 @@ export class TableInner extends React.Component {
     render() {
         let columns = null;
         if ((this.props.fieldDescriptionMap != null && Object.keys(this.props.fieldDescriptionMap).length !== 0) || this.props.fieldDescriptionMap.constructor !== Object) {
-            columns = Object.keys(this.props.fieldDescriptionMap).map((key) => this.getColumnDefinition(this.props.fieldDescriptionMap[key]));
+            columns = Object.keys(this.props.fieldDescriptionMap).filter(key => key !== "orgId").map((key) => this.getColumnDefinition(this.props.fieldDescriptionMap[key]));
         }
         let bootstrapTable;
         if (columns != null) {
             const csvOptions = {
                 fieldSeparator: ",",
                 quoteStrings: "\"",
+                filename: "addressbook_export_" + new Date().toISOString().replace(/-/g,"_"),
                 decimalSeparator: ".",
                 showLabels: true,
                 useBom: true,
@@ -177,6 +176,7 @@ export class TableInner extends React.Component {
                 columns={columns}
                 enableRowSelection
                 enableMultiRowSelection={this.props.selectMode === "multi"}
+                positionToolbarAlertBanner={this.props.selectMode === "multi" ? "bottom" : "none"}
                 onColumnFiltersChange={this.onFilterChange}
                 onPaginationChange={this.onPaginationChange}
                 onSortingChange={this.onSortChange}
@@ -188,9 +188,14 @@ export class TableInner extends React.Component {
                 getRowId={(originalRow) => originalRow.id}
                 enableMultiSort={false}
                 enableHiding={false}
-                positionToolbarAlertBanner="bottom"
                 enableFullScreenToggle={false}
                 enableColumnFilterModes={true}
+                enableSelectAll={false}
+                muiTableProps={{
+                    sx: {
+                        tableLayout: 'fixed',
+                    },
+                }}
                 onColumnFilterFnsChange={(updater) => {
                     this.props.onCustomFilterFn(updater(this.props.customFilterFns), this.props.cache)
                 }}
