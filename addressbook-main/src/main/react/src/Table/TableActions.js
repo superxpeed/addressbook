@@ -1,4 +1,5 @@
 export const ON_SELECT_ROW = "ON_SELECT_ROW";
+export const SYNC_SELECTED_ROWS = "SYNC_SELECTED_ROWS";
 export const ON_PAGINATION_CHANGE = "ON_PAGINATION_CHANGE";
 export const ON_SORTING_CHANGE = "ON_SORTING_CHANGE";
 export const ON_FILTER_CHANGE = "ON_FILTER_CHANGE";
@@ -9,6 +10,14 @@ export function onSelectRow(row, cacheName) {
     return (dispatch) => {
         dispatch({
             type: ON_SELECT_ROW + cacheName, row: row
+        });
+    };
+}
+
+export function syncSelectedRows(row, cacheName) {
+    return (dispatch) => {
+        dispatch({
+            type: SYNC_SELECTED_ROWS + cacheName, row: row
         });
     };
 }

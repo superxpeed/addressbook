@@ -84,6 +84,10 @@ export default function universalListReducer(state = initialState, action = {}) 
             return Object.assign({}, state, {
                 selectedRowsPerson: state.tableDataPerson.data.filter(item => Object.keys(action.row).includes(item.id))
             });
+        case tableActions.SYNC_SELECTED_ROWS + Caches.PERSON_CACHE:
+            return Object.assign({}, state, {
+                selectedRowsPerson: state.selectedRowsPerson.filter(item => Object.keys(action.row).includes(item.id))
+            });
         case tableActions.UPDATE_ROW_IN_TABLE + Caches.PERSON_CACHE: {
             let newSelected = state.selectedRowsPerson.filter((it) => it.id !== action.row.id);
             newSelected.push(action.row);

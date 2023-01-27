@@ -160,7 +160,7 @@ export class UniversalListFormInner extends React.Component {
                         onClick={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
-                            this.props.onSelectRow(this.props.selectedRowsPerson.filter((it) => it.id !== personLocal.id).map((x) => x.id).reduce((a, v) => ({
+                            this.props.syncSelectedRows(this.props.selectedRowsPerson.filter((it) => it.id !== personLocal.id).map((x) => x.id).reduce((a, v) => ({
                                 ...a,
                                 [v]: true
                             }), {}), Caches.PERSON_CACHE);
@@ -324,6 +324,7 @@ export const UniversalListForm = connect((state) => ({
 }), (dispatch) => ({
     getList: bindActionCreators(CommonActions.getList, dispatch),
     onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
+    syncSelectedRows: bindActionCreators(TableActions.syncSelectedRows, dispatch),
     updateRow: bindActionCreators(TableActions.updateRow, dispatch),
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
     clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch),
