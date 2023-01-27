@@ -11,7 +11,7 @@ import * as CommonActions from "../Pages/UniversalListActions";
 import * as MenuActions from "../Pages/MenuFormActions";
 import {AuthTokenUtils} from "../Common/Utils";
 
-export class NavBarComponentRaw extends React.Component {
+export class NavBarComponentInner extends React.Component {
     state = {
         username: "", roles: [], show: false, buildVersion: "", buildTime: "",
     };
@@ -157,4 +157,4 @@ export const NavBarComponent = connect((state) => ({
 }), (dispatch) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
     changeShowNotification: bindActionCreators(CommonActions.changeShowNotification, dispatch),
-}), null, {withRef: true})(NavBarComponentRaw);
+}), null, {withRef: true})(NavBarComponentInner);

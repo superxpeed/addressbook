@@ -36,7 +36,7 @@ function TabPanel(props) {
     );
 }
 
-export class UniversalListFormRaw extends React.Component {
+export class UniversalListFormInner extends React.Component {
     constructor(props) {
         super(props);
         this.handleSelect = this.handleSelect.bind(this);
@@ -323,4 +323,4 @@ export const UniversalListForm = connect((state) => ({
     clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch),
     logout: bindActionCreators(MenuActions.logout, dispatch),
     dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch),
-}), null, {withRef: true})(UniversalListFormRaw);
+}), null, {withRef: true})(UniversalListFormInner);

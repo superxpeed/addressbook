@@ -10,7 +10,7 @@ import * as MenuActions from "../Pages/MenuFormActions";
 import {FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 
-export class OrganizationComponentRaw extends React.Component {
+export class OrganizationComponentInner extends React.Component {
     state = {
         create: false, locked: true, organization: {}, invalidFields: new Set()
     };
@@ -206,4 +206,4 @@ export const OrganizationComponent = connect((state) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
     showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),
     lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch),
-}), null, {withRef: true})(OrganizationComponentRaw);
+}), null, {withRef: true})(OrganizationComponentInner);

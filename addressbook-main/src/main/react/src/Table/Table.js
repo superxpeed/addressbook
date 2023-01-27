@@ -13,7 +13,7 @@ import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {DateComparators} from "../Common/Utils";
 import * as Utils from "../Common/Utils";
 
-export class TableRaw extends React.Component {
+export class TableInner extends React.Component {
 
     static html2text = (html) => {
         let tag = document.createElement("div");
@@ -261,4 +261,4 @@ export const Table = connect(null, (dispatch) => ({
     onFilterChange: bindActionCreators(TableActions.onFilterChange, dispatch),
     onSortingChange: bindActionCreators(TableActions.onSortingChange, dispatch),
     onCustomFilterFn: bindActionCreators(TableActions.onCustomFilterFn, dispatch)
-}), null, {withRef: true})(TableRaw);
+}), null, {withRef: true})(TableInner);

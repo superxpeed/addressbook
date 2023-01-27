@@ -11,7 +11,7 @@ import {NavBarComponent} from "../Components/NavBarComponent";
 import * as url from "../Common/Url";
 import {ifNoAuthorizedRedirect} from "./UniversalListActions";
 
-export class MenuFormRaw extends React.Component {
+export class MenuFormInner extends React.Component {
     state = {
         currentUrl: undefined,
     };
@@ -112,4 +112,4 @@ export const MenuForm = connect((state) => ({
     getNextLevelMenus: bindActionCreators(MenuActions.getNextLevelMenus, dispatch),
     logout: bindActionCreators(MenuActions.logout, dispatch),
     dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch),
-}), null, {withRef: true})(MenuFormRaw);
+}), null, {withRef: true})(MenuFormInner);

@@ -30,7 +30,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 require("../Common/style.css");
 
-export class PersonComponentRaw extends React.Component {
+export class PersonComponentInner extends React.Component {
 
     constructor(props) {
         super(props);
@@ -483,4 +483,4 @@ export const PersonComponent = connect((state) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
     showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),
     lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch),
-}), null, {withRef: true})(PersonComponentRaw);
+}), null, {withRef: true})(PersonComponentInner);

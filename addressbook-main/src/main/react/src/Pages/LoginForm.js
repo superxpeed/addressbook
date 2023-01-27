@@ -23,7 +23,7 @@ import DialogContent from "@mui/material/DialogContent";
 import * as MenuActions from "./MenuFormActions";
 import * as url from "../Common/Url";
 
-export class LoginFormRaw extends React.Component {
+export class LoginFormInner extends React.Component {
     state = {
         login: "", password: "", invalidLoginPassword: false,
         showPassword: false,
@@ -148,4 +148,4 @@ export class LoginFormRaw extends React.Component {
 
 export const LoginForm = connect(null, (dispatch) => ({
     clearAlerts: bindActionCreators(MenuActions.clearAlerts, dispatch),
-}), null, {withRef: true})(LoginFormRaw);
+}), null, {withRef: true})(LoginFormInner);
