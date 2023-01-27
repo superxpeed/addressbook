@@ -12,9 +12,9 @@
 
 ### Web client application
 
-https://user-images.githubusercontent.com/8986329/214672525-88fae87e-af63-44cd-91fa-c1796079915f.mp4
+https://user-images.githubusercontent.com/8986329/215043020-60274085-6d3d-4a77-a1b4-2c3ab5b72ea0.mp4
 
-https://user-images.githubusercontent.com/8986329/214672562-d8fb0405-f70c-4cb6-bdd8-501f1ca051b9.mp4
+https://user-images.githubusercontent.com/8986329/215043043-fb009229-62ea-4dd0-97d5-b1ed87d0c7fe.mp4
 
 ## Architecture
 
