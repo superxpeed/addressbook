@@ -368,7 +368,13 @@ export class PersonComponentInner extends React.Component {
                     }}
                 />
             </div>
-            <div style={{width: "20%", display: "inline-block", paddingLeft: "5px", height: "100%"}}>
+            <div style={{
+                width: "20%",
+                display: "inline-block",
+                paddingLeft: "5px",
+                height: "100%",
+                verticalAlign: "top"
+            }}>
                 <FormControl fullWidth={true} sx={{mt: 1, display: "flex", height: "100%"}}>
                     <InputLabel id="currency-label">Currency</InputLabel>
                     <Select
