@@ -193,7 +193,7 @@ export class TableInner extends React.Component {
                 enableSelectAll={false}
                 muiTableProps={{
                     sx: {
-                        tableLayout: 'fixed',
+                        tableLayout: "fixed",
                     },
                 }}
                 onColumnFilterFnsChange={(updater) => {
