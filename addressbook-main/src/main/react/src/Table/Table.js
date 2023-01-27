@@ -10,8 +10,8 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
-import {DateComparators} from "../Common/Utils";
 import * as Utils from "../Common/Utils";
+import {DateComparators} from "../Common/Utils";
 
 export class TableInner extends React.Component {
 
