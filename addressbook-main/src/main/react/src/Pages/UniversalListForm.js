@@ -206,6 +206,11 @@ export class UniversalListFormInner extends React.Component {
                 newPersonTab = <div/>;
                 newPersonTabPanel = <div/>;
             }
+            if (key === 0) {
+                this.lastKey = 2
+            } else {
+                this.lastKey = key
+            }
         } else {
             personTableTab = <div/>;
             personTableTabPanel = <div/>;
@@ -228,9 +233,10 @@ export class UniversalListFormInner extends React.Component {
                             style={{marginRight: "5px"}}
                             disabled={this.props.selectedRowsOrganization.length !== 1 || this.state.createNewPerson === true}
                             onClick={() => this.setState({
+                                activeTab: this.lastKey + 1,
                                 createNewPerson: true, newPerson: {
                                     orgId: this.props.selectedRowsOrganization[0].id,
-                                },
+                                }
                             })}
                         >
                             Create person
