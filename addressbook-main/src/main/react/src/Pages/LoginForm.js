@@ -136,7 +136,7 @@ export class LoginFormInner extends React.Component {
                     </DialogContent>
                     <DialogActions>
                         <Grid container sx={{justifyContent: "center"}}>
-                            <Button sx={{ml: 2, mr: 2, mb: 2, width: "100%"}} variant="contained"
+                            <Button sx={{ml: 2, mr: 2, mb: 2, width: "100%", height: "56px"}} variant="contained"
                                     onClick={this.login}>Login</Button>
                         </Grid>
                     </DialogActions>

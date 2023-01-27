@@ -392,7 +392,11 @@ export class PersonComponentInner extends React.Component {
         return (<div>
             <div
                 style={{
-                    width: "50%", display: "inline-block", verticalAlign: "top", paddingLeft: "5px",
+                    width: "calc(50% - 10px)",
+                    display: "inline-block",
+                    verticalAlign: "top",
+                    marginLeft: "5px",
+                    marginRight: "5px",
                 }}
             >
                 <TextField
@@ -441,11 +445,11 @@ export class PersonComponentInner extends React.Component {
             </div>
             <div
                 style={{
-                    width: "calc(50% - 20px)",
+                    width: "calc(50% - 10px)",
                     display: "inline-block",
                     verticalAlign: "top",
-                    marginLeft: "10px",
-                    marginRight: "10px",
+                    marginLeft: "5px",
+                    marginRight: "5px",
                 }}
             >
                 <div>
