@@ -99,7 +99,7 @@ export class LoginFormInner extends React.Component {
             <div>
                 <Dialog fullWidth maxWidth="sm" open={true}>
                     <DialogTitle>Please login</DialogTitle>
-                    <DialogContent>
+                    <DialogContent sx={{paddingBottom: "16px"}}>
                         <Box sx={{display: "grid", gridTemplateRows: "repeat(2 1fr)"}}>
                             {this.getWarning()}
                             <TextField
@@ -134,7 +134,7 @@ export class LoginFormInner extends React.Component {
                             </FormControl>
                         </Box>
                     </DialogContent>
-                    <DialogActions>
+                    <DialogActions sx={{paddingTop: "0px"}}>
                         <Grid container sx={{justifyContent: "center"}}>
                             <Button sx={{ml: 2, mr: 2, mb: 2, width: "100%", height: "56px"}} variant="contained"
                                     onClick={this.login}>Login</Button>
