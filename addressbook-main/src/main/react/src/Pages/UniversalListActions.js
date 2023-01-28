@@ -1,4 +1,13 @@
-import {ADD_ALERT, AuthTokenUtils, Caches, FAIL, REQUEST, SHOW_NOTIFICATION_CHANGE, SUCCESS} from "../Common/Utils";
+import {
+    ADD_ALERT,
+    AuthTokenUtils,
+    Caches,
+    FAIL,
+    REQUEST,
+    SHOW_NOTIFICATION_CHANGE,
+    SUCCESS,
+    USE_DARK_THEME
+} from "../Common/Utils";
 import * as tableActions from "../Table/TableActions";
 
 export const GET_LIST = "GET_LIST";
@@ -24,6 +33,14 @@ export function changeShowNotification(showNotification) {
     return (dispatch) => {
         dispatch({
             type: SHOW_NOTIFICATION_CHANGE, showNotification: showNotification
+        });
+    };
+}
+
+export function changeUseDarkTheme(useDarkTheme) {
+    return (dispatch) => {
+        dispatch({
+            type: USE_DARK_THEME, useDarkTheme: useDarkTheme
         });
     };
 }

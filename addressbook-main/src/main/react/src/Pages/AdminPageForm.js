@@ -76,13 +76,20 @@ export class AdminPageFormInner extends React.Component {
     }
 
     render() {
-        const breads = getBreadcrumbsList(this.props.breadcrumbs)
+        const breads = getBreadcrumbsList(this.props.breadcrumbs, this.props.useDarkTheme)
+        let separator;
+        if (this.props.useDarkTheme) {
+            separator = <NavigateNextIcon fontSize="small"/>
+        } else {
+            separator = <NavigateNextIcon fontSize="small" style={{color: "white"}}/>
+        }
         return (
             <div>
                 <AppBar position="static">
                     <Container maxWidth="xl">
                         <Toolbar disableGutters>
-                            <Breadcrumbs separator={<NavigateNextIcon fontSize="small"/>} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
+                            <Breadcrumbs separator={separator} style={{flex: 1}}
+                                         aria-label="breadcrumb">{breads}</Breadcrumbs>
                             <NavBarComponent/>
                             <Button sx={{ml: 1}} variant="contained" color="error"
                                     onClick={() => this.props.logout()}>Logout</Button>
@@ -229,6 +236,7 @@ export class AdminPageFormInner extends React.Component {
 
 export const AdminPageForm = connect((state) => ({
     breadcrumbs: state.menuReducer.breadcrumbs,
+    useDarkTheme: state.universalListReducer.useDarkTheme
 }), (dispatch) => ({
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
     logout: bindActionCreators(MenuActions.logout, dispatch),

@@ -74,11 +74,17 @@ export class MenuFormInner extends React.Component {
                 {" "}
             </Button>);
         });
-        const breads = Utils.getBreadcrumbsList(this.props.breadcrumbs)
+        const breads = Utils.getBreadcrumbsList(this.props.breadcrumbs, this.props.useDarkTheme)
         if (this.props.breadcrumbs.length === 0) {
-            breads.push(<Link underline="hover" color="inherit" key="/root" href="#/">
+            breads.push(<Link underline="hover" color={this.props.useDarkTheme ? "inherit" : "white"} key="/root" href="#/">
                 Home
             </Link>);
+        }
+        let separator;
+        if (this.props.useDarkTheme) {
+            separator = <NavigateNextIcon fontSize="small"/>
+        } else {
+            separator = <NavigateNextIcon fontSize="small" style={{color: "white"}}/>
         }
         const allAlerts = this.props.alerts;
         return (
@@ -94,7 +100,7 @@ export class MenuFormInner extends React.Component {
                 <AppBar position="static">
                     <Container maxWidth="xl">
                         <Toolbar disableGutters>
-                            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
+                            <Breadcrumbs separator={separator} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
                             <NavBarComponent/>
                             <Button sx={{ml: 1}} variant="contained" color="error"
                                     onClick={() => this.props.logout()}>Logout</Button>
@@ -108,7 +114,10 @@ export class MenuFormInner extends React.Component {
 }
 
 export const MenuForm = connect((state) => ({
-    breadcrumbs: state.menuReducer.breadcrumbs, menus: state.menuReducer.menus, alerts: state.menuReducer.alerts,
+    breadcrumbs: state.menuReducer.breadcrumbs,
+    menus: state.menuReducer.menus,
+    alerts: state.menuReducer.alerts,
+    useDarkTheme: state.universalListReducer.useDarkTheme
 }), (dispatch) => ({
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
     getNextLevelMenus: bindActionCreators(MenuActions.getNextLevelMenus, dispatch),

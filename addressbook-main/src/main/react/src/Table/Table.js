@@ -66,15 +66,16 @@ export class TableInner extends React.Component {
     getCellFormatter = (fieldName) => {
         if (fieldName === "resume")
             return function Formatter({cell}) {
-                return <div style={{whiteSpace: "initial"}} title={Table.html2text(cell.getValue())}>{Table.html2text(cell.getValue())}</div>
+                return <div style={{whiteSpace: "initial"}}
+                            title={Table.html2text(cell.getValue())}>{Table.html2text(cell.getValue())}</div>
             }
         if (fieldName === "salary")
             return function Formatter({cell}) {
                 return <Box
                     sx={(theme) => ({
-                        backgroundColor: "#90caf9",
+                        backgroundColor: this.props.useDarkTheme ? "#90caf9" : "#9c27b0",
                         borderRadius: "0.25rem",
-                        color: "#000000",
+                        color: this.props.useDarkTheme ? "#000000" : "#FFFFFF",
                         p: "0.25rem",
                     })}
                 >
@@ -163,7 +164,7 @@ export class TableInner extends React.Component {
             const csvOptions = {
                 fieldSeparator: ",",
                 quoteStrings: "\"",
-                filename: "addressbook_export_" + new Date().toISOString().replace(/-/g,"_"),
+                filename: "addressbook_export_" + new Date().toISOString().replace(/-/g, "_"),
                 decimalSeparator: ".",
                 showLabels: true,
                 useBom: true,
@@ -260,7 +261,9 @@ export class TableInner extends React.Component {
     }
 }
 
-export const Table = connect(null, (dispatch) => ({
+export const Table = connect((state) => ({
+    useDarkTheme: state.universalListReducer.useDarkTheme
+}), (dispatch) => ({
     onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
     onPaginationChange: bindActionCreators(TableActions.onPaginationChange, dispatch),
     onFilterChange: bindActionCreators(TableActions.onFilterChange, dispatch),

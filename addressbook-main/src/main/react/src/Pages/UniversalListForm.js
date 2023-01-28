@@ -122,7 +122,7 @@ export class UniversalListFormInner extends React.Component {
         let newPersonTabPanel;
         let personsTabs = [];
         let personsTabPanels = [];
-        let breads = Utils.getBreadcrumbsList(this.props.breadcrumbs)
+        let breads = Utils.getBreadcrumbsList(this.props.breadcrumbs, this.props.useDarkTheme)
         let allAlerts = this.props.alerts;
         if (this.props.selectedRowsOrganization.length === 1) {
             personTableTab = (<Tab
@@ -216,6 +216,13 @@ export class UniversalListFormInner extends React.Component {
             personTableTabPanel = <div/>;
         }
 
+        let separator;
+        if (this.props.useDarkTheme) {
+            separator = <NavigateNextIcon fontSize="small"/>
+        } else {
+            separator = <NavigateNextIcon fontSize="small" style={{color: "white"}}/>
+        }
+
         return (<div>
             <AlertList
                 showIcon={false}
@@ -228,9 +235,9 @@ export class UniversalListFormInner extends React.Component {
             <AppBar position="static">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
+                        <Breadcrumbs separator={separator} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
                         <Button
-                            variant="outlined"
+                            variant={this.props.useDarkTheme ? "outlined" : "contained"}
                             style={{marginRight: "5px"}}
                             disabled={this.props.selectedRowsOrganization.length !== 1 || this.state.createNewPerson === true}
                             onClick={() => this.setState({
@@ -321,6 +328,7 @@ export const UniversalListForm = connect((state) => ({
     totalDataSizePerson: state.universalListReducer.totalDataSizePerson,
     selectedRowsPerson: state.universalListReducer.selectedRowsPerson,
     selectedRowsOrganization: state.universalListReducer.selectedRowsOrganization,
+    useDarkTheme: state.universalListReducer.useDarkTheme,
     breadcrumbs: state.menuReducer.breadcrumbs,
     alerts: state.menuReducer.alerts,
 }), (dispatch) => ({

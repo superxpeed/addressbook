@@ -9,16 +9,13 @@ export const GET_LIST = "GET_LIST";
 export const GET_MENU = "GET_MENU";
 export const GET_BREADCRUMBS = "GET_BREADCRUMBS";
 export const SHOW_NOTIFICATION_CHANGE = "SHOW_NOTIFICATION_CHANGE";
+export const USE_DARK_THEME = "USE_DARK_THEME";
 export const ADD_ALERT = "ADD_ALERT";
 export const DISMISS_ALERT = "DISMISS_ALERT";
 export const CLEAR_ALERTS = "CLEAR_ALERTS";
 
 export var Caches = {
     ORGANIZATION_CACHE: "com.addressbook.model.Organization", PERSON_CACHE: "com.addressbook.model.Person",
-};
-
-export const organizationTypes = {
-    0: "Non profit", 1: "Private", 2: "Government", 3: "Public",
 };
 
 export const currencies = ["AED", "ALL", "ARS", "AUD", "BAM", "BGN", "BHD", "BOB", "BRL", "BYN", "CAD", "CHF", "CLP",
@@ -137,14 +134,14 @@ export function convertFilterObj(filterObj, customFilterFns) {
     return converted;
 }
 
-export function getBreadcrumbsList(breadcrumbs) {
+export function getBreadcrumbsList(breadcrumbs, useDarkTheme) {
     const breads = [];
     const breadcrumbsCount = breadcrumbs.length;
     breadcrumbs.forEach((element, index) => {
         if (index === breadcrumbsCount - 1) {
             breads.push(<Link
                 underline="hover"
-                color="text.primary"
+                color={useDarkTheme? "text.primary" : "white"}
                 aria-current="page"
                 key={element.url}
                 href={`#${element.url}`}
@@ -156,7 +153,7 @@ export function getBreadcrumbsList(breadcrumbs) {
         } else {
             breads.push(<Link
                 underline="hover"
-                color="inherit"
+                color={useDarkTheme? "inherit" : "white"}
                 key={element.url}
                 href={`#${element.url}`}
             >

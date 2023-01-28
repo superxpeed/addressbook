@@ -5,22 +5,16 @@ import {Provider} from "react-redux";
 import thunkMiddleware from "redux-thunk";
 import {HashRouter, Route, Switch} from "react-router-dom";
 import {routerReducer} from "react-router-redux";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import universalListReducer from "./Pages/UniversalListReducers";
 import menuReducer from "./Pages/MenuFormReducers";
 import {UniversalListForm} from "./Pages/UniversalListForm";
 import {MenuForm} from "./Pages/MenuForm";
 import {LoginForm} from "./Pages/LoginForm";
 import {AdminPageForm} from "./Pages/AdminPageForm";
+import {App} from "./Common/App";
 
 const reducer = combineReducers({universalListReducer, menuReducer, routing: routerReducer});
 const store = createStore(reducer, compose(applyMiddleware(thunkMiddleware)));
-const darkTheme = createTheme({
-    palette: {
-        mode: "dark",
-    },
-});
 
 export default class Index extends React.Component {
 
@@ -28,8 +22,7 @@ export default class Index extends React.Component {
         return (
             <Provider store={store}>
                 <HashRouter>
-                    <ThemeProvider theme={darkTheme}>
-                        <CssBaseline/>
+                    <App>
                         <Route path="/">
                             <div>
                                 <Switch>
@@ -40,14 +33,12 @@ export default class Index extends React.Component {
                                 </Switch>
                             </div>
                         </Route>
-                    </ThemeProvider>
+                    </App>
                 </HashRouter>
             </Provider>
         );
     }
 }
 
-const rootElement = document.getElementById("application");
-const root = createRoot(rootElement);
-
+const root = createRoot(document.getElementById("application"));
 root.render(<Index/>);

@@ -24,7 +24,8 @@ const initialState = {
     filterObjPerson: [],
     customFilterFnsOrganization: {},
     customFilterFnsPerson: {},
-    showNotification: false
+    showNotification: false,
+    useDarkTheme: true
 };
 
 export default function universalListReducer(state = initialState, action = {}) {
@@ -71,6 +72,10 @@ export default function universalListReducer(state = initialState, action = {}) 
         case types.SHOW_NOTIFICATION_CHANGE:
             return Object.assign({}, state, {
                 showNotification: action.showNotification
+            });
+        case types.USE_DARK_THEME:
+            return Object.assign({}, state, {
+                useDarkTheme: action.useDarkTheme
             });
         case types.GET_LIST + Caches.PERSON_CACHE + types.REQUEST:
             return Object.assign({}, state, {

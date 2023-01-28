@@ -145,6 +145,14 @@ export class NavBarComponentInner extends React.Component {
                                                                  inputProps={{"aria-label": "controlled"}}/>}
                                               label="Show lock notifications"/>
                         </FormGroup>
+                        <FormGroup>
+                            <FormControlLabel control={<Checkbox checked={this.props.useDarkTheme}
+                                                                 onChange={(e, v) => {
+                                                                     this.props.changeUseDarkTheme(v)
+                                                                 }}
+                                                                 inputProps={{"aria-label": "controlled"}}/>}
+                                              label="Use dark theme"/>
+                        </FormGroup>
                     </DialogContent>
                 </Dialog>
             </div>
@@ -154,7 +162,9 @@ export class NavBarComponentInner extends React.Component {
 
 export const NavBarComponent = connect((state) => ({
     showNotification: state.universalListReducer.showNotification,
+    useDarkTheme: state.universalListReducer.useDarkTheme
 }), (dispatch) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
     changeShowNotification: bindActionCreators(CommonActions.changeShowNotification, dispatch),
+    changeUseDarkTheme: bindActionCreators(CommonActions.changeUseDarkTheme, dispatch)
 }), null, {withRef: true})(NavBarComponentInner);
