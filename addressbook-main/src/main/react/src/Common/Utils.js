@@ -134,6 +134,10 @@ export function convertFilterObj(filterObj, customFilterFns) {
     return converted;
 }
 
+export function getPhoneRegEx(){
+   return new RegExp(/^[+]?[\s./0-9]*[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/g)
+}
+
 export function getBreadcrumbsList(breadcrumbs, useDarkTheme) {
     const breads = [];
     const breadcrumbsCount = breadcrumbs.length;

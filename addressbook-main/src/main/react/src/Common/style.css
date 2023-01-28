@@ -116,5 +116,5 @@
 }
 
 th.MuiTableCell-head:first-of-type {
-    vertical-align: middle;
+    vertical-align: bottom;
 }

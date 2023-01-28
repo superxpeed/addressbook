@@ -3,7 +3,7 @@ import update from "react-addons-update";
 import React from "react";
 import {ifNoAuthorizedRedirect} from "../Pages/UniversalListActions";
 import * as url from "../Common/Url";
-import {AuthTokenUtils, Caches, ContactTypes, currencies} from "../Common/Utils";
+import {AuthTokenUtils, Caches, ContactTypes, currencies, getPhoneRegEx} from "../Common/Utils";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as MenuActions from "../Pages/MenuFormActions";
@@ -211,6 +211,9 @@ export class PersonComponentInner extends React.Component {
         let filteredContacts = this.state.contactList.filter(contact => contact.id === id)
         if (filteredContacts.length === 0) return
         filteredContacts[0][e.target.name] = e.target.value
+        if(e.target.name === "type"){
+            this.getContactValidationState("data", id)
+        }
         let newContactList = [...this.state.contactList]
         newContactList[this.state.contactList.findIndex(contact => contact.id === id)] = filteredContacts[0]
         this.setState({contactList: newContactList});
@@ -312,7 +315,12 @@ export class PersonComponentInner extends React.Component {
         let filteredContacts = this.state.contactList.filter(contact => contact.id === id)
         if (filteredContacts.length === 0) return
         let targetContact = filteredContacts[0]
-        if (targetContact[field] == null || targetContact[field].trim().length === 0) {
+        if ((targetContact.type == "0" || targetContact.type == "1") && field === "data") {
+            if (!getPhoneRegEx().test(targetContact[field].trim())) {
+                this.state.invalidFields.add(id + "&&" + field);
+                return false;
+            }
+        } else if (targetContact[field] == null || targetContact[field].trim().length === 0) {
             this.state.invalidFields.add(id + "&&" + field);
             return false;
         }

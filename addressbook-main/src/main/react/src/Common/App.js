@@ -2,7 +2,7 @@ import React from "react";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import {connect} from "react-redux";
-import {purple} from '@mui/material/colors';
+import {purple} from "@mui/material/colors";
 
 const darkTheme = createTheme({
     palette: {
