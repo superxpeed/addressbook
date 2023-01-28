@@ -12,6 +12,7 @@ import * as MenuActions from "./MenuFormActions";
 import {OrganizationComponent} from "../Components/OrganizationComponent";
 import {PersonComponent} from "../Components/PersonComponent";
 import {NavBarComponent} from "../Components/NavBarComponent";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {AppBar, Box, Breadcrumbs, Container, IconButton, Tab, Tabs, Toolbar} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
@@ -226,7 +227,7 @@ export class UniversalListFormInner extends React.Component {
             <AppBar position="static">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <Breadcrumbs style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
+                        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
                         <Button
                             variant="outlined"
                             style={{marginRight: "5px"}}

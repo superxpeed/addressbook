@@ -10,6 +10,7 @@ import {AuthTokenUtils, HashUtils} from "../Common/Utils";
 import {NavBarComponent} from "../Components/NavBarComponent";
 import * as url from "../Common/Url";
 import {ifNoAuthorizedRedirect} from "./UniversalListActions";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 export class MenuFormInner extends React.Component {
     state = {
@@ -92,7 +93,7 @@ export class MenuFormInner extends React.Component {
                 <AppBar position="static">
                     <Container maxWidth="xl">
                         <Toolbar disableGutters>
-                            <Breadcrumbs style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
+                            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
                             <NavBarComponent/>
                             <Button sx={{ml: 1}} variant="contained" color="error"
                                     onClick={() => this.props.logout()}>Logout</Button>

@@ -4,6 +4,7 @@ import {bindActionCreators} from "redux";
 import {EventSourcePolyfill} from "event-source-polyfill";
 import {styled} from "@mui/material/styles";
 import MuiTableCell from "@mui/material/TableCell";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {
     AppBar,
     Breadcrumbs,
@@ -81,7 +82,7 @@ export class AdminPageFormInner extends React.Component {
                 <AppBar position="static">
                     <Container maxWidth="xl">
                         <Toolbar disableGutters>
-                            <Breadcrumbs style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
+                            <Breadcrumbs separator={<NavigateNextIcon fontSize="small"/>} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
                             <NavBarComponent/>
                             <Button sx={{ml: 1}} variant="contained" color="error"
                                     onClick={() => this.props.logout()}>Logout</Button>
