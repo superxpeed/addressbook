@@ -83,11 +83,17 @@ export class NavBarComponentInner extends React.Component {
 
     getRoles = () => {
         const allRoles = [];
+        let targetBoxColor = this.props.useDarkTheme ? "#90caf9" : "#9c27b0"
+        let targetTextColor = this.props.useDarkTheme ? "#000000" : "#FFFFFF"
         this.state.roles.forEach((value, index) => {
             if (index === 0)
-                allRoles.push(<Chip key={value} label={value} variant="outlined"/>);
+                allRoles.push(<Chip key={value} label={value}
+                                    sx={{backgroundColor: targetBoxColor, color: targetTextColor}}
+                                    color="info" variant="contained"/>);
             else
-                allRoles.push(<Chip key={value} label={value} variant="outlined" sx={{ml: 1}}/>);
+                allRoles.push(<Chip key={value} label={value}
+                                    sx={{ml: 1, backgroundColor: targetBoxColor, color: targetTextColor,}}
+                                    color="info" variant="contained"/>);
         });
         return allRoles;
     };
@@ -120,7 +126,6 @@ export class NavBarComponentInner extends React.Component {
                     <DialogContent dividers>
                         <Chip
                             edge="end"
-                            color="info"
                             size="small"
                             key="build_version"
                             label={`Build version: ${this.state.buildVersion}`}
@@ -128,7 +133,6 @@ export class NavBarComponentInner extends React.Component {
                         />
                         <Chip
                             edge="end"
-                            color="info"
                             size="small"
                             key="build_time"
                             label={`Build time: ${this.state.buildTime}`}

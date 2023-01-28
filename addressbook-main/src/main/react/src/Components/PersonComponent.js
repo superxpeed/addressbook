@@ -211,7 +211,7 @@ export class PersonComponentInner extends React.Component {
         let filteredContacts = this.state.contactList.filter(contact => contact.id === id)
         if (filteredContacts.length === 0) return
         filteredContacts[0][e.target.name] = e.target.value
-        if(e.target.name === "type"){
+        if (e.target.name === "type") {
             this.getContactValidationState("data", id)
         }
         let newContactList = [...this.state.contactList]
@@ -253,7 +253,8 @@ export class PersonComponentInner extends React.Component {
                     label="Enter data"
                     variant="outlined"
                     autoComplete="off"
-                    helperText={!this.getContactValidationState("data", contact.id) ? "Required field!" : ""}
+                    helperText={!this.getContactValidationState("data", contact.id) ?
+                        (contact.type == "0" || contact.type == "1" ? "Invalid format!" : "Required field!") : ""}
                     sx={{mt: 5, display: "flex", height: "80px"}}
                     onChange={this.handleChangeContact.bind(this, contact.id)}
                 />
