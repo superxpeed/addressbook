@@ -316,7 +316,7 @@ export class PersonComponentInner extends React.Component {
         if (filteredContacts.length === 0) return
         let targetContact = filteredContacts[0]
         if ((targetContact.type == "0" || targetContact.type == "1") && field === "data") {
-            if (!getPhoneRegEx().test(targetContact[field].trim())) {
+            if (targetContact[field] == null || !getPhoneRegEx().test(targetContact[field].trim())) {
                 this.state.invalidFields.add(id + "&&" + field);
                 return false;
             }
