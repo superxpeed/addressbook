@@ -84,6 +84,7 @@ export class MenuFormInner extends React.Component {
         return (
             <div>
                 <AlertList
+                    showIcon={false}
                     position="top-right"
                     alerts={allAlerts}
                     timeout={1500}
