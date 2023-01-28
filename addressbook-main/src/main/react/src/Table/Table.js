@@ -69,19 +69,22 @@ export class TableInner extends React.Component {
                 return <div style={{whiteSpace: "initial"}}
                             title={Table.html2text(cell.getValue())}>{Table.html2text(cell.getValue())}</div>
             }
-        if (fieldName === "salary")
+        if (fieldName === "salary") {
+            let targetBoxColor = this.props.useDarkTheme ? "#90caf9" : "#9c27b0"
+            let targetTextColor = this.props.useDarkTheme ? "#000000" : "#FFFFFF"
             return function Formatter({cell}) {
                 return <Box
                     sx={(theme) => ({
-                        backgroundColor: this.props.useDarkTheme ? "#90caf9" : "#9c27b0",
+                        backgroundColor: targetBoxColor,
                         borderRadius: "0.25rem",
-                        color: this.props.useDarkTheme ? "#000000" : "#FFFFFF",
+                        color: targetTextColor,
                         p: "0.25rem",
                     })}
                 >
                     {cell.getValue()}
                 </Box>
             }
+        }
         return function Formatter({cell}) {
             return <div style={{whiteSpace: "initial"}} title={cell.getValue()}>{cell.getValue()}</div>
         }
