@@ -17,7 +17,7 @@ import {AppBar, Box, Breadcrumbs, Container, IconButton, Tab, Tabs, Toolbar} fro
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;

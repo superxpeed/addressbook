@@ -22,6 +22,7 @@ import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import * as MenuActions from "./MenuFormActions";
 import * as url from "../Common/Url";
+import LoginIcon from "@mui/icons-material/Login";
 
 export class LoginFormInner extends React.Component {
     state = {
@@ -136,7 +137,8 @@ export class LoginFormInner extends React.Component {
                     </DialogContent>
                     <DialogActions sx={{paddingTop: "0px"}}>
                         <Grid container sx={{justifyContent: "center"}}>
-                            <Button sx={{ml: 2, mr: 2, mb: 2, width: "100%", height: "56px"}} variant="contained"
+                            <Button startIcon={<LoginIcon/>} sx={{ml: 2, mr: 2, mb: 2, width: "100%", height: "56px"}}
+                                    variant="contained"
                                     onClick={this.login}>Login</Button>
                         </Grid>
                     </DialogActions>

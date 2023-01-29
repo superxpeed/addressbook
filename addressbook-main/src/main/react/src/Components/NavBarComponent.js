@@ -11,7 +11,7 @@ import * as CommonActions from "../Pages/UniversalListActions";
 import * as MenuActions from "../Pages/MenuFormActions";
 import {AuthTokenUtils} from "../Common/Utils";
 import SettingsIcon from "@mui/icons-material/Settings";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 
 export class NavBarComponentInner extends React.Component {
     state = {

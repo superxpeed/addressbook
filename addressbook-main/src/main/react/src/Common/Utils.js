@@ -134,8 +134,8 @@ export function convertFilterObj(filterObj, customFilterFns) {
     return converted;
 }
 
-export function getPhoneRegEx(){
-   return new RegExp(/^[+]?[\s./0-9]*[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/g)
+export function getPhoneRegEx() {
+    return new RegExp(/^[+]?[\s./0-9]*[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/g)
 }
 
 export function getBreadcrumbsList(breadcrumbs, useDarkTheme) {
@@ -145,7 +145,7 @@ export function getBreadcrumbsList(breadcrumbs, useDarkTheme) {
         if (index === breadcrumbsCount - 1) {
             breads.push(<Link
                 underline="hover"
-                color={useDarkTheme? "text.primary" : "white"}
+                color={useDarkTheme ? "text.primary" : "white"}
                 aria-current="page"
                 key={element.url}
                 href={`#${element.url}`}
@@ -157,7 +157,7 @@ export function getBreadcrumbsList(breadcrumbs, useDarkTheme) {
         } else {
             breads.push(<Link
                 underline="hover"
-                color={useDarkTheme? "inherit" : "white"}
+                color={useDarkTheme ? "inherit" : "white"}
                 key={element.url}
                 href={`#${element.url}`}
             >

@@ -31,6 +31,9 @@ import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import EmailIcon from "@mui/icons-material/Email";
+import SaveIcon from "@mui/icons-material/Save";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import ContactPageIcon from "@mui/icons-material/ContactPage";
 
 require("../Common/style.css");
 
@@ -291,7 +294,8 @@ export class PersonComponentInner extends React.Component {
                     sx={{mt: 2, display: "flex", height: "80px"}}
                     onChange={this.handleChangeContact.bind(this, contact.id)}
                 />
-                <Button sx={{mt: 2, width: "100%", height: "56px"}}
+                <Button startIcon={<DeleteForeverIcon/>}
+                        sx={{mt: 2, width: "100%", height: "56px"}}
                         onClick={this.showConfirmationDialog.bind(this, contact.id)}
                         variant="outlined"
                         color="error">
@@ -475,7 +479,9 @@ export class PersonComponentInner extends React.Component {
                     }}
                 />
                 <Button
-                    variant="contained" sx={{mt: 4, width: "100%", height: "56px"}}
+                    startIcon={<SaveIcon/>}
+                    variant="contained"
+                    sx={{mt: 4, width: "100%", height: "56px"}}
                     onClick={this.savePerson}
                     disabled={this.state.invalidFields.size !== 0 || !this.state.locked}
                 >
@@ -492,7 +498,9 @@ export class PersonComponentInner extends React.Component {
                 }}
             >
                 <div>
-                    <Button sx={{mt: 1, width: "100%", height: "56px", marginBottom: "30px"}} variant="outlined"
+                    <Button startIcon={<ContactPageIcon/>}
+                            sx={{mt: 1, width: "100%", height: "56px", marginBottom: "30px"}}
+                            variant="outlined"
                             onClick={this.addEmptyContact}>
                         Add contact
                     </Button>
