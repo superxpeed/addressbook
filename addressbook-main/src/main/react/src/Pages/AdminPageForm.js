@@ -11,6 +11,7 @@ import {
     Chip,
     Container,
     Grid,
+    IconButton,
     Paper,
     Table,
     TableBody,
@@ -18,10 +19,10 @@ import {
     TableRow,
     Toolbar,
 } from "@mui/material";
-import Button from "@mui/material/Button";
 import {NavBarComponent} from "../Components/NavBarComponent";
 import {getBreadcrumbsList, HashUtils} from "../Common/Utils";
 import * as MenuActions from "./MenuFormActions";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const TableCell = styled(MuiTableCell)({
     width: "50%",
@@ -91,8 +92,10 @@ export class AdminPageFormInner extends React.Component {
                             <Breadcrumbs separator={separator} style={{flex: 1}}
                                          aria-label="breadcrumb">{breads}</Breadcrumbs>
                             <NavBarComponent/>
-                            <Button sx={{ml: 1}} variant="contained" color="error"
-                                    onClick={() => this.props.logout()}>Logout</Button>
+                            <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
+                                        onClick={() => this.props.logout()}>
+                                <LogoutIcon/>
+                            </IconButton>
                         </Toolbar>
                     </Container>
                 </AppBar>

@@ -27,6 +27,10 @@ import {stateToHTML} from "draft-js-export-html"
 import Button from "@mui/material/Button";
 import MUIRichTextEditor from "mui-rte";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import EmailIcon from "@mui/icons-material/Email";
 
 require("../Common/style.css");
 
@@ -192,6 +196,21 @@ export class PersonComponentInner extends React.Component {
         }
     };
 
+    getContactHeaderIcon(type) {
+        switch (type) {
+            case "0":
+                return <PhoneIphoneIcon color={this.props.useDarkTheme ? "primary" : "topButtonColor"}/>
+            case "1":
+                return <LocalPhoneIcon color={this.props.useDarkTheme ? "primary" : "topButtonColor"}/>
+            case "2":
+                return <ApartmentIcon color={this.props.useDarkTheme ? "primary" : "topButtonColor"}/>
+            case "3":
+                return <EmailIcon color={this.props.useDarkTheme ? "primary" : "topButtonColor"}/>
+            default:
+                return <div/>
+        }
+    }
+
     componentDidMount() {
         if (this.state.person["id"] != null && this.props.forUpdate) {
             this.getContactList(this.state.person["id"]);
@@ -225,7 +244,8 @@ export class PersonComponentInner extends React.Component {
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon/>}
                 aria-controls="panel1a-content">
-                <Typography>{contact.personId == null ? "New contact" : ContactTypes.getEngType(contact.type + "")}</Typography>
+                {this.getContactHeaderIcon(contact.type + "")}<Typography
+                sx={{ml: 1}}>{contact.personId == null ? "New contact" : ContactTypes.getEngType(contact.type + "")}</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 <FormControl fullWidth>

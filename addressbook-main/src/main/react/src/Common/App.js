@@ -7,6 +7,12 @@ import {purple} from "@mui/material/colors";
 const darkTheme = createTheme({
     palette: {
         mode: "dark",
+        topButtonColor: {
+            main: "#90caf9"
+        },
+        topServiceButtonColor: {
+            main: "#90caf9"
+        }
     },
 });
 
@@ -17,6 +23,9 @@ const lightTheme = createTheme({
         },
         topButtonColor: {
             main: purple[700]
+        },
+        topServiceButtonColor: {
+            main: "#FFFFFF"
         }
     },
 });

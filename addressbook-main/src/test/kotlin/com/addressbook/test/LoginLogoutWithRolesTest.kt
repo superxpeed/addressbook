@@ -32,7 +32,7 @@ class LoginLogoutWithRolesTest {
         // Open login page
         driver.get("https://localhost:9000")
         // Wait until page is loaded
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\":r1:\"]")))
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\":r2:\"]")))
         // Locate login input field
         var loginInput = driver.findElement(By.xpath("//*[@id=\"login\"]"))
         // Locate password input field
@@ -99,7 +99,6 @@ class LoginLogoutWithRolesTest {
         // Click logout button
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/button"))).click()
         Thread.sleep(300)
-        driver.close()
         driver.quit()
     }
 }

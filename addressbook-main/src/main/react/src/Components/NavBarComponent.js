@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import {Checkbox, Chip, FormControlLabel, FormGroup} from "@mui/material";
+import {Checkbox, Chip, FormControlLabel, FormGroup, IconButton} from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import {connect} from "react-redux";
@@ -10,18 +10,33 @@ import * as url from "../Common/Url";
 import * as CommonActions from "../Pages/UniversalListActions";
 import * as MenuActions from "../Pages/MenuFormActions";
 import {AuthTokenUtils} from "../Common/Utils";
+import SettingsIcon from "@mui/icons-material/Settings";
+import PersonIcon from '@mui/icons-material/Person';
 
 export class NavBarComponentInner extends React.Component {
     state = {
-        username: "", roles: [], show: false, buildVersion: "", buildTime: "",
+        username: "",
+        roles: [],
+        showUserInfo: false,
+        showSettings: false,
+        buildVersion: "",
+        buildTime: "",
     };
 
-    handleClose = () => {
-        this.setState({show: false});
+    handleCloseUserInfo = () => {
+        this.setState({showUserInfo: false});
     };
 
-    handleShow = () => {
-        this.setState({show: true});
+    handleShowUserInfo = () => {
+        this.setState({showUserInfo: true});
+    };
+
+    handleCloseSettings = () => {
+        this.setState({showSettings: false});
+    };
+
+    handleShowSettings = () => {
+        this.setState({showSettings: true});
     };
 
     updatePersonInfo = () => {
@@ -103,20 +118,25 @@ export class NavBarComponentInner extends React.Component {
             <div>
                 <div>
                     <Button
+                        startIcon={<PersonIcon/>}
                         variant="contained"
                         edge="end"
                         color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
-                        onClick={this.handleShow}
+                        onClick={this.handleShowUserInfo}
                     >
                         {this.state.username}
                     </Button>
+                    <IconButton onClick={this.handleShowSettings}
+                                color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
+                        <SettingsIcon/>
+                    </IconButton>
                 </div>
                 <Dialog
-                    onClose={this.handleClose}
+                    onClose={this.handleCloseUserInfo}
                     aria-labelledby="roles-dialog-title"
-                    open={this.state.show}
+                    open={this.state.showUserInfo}
                 >
-                    <DialogTitle id="roles-dialog-title" onClose={this.handleClose}>
+                    <DialogTitle id="roles-dialog-title" onClose={this.handleCloseUserInfo}>
                         Roles for
                         {" "}
                         {this.state.username}
@@ -141,6 +161,15 @@ export class NavBarComponentInner extends React.Component {
                             sx={{ml: 1}}
                         />
                     </DialogContent>
+                </Dialog>
+                <Dialog
+                    onClose={this.handleCloseSettings}
+                    aria-labelledby="roles-dialog-title"
+                    open={this.state.showSettings}
+                >
+                    <DialogTitle id="roles-dialog-title" onClose={this.handleCloseSettings}>
+                        Settings
+                    </DialogTitle>
                     <DialogContent dividers>
                         <FormGroup>
                             <FormControlLabel control={<Checkbox checked={this.props.showNotification}

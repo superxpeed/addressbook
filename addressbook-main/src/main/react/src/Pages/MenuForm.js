@@ -2,7 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {AlertList} from "react-bs-notifier";
-import {AppBar, Breadcrumbs, Container, Link, Toolbar,} from "@mui/material";
+import {AppBar, Breadcrumbs, Container, IconButton, Link, Toolbar,} from "@mui/material";
 import Button from "@mui/material/Button";
 import * as MenuActions from "./MenuFormActions";
 import * as Utils from "../Common/Utils";
@@ -11,6 +11,7 @@ import {NavBarComponent} from "../Components/NavBarComponent";
 import * as url from "../Common/Url";
 import {ifNoAuthorizedRedirect} from "./UniversalListActions";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export class MenuFormInner extends React.Component {
     state = {
@@ -76,7 +77,8 @@ export class MenuFormInner extends React.Component {
         });
         const breads = Utils.getBreadcrumbsList(this.props.breadcrumbs, this.props.useDarkTheme)
         if (this.props.breadcrumbs.length === 0) {
-            breads.push(<Link underline="hover" color={this.props.useDarkTheme ? "inherit" : "white"} key="/root" href="#/">
+            breads.push(<Link underline="hover" color={this.props.useDarkTheme ? "inherit" : "white"} key="/root"
+                              href="#/">
                 Home
             </Link>);
         }
@@ -100,10 +102,13 @@ export class MenuFormInner extends React.Component {
                 <AppBar position="static">
                     <Container maxWidth="xl">
                         <Toolbar disableGutters>
-                            <Breadcrumbs separator={separator} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
+                            <Breadcrumbs separator={separator} style={{flex: 1}}
+                                         aria-label="breadcrumb">{breads}</Breadcrumbs>
                             <NavBarComponent/>
-                            <Button sx={{ml: 1}} variant="contained" color="error"
-                                    onClick={() => this.props.logout()}>Logout</Button>
+                            <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
+                                        onClick={() => this.props.logout()}>
+                                <LogoutIcon/>
+                            </IconButton>
                         </Toolbar>
                     </Container>
                 </AppBar>

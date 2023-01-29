@@ -16,6 +16,8 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {AppBar, Box, Breadcrumbs, Container, IconButton, Tab, Tabs, Toolbar} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
+import LogoutIcon from "@mui/icons-material/Logout";
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -235,8 +237,10 @@ export class UniversalListFormInner extends React.Component {
             <AppBar position="static">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <Breadcrumbs separator={separator} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
+                        <Breadcrumbs separator={separator} style={{flex: 1}}
+                                     aria-label="breadcrumb">{breads}</Breadcrumbs>
                         <Button
+                            startIcon={<GroupAddIcon/>}
                             variant="contained"
                             color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
                             style={{marginRight: "5px"}}
@@ -251,8 +255,10 @@ export class UniversalListFormInner extends React.Component {
                             Create person
                         </Button>
                         <NavBarComponent/>
-                        <Button sx={{ml: 1}} variant="contained" color="error"
-                                onClick={() => this.props.logout()}>Logout</Button>
+                        <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
+                                    onClick={() => this.props.logout()}>
+                            <LogoutIcon/>
+                        </IconButton>
                     </Toolbar>
                 </Container>
             </AppBar>
