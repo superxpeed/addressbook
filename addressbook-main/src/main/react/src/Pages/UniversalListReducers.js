@@ -5,7 +5,10 @@ import * as tableActions from "../Table/TableActions";
 const initialState = {
     tableDataOrganization: {
         data: [],
-    }, fieldDescriptionMapOrganization: {}, totalDataSizeOrganization: 0, tableDataPerson: {
+    },
+    fieldDescriptionMapOrganization: {},
+    totalDataSizeOrganization: 0,
+    tableDataPerson: {
         data: [],
     },
     fieldDescriptionMapPerson: {},

@@ -127,25 +127,21 @@ export class TableInner extends React.Component {
                 filterFn: "equals",
                 Cell: this.getCellFormatter(columnMetaData.name),
                 columnFilterModeOptions: ["equals", "notEquals", "greaterThan", "greaterThanOrEqualTo", "lessThan", "lessThanOrEqualTo"],
-                Filter: ({column}) => (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                Filter: ({column}) => (<LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             inputFormat="YYYY-MM-DD"
                             onChange={(newValue) => {
                                 column.setFilterValue(newValue);
                             }}
-                            renderInput={(params) => (
-                                <TextField
+                            renderInput={(params) => (<TextField
                                     {...params}
                                     sx={{mt: 1, minWidth: "110px"}}
                                     helperText={"Filter Mode: " + DateComparators.getEngType(column.getFilterFn().name)}
                                     variant="outlined"
-                                />
-                            )}
+                                />)}
                             value={column.getFilterValue()}
                         />
-                    </LocalizationProvider>
-                )
+                    </LocalizationProvider>)
             }
         }
 
@@ -205,8 +201,7 @@ export class TableInner extends React.Component {
                 }}
                 onRowSelectionChange={this.onSelectTableRow}
                 rowCount={this.props.totalDataSize}
-                renderTopToolbarCustomActions={({table}) => (
-                    <Box
+                renderTopToolbarCustomActions={({table}) => (<Box
                         sx={{display: "flex", gap: "1rem", p: "0.5rem", flexWrap: "wrap"}}
                     >
                         <Button
@@ -218,17 +213,14 @@ export class TableInner extends React.Component {
                             Export Page Rows
                         </Button>
                         <Button
-                            disabled={
-                                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-                            }
+                            disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()}
                             onClick={() => csvExporter.generateCsv(table.getSelectedRowModel().rows.map((row) => row.original))}
                             startIcon={<FileDownloadIcon/>}
                             variant="contained"
                         >
                             Export Selected Rows
                         </Button>
-                    </Box>
-                )}
+                    </Box>)}
                 muiTablePaginationProps={{
                     rowsPerPageOptions: [10, 15, 25, 50],
                     showFirstButton: true,

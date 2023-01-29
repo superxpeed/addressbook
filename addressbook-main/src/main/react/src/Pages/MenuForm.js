@@ -89,8 +89,7 @@ export class MenuFormInner extends React.Component {
             separator = <NavigateNextIcon fontSize="small" style={{color: "white"}}/>
         }
         const allAlerts = this.props.alerts;
-        return (
-            <div>
+        return (<div>
                 <AlertList
                     showIcon={false}
                     position="top-right"
@@ -113,8 +112,7 @@ export class MenuFormInner extends React.Component {
                     </Container>
                 </AppBar>
                 {allMenus}
-            </div>
-        );
+            </div>);
     }
 }
 

@@ -32,12 +32,10 @@ const lightTheme = createTheme({
 
 export class AppInner extends React.Component {
     render() {
-        return (
-            <ThemeProvider theme={this.props.useDarkTheme ? darkTheme : lightTheme}>
+        return (<ThemeProvider theme={this.props.useDarkTheme ? darkTheme : lightTheme}>
                 <CssBaseline/>
                 {this.props.children}
-            </ThemeProvider>
-        );
+            </ThemeProvider>);
     }
 }
 

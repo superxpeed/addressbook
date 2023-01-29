@@ -22,21 +22,17 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
 
-    return (
-        <div
+    return (<div
             role="tabpanel"
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && (
-                <Box sx={{p: 3}}>
+            {value === index && (<Box sx={{p: 3}}>
                     {children}
-                </Box>
-            )}
-        </div>
-    );
+                </Box>)}
+        </div>);
 }
 
 export class UniversalListFormInner extends React.Component {

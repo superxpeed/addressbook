@@ -26,7 +26,9 @@ import LoginIcon from "@mui/icons-material/Login";
 
 export class LoginFormInner extends React.Component {
     state = {
-        login: "", password: "", invalidLoginPassword: false,
+        login: "",
+        password: "",
+        invalidLoginPassword: false,
         showPassword: false,
     };
 
@@ -86,18 +88,15 @@ export class LoginFormInner extends React.Component {
 
     getWarning = () => {
         if (this.state.invalidLoginPassword) {
-            return (
-                <Alert severity="error" sx={{mb: 1}}>
+            return (<Alert severity="error" sx={{mb: 1}}>
                     Invalid login or password
-                </Alert>
-            );
+                </Alert>);
         }
         return <div/>;
     };
 
     render() {
-        return (
-            <div>
+        return (<div>
                 <Dialog fullWidth maxWidth="sm" open={true}>
                     <DialogTitle>Please login</DialogTitle>
                     <DialogContent sx={{paddingBottom: "16px"}}>
@@ -120,17 +119,15 @@ export class LoginFormInner extends React.Component {
                                     type={this.state.showPassword ? "text" : "password"}
                                     autoComplete="off"
                                     onChange={this.handleChange}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={this.handleClickShowPassword}
-                                                onMouseDown={this.handleMouseDownPassword}
-                                            >
-                                                {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
+                                    endAdornment={<InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={this.handleClickShowPassword}
+                                            onMouseDown={this.handleMouseDownPassword}
+                                        >
+                                            {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
+                                        </IconButton>
+                                    </InputAdornment>}
                                 />
                             </FormControl>
                         </Box>
@@ -143,8 +140,7 @@ export class LoginFormInner extends React.Component {
                         </Grid>
                     </DialogActions>
                 </Dialog>
-            </div>
-        );
+            </div>);
     }
 }
 

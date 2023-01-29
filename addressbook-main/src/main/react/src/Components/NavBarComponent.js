@@ -114,83 +114,81 @@ export class NavBarComponentInner extends React.Component {
     };
 
     render() {
-        return (
+        return (<div>
             <div>
-                <div>
-                    <Button
-                        startIcon={<PersonIcon/>}
-                        variant="contained"
-                        edge="end"
-                        color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
-                        onClick={this.handleShowUserInfo}
-                    >
-                        {this.state.username}
-                    </Button>
-                    <IconButton onClick={this.handleShowSettings}
-                                color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
-                        <SettingsIcon/>
-                    </IconButton>
-                </div>
-                <Dialog
-                    onClose={this.handleCloseUserInfo}
-                    aria-labelledby="roles-dialog-title"
-                    open={this.state.showUserInfo}
+                <Button
+                    startIcon={<PersonIcon/>}
+                    variant="contained"
+                    edge="end"
+                    color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
+                    onClick={this.handleShowUserInfo}
                 >
-                    <DialogTitle id="roles-dialog-title" onClose={this.handleCloseUserInfo}>
-                        Roles for
-                        {" "}
-                        {this.state.username}
-                    </DialogTitle>
-                    <DialogContent dividers>
-                        {this.getRoles()}
-                    </DialogContent>
-                    <DialogContent dividers>
-                        <Chip
-                            edge="end"
-                            size="small"
-                            key="build_version"
-                            label={`Build version: ${this.state.buildVersion}`}
-                            variant="outlined"
-                        />
-                        <Chip
-                            edge="end"
-                            size="small"
-                            key="build_time"
-                            label={`Build time: ${this.state.buildTime}`}
-                            variant="outlined"
-                            sx={{ml: 1}}
-                        />
-                    </DialogContent>
-                </Dialog>
-                <Dialog
-                    onClose={this.handleCloseSettings}
-                    aria-labelledby="roles-dialog-title"
-                    open={this.state.showSettings}
-                >
-                    <DialogTitle id="roles-dialog-title" onClose={this.handleCloseSettings}>
-                        Settings
-                    </DialogTitle>
-                    <DialogContent dividers>
-                        <FormGroup>
-                            <FormControlLabel control={<Checkbox checked={this.props.showNotification}
-                                                                 onChange={(e, v) => {
-                                                                     this.props.changeShowNotification(v)
-                                                                 }}
-                                                                 inputProps={{"aria-label": "controlled"}}/>}
-                                              label="Show lock notifications"/>
-                        </FormGroup>
-                        <FormGroup>
-                            <FormControlLabel control={<Checkbox checked={this.props.useDarkTheme}
-                                                                 onChange={(e, v) => {
-                                                                     this.props.changeUseDarkTheme(v)
-                                                                 }}
-                                                                 inputProps={{"aria-label": "controlled"}}/>}
-                                              label="Use dark theme"/>
-                        </FormGroup>
-                    </DialogContent>
-                </Dialog>
+                    {this.state.username}
+                </Button>
+                <IconButton onClick={this.handleShowSettings}
+                            color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
+                    <SettingsIcon/>
+                </IconButton>
             </div>
-        );
+            <Dialog
+                onClose={this.handleCloseUserInfo}
+                aria-labelledby="roles-dialog-title"
+                open={this.state.showUserInfo}
+            >
+                <DialogTitle id="roles-dialog-title" onClose={this.handleCloseUserInfo}>
+                    Roles for
+                    {" "}
+                    {this.state.username}
+                </DialogTitle>
+                <DialogContent dividers>
+                    {this.getRoles()}
+                </DialogContent>
+                <DialogContent dividers>
+                    <Chip
+                        edge="end"
+                        size="small"
+                        key="build_version"
+                        label={`Build version: ${this.state.buildVersion}`}
+                        variant="outlined"
+                    />
+                    <Chip
+                        edge="end"
+                        size="small"
+                        key="build_time"
+                        label={`Build time: ${this.state.buildTime}`}
+                        variant="outlined"
+                        sx={{ml: 1}}
+                    />
+                </DialogContent>
+            </Dialog>
+            <Dialog
+                onClose={this.handleCloseSettings}
+                aria-labelledby="roles-dialog-title"
+                open={this.state.showSettings}
+            >
+                <DialogTitle id="roles-dialog-title" onClose={this.handleCloseSettings}>
+                    Settings
+                </DialogTitle>
+                <DialogContent dividers>
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox checked={this.props.showNotification}
+                                                             onChange={(e, v) => {
+                                                                 this.props.changeShowNotification(v)
+                                                             }}
+                                                             inputProps={{"aria-label": "controlled"}}/>}
+                                          label="Show lock notifications"/>
+                    </FormGroup>
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox checked={this.props.useDarkTheme}
+                                                             onChange={(e, v) => {
+                                                                 this.props.changeUseDarkTheme(v)
+                                                             }}
+                                                             inputProps={{"aria-label": "controlled"}}/>}
+                                          label="Use dark theme"/>
+                    </FormGroup>
+                </DialogContent>
+            </Dialog>
+        </div>);
     }
 }
 

@@ -90,8 +90,7 @@ export class AdminPageFormInner extends React.Component {
         } else {
             separator = <NavigateNextIcon fontSize="small" style={{color: "white"}}/>
         }
-        return (
-            <div>
+        return (<div>
                 <AppBar position="static">
                     <Container maxWidth="xl">
                         <Toolbar disableGutters>
