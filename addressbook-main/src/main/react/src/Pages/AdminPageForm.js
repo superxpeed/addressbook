@@ -5,6 +5,9 @@ import {EventSourcePolyfill} from "event-source-polyfill";
 import {styled} from "@mui/material/styles";
 import MuiTableCell from "@mui/material/TableCell";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import ComputerIcon from "@mui/icons-material/Computer";
+import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
+
 import {
     AppBar,
     Breadcrumbs,
@@ -23,6 +26,9 @@ import {NavBarComponent} from "../Components/NavBarComponent";
 import {getBreadcrumbsList, HashUtils} from "../Common/Utils";
 import * as MenuActions from "./MenuFormActions";
 import LogoutIcon from "@mui/icons-material/Logout";
+import WavesIcon from "@mui/icons-material/Waves";
+import StorageIcon from "@mui/icons-material/Storage";
+import MemoryIcon from "@mui/icons-material/Memory";
 
 const TableCell = styled(MuiTableCell)({
     width: "50%",
@@ -101,7 +107,7 @@ export class AdminPageFormInner extends React.Component {
                 </AppBar>
                 <Container maxWidth="sm">
                     <Grid container sx={{justifyContent: "center"}}>
-                        <Chip color="primary" label="Runtime" sx={{m: 2, width: "100%"}}/>
+                        <Chip icon={<DeveloperBoardIcon/>} color="primary" label="Runtime" sx={{m: 2, width: "100%"}}/>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table aria-label="dense table">
@@ -122,7 +128,7 @@ export class AdminPageFormInner extends React.Component {
                         </Table>
                     </TableContainer>
                     <Grid container sx={{justifyContent: "center"}}>
-                        <Chip color="primary" label="System" sx={{m: 2, width: "100%"}}/>
+                        <Chip icon={<ComputerIcon/>} color="primary" label="System" sx={{m: 2, width: "100%"}}/>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table aria-label="dense table">
@@ -167,7 +173,7 @@ export class AdminPageFormInner extends React.Component {
                         </Table>
                     </TableContainer>
                     <Grid container sx={{justifyContent: "center"}}>
-                        <Chip color="primary" label="Heap" sx={{m: 2, width: "100%"}}/>
+                        <Chip icon={<StorageIcon/>} color="primary" label="Heap" sx={{m: 2, width: "100%"}}/>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table aria-label="dense table">
@@ -190,7 +196,7 @@ export class AdminPageFormInner extends React.Component {
                         </Table>
                     </TableContainer>
                     <Grid container sx={{justifyContent: "center"}}>
-                        <Chip color="primary" label="Non-heap" sx={{m: 2, width: "100%"}}/>
+                        <Chip icon={<MemoryIcon/>} color="primary" label="Non-heap" sx={{m: 2, width: "100%"}}/>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table aria-label="dense table">
@@ -213,7 +219,7 @@ export class AdminPageFormInner extends React.Component {
                         </Table>
                     </TableContainer>
                     <Grid container sx={{justifyContent: "center"}}>
-                        <Chip color="primary" label="Threads" sx={{m: 2, width: "100%"}}/>
+                        <Chip icon={<WavesIcon/>} color="primary" label="Threads" sx={{m: 2, width: "100%"}}/>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table>
