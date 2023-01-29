@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import {Checkbox, Chip, FormControlLabel, FormGroup, IconButton} from "@mui/material";
+import {Checkbox, Chip, FormControlLabel, FormGroup, IconButton, Tooltip} from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import {connect} from "react-redux";
@@ -125,10 +125,12 @@ export class NavBarComponentInner extends React.Component {
                 >
                     {this.state.username}
                 </Button>
-                <IconButton onClick={this.handleShowSettings}
-                            color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
-                    <SettingsIcon/>
-                </IconButton>
+                <Tooltip title="Settings">
+                    <IconButton onClick={this.handleShowSettings}
+                                color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
+                        <SettingsIcon/>
+                    </IconButton>
+                </Tooltip>
             </div>
             <Dialog
                 onClose={this.handleCloseUserInfo}

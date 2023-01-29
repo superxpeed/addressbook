@@ -2,7 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {AlertList} from "react-bs-notifier";
-import {AppBar, Breadcrumbs, Container, IconButton, Link, Toolbar,} from "@mui/material";
+import {AppBar, Breadcrumbs, Container, IconButton, Link, Toolbar, Tooltip} from "@mui/material";
 import Button from "@mui/material/Button";
 import * as MenuActions from "./MenuFormActions";
 import * as Utils from "../Common/Utils";
@@ -104,10 +104,12 @@ export class MenuFormInner extends React.Component {
                             <Breadcrumbs separator={separator} style={{flex: 1}}
                                          aria-label="breadcrumb">{breads}</Breadcrumbs>
                             <NavBarComponent/>
-                            <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
-                                        onClick={() => this.props.logout()}>
-                                <LogoutIcon/>
-                            </IconButton>
+                            <Tooltip title="Logout">
+                                <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
+                                            onClick={() => this.props.logout()}>
+                                    <LogoutIcon/>
+                                </IconButton>
+                            </Tooltip>
                         </Toolbar>
                     </Container>
                 </AppBar>

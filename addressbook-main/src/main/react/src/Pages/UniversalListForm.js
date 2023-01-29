@@ -13,7 +13,7 @@ import {OrganizationComponent} from "../Components/OrganizationComponent";
 import {PersonComponent} from "../Components/PersonComponent";
 import {NavBarComponent} from "../Components/NavBarComponent";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import {AppBar, Box, Breadcrumbs, Container, IconButton, Tab, Tabs, Toolbar} from "@mui/material";
+import {AppBar, Box, Breadcrumbs, Container, IconButton, Tab, Tabs, Toolbar, Tooltip} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -23,16 +23,16 @@ function TabPanel(props) {
     const {children, value, index, ...other} = props;
 
     return (<div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (<Box sx={{p: 3}}>
-                    {children}
-                </Box>)}
-        </div>);
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+    >
+        {value === index && (<Box sx={{p: 3}}>
+            {children}
+        </Box>)}
+    </div>);
 }
 
 export class UniversalListFormInner extends React.Component {
@@ -251,10 +251,12 @@ export class UniversalListFormInner extends React.Component {
                             Create person
                         </Button>
                         <NavBarComponent/>
-                        <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
-                                    onClick={() => this.props.logout()}>
-                            <LogoutIcon/>
-                        </IconButton>
+                        <Tooltip title="Logout">
+                            <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
+                                        onClick={() => this.props.logout()}>
+                                <LogoutIcon/>
+                            </IconButton>
+                        </Tooltip>
                     </Toolbar>
                 </Container>
             </AppBar>

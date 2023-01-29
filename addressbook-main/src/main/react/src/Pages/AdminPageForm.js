@@ -7,7 +7,6 @@ import MuiTableCell from "@mui/material/TableCell";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import ComputerIcon from "@mui/icons-material/Computer";
 import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
-
 import {
     AppBar,
     Breadcrumbs,
@@ -21,6 +20,7 @@ import {
     TableContainer,
     TableRow,
     Toolbar,
+    Tooltip
 } from "@mui/material";
 import {NavBarComponent} from "../Components/NavBarComponent";
 import {getBreadcrumbsList, HashUtils} from "../Common/Utils";
@@ -97,10 +97,12 @@ export class AdminPageFormInner extends React.Component {
                             <Breadcrumbs separator={separator} style={{flex: 1}}
                                          aria-label="breadcrumb">{breads}</Breadcrumbs>
                             <NavBarComponent/>
-                            <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
-                                        onClick={() => this.props.logout()}>
-                                <LogoutIcon/>
-                            </IconButton>
+                            <Tooltip title="Logout">
+                                <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
+                                            onClick={() => this.props.logout()}>
+                                    <LogoutIcon/>
+                                </IconButton>
+                            </Tooltip>
                         </Toolbar>
                     </Container>
                 </AppBar>
