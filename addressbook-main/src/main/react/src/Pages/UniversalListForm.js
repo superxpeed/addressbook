@@ -237,7 +237,8 @@ export class UniversalListFormInner extends React.Component {
                     <Toolbar disableGutters>
                         <Breadcrumbs separator={separator} style={{flex: 1}} aria-label="breadcrumb">{breads}</Breadcrumbs>
                         <Button
-                            variant={this.props.useDarkTheme ? "outlined" : "contained"}
+                            variant="contained"
+                            color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
                             style={{marginRight: "5px"}}
                             disabled={this.props.selectedRowsOrganization.length !== 1 || this.state.createNewPerson === true}
                             onClick={() => this.setState({

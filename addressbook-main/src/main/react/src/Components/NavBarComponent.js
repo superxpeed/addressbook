@@ -105,6 +105,7 @@ export class NavBarComponentInner extends React.Component {
                     <Button
                         variant="contained"
                         edge="end"
+                        color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
                         onClick={this.handleShow}
                     >
                         {this.state.username}

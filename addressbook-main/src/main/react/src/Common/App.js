@@ -14,6 +14,9 @@ const lightTheme = createTheme({
     palette: {
         primary: {
             main: purple[500]
+        },
+        topButtonColor: {
+            main: purple[700]
         }
     },
 });
