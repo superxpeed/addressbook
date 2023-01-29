@@ -108,132 +108,132 @@ export class AdminPageFormInner extends React.Component {
                 </AppBar>
                 <Container maxWidth="sm">
                     <Grid container sx={{justifyContent: "center"}}>
-                        <Chip icon={<DeveloperBoardIcon/>} color="primary" label="Runtime" sx={{m: 2, width: "100%"}}/>
+                        <Chip icon={<DeveloperBoardIcon/>} color="primary" label="RUNTIME" sx={{m: 2, width: "100%"}}/>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table aria-label="dense table">
                             <TableBody>
                                 <TableRow component="th">
-                                    <TableCell>Total memory</TableCell>
+                                    <TableCell>TOTAL MEMORY</TableCell>
                                     <TableCell>{this.state.jvmState.runtimeTotalMemory}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>Free memory</TableCell>
+                                    <TableCell>FREE MEMORY</TableCell>
                                     <TableCell>{this.state.jvmState.runtimeFreeMemory}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>Max memory</TableCell>
+                                    <TableCell>MAX MEMORY</TableCell>
                                     <TableCell>{this.state.jvmState.runtimeMaxMemory}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>
                     <Grid container sx={{justifyContent: "center"}}>
-                        <Chip icon={<ComputerIcon/>} color="primary" label="System" sx={{m: 2, width: "100%"}}/>
+                        <Chip icon={<ComputerIcon/>} color="primary" label="SYSTEM" sx={{m: 2, width: "100%"}}/>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table aria-label="dense table">
                             <TableBody>
                                 <TableRow component="th">
-                                    <TableCell>Available processors</TableCell>
+                                    <TableCell>AVAILABLE PROCESSORS</TableCell>
                                     <TableCell>{this.state.jvmState.availableProcessors}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>Load average</TableCell>
+                                    <TableCell>LOAD AVERAGE</TableCell>
                                     <TableCell>{this.state.jvmState.systemLoadAverage}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>Architecture</TableCell>
+                                    <TableCell>ARCHITECTURE</TableCell>
                                     <TableCell>{this.state.jvmState.arch}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>Operating system</TableCell>
+                                    <TableCell>OPERATING SYSTEM</TableCell>
                                     <TableCell>{this.state.jvmState.name}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>Operating system version</TableCell>
+                                    <TableCell>OPERATING SYSTEM VERSION</TableCell>
                                     <TableCell>{this.state.jvmState.version}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>Total physical memory</TableCell>
+                                    <TableCell>TOTAL PHYSICAL MEMORY</TableCell>
                                     <TableCell>{this.state.jvmState.totalPhysicalMemory}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>Total cpu load</TableCell>
+                                    <TableCell>TOTAL CPU LOAD</TableCell>
                                     <TableCell>{this.state.jvmState.totalCpuLoad}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>Disk size</TableCell>
+                                    <TableCell>DISK SIZE</TableCell>
                                     <TableCell>{this.state.jvmState.diskSize}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>OS user</TableCell>
+                                    <TableCell>OS USER</TableCell>
                                     <TableCell>{this.state.jvmState.user}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>
                     <Grid container sx={{justifyContent: "center"}}>
-                        <Chip icon={<StorageIcon/>} color="primary" label="Heap" sx={{m: 2, width: "100%"}}/>
+                        <Chip icon={<StorageIcon/>} color="primary" label="HEAP" sx={{m: 2, width: "100%"}}/>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table aria-label="dense table">
                             <TableRow component="th">
-                                <TableCell>Used</TableCell>
+                                <TableCell>USED</TableCell>
                                 <TableCell>{this.state.jvmState.heapMemoryUsed}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Initial</TableCell>
+                                <TableCell>INITIAL</TableCell>
                                 <TableCell>{this.state.jvmState.heapMemoryInit}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Committed</TableCell>
+                                <TableCell>COMMITTED</TableCell>
                                 <TableCell>{this.state.jvmState.heapMemoryCommitted}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Max</TableCell>
+                                <TableCell>MAX</TableCell>
                                 <TableCell>{this.state.jvmState.heapMemoryMax}</TableCell>
                             </TableRow>
                         </Table>
                     </TableContainer>
                     <Grid container sx={{justifyContent: "center"}}>
-                        <Chip icon={<MemoryIcon/>} color="primary" label="Non-heap" sx={{m: 2, width: "100%"}}/>
+                        <Chip icon={<MemoryIcon/>} color="primary" label="NON-HEAP" sx={{m: 2, width: "100%"}}/>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table aria-label="dense table">
                             <TableRow component="th">
-                                <TableCell>Used</TableCell>
+                                <TableCell>USED</TableCell>
                                 <TableCell>{this.state.jvmState.nonHeapMemoryUsed}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Initial</TableCell>
+                                <TableCell>INITIAL</TableCell>
                                 <TableCell>{this.state.jvmState.nonHeapMemoryInit}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Committed</TableCell>
+                                <TableCell>COMMITTED</TableCell>
                                 <TableCell>{this.state.jvmState.nonHeapMemoryCommitted}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Max</TableCell>
+                                <TableCell>MAX</TableCell>
                                 <TableCell>{this.state.jvmState.nonHeapMemoryMax}</TableCell>
                             </TableRow>
                         </Table>
                     </TableContainer>
                     <Grid container sx={{justifyContent: "center"}}>
-                        <Chip icon={<WavesIcon/>} color="primary" label="Threads" sx={{m: 2, width: "100%"}}/>
+                        <Chip icon={<WavesIcon/>} color="primary" label="THREADS" sx={{m: 2, width: "100%"}}/>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table>
                             <TableRow component="th">
-                                <TableCell>Current thread count</TableCell>
+                                <TableCell>CURRENT THREAD COUNT</TableCell>
                                 <TableCell>{this.state.jvmState.threadCount}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Total started thread count</TableCell>
+                                <TableCell>TOTAL STARTED THREAD COUNT</TableCell>
                                 <TableCell>{this.state.jvmState.totalStartedThreadCount}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Peak thread count</TableCell>
+                                <TableCell>PEAK THREAD COUNT</TableCell>
                                 <TableCell>{this.state.jvmState.peakThreadCount}</TableCell>
                             </TableRow>
                         </Table>
