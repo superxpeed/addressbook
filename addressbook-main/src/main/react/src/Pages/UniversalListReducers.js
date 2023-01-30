@@ -28,7 +28,7 @@ const initialState = {
     customFilterFnsOrganization: {},
     customFilterFnsPerson: {},
     showNotification: false,
-    useDarkTheme: true
+    useDarkTheme: window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
 };
 
 export default function universalListReducer(state = initialState, action = {}) {
