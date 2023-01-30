@@ -3,12 +3,13 @@ import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import {connect} from "react-redux";
 import {purple} from "@mui/material/colors";
-import {Alert, AlertTitle, Drawer} from "@mui/material";
+import {Alert, AlertTitle, Collapse, Drawer, List} from "@mui/material";
 import * as CommonActions from "../Pages/UniversalListActions";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import * as MenuActions from "../Pages/MenuFormActions";
 import {bindActionCreators} from "redux";
 import Button from "@mui/material/Button";
+import {TransitionGroup} from 'react-transition-group';
 
 const darkTheme = createTheme({
     palette: {
@@ -46,13 +47,17 @@ export class AppInner extends React.Component {
             } else {
                 if (targetMessage.length > 300) targetMessage = targetMessage.substring(0, 300)
             }
-            currentAlerts.push(<Alert variant="filled"
-                                      severity={alert.type}
-                                      sx={{width: "600px", marginLeft: "20px", marginRight: "20px", marginTop: "5px"}}
-                                      onClose={() => this.props.dismissAlert(alert)}>
-                <AlertTitle>{alert.headline}</AlertTitle>
-                {targetMessage}
-            </Alert>)
+            currentAlerts.push(
+                <Collapse key={alert.id}>
+                    <Alert variant="filled"
+                           severity={alert.type}
+                           sx={{width: "600px", marginLeft: "20px", marginRight: "20px", marginTop: "5px"}}
+                           onClose={() => this.props.dismissAlert(alert)}>
+                        <AlertTitle>{alert.headline}</AlertTitle>
+                        {targetMessage}
+                    </Alert>
+                </Collapse>
+            )
         })
         return (<ThemeProvider theme={this.props.useDarkTheme ? darkTheme : lightTheme}>
             <CssBaseline>
@@ -74,7 +79,9 @@ export class AppInner extends React.Component {
                                 onClick={() => this.props.clearAlerts()}
                                 startIcon={<DeleteForeverOutlinedIcon/>} variant="outlined">Clear all
                             notifications</Button>
-                        {currentAlerts}
+                        <TransitionGroup>
+                            {currentAlerts}
+                        </TransitionGroup>
                     </Drawer>
                 </React.Fragment>
             </CssBaseline>
