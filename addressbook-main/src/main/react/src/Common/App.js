@@ -64,7 +64,12 @@ export class AppInner extends React.Component {
                         onClose={() => this.props.openCloseDrawer(false)}
                     >
                         <Button sx={{
-                            width: "600px", marginLeft: "20px", marginRight: "20px", marginTop: "5px", height: "56px"
+                            width: "600px",
+                            marginLeft: "20px",
+                            marginRight: "20px",
+                            marginTop: "5px",
+                            height: "56px",
+                            minHeight: "56px"
                         }}
                                 onClick={() => this.props.clearAlerts()}
                                 startIcon={<DeleteForeverOutlinedIcon/>} variant="outlined">Clear all

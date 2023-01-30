@@ -51,10 +51,10 @@ export function showCommonErrorAlert(text) {
     };
 }
 
-export function showCommonAlert(headline) {
+export function showCommonAlert(message) {
     return (dispatch) => {
         dispatch({
-            type: ADD_ALERT, alert: {type: "success", headline},
+            type: ADD_ALERT, alert: {type: "success", message: message, headline: "Success"},
         });
     };
 }
