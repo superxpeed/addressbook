@@ -1,7 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {AlertList} from "react-bs-notifier";
 import {AppBar, Breadcrumbs, Container, IconButton, Link, Toolbar, Tooltip} from "@mui/material";
 import Button from "@mui/material/Button";
 import * as MenuActions from "./MenuFormActions";
@@ -88,16 +87,7 @@ export class MenuFormInner extends React.Component {
         } else {
             separator = <NavigateNextIcon fontSize="small" style={{color: "white"}}/>
         }
-        const allAlerts = this.props.alerts;
         return (<div>
-            <AlertList
-                showIcon={false}
-                position="top-right"
-                alerts={allAlerts}
-                timeout={1500}
-                dismissTitle="Close"
-                onDismiss={this.onAlertDismissed.bind(this)}
-            />
             <AppBar position="static">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
@@ -121,7 +111,6 @@ export class MenuFormInner extends React.Component {
 export const MenuForm = connect((state) => ({
     breadcrumbs: state.menuReducer.breadcrumbs,
     menus: state.menuReducer.menus,
-    alerts: state.menuReducer.alerts,
     useDarkTheme: state.universalListReducer.useDarkTheme
 }), (dispatch) => ({
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),

@@ -30,7 +30,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import ApartmentIcon from "@mui/icons-material/Apartment";
-import AlternateEmailOutlinedIcon from '@mui/icons-material/AlternateEmailOutlined';
+import AlternateEmailOutlinedIcon from "@mui/icons-material/AlternateEmailOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ContactPageIcon from "@mui/icons-material/ContactPage";

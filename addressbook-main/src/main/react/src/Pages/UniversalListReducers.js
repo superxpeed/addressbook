@@ -27,7 +27,8 @@ const initialState = {
     filterObjPerson: [],
     customFilterFnsOrganization: {},
     customFilterFnsPerson: {},
-    showNotification: false,
+    showNotification: true,
+    drawerOpened: false,
     useDarkTheme: window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
 };
 
@@ -79,6 +80,10 @@ export default function universalListReducer(state = initialState, action = {}) 
         case types.USE_DARK_THEME:
             return Object.assign({}, state, {
                 useDarkTheme: action.useDarkTheme
+            });
+        case types.OPEN_CLOSE_DRAWER:
+            return Object.assign({}, state, {
+                drawerOpened: action.isOpened
             });
         case types.GET_LIST + Caches.PERSON_CACHE + types.REQUEST:
             return Object.assign({}, state, {

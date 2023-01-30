@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import {Checkbox, Chip, FormControlLabel, FormGroup, IconButton, Tooltip} from "@mui/material";
+import {Badge, Checkbox, Chip, FormControlLabel, FormGroup, IconButton, Tooltip} from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import {connect} from "react-redux";
@@ -129,6 +129,16 @@ export class NavBarComponentInner extends React.Component {
                 >
                     {this.state.username}
                 </Button>
+                <Tooltip title="Notifications">
+                    <IconButton onClick={() => this.props.openCloseDrawer(true)}
+                                color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
+                        <Badge max={99}
+                               badgeContent={this.props.alerts.length}
+                               color={this.props.useDarkTheme ? "primary" : "topButtonColor"}>
+                            <NotificationsActiveOutlinedIcon/>
+                        </Badge>
+                    </IconButton>
+                </Tooltip>
                 <Tooltip title="Settings">
                     <IconButton onClick={this.handleShowSettings}
                                 color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
@@ -206,9 +216,11 @@ export class NavBarComponentInner extends React.Component {
 
 export const NavBarComponent = connect((state) => ({
     showNotification: state.universalListReducer.showNotification,
-    useDarkTheme: state.universalListReducer.useDarkTheme
+    useDarkTheme: state.universalListReducer.useDarkTheme,
+    alerts: state.menuReducer.alerts
 }), (dispatch) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
     changeShowNotification: bindActionCreators(CommonActions.changeShowNotification, dispatch),
+    openCloseDrawer: bindActionCreators(CommonActions.openCloseDrawer, dispatch),
     changeUseDarkTheme: bindActionCreators(CommonActions.changeUseDarkTheme, dispatch)
 }), null, {withRef: true})(NavBarComponentInner);

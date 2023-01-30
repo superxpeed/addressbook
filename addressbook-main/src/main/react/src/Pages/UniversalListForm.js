@@ -2,7 +2,6 @@ import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {Table} from "../Table/Table";
-import {AlertList} from "react-bs-notifier";
 import * as CommonActions from "./UniversalListActions";
 import * as Url from "../Common/Url";
 import * as Utils from "../Common/Utils";
@@ -121,7 +120,6 @@ export class UniversalListFormInner extends React.Component {
         let personsTabs = [];
         let personsTabPanels = [];
         let breads = Utils.getBreadcrumbsList(this.props.breadcrumbs, this.props.useDarkTheme)
-        let allAlerts = this.props.alerts;
         if (this.props.selectedRowsOrganization.length === 1) {
             personTableTab = (<Tab
                 key={2}
@@ -222,14 +220,6 @@ export class UniversalListFormInner extends React.Component {
         }
 
         return (<div>
-            <AlertList
-                showIcon={false}
-                position={"top-right"}
-                alerts={allAlerts}
-                timeout={1500}
-                dismissTitle="Close"
-                onDismiss={this.onAlertDismissed.bind(this)}
-            />
             <AppBar position="static">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
@@ -334,8 +324,7 @@ export const UniversalListForm = connect((state) => ({
     selectedRowsPerson: state.universalListReducer.selectedRowsPerson,
     selectedRowsOrganization: state.universalListReducer.selectedRowsOrganization,
     useDarkTheme: state.universalListReducer.useDarkTheme,
-    breadcrumbs: state.menuReducer.breadcrumbs,
-    alerts: state.menuReducer.alerts,
+    breadcrumbs: state.menuReducer.breadcrumbs
 }), (dispatch) => ({
     getList: bindActionCreators(CommonActions.getList, dispatch),
     onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),

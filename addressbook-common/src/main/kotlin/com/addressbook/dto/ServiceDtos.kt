@@ -7,7 +7,7 @@ class AlertDto(headline: String?, type: String?, message: String?) : Serializabl
     companion object {
         const val SUCCESS: String = "success"
         const val WARNING: String = "warning"
-        const val DANGER: String = "danger"
+        const val DANGER: String = "error"
         const val RECORD_PREFIX: String = "Record id "
     }
 

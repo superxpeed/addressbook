@@ -3,6 +3,7 @@ import {
     AuthTokenUtils,
     Caches,
     FAIL,
+    OPEN_CLOSE_DRAWER,
     REQUEST,
     SHOW_NOTIFICATION_CHANGE,
     SUCCESS,
@@ -25,6 +26,14 @@ export function clearPersonSelection(rows) {
     return (dispatch) => {
         dispatch({
             type: tableActions.ON_SELECT_ROW + Caches.PERSON_CACHE, row: rows, isSelected: false,
+        });
+    };
+}
+
+export function openCloseDrawer(isOpened) {
+    return (dispatch) => {
+        dispatch({
+            type: OPEN_CLOSE_DRAWER, isOpened: isOpened,
         });
     };
 }

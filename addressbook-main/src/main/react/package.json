@@ -30,7 +30,6 @@
     "mui-rte": "^2.0.1",
     "react": "^18.2.0",
     "react-addons-update": "^15.6.3",
-    "react-bs-notifier": "^7.0.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-router": "5.2.0",

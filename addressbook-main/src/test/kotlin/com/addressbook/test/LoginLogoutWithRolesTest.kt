@@ -32,7 +32,7 @@ class LoginLogoutWithRolesTest {
         // Open login page
         driver.get("https://localhost:9000")
         // Wait until page is loaded
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\":r2:\"]")))
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"login\"]")))
         // Locate login input field
         var loginInput = driver.findElement(By.xpath("//*[@id=\"login\"]"))
         // Locate password input field

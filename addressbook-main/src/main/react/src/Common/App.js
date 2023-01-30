@@ -3,6 +3,12 @@ import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import {connect} from "react-redux";
 import {purple} from "@mui/material/colors";
+import {Alert, AlertTitle, Drawer} from "@mui/material";
+import * as CommonActions from "../Pages/UniversalListActions";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import * as MenuActions from "../Pages/MenuFormActions";
+import {bindActionCreators} from "redux";
+import Button from "@mui/material/Button";
 
 const darkTheme = createTheme({
     palette: {
@@ -32,13 +38,51 @@ const lightTheme = createTheme({
 
 export class AppInner extends React.Component {
     render() {
+        let currentAlerts = []
+        this.props.alerts.forEach(alert => {
+            let targetMessage = alert.message;
+            if (targetMessage == null || targetMessage.trim().length === 0) {
+                targetMessage = null;
+            } else {
+                if (targetMessage.length > 300) targetMessage = targetMessage.substring(0, 300)
+            }
+            currentAlerts.push(<Alert variant="filled"
+                                      severity={alert.type}
+                                      sx={{width: "600px", marginLeft: "20px", marginRight: "20px", marginTop: "5px"}}
+                                      onClose={() => this.props.dismissAlert(alert)}>
+                <AlertTitle>{alert.headline}</AlertTitle>
+                {targetMessage}
+            </Alert>)
+        })
         return (<ThemeProvider theme={this.props.useDarkTheme ? darkTheme : lightTheme}>
-            <CssBaseline/>
-            {this.props.children}
+            <CssBaseline>
+                {this.props.children}
+                <React.Fragment key="drawer_right">
+                    <Drawer
+                        anchor="right"
+                        open={this.props.drawerOpened}
+                        onClose={() => this.props.openCloseDrawer(false)}
+                    >
+                        <Button sx={{
+                            width: "600px", marginLeft: "20px", marginRight: "20px", marginTop: "5px", height: "56px"
+                        }}
+                                onClick={() => this.props.clearAlerts()}
+                                startIcon={<DeleteForeverOutlinedIcon/>} variant="outlined">Clear all
+                            notifications</Button>
+                        {currentAlerts}
+                    </Drawer>
+                </React.Fragment>
+            </CssBaseline>
         </ThemeProvider>);
     }
 }
 
 export const App = connect((state) => ({
-    useDarkTheme: state.universalListReducer.useDarkTheme
-}), null, null, {withRef: true})(AppInner);
+    useDarkTheme: state.universalListReducer.useDarkTheme,
+    drawerOpened: state.universalListReducer.drawerOpened,
+    alerts: state.menuReducer.alerts
+}), (dispatch) => ({
+    openCloseDrawer: bindActionCreators(CommonActions.openCloseDrawer, dispatch),
+    dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch),
+    clearAlerts: bindActionCreators(MenuActions.clearAlerts, dispatch)
+}), null, {withRef: true})(AppInner);
