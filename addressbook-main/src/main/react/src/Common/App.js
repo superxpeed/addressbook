@@ -77,8 +77,10 @@ export class AppInner extends React.Component {
                             minHeight: "56px"
                         }}
                                 onClick={() => this.props.clearAlerts()}
-                                startIcon={<DeleteForeverOutlinedIcon/>} variant="outlined">Clear all
-                            notifications</Button>
+                                startIcon={<DeleteForeverOutlinedIcon/>}
+                                variant="contained">
+                            Clear all notifications
+                        </Button>
                         <TransitionGroup>
                             {currentAlerts}
                         </TransitionGroup>
