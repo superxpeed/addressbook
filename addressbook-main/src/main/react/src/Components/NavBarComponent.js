@@ -10,7 +10,7 @@ import * as url from "../Common/Url";
 import * as CommonActions from "../Pages/UniversalListActions";
 import * as MenuActions from "../Pages/MenuFormActions";
 import {AuthTokenUtils} from "../Common/Utils";
-import SettingsIcon from "@mui/icons-material/Settings";
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import PersonIcon from "@mui/icons-material/Person";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
@@ -132,7 +132,7 @@ export class NavBarComponentInner extends React.Component {
                 <Tooltip title="Settings">
                     <IconButton onClick={this.handleShowSettings}
                                 color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
-                        <SettingsIcon/>
+                        <SettingsOutlinedIcon/>
                     </IconButton>
                 </Tooltip>
             </div>
