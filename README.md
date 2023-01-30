@@ -48,10 +48,11 @@ https://user-images.githubusercontent.com/8986329/215350372-cd0b22f7-9082-4573-9
 2.  [**react v18.2.0**](https://reactjs.org/blog/2022/03/29/react-v18.html), [**react-redux v8.0.5**](https://react-redux.js.org), [**react-router v5.2.0**](https://v5.reactrouter.com), component lifecycle, integration with Spring Security for REST API
 3.  [**Material React Table**](https://www.material-react-table.com) & [**Material UI v5**](https://mui.com/core) components
 4.  [**webpack-dev-server**](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/react/webpack.config.js#L56) & **npm** configuration & assembly with [**compression**](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/react/webpack.prod.config.js#L17) (+ multiplatform **Maven** configuration)
-5.  Handling HTTP Statuses & JS exceptions
-6.  User notifications of all back-end and front-end events (+ exception handling) using **react-bs-notifier**
-7.  Hierarchical menu with breadcrumbs and role-dependent feature availability
-8.  Dynamic collections of child components
+5.  Dark & Light Themes with automatic switching
+6.  Handling HTTP Statuses & JS exceptions
+7.  User notifications of all back-end and front-end events (+ exception handling) using **react-bs-notifier**
+8.  Hierarchical menu with breadcrumbs and role-dependent feature availability
+9.  Dynamic collections of child components
 
 #### [DevOps](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md)
 1.  [**Ansible** playbook](https://github.com/dredwardhyde/addressbook/tree/master/devops/ansible)  
