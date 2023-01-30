@@ -8,7 +8,7 @@ import {
     GET_MENU,
     SUCCESS,
 } from "../Common/Utils";
-import {asyncCommonCatch, ifNoAuthorizedRedirect} from "./UniversalListActions";
+import {asyncCommonCatch, ifNoAuthorizedRedirect} from "./ListActions";
 import * as url from "../Common/Url";
 
 export function getNextLevelMenus(currentUrl) {

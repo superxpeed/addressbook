@@ -257,7 +257,7 @@ export class TableInner extends React.Component {
 }
 
 export const Table = connect((state) => ({
-    useDarkTheme: state.universalListReducer.useDarkTheme
+    useDarkTheme: state.listReducer.useDarkTheme
 }), (dispatch) => ({
     onSelectRow: bindActionCreators(TableActions.onSelectRow, dispatch),
     onPaginationChange: bindActionCreators(TableActions.onPaginationChange, dispatch),

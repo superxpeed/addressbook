@@ -2,7 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {Table} from "../Table/Table";
-import * as CommonActions from "./UniversalListActions";
+import * as CommonActions from "./ListActions";
 import * as Url from "../Common/Url";
 import * as Utils from "../Common/Utils";
 import {Caches, HashUtils} from "../Common/Utils";
@@ -34,7 +34,7 @@ function TabPanel(props) {
     </div>);
 }
 
-export class UniversalListFormInner extends React.Component {
+export class ListFormInner extends React.Component {
     constructor(props) {
         super(props);
         this.handleSelect = this.handleSelect.bind(this);
@@ -100,7 +100,7 @@ export class UniversalListFormInner extends React.Component {
                 name: "orgId", value: this.props.selectedRowsOrganization[0].id, comparator: "", type: "TextFilter",
             });
         }
-        this.props.getList(Url.GET_LIST_4_UNIVERSAL_LIST_FORM + "?start=" + start + "&pageSize=" + pageSize + "&sortName=" + sortName + "&sortOrder=" + sortOrder + "&cache=" + cache, filterDto, cache);
+        this.props.getList(Url.GET_LIST + "?start=" + start + "&pageSize=" + pageSize + "&sortName=" + sortName + "&sortOrder=" + sortOrder + "&cache=" + cache, filterDto, cache);
     };
 
     updateSelectedPerson = (person) => {
@@ -302,28 +302,28 @@ export class UniversalListFormInner extends React.Component {
 }
 
 
-export const UniversalListForm = connect((state) => ({
-    customFilterFnsOrganization: state.universalListReducer.customFilterFnsOrganization,
-    customFilterFnsPerson: state.universalListReducer.customFilterFnsPerson,
-    sortNameOrganization: state.universalListReducer.sortNameOrganization,
-    sortOrderOrganization: state.universalListReducer.sortOrderOrganization,
-    paginationOrganization: state.universalListReducer.paginationOrganization,
-    filterObjOrganization: state.universalListReducer.filterObjOrganization,
-    sortNamePerson: state.universalListReducer.sortNamePerson,
-    sortOrderPerson: state.universalListReducer.sortOrderPerson,
-    paginationPerson: state.universalListReducer.paginationPerson,
-    filterObjPerson: state.universalListReducer.filterObjPerson,
-    tableDataOrganization: state.universalListReducer.tableDataOrganization,
-    fieldDescriptionMapOrganization: state.universalListReducer.fieldDescriptionMapOrganization,
-    tableDataOrganizationLoading: state.universalListReducer.tableDataOrganizationLoading,
-    tableDataPersonLoading: state.universalListReducer.tableDataPersonLoading,
-    totalDataSizeOrganization: state.universalListReducer.totalDataSizeOrganization,
-    tableDataPerson: state.universalListReducer.tableDataPerson,
-    fieldDescriptionMapPerson: state.universalListReducer.fieldDescriptionMapPerson,
-    totalDataSizePerson: state.universalListReducer.totalDataSizePerson,
-    selectedRowsPerson: state.universalListReducer.selectedRowsPerson,
-    selectedRowsOrganization: state.universalListReducer.selectedRowsOrganization,
-    useDarkTheme: state.universalListReducer.useDarkTheme,
+export const ListForm = connect((state) => ({
+    customFilterFnsOrganization: state.listReducer.customFilterFnsOrganization,
+    customFilterFnsPerson: state.listReducer.customFilterFnsPerson,
+    sortNameOrganization: state.listReducer.sortNameOrganization,
+    sortOrderOrganization: state.listReducer.sortOrderOrganization,
+    paginationOrganization: state.listReducer.paginationOrganization,
+    filterObjOrganization: state.listReducer.filterObjOrganization,
+    sortNamePerson: state.listReducer.sortNamePerson,
+    sortOrderPerson: state.listReducer.sortOrderPerson,
+    paginationPerson: state.listReducer.paginationPerson,
+    filterObjPerson: state.listReducer.filterObjPerson,
+    tableDataOrganization: state.listReducer.tableDataOrganization,
+    fieldDescriptionMapOrganization: state.listReducer.fieldDescriptionMapOrganization,
+    tableDataOrganizationLoading: state.listReducer.tableDataOrganizationLoading,
+    tableDataPersonLoading: state.listReducer.tableDataPersonLoading,
+    totalDataSizeOrganization: state.listReducer.totalDataSizeOrganization,
+    tableDataPerson: state.listReducer.tableDataPerson,
+    fieldDescriptionMapPerson: state.listReducer.fieldDescriptionMapPerson,
+    totalDataSizePerson: state.listReducer.totalDataSizePerson,
+    selectedRowsPerson: state.listReducer.selectedRowsPerson,
+    selectedRowsOrganization: state.listReducer.selectedRowsOrganization,
+    useDarkTheme: state.listReducer.useDarkTheme,
     breadcrumbs: state.menuReducer.breadcrumbs
 }), (dispatch) => ({
     getList: bindActionCreators(CommonActions.getList, dispatch),
@@ -334,4 +334,4 @@ export const UniversalListForm = connect((state) => ({
     clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch),
     logout: bindActionCreators(MenuActions.logout, dispatch),
     dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch),
-}), null, {withRef: true})(UniversalListFormInner);
+}), null, {withRef: true})(ListFormInner);

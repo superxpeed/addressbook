@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import {connect} from "react-redux";
 import {purple} from "@mui/material/colors";
 import {Alert, AlertTitle, Collapse, Drawer, List} from "@mui/material";
-import * as CommonActions from "../Pages/UniversalListActions";
+import * as CommonActions from "../Pages/ListActions";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import * as MenuActions from "../Pages/MenuFormActions";
 import {bindActionCreators} from "redux";
@@ -92,8 +92,8 @@ export class AppInner extends React.Component {
 }
 
 export const App = connect((state) => ({
-    useDarkTheme: state.universalListReducer.useDarkTheme,
-    drawerOpened: state.universalListReducer.drawerOpened,
+    useDarkTheme: state.listReducer.useDarkTheme,
+    drawerOpened: state.listReducer.drawerOpened,
     alerts: state.menuReducer.alerts
 }), (dispatch) => ({
     openCloseDrawer: bindActionCreators(CommonActions.openCloseDrawer, dispatch),

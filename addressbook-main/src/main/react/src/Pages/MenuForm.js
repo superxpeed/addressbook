@@ -8,7 +8,7 @@ import * as Utils from "../Common/Utils";
 import {AuthTokenUtils, HashUtils} from "../Common/Utils";
 import {NavBarComponent} from "../Components/NavBarComponent";
 import * as url from "../Common/Url";
-import {ifNoAuthorizedRedirect} from "./UniversalListActions";
+import {ifNoAuthorizedRedirect} from "./ListActions";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -111,7 +111,7 @@ export class MenuFormInner extends React.Component {
 export const MenuForm = connect((state) => ({
     breadcrumbs: state.menuReducer.breadcrumbs,
     menus: state.menuReducer.menus,
-    useDarkTheme: state.universalListReducer.useDarkTheme
+    useDarkTheme: state.listReducer.useDarkTheme
 }), (dispatch) => ({
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
     getNextLevelMenus: bindActionCreators(MenuActions.getNextLevelMenus, dispatch),

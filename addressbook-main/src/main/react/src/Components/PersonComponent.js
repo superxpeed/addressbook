@@ -1,7 +1,7 @@
 import DialogContent from "@mui/material/DialogContent";
 import update from "react-addons-update";
 import React from "react";
-import {ifNoAuthorizedRedirect} from "../Pages/UniversalListActions";
+import {ifNoAuthorizedRedirect} from "../Pages/ListActions";
 import * as url from "../Common/Url";
 import {AuthTokenUtils, Caches, ContactTypes, currencies, getPhoneRegEx} from "../Common/Utils";
 import {connect} from "react-redux";
@@ -529,7 +529,7 @@ export class PersonComponentInner extends React.Component {
 
 
 export const PersonComponent = connect((state) => ({
-    showNotification: state.universalListReducer.showNotification,
+    showNotification: state.listReducer.showNotification,
 }), (dispatch) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
     showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),

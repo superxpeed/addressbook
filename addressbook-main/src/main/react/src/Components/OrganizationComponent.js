@@ -1,7 +1,7 @@
 import update from "react-addons-update";
 import React from "react";
 import * as url from "../Common/Url";
-import {ifNoAuthorizedRedirect} from "../Pages/UniversalListActions";
+import {ifNoAuthorizedRedirect} from "../Pages/ListActions";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as TableActions from "../Table/TableActions";
@@ -200,7 +200,7 @@ export class OrganizationComponentInner extends React.Component {
 }
 
 export const OrganizationComponent = connect((state) => ({
-    showNotification: state.universalListReducer.showNotification,
+    showNotification: state.listReducer.showNotification,
 }), (dispatch) => ({
     updateRow: bindActionCreators(TableActions.updateRow, dispatch),
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),

@@ -246,7 +246,7 @@ export class AdminPageFormInner extends React.Component {
 
 export const AdminPageForm = connect((state) => ({
     breadcrumbs: state.menuReducer.breadcrumbs,
-    useDarkTheme: state.universalListReducer.useDarkTheme
+    useDarkTheme: state.listReducer.useDarkTheme
 }), (dispatch) => ({
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
     logout: bindActionCreators(MenuActions.logout, dispatch),

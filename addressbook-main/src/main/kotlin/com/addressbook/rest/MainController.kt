@@ -38,7 +38,7 @@ class MainController {
     @Autowired
     lateinit var buildProperties: BuildProperties
 
-    @PostMapping("/getList4UniversalListForm")
+    @PostMapping("/getList")
     fun getList(@RequestParam(value = "start") start: Int,
                 @RequestParam(value = "pageSize") pageSize: Int,
                 @RequestParam(value = "sortName") sortName: String,

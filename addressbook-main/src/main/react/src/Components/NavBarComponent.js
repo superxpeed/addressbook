@@ -7,7 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as url from "../Common/Url";
-import * as CommonActions from "../Pages/UniversalListActions";
+import * as CommonActions from "../Pages/ListActions";
 import * as MenuActions from "../Pages/MenuFormActions";
 import {AuthTokenUtils} from "../Common/Utils";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -215,8 +215,8 @@ export class NavBarComponentInner extends React.Component {
 }
 
 export const NavBarComponent = connect((state) => ({
-    showNotification: state.universalListReducer.showNotification,
-    useDarkTheme: state.universalListReducer.useDarkTheme,
+    showNotification: state.listReducer.showNotification,
+    useDarkTheme: state.listReducer.useDarkTheme,
     alerts: state.menuReducer.alerts
 }), (dispatch) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),

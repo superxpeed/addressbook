@@ -32,7 +32,7 @@ const initialState = {
     useDarkTheme: window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
 };
 
-export default function universalListReducer(state = initialState, action = {}) {
+export default function listReducer(state = initialState, action = {}) {
     switch (action.type) {
         case types.GET_LIST + Caches.ORGANIZATION_CACHE + types.SUCCESS:
             if (action.data.data != null) {
