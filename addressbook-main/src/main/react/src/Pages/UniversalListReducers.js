@@ -27,7 +27,7 @@ const initialState = {
     filterObjPerson: [],
     customFilterFnsOrganization: {},
     customFilterFnsPerson: {},
-    showNotification: true,
+    showNotification: false,
     drawerOpened: false,
     useDarkTheme: window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
 };
