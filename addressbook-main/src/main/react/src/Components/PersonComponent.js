@@ -30,7 +30,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import ApartmentIcon from "@mui/icons-material/Apartment";
-import EmailIcon from "@mui/icons-material/Email";
+import AlternateEmailOutlinedIcon from '@mui/icons-material/AlternateEmailOutlined';
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
@@ -208,7 +208,7 @@ export class PersonComponentInner extends React.Component {
             case "2":
                 return <ApartmentIcon color={this.props.useDarkTheme ? "primary" : "topButtonColor"}/>
             case "3":
-                return <EmailIcon color={this.props.useDarkTheme ? "primary" : "topButtonColor"}/>
+                return <AlternateEmailOutlinedIcon color={this.props.useDarkTheme ? "primary" : "topButtonColor"}/>
             default:
                 return <div/>
         }
@@ -247,8 +247,8 @@ export class PersonComponentInner extends React.Component {
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon/>}
                 aria-controls="panel1a-content">
-                {this.getContactHeaderIcon(contact.type + "")}<Typography
-                sx={{ml: 1}}>{contact.personId == null ? "New contact" : ContactTypes.getEngType(contact.type + "")}</Typography>
+                {this.getContactHeaderIcon(contact.type)}<Typography
+                sx={{ml: 1}}>{contact.personId == null ? "New contact" : ContactTypes.getEngType(contact.type)}</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 <FormControl fullWidth>
@@ -261,10 +261,10 @@ export class PersonComponentInner extends React.Component {
                         label="Type"
                         onChange={this.handleChangeContact.bind(this, contact.id)}
                     >
-                        <MenuItem value={0}>Mobile phone</MenuItem>
-                        <MenuItem value={1}>Home phone</MenuItem>
-                        <MenuItem value={2}>Address</MenuItem>
-                        <MenuItem value={3}>E-mail</MenuItem>
+                        <MenuItem value={"0"}>Mobile phone</MenuItem>
+                        <MenuItem value={"1"}>Home phone</MenuItem>
+                        <MenuItem value={"2"}>Address</MenuItem>
+                        <MenuItem value={"3"}>E-mail</MenuItem>
                     </Select>
                 </FormControl>
                 <TextField
@@ -277,7 +277,7 @@ export class PersonComponentInner extends React.Component {
                     variant="outlined"
                     autoComplete="off"
                     helperText={!this.getContactValidationState("data", contact.id) ?
-                        (contact.type == "0" || contact.type == "1" ? "Invalid format!" : "Required field!") : ""}
+                        (contact.type === "0" || contact.type === "1" ? "Invalid format!" : "Required field!") : ""}
                     sx={{mt: 5, display: "flex", height: "80px"}}
                     onChange={this.handleChangeContact.bind(this, contact.id)}
                 />
