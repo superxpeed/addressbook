@@ -12,6 +12,10 @@ import * as MenuActions from "../Pages/MenuFormActions";
 import {AuthTokenUtils} from "../Common/Utils";
 import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 export class NavBarComponentInner extends React.Component {
     state = {
@@ -173,19 +177,25 @@ export class NavBarComponentInner extends React.Component {
                 </DialogTitle>
                 <DialogContent dividers>
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox checked={this.props.showNotification}
-                                                             onChange={(e, v) => {
-                                                                 this.props.changeShowNotification(v)
-                                                             }}
-                                                             inputProps={{"aria-label": "controlled"}}/>}
+                        <FormControlLabel control={<Checkbox
+                            icon={<NotificationsActiveOutlinedIcon/>}
+                            checkedIcon={<NotificationsActiveIcon/>}
+                            checked={this.props.showNotification}
+                            onChange={(e, v) => {
+                                this.props.changeShowNotification(v)
+                            }}
+                            inputProps={{"aria-label": "controlled"}}/>}
                                           label="Show lock notifications"/>
                     </FormGroup>
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox checked={this.props.useDarkTheme}
-                                                             onChange={(e, v) => {
-                                                                 this.props.changeUseDarkTheme(v)
-                                                             }}
-                                                             inputProps={{"aria-label": "controlled"}}/>}
+                        <FormControlLabel control={<Checkbox
+                            icon={<DarkModeOutlinedIcon/>}
+                            checkedIcon={<DarkModeIcon/>}
+                            checked={this.props.useDarkTheme}
+                            onChange={(e, v) => {
+                                this.props.changeUseDarkTheme(v)
+                            }}
+                            inputProps={{"aria-label": "controlled"}}/>}
                                           label="Use dark theme"/>
                     </FormGroup>
                 </DialogContent>
