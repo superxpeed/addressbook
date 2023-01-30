@@ -90,31 +90,31 @@ export class MenuFormInner extends React.Component {
         }
         const allAlerts = this.props.alerts;
         return (<div>
-                <AlertList
-                    showIcon={false}
-                    position="top-right"
-                    alerts={allAlerts}
-                    timeout={1500}
-                    dismissTitle="Close"
-                    onDismiss={this.onAlertDismissed.bind(this)}
-                />
-                <AppBar position="static">
-                    <Container maxWidth="xl">
-                        <Toolbar disableGutters>
-                            <Breadcrumbs separator={separator} style={{flex: 1}}
-                                         aria-label="breadcrumb">{breads}</Breadcrumbs>
-                            <NavBarComponent/>
-                            <Tooltip title="Logout">
-                                <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
-                                            onClick={() => this.props.logout()}>
-                                    <LogoutIcon/>
-                                </IconButton>
-                            </Tooltip>
-                        </Toolbar>
-                    </Container>
-                </AppBar>
-                {allMenus}
-            </div>);
+            <AlertList
+                showIcon={false}
+                position="top-right"
+                alerts={allAlerts}
+                timeout={1500}
+                dismissTitle="Close"
+                onDismiss={this.onAlertDismissed.bind(this)}
+            />
+            <AppBar position="static">
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters>
+                        <Breadcrumbs separator={separator} style={{flex: 1}}
+                                     aria-label="breadcrumb">{breads}</Breadcrumbs>
+                        <NavBarComponent/>
+                        <Tooltip title="Logout">
+                            <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
+                                        onClick={() => this.props.logout()}>
+                                <LogoutIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </Toolbar>
+                </Container>
+            </AppBar>
+            {allMenus}
+        </div>);
     }
 }
 

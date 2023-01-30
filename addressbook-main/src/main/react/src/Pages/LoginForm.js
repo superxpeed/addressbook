@@ -89,58 +89,58 @@ export class LoginFormInner extends React.Component {
     getWarning = () => {
         if (this.state.invalidLoginPassword) {
             return (<Alert severity="error" sx={{mb: 1}}>
-                    Invalid login or password
-                </Alert>);
+                Invalid login or password
+            </Alert>);
         }
         return <div/>;
     };
 
     render() {
         return (<div>
-                <Dialog fullWidth maxWidth="sm" open={true}>
-                    <DialogTitle>Please login</DialogTitle>
-                    <DialogContent sx={{paddingBottom: "16px"}}>
-                        <Box sx={{display: "grid", gridTemplateRows: "repeat(2 1fr)"}}>
-                            {this.getWarning()}
-                            <TextField
-                                id="login"
-                                type="text"
-                                label="Enter login"
-                                variant="outlined"
+            <Dialog fullWidth maxWidth="sm" open={true}>
+                <DialogTitle>Please login</DialogTitle>
+                <DialogContent sx={{paddingBottom: "16px"}}>
+                    <Box sx={{display: "grid", gridTemplateRows: "repeat(2 1fr)"}}>
+                        {this.getWarning()}
+                        <TextField
+                            id="login"
+                            type="text"
+                            label="Enter login"
+                            variant="outlined"
+                            autoComplete="off"
+                            sx={{mt: 1}}
+                            onChange={this.handleChange}
+                        />
+                        <FormControl sx={{mt: 2}} variant="outlined">
+                            <InputLabel htmlFor="password">Enter password</InputLabel>
+                            <OutlinedInput
+                                id="password"
+                                label="Enter password"
+                                type={this.state.showPassword ? "text" : "password"}
                                 autoComplete="off"
-                                sx={{mt: 1}}
                                 onChange={this.handleChange}
+                                endAdornment={<InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={this.handleClickShowPassword}
+                                        onMouseDown={this.handleMouseDownPassword}
+                                    >
+                                        {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
+                                    </IconButton>
+                                </InputAdornment>}
                             />
-                            <FormControl sx={{mt: 2}} variant="outlined">
-                                <InputLabel htmlFor="password">Enter password</InputLabel>
-                                <OutlinedInput
-                                    id="password"
-                                    label="Enter password"
-                                    type={this.state.showPassword ? "text" : "password"}
-                                    autoComplete="off"
-                                    onChange={this.handleChange}
-                                    endAdornment={<InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={this.handleClickShowPassword}
-                                            onMouseDown={this.handleMouseDownPassword}
-                                        >
-                                            {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
-                                        </IconButton>
-                                    </InputAdornment>}
-                                />
-                            </FormControl>
-                        </Box>
-                    </DialogContent>
-                    <DialogActions sx={{paddingTop: "0px"}}>
-                        <Grid container sx={{justifyContent: "center"}}>
-                            <Button startIcon={<LoginIcon/>} sx={{ml: 2, mr: 2, mb: 2, width: "100%", height: "56px"}}
-                                    variant="contained"
-                                    onClick={this.login}>Login</Button>
-                        </Grid>
-                    </DialogActions>
-                </Dialog>
-            </div>);
+                        </FormControl>
+                    </Box>
+                </DialogContent>
+                <DialogActions sx={{paddingTop: "0px"}}>
+                    <Grid container sx={{justifyContent: "center"}}>
+                        <Button startIcon={<LoginIcon/>} sx={{ml: 2, mr: 2, mb: 2, width: "100%", height: "56px"}}
+                                variant="contained"
+                                onClick={this.login}>Login</Button>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
+        </div>);
     }
 }
 
