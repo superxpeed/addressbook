@@ -158,7 +158,7 @@ export class TableInner extends React.Component {
         if ((this.props.fieldDescriptionMap != null && Object.keys(this.props.fieldDescriptionMap).length !== 0) || this.props.fieldDescriptionMap.constructor !== Object) {
             columns = Object.keys(this.props.fieldDescriptionMap).filter(key => key !== "orgId").map((key) => this.getColumnDefinition(this.props.fieldDescriptionMap[key]));
         }
-        let bootstrapTable;
+        let materialTable;
         if (columns != null) {
             const csvOptions = {
                 fieldSeparator: ",",
@@ -171,7 +171,7 @@ export class TableInner extends React.Component {
                 headers: columns.map((c) => c.header),
             };
             const csvExporter = new ExportToCsv(csvOptions);
-            bootstrapTable = (<MaterialReactTable
+            materialTable = (<MaterialReactTable
                 data={this.props.data}
                 columns={columns}
                 enableRowSelection
@@ -250,9 +250,9 @@ export class TableInner extends React.Component {
                 }}
             />);
         } else {
-            bootstrapTable = <div/>;
+            materialTable = <div/>;
         }
-        return <div>{bootstrapTable}</div>;
+        return <div>{materialTable}</div>;
     }
 }
 

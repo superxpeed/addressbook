@@ -43,10 +43,6 @@ export class ListFormInner extends React.Component {
         };
     }
 
-    onAlertDismissed(alert) {
-        this.props.dismissAlert(alert);
-    }
-
     componentDidMount() {
         let currentUrl = window.location.hash;
         this.refreshTable(this.props.paginationOrganization.pageIndex + 1,
@@ -332,6 +328,5 @@ export const ListForm = connect((state) => ({
     updateRow: bindActionCreators(TableActions.updateRow, dispatch),
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
     clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch),
-    logout: bindActionCreators(MenuActions.logout, dispatch),
-    dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch),
+    logout: bindActionCreators(MenuActions.logout, dispatch)
 }), null, {withRef: true})(ListFormInner);

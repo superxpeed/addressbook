@@ -296,21 +296,13 @@ export class PersonComponentInner extends React.Component {
                 />
                 <Button startIcon={<DeleteForeverIcon/>}
                         sx={{mt: 2, width: "100%", height: "56px"}}
-                        onClick={this.showConfirmationDialog.bind(this, contact.id)}
+                        onClick={() => this.setState({show: true, idToDelete: contact.id})}
                         variant="outlined"
                         color="error">
                     Delete contact
                 </Button>
             </AccordionDetails>
         </Accordion>)
-    }
-
-    closeConfirmationDialog = () => {
-        this.setState({show: false, idToDelete: null});
-    }
-
-    showConfirmationDialog = (id) => {
-        this.setState({show: true, idToDelete: id});
     }
 
     updateExpanded = (id) => {
@@ -507,7 +499,7 @@ export class PersonComponentInner extends React.Component {
                     {contacts}
                     <Dialog
                         open={this.state.show}
-                        onClose={() => this.closeConfirmationDialog()}
+                        onClose={() => this.setState({show: false, idToDelete: null})}
                         aria-describedby="confirmation-modal-description"
                     >
                         <DialogTitle>Confirm contact deletion</DialogTitle>
@@ -517,7 +509,7 @@ export class PersonComponentInner extends React.Component {
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={this.closeConfirmationDialog}>Cancel</Button>
+                            <Button onClick={() => this.setState({show: false, idToDelete: null})}>Cancel</Button>
                             <Button variant="outlined" color="error" onClick={this.deleteContact}>Delete</Button>
                         </DialogActions>
                     </Dialog>
@@ -529,9 +521,9 @@ export class PersonComponentInner extends React.Component {
 
 
 export const PersonComponent = connect((state) => ({
-    showNotification: state.listReducer.showNotification,
+    showNotification: state.listReducer.showNotification
 }), (dispatch) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
     showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),
-    lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch),
+    lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch)
 }), null, {withRef: true})(PersonComponentInner);

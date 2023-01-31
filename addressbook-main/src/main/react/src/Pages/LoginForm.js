@@ -32,18 +32,12 @@ export class LoginFormInner extends React.Component {
         showPassword: false,
     };
 
-    handleClickShowPassword = () => this.setState({showPassword: !this.state.showPassword});
-
     keyDownTextField = (e) => {
         const parent = this;
         const {keyCode} = e;
         if (keyCode === 13) {
             parent.login();
         }
-    };
-
-    handleMouseDownPassword = (event) => {
-        event.preventDefault();
     };
 
     componentDidMount() {
@@ -122,8 +116,10 @@ export class LoginFormInner extends React.Component {
                                 endAdornment={<InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
-                                        onClick={this.handleClickShowPassword}
-                                        onMouseDown={this.handleMouseDownPassword}
+                                        onClick={() => this.setState({showPassword: !this.state.showPassword})}
+                                        onMouseDown={(event) => {
+                                            event.preventDefault();
+                                        }}
                                     >
                                         {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
                                     </IconButton>

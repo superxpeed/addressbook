@@ -42,23 +42,6 @@ export class AdminPageFormInner extends React.Component {
         jvmState: {},
     };
 
-    onOpen = () => {
-        console.log("Connection opened for JVM state");
-    };
-
-    onError = () => {
-        if (this.state.eventSource.readyState === EventSource.CONNECTING) {
-            console.log("Reconnecting to JVM event source");
-        } else {
-            console.log(`Error: ${this.state.eventSource.readyState}`);
-        }
-    };
-
-    onMessage = (e) => {
-        const result = JSON.parse(e.data);
-        this.setState({jvmState: result});
-    };
-
     componentDidMount() {
         const EventSource = EventSourcePolyfill;
         const currentUrl = window.location.hash;
@@ -69,9 +52,15 @@ export class AdminPageFormInner extends React.Component {
                 Authorization: `Bearer ${token}`,
             },
         });
-        newEventSource.onopen = this.onOpen;
-        newEventSource.onmessage = this.onMessage;
-        newEventSource.onerror = this.onError;
+        newEventSource.onopen = () => console.log("Connection opened for JVM state");
+        newEventSource.onmessage = (e) => this.setState({jvmState: JSON.parse(e.data)});
+        newEventSource.onerror = () => {
+            if (this.state.eventSource.readyState === EventSource.CONNECTING) {
+                console.log("Reconnecting to JVM event source");
+            } else {
+                console.log(`Error: ${this.state.eventSource.readyState}`);
+            }
+        };
 
         this.setState({
             eventSource: newEventSource,
@@ -249,5 +238,5 @@ export const AdminPageForm = connect((state) => ({
     useDarkTheme: state.listReducer.useDarkTheme
 }), (dispatch) => ({
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
-    logout: bindActionCreators(MenuActions.logout, dispatch),
+    logout: bindActionCreators(MenuActions.logout, dispatch)
 }), null, {withRef: true})(AdminPageFormInner);

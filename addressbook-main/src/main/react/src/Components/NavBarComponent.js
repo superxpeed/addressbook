@@ -27,22 +27,6 @@ export class NavBarComponentInner extends React.Component {
         buildTime: "",
     };
 
-    handleCloseUserInfo = () => {
-        this.setState({showUserInfo: false});
-    };
-
-    handleShowUserInfo = () => {
-        this.setState({showUserInfo: true});
-    };
-
-    handleCloseSettings = () => {
-        this.setState({showSettings: false});
-    };
-
-    handleShowSettings = () => {
-        this.setState({showSettings: true});
-    };
-
     updatePersonInfo = () => {
         let isOk = false;
         const headers = new Headers();
@@ -111,7 +95,7 @@ export class NavBarComponentInner extends React.Component {
                                     color="info" variant="contained"/>);
             else
                 allRoles.push(<Chip key={value} label={value}
-                                    sx={{ml: 1, backgroundColor: targetBoxColor, color: targetTextColor,}}
+                                    sx={{ml: 1, backgroundColor: targetBoxColor, color: targetTextColor}}
                                     color="info" variant="contained"/>);
         });
         return allRoles;
@@ -125,7 +109,7 @@ export class NavBarComponentInner extends React.Component {
                     variant="contained"
                     edge="end"
                     color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
-                    onClick={this.handleShowUserInfo}
+                    onClick={() => this.setState({showUserInfo: true})}
                 >
                     {this.state.username}
                 </Button>
@@ -140,18 +124,18 @@ export class NavBarComponentInner extends React.Component {
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="Settings">
-                    <IconButton onClick={this.handleShowSettings}
+                    <IconButton onClick={() => this.setState({showSettings: true})}
                                 color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
                         <SettingsOutlinedIcon/>
                     </IconButton>
                 </Tooltip>
             </div>
             <Dialog
-                onClose={this.handleCloseUserInfo}
+                onClose={() => this.setState({showUserInfo: false})}
                 aria-labelledby="roles-dialog-title"
                 open={this.state.showUserInfo}
             >
-                <DialogTitle id="roles-dialog-title" onClose={this.handleCloseUserInfo}>
+                <DialogTitle id="roles-dialog-title" onClose={() => this.setState({showUserInfo: false})}>
                     Roles for
                     {" "}
                     {this.state.username}
@@ -178,11 +162,11 @@ export class NavBarComponentInner extends React.Component {
                 </DialogContent>
             </Dialog>
             <Dialog
-                onClose={this.handleCloseSettings}
+                onClose={() => this.setState({showSettings: false})}
                 aria-labelledby="roles-dialog-title"
                 open={this.state.showSettings}
             >
-                <DialogTitle id="roles-dialog-title" onClose={this.handleCloseSettings}>
+                <DialogTitle id="roles-dialog-title" onClose={() => this.setState({showSettings: false})}>
                     Settings
                 </DialogTitle>
                 <DialogContent dividers>

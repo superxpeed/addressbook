@@ -200,10 +200,10 @@ export class OrganizationComponentInner extends React.Component {
 }
 
 export const OrganizationComponent = connect((state) => ({
-    showNotification: state.listReducer.showNotification,
+    showNotification: state.listReducer.showNotification
 }), (dispatch) => ({
     updateRow: bindActionCreators(TableActions.updateRow, dispatch),
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
     showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),
-    lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch),
+    lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch)
 }), null, {withRef: true})(OrganizationComponentInner);

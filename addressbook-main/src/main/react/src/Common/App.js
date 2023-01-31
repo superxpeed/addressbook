@@ -3,13 +3,13 @@ import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import {connect} from "react-redux";
 import {purple} from "@mui/material/colors";
-import {Alert, AlertTitle, Collapse, Drawer, List} from "@mui/material";
+import {Alert, AlertTitle, Collapse, Drawer} from "@mui/material";
 import * as CommonActions from "../Pages/ListActions";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import * as MenuActions from "../Pages/MenuFormActions";
 import {bindActionCreators} from "redux";
 import Button from "@mui/material/Button";
-import {TransitionGroup} from 'react-transition-group';
+import {TransitionGroup} from "react-transition-group";
 
 const darkTheme = createTheme({
     palette: {

@@ -42,10 +42,6 @@ export class MenuFormInner extends React.Component {
         }
     };
 
-    onAlertDismissed(alert) {
-        this.props.dismissAlert(alert);
-    }
-
     componentDidUpdate(prevProps, prevState, snapshot) {
         this.updateAll();
     }
@@ -115,6 +111,5 @@ export const MenuForm = connect((state) => ({
 }), (dispatch) => ({
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
     getNextLevelMenus: bindActionCreators(MenuActions.getNextLevelMenus, dispatch),
-    logout: bindActionCreators(MenuActions.logout, dispatch),
-    dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch),
+    logout: bindActionCreators(MenuActions.logout, dispatch)
 }), null, {withRef: true})(MenuFormInner);
