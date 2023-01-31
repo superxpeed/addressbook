@@ -37,7 +37,7 @@ const TableCell = styled(MuiTableCell)({
     textOverflow: "ellipsis",
 });
 
-export class AdminPageFormInner extends React.Component {
+export class AdminFormInner extends React.Component {
     state = {
         jvmState: {},
     };
@@ -233,10 +233,10 @@ export class AdminPageFormInner extends React.Component {
     }
 }
 
-export const AdminPageForm = connect((state) => ({
+export const AdminForm = connect((state) => ({
     breadcrumbs: state.menuReducer.breadcrumbs,
     useDarkTheme: state.listReducer.useDarkTheme
 }), (dispatch) => ({
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
     logout: bindActionCreators(MenuActions.logout, dispatch)
-}), null, {withRef: true})(AdminPageFormInner);
+}), null, {withRef: true})(AdminFormInner);

@@ -10,7 +10,7 @@ import menuReducer from "./Pages/MenuFormReducers";
 import {ListForm} from "./Pages/ListForm";
 import {MenuForm} from "./Pages/MenuForm";
 import {LoginForm} from "./Pages/LoginForm";
-import {AdminPageForm} from "./Pages/AdminPageForm";
+import {AdminForm} from "./Pages/AdminForm";
 import {App} from "./Common/App";
 
 const reducer = combineReducers({listReducer, menuReducer, routing: routerReducer});
@@ -26,7 +26,7 @@ export default class Index extends React.Component {
                         <Route path="/">
                             <div>
                                 <Switch>
-                                    <Route path="/adminPage" component={AdminPageForm} exact/>
+                                    <Route path="/adminPage" component={AdminForm} exact/>
                                     <Route path="/lastLevel" component={ListForm} exact/>
                                     <Route path="/login" component={LoginForm} exact/>
                                     <Route path="/" component={MenuForm}/>
