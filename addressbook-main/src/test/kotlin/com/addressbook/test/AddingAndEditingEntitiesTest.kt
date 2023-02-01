@@ -52,7 +52,7 @@ class AddingAndEditingEntitiesTest {
         loginButton.click()
         Thread.sleep(500)
         // Locate user info button on navigation bar
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/div/div/button")))
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div/header/div/div/button[1]")))
         Thread.sleep(500)
         // First level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
@@ -135,7 +135,7 @@ class AddingAndEditingEntitiesTest {
         // Wait until all notifications disappear
         Thread.sleep(10_000)
         // Click logout button
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/button[2]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//html/body/div/div/div/div/header/div/div/button[4]"))).click()
         Thread.sleep(300)
         driver.quit()
     }
@@ -175,7 +175,7 @@ class AddingAndEditingEntitiesTest {
         loginButton.click()
         Thread.sleep(500)
         // Locate user info button on navigation bar
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/div/div/button")))
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div/header/div/div/button[1]")))
         Thread.sleep(500)
         // First level tile
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/a"))).click()
@@ -203,7 +203,7 @@ class AddingAndEditingEntitiesTest {
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables\"]/div/div/button[2]"))).click()
         Thread.sleep(2_000)
         // Click create person button
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/button[1]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div[1]/header/div/div/button[1]"))).click()
         Thread.sleep(1_000)
         // Click third tab - New person
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables\"]/div/div/button[3]"))).click()
@@ -326,7 +326,7 @@ class AddingAndEditingEntitiesTest {
         // Wait until all notifications disappear
         Thread.sleep(10_000)
         // Click logout button
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/button[2]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//html/body/div/div/div/div/header/div/div/button[4]"))).click()
         Thread.sleep(300)
         driver.quit()
     }

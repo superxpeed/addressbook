@@ -11,11 +11,9 @@ import * as MenuActions from "./MenuFormActions";
 import {OrganizationComponent} from "../Components/OrganizationComponent";
 import {PersonComponent} from "../Components/PersonComponent";
 import {NavBarComponent} from "../Components/NavBarComponent";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {AppBar, Box, Breadcrumbs, Container, IconButton, Tab, Tabs, Toolbar, Tooltip} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
-import LogoutIcon from "@mui/icons-material/Logout";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
 function TabPanel(props) {
@@ -208,44 +206,24 @@ export class ListFormInner extends React.Component {
             personTableTabPanel = <div/>;
         }
 
-        let separator;
-        if (this.props.useDarkTheme) {
-            separator = <NavigateNextIcon fontSize="small"/>
-        } else {
-            separator = <NavigateNextIcon fontSize="small" style={{color: "white"}}/>
-        }
-
         return (<div>
-            <AppBar position="static">
-                <Container maxWidth="xl">
-                    <Toolbar disableGutters>
-                        <Breadcrumbs separator={separator} style={{flex: 1}}
-                                     aria-label="breadcrumb">{breads}</Breadcrumbs>
-                        <Button
-                            startIcon={<GroupAddIcon/>}
-                            variant="contained"
-                            color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
-                            style={{marginRight: "5px"}}
-                            disabled={this.props.selectedRowsOrganization.length !== 1 || this.state.createNewPerson === true}
-                            onClick={() => this.setState({
-                                activeTab: this.lastKey + 1,
-                                createNewPerson: true, newPerson: {
-                                    orgId: this.props.selectedRowsOrganization[0].id,
-                                }
-                            })}
-                        >
-                            Create person
-                        </Button>
-                        <NavBarComponent/>
-                        <Tooltip title="Logout">
-                            <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
-                                        onClick={() => this.props.logout()}>
-                                <LogoutIcon/>
-                            </IconButton>
-                        </Tooltip>
-                    </Toolbar>
-                </Container>
-            </AppBar>
+            <NavBarComponent breads={breads}>
+                <Button
+                    startIcon={<GroupAddIcon/>}
+                    variant="contained"
+                    color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
+                    style={{marginRight: "5px"}}
+                    disabled={this.props.selectedRowsOrganization.length !== 1 || this.state.createNewPerson === true}
+                    onClick={() => this.setState({
+                        activeTab: this.lastKey + 1,
+                        createNewPerson: true, newPerson: {
+                            orgId: this.props.selectedRowsOrganization[0].id,
+                        }
+                    })}
+                >
+                    Create person
+                </Button>
+            </NavBarComponent>
             <Box sx={{width: "100%"}}>
                 <Box sx={{borderBottom: 1, borderColor: "divider"}}>
                     <Tabs
@@ -327,6 +305,5 @@ export const ListForm = connect((state) => ({
     syncSelectedRows: bindActionCreators(TableActions.syncSelectedRows, dispatch),
     updateRow: bindActionCreators(TableActions.updateRow, dispatch),
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
-    clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch),
-    logout: bindActionCreators(MenuActions.logout, dispatch)
+    clearPersonSelection: bindActionCreators(CommonActions.clearPersonSelection, dispatch)
 }), null, {withRef: true})(ListFormInner);

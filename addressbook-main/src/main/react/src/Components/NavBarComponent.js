@@ -1,7 +1,19 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import {Badge, Checkbox, Chip, FormControlLabel, FormGroup, IconButton, Tooltip} from "@mui/material";
+import {
+    AppBar,
+    Badge,
+    Breadcrumbs,
+    Checkbox,
+    Chip,
+    Container,
+    FormControlLabel,
+    FormGroup,
+    IconButton,
+    Toolbar,
+    Tooltip
+} from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import {connect} from "react-redux";
@@ -16,6 +28,8 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import LogoutIcon from "@mui/icons-material/Logout";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 export class NavBarComponentInner extends React.Component {
     state = {
@@ -102,99 +116,119 @@ export class NavBarComponentInner extends React.Component {
     };
 
     render() {
-        return (<div>
+        let separator;
+        if (this.props.useDarkTheme) {
+            separator = <NavigateNextIcon fontSize="small"/>
+        } else {
+            separator = <NavigateNextIcon fontSize="small" style={{color: "white"}}/>
+        }
+        return (
             <div>
-                <Button
-                    startIcon={<PersonIcon/>}
-                    variant="contained"
-                    edge="end"
-                    color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
-                    onClick={() => this.setState({showUserInfo: true})}
+                <AppBar position="static">
+                    <Container maxWidth="xl">
+                        <Toolbar disableGutters>
+                            <Breadcrumbs separator={separator} style={{flex: 1}}
+                                         aria-label="breadcrumb">{this.props.breads}</Breadcrumbs>
+                            {this.props.children}
+                            <Button
+                                startIcon={<PersonIcon/>}
+                                variant="contained"
+                                edge="end"
+                                color={this.props.useDarkTheme ? "primary" : "topButtonColor"}
+                                onClick={() => this.setState({showUserInfo: true})}
+                            >
+                                {this.state.username}
+                            </Button>
+                            <Tooltip title="Notifications">
+                                <IconButton onClick={() => this.props.openCloseDrawer(true)}
+                                            color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
+                                    <Badge max={99}
+                                           badgeContent={this.props.alerts.length}
+                                           color={this.props.useDarkTheme ? "primary" : "topButtonColor"}>
+                                        <NotificationsActiveOutlinedIcon/>
+                                    </Badge>
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Settings">
+                                <IconButton onClick={() => this.setState({showSettings: true})}
+                                            color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
+                                    <SettingsOutlinedIcon/>
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Logout">
+                                <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
+                                            onClick={() => this.props.logout()}>
+                                    <LogoutIcon/>
+                                </IconButton>
+                            </Tooltip>
+                        </Toolbar>
+                    </Container>
+                </AppBar>
+                <Dialog
+                    onClose={() => this.setState({showUserInfo: false})}
+                    aria-labelledby="roles-dialog-title"
+                    open={this.state.showUserInfo}
                 >
-                    {this.state.username}
-                </Button>
-                <Tooltip title="Notifications">
-                    <IconButton onClick={() => this.props.openCloseDrawer(true)}
-                                color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
-                        <Badge max={99}
-                               badgeContent={this.props.alerts.length}
-                               color={this.props.useDarkTheme ? "primary" : "topButtonColor"}>
-                            <NotificationsActiveOutlinedIcon/>
-                        </Badge>
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="Settings">
-                    <IconButton onClick={() => this.setState({showSettings: true})}
-                                color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}>
-                        <SettingsOutlinedIcon/>
-                    </IconButton>
-                </Tooltip>
-            </div>
-            <Dialog
-                onClose={() => this.setState({showUserInfo: false})}
-                aria-labelledby="roles-dialog-title"
-                open={this.state.showUserInfo}
-            >
-                <DialogTitle id="roles-dialog-title" onClose={() => this.setState({showUserInfo: false})}>
-                    Roles for
-                    {" "}
-                    {this.state.username}
-                </DialogTitle>
-                <DialogContent dividers>
-                    {this.getRoles()}
-                </DialogContent>
-                <DialogContent dividers>
-                    <Chip
-                        edge="end"
-                        size="small"
-                        key="build_version"
-                        label={`Build version: ${this.state.buildVersion}`}
-                        variant="outlined"
-                    />
-                    <Chip
-                        edge="end"
-                        size="small"
-                        key="build_time"
-                        label={`Build time: ${this.state.buildTime}`}
-                        variant="outlined"
-                        sx={{ml: 1}}
-                    />
-                </DialogContent>
-            </Dialog>
-            <Dialog
-                onClose={() => this.setState({showSettings: false})}
-                aria-labelledby="roles-dialog-title"
-                open={this.state.showSettings}
-            >
-                <DialogTitle id="roles-dialog-title" onClose={() => this.setState({showSettings: false})}>
-                    Settings
-                </DialogTitle>
-                <DialogContent dividers>
-                    <FormGroup>
-                        <FormControlLabel control={<Checkbox
-                            icon={<NotificationsActiveOutlinedIcon/>}
-                            checkedIcon={<NotificationsActiveIcon/>}
-                            checked={this.props.showNotification}
-                            onChange={(e, v) => {
-                                this.props.changeShowNotification(v)
-                            }}
-                            inputProps={{"aria-label": "controlled"}}/>}
-                                          label="Show lock notifications"/>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormControlLabel control={<Checkbox
-                            icon={<DarkModeOutlinedIcon/>}
-                            checkedIcon={<DarkModeIcon/>}
-                            checked={this.props.useDarkTheme}
-                            onChange={(e, v) => {
-                                this.props.changeUseDarkTheme(v)
-                            }}
-                            inputProps={{"aria-label": "controlled"}}/>}
-                                          label="Use dark theme"/>
-                    </FormGroup>
-                </DialogContent>
-            </Dialog>
-        </div>);
+                    <DialogTitle id="roles-dialog-title" onClose={() => this.setState({showUserInfo: false})}>
+                        Roles for
+                        {" "}
+                        {this.state.username}
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        {this.getRoles()}
+                    </DialogContent>
+                    <DialogContent dividers>
+                        <Chip
+                            edge="end"
+                            size="small"
+                            key="build_version"
+                            label={`Build version: ${this.state.buildVersion}`}
+                            variant="outlined"
+                        />
+                        <Chip
+                            edge="end"
+                            size="small"
+                            key="build_time"
+                            label={`Build time: ${this.state.buildTime}`}
+                            variant="outlined"
+                            sx={{ml: 1}}
+                        />
+                    </DialogContent>
+                </Dialog>
+                <Dialog
+                    onClose={() => this.setState({showSettings: false})}
+                    aria-labelledby="roles-dialog-title"
+                    open={this.state.showSettings}
+                >
+                    <DialogTitle id="roles-dialog-title" onClose={() => this.setState({showSettings: false})}>
+                        Settings
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        <FormGroup>
+                            <FormControlLabel control={<Checkbox
+                                icon={<NotificationsActiveOutlinedIcon/>}
+                                checkedIcon={<NotificationsActiveIcon/>}
+                                checked={this.props.showNotification}
+                                onChange={(e, v) => {
+                                    this.props.changeShowNotification(v)
+                                }}
+                                inputProps={{"aria-label": "controlled"}}/>}
+                                              label="Show lock notifications"/>
+                        </FormGroup>
+                        <FormGroup>
+                            <FormControlLabel control={<Checkbox
+                                icon={<DarkModeOutlinedIcon/>}
+                                checkedIcon={<DarkModeIcon/>}
+                                checked={this.props.useDarkTheme}
+                                onChange={(e, v) => {
+                                    this.props.changeUseDarkTheme(v)
+                                }}
+                                inputProps={{"aria-label": "controlled"}}/>}
+                                              label="Use dark theme"/>
+                        </FormGroup>
+                    </DialogContent>
+                </Dialog>
+            </div>);
     }
 }
 
@@ -206,5 +240,6 @@ export const NavBarComponent = connect((state) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
     changeShowNotification: bindActionCreators(CommonActions.changeShowNotification, dispatch),
     openCloseDrawer: bindActionCreators(CommonActions.openCloseDrawer, dispatch),
-    changeUseDarkTheme: bindActionCreators(CommonActions.changeUseDarkTheme, dispatch)
+    changeUseDarkTheme: bindActionCreators(CommonActions.changeUseDarkTheme, dispatch),
+    logout: bindActionCreators(MenuActions.logout, dispatch)
 }), null, {withRef: true})(NavBarComponentInner);

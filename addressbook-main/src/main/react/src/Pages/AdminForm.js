@@ -4,7 +4,6 @@ import {bindActionCreators} from "redux";
 import {EventSourcePolyfill} from "event-source-polyfill";
 import {styled} from "@mui/material/styles";
 import MuiTableCell from "@mui/material/TableCell";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import ComputerIcon from "@mui/icons-material/Computer";
 import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
 import {
@@ -25,7 +24,6 @@ import {
 import {NavBarComponent} from "../Components/NavBarComponent";
 import {getBreadcrumbsList, HashUtils} from "../Common/Utils";
 import * as MenuActions from "./MenuFormActions";
-import LogoutIcon from "@mui/icons-material/Logout";
 import WavesIcon from "@mui/icons-material/Waves";
 import StorageIcon from "@mui/icons-material/Storage";
 import MemoryIcon from "@mui/icons-material/Memory";
@@ -73,28 +71,8 @@ export class AdminFormInner extends React.Component {
 
     render() {
         const breads = getBreadcrumbsList(this.props.breadcrumbs, this.props.useDarkTheme)
-        let separator;
-        if (this.props.useDarkTheme) {
-            separator = <NavigateNextIcon fontSize="small"/>
-        } else {
-            separator = <NavigateNextIcon fontSize="small" style={{color: "white"}}/>
-        }
         return (<div>
-                <AppBar position="static">
-                    <Container maxWidth="xl">
-                        <Toolbar disableGutters>
-                            <Breadcrumbs separator={separator} style={{flex: 1}}
-                                         aria-label="breadcrumb">{breads}</Breadcrumbs>
-                            <NavBarComponent/>
-                            <Tooltip title="Logout">
-                                <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
-                                            onClick={() => this.props.logout()}>
-                                    <LogoutIcon/>
-                                </IconButton>
-                            </Tooltip>
-                        </Toolbar>
-                    </Container>
-                </AppBar>
+                <NavBarComponent breads={breads}/>
                 <Container maxWidth="sm">
                     <Grid container sx={{justifyContent: "center"}}>
                         <Chip icon={<DeveloperBoardIcon/>} color="primary" label="RUNTIME" sx={{m: 2, width: "100%"}}/>
@@ -237,6 +215,5 @@ export const AdminForm = connect((state) => ({
     breadcrumbs: state.menuReducer.breadcrumbs,
     useDarkTheme: state.listReducer.useDarkTheme
 }), (dispatch) => ({
-    getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
-    logout: bindActionCreators(MenuActions.logout, dispatch)
+    getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch)
 }), null, {withRef: true})(AdminFormInner);

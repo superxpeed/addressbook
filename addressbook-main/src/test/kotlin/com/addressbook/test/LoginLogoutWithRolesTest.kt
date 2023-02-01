@@ -46,13 +46,13 @@ class LoginLogoutWithRolesTest {
         // Click login
         loginButton.click()
         // Locate user info button on navigation bar
-        var userName = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/div/div/button")))
-        // Check if user name is right
+        var userName = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div/header/div/div/button[1]")))
+        // Check if username is right
         Assert.assertEquals("USER", userName.text)
         // Click user info button to check roles
         userName.click()
         // Locate first role
-        var userRole = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[3]/div/div[1]/div/span")))
+        var userRole = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[3]/div/div[1]/div[1]/span")))
         /// This user should have only one role called USER, check that
         Assert.assertEquals("USER", userRole.text)
         // Close modal with user roles
@@ -68,7 +68,7 @@ class LoginLogoutWithRolesTest {
         // Wait for modal window to close
         Thread.sleep(300)
         // Click logout button
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/button"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div/header/div/div/button[4]"))).click()
         // Login as admin
         loginInput = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"login\"]")))
         loginInput.sendKeys("admin")
@@ -76,10 +76,10 @@ class LoginLogoutWithRolesTest {
         passwordInput.sendKeys("adminPass")
         loginButton = driver.findElement(By.xpath("/html/body/div[2]/div[3]/div/div[2]/div/button"))
         loginButton.click()
-        userName = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/div/div/button")))
+        userName = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div/header/div/div/button[1]")))
         Assert.assertEquals("ADMIN", userName.text)
         userName.click()
-        userRole = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[3]/div/div[1]/div/span")))
+        userRole = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[3]/div/div[1]/div[1]/span")))
         Assert.assertEquals("USER", userRole.text)
         val adminRole = driver.findElement(By.xpath("/html/body/div[2]/div[3]/div/div[1]/div[2]/span"))
         // Admin should also have second role called ADMIN, check that
@@ -97,7 +97,7 @@ class LoginLogoutWithRolesTest {
         // Wait for modal window to close
         Thread.sleep(300)
         // Click logout button
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"application\"]/div/div/header/div/div/button"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div/header/div/div/button[4]"))).click()
         Thread.sleep(300)
         driver.quit()
     }

@@ -9,8 +9,6 @@ import {AuthTokenUtils, HashUtils} from "../Common/Utils";
 import {NavBarComponent} from "../Components/NavBarComponent";
 import * as url from "../Common/Url";
 import {ifNoAuthorizedRedirect} from "./ListActions";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import LogoutIcon from "@mui/icons-material/Logout";
 
 export class MenuFormInner extends React.Component {
     state = {
@@ -77,28 +75,8 @@ export class MenuFormInner extends React.Component {
                 Home
             </Link>);
         }
-        let separator;
-        if (this.props.useDarkTheme) {
-            separator = <NavigateNextIcon fontSize="small"/>
-        } else {
-            separator = <NavigateNextIcon fontSize="small" style={{color: "white"}}/>
-        }
         return (<div>
-            <AppBar position="static">
-                <Container maxWidth="xl">
-                    <Toolbar disableGutters>
-                        <Breadcrumbs separator={separator} style={{flex: 1}}
-                                     aria-label="breadcrumb">{breads}</Breadcrumbs>
-                        <NavBarComponent/>
-                        <Tooltip title="Logout">
-                            <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
-                                        onClick={() => this.props.logout()}>
-                                <LogoutIcon/>
-                            </IconButton>
-                        </Tooltip>
-                    </Toolbar>
-                </Container>
-            </AppBar>
+            <NavBarComponent breads={breads}/>
             {allMenus}
         </div>);
     }
@@ -110,6 +88,5 @@ export const MenuForm = connect((state) => ({
     useDarkTheme: state.listReducer.useDarkTheme
 }), (dispatch) => ({
     getBreadcrumbs: bindActionCreators(MenuActions.getBreadcrumbs, dispatch),
-    getNextLevelMenus: bindActionCreators(MenuActions.getNextLevelMenus, dispatch),
-    logout: bindActionCreators(MenuActions.logout, dispatch)
+    getNextLevelMenus: bindActionCreators(MenuActions.getNextLevelMenus, dispatch)
 }), null, {withRef: true})(MenuFormInner);
