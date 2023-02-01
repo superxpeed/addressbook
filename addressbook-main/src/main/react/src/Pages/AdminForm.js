@@ -6,21 +6,7 @@ import {styled} from "@mui/material/styles";
 import MuiTableCell from "@mui/material/TableCell";
 import ComputerIcon from "@mui/icons-material/Computer";
 import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
-import {
-    AppBar,
-    Breadcrumbs,
-    Chip,
-    Container,
-    Grid,
-    IconButton,
-    Paper,
-    Table,
-    TableBody,
-    TableContainer,
-    TableRow,
-    Toolbar,
-    Tooltip
-} from "@mui/material";
+import {Chip, Container, Grid, Paper, Table, TableBody, TableContainer, TableRow} from "@mui/material";
 import {NavBarComponent} from "../Components/NavBarComponent";
 import {getBreadcrumbsList, HashUtils} from "../Common/Utils";
 import * as MenuActions from "./MenuFormActions";
