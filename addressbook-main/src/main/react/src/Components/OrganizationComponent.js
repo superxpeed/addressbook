@@ -9,6 +9,8 @@ import {AuthTokenUtils, Caches, Generator, OrgTypes} from "../Common/Utils";
 import * as MenuActions from "../Pages/MenuFormActions";
 import {FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
+import SaveIcon from "@mui/icons-material/Save";
+import DomainAddOutlinedIcon from '@mui/icons-material/DomainAddOutlined';
 
 export class OrganizationComponentInner extends React.Component {
     state = {
@@ -111,14 +113,18 @@ export class OrganizationComponentInner extends React.Component {
 
     getButton() {
         if (this.state.create) {
-            return (<Button variant="contained" style={{width: "100%"}} disabled={this.state.invalidFields.size !== 0}
+            return (<Button startIcon={<DomainAddOutlinedIcon/>}
+                            variant="contained"
+                            style={{width: "100%", height: "56px", minHeight: "56px"}}
+                            disabled={this.state.invalidFields.size !== 0}
                             onClick={() => this.saveOrganization(this.state.create)}>
                 Create organization
             </Button>);
         } else {
             return (<Button
+                startIcon={<SaveIcon/>}
                 variant="contained"
-                style={{width: "100%"}}
+                style={{width: "100%", height: "56px", minHeight: "56px"}}
                 onClick={() => this.saveOrganization(this.state.create)}
                 disabled={this.state.invalidFields.size !== 0 || !this.state.locked}
             >
