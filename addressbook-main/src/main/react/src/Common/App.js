@@ -3,7 +3,7 @@ import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import {connect} from "react-redux";
 import {purple} from "@mui/material/colors";
-import {Alert, AlertTitle, Collapse, Drawer} from "@mui/material";
+import {Alert, AlertTitle, Collapse, Drawer, Snackbar} from "@mui/material";
 import * as CommonActions from "../Pages/ListActions";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import * as MenuActions from "../Pages/MenuFormActions";
@@ -38,15 +38,38 @@ const lightTheme = createTheme({
 });
 
 export class AppInner extends React.Component {
+
+    state = {
+        open: false
+    };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.lastAlert.id != null && this.props.lastAlert.id !== prevProps.lastAlert.id) {
+            this.setState({open: true})
+        }
+    }
+
+    handleClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        this.setState({open: false})
+    };
+
+    prepareAlertMessage = (message) => {
+        let targetMessage = message;
+        if (targetMessage == null || targetMessage.trim().length === 0) {
+            targetMessage = null;
+        } else {
+            if (targetMessage.length > 300) targetMessage = targetMessage.substring(0, 300)
+        }
+        return targetMessage
+    }
+
     render() {
         let currentAlerts = []
         this.props.alerts.forEach(alert => {
-            let targetMessage = alert.message;
-            if (targetMessage == null || targetMessage.trim().length === 0) {
-                targetMessage = null;
-            } else {
-                if (targetMessage.length > 300) targetMessage = targetMessage.substring(0, 300)
-            }
             currentAlerts.push(
                 <Collapse key={alert.id}>
                     <Alert variant="filled"
@@ -54,11 +77,20 @@ export class AppInner extends React.Component {
                            sx={{width: "600px", marginLeft: "10px", marginRight: "10px", marginTop: "5px"}}
                            onClose={() => this.props.dismissAlert(alert)}>
                         <AlertTitle>{alert.headline}</AlertTitle>
-                        {targetMessage}
+                        {this.prepareAlertMessage(alert.message)}
                     </Alert>
                 </Collapse>
             )
         })
+        let lastAlertMessage = null
+        if (this.props.lastAlert.id != null) {
+            lastAlertMessage = <Alert variant="filled"
+                                      severity={this.props.lastAlert.type}
+                                      sx={{width: "600px", marginLeft: "10px", marginRight: "10px", marginTop: "5px"}}>
+                <AlertTitle>{this.props.lastAlert.headline}</AlertTitle>
+                {this.prepareAlertMessage(this.props.lastAlert.message)}
+            </Alert>
+        }
         return (<ThemeProvider theme={this.props.useDarkTheme ? darkTheme : lightTheme}>
             <CssBaseline>
                 {this.props.children}
@@ -86,6 +118,10 @@ export class AppInner extends React.Component {
                         </TransitionGroup>
                     </Drawer>
                 </React.Fragment>
+                <Snackbar anchorOrigin={{vertical: "top", horizontal: "right"}} open={this.state.open}
+                          autoHideDuration={1500} onClose={this.handleClose}>
+                    {lastAlertMessage}
+                </Snackbar>
             </CssBaseline>
         </ThemeProvider>);
     }
@@ -94,7 +130,8 @@ export class AppInner extends React.Component {
 export const App = connect((state) => ({
     useDarkTheme: state.listReducer.useDarkTheme,
     drawerOpened: state.listReducer.drawerOpened,
-    alerts: state.menuReducer.alerts
+    alerts: state.menuReducer.alerts,
+    lastAlert: state.menuReducer.lastAlert
 }), (dispatch) => ({
     openCloseDrawer: bindActionCreators(CommonActions.openCloseDrawer, dispatch),
     dismissAlert: bindActionCreators(MenuActions.dismissAlert, dispatch),

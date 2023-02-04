@@ -2,7 +2,7 @@ import * as types from "../Common/Utils";
 import {ADD_ALERT, CLEAR_ALERTS, DISMISS_ALERT} from "../Common/Utils";
 
 const initialState = {
-    breadcrumbs: [], menus: [], alerts: [],
+    breadcrumbs: [], menus: [], alerts: [], lastAlert: {}
 };
 
 export default function menuReducer(state = initialState, action = {}) {
@@ -20,7 +20,7 @@ export default function menuReducer(state = initialState, action = {}) {
             };
             if (state.alerts != null && state.alerts.length > 200)
                 state.alerts.pop()
-            return {...state, alerts: [newAlert, ...state.alerts]};
+            return {...state, alerts: [newAlert, ...state.alerts], lastAlert: newAlert};
         }
         case DISMISS_ALERT: {
             return {...state, alerts: state.alerts.filter((it) => it.id !== action.alert.id)};
