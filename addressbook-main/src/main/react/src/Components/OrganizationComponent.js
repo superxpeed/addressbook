@@ -10,7 +10,7 @@ import * as MenuActions from "../Pages/MenuFormActions";
 import {FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import SaveIcon from "@mui/icons-material/Save";
-import DomainAddOutlinedIcon from '@mui/icons-material/DomainAddOutlined';
+import DomainAddOutlinedIcon from "@mui/icons-material/DomainAddOutlined";
 
 export class OrganizationComponentInner extends React.Component {
     state = {

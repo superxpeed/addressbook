@@ -51,7 +51,7 @@ export class AppInner extends React.Component {
                 <Collapse key={alert.id}>
                     <Alert variant="filled"
                            severity={alert.type}
-                           sx={{width: "600px", marginLeft: "20px", marginRight: "20px", marginTop: "5px"}}
+                           sx={{width: "600px", marginLeft: "10px", marginRight: "10px", marginTop: "5px"}}
                            onClose={() => this.props.dismissAlert(alert)}>
                         <AlertTitle>{alert.headline}</AlertTitle>
                         {targetMessage}
@@ -70,9 +70,9 @@ export class AppInner extends React.Component {
                     >
                         <Button sx={{
                             width: "600px",
-                            marginLeft: "20px",
-                            marginRight: "20px",
-                            marginTop: "5px",
+                            marginLeft: "10px",
+                            marginRight: "10px",
+                            marginTop: "10px",
                             height: "56px",
                             minHeight: "56px"
                         }}
