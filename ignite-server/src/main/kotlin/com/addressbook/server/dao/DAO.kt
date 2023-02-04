@@ -187,8 +187,12 @@ class DAO : AddressBookDAO {
                 true
             } else return user.lowercase() == userLocked.login?.lowercase()
         } else {
-            cacheLocks?.remove(key, Lock(key, user))
-            return true
+            val userLocked = cacheLocks?.get(key) ?: return true
+            return if (user.lowercase() == userLocked.login?.lowercase()) {
+                cacheLocks.remove(key, Lock(key, user))
+                true
+            } else
+                false
         }
     }
 

@@ -154,9 +154,12 @@ class DAO : AddressBookDAO {
                 true
             } else return user.lowercase() == userLocked.login?.lowercase()
         } else {
-            val userLocked = getById("id", key, Lock::class.java) ?: return false
-            dataStore.delete(userLocked)
-            return true
+            val userLocked = getById("id", key, Lock::class.java) ?: return true
+            return if (user.lowercase() == userLocked.login?.lowercase()) {
+                dataStore.delete(userLocked)
+                true
+            } else
+                false
         }
     }
 

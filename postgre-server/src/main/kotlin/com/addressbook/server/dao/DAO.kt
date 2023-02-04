@@ -126,9 +126,12 @@ class DAO : AddressBookDAO {
                 true
             } else return user.lowercase() == userLocked.login?.lowercase()
         } else {
-            val userLocked = entityManager.find(Lock::class.java, key) ?: return false
-            entityManager.remove(userLocked)
-            return true
+            val userLocked = entityManager.find(Lock::class.java, key) ?: return true
+            return if (user.lowercase() == userLocked.login?.lowercase()) {
+                entityManager.remove(userLocked)
+                true
+            } else
+                false
         }
     }
 
