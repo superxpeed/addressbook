@@ -185,7 +185,7 @@ class DAO : AddressBookDAO {
             return if (userLocked == null) {
                 cacheLocks?.put(key, Lock(key, user))
                 true
-            } else return userLocked.login == user
+            } else return user.lowercase() == userLocked.login?.lowercase()
         } else {
             cacheLocks?.remove(key, Lock(key, user))
             return true

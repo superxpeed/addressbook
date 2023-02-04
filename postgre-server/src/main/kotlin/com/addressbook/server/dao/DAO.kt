@@ -124,7 +124,7 @@ class DAO : AddressBookDAO {
             return if (userLocked == null) {
                 entityManager.persist(Lock(key, user))
                 true
-            } else return userLocked.login == user
+            } else return user.lowercase() == userLocked.login?.lowercase()
         } else {
             val userLocked = entityManager.find(Lock::class.java, key) ?: return false
             entityManager.remove(userLocked)

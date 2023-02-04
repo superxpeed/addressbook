@@ -2,7 +2,10 @@ import * as types from "../Common/Utils";
 import {ADD_ALERT, CLEAR_ALERTS, DISMISS_ALERT} from "../Common/Utils";
 
 const initialState = {
-    breadcrumbs: [], menus: [], alerts: [], lastAlert: {}
+    breadcrumbs: [],
+    menus: [],
+    alerts: [],
+    lastAlert: {}
 };
 
 export default function menuReducer(state = initialState, action = {}) {

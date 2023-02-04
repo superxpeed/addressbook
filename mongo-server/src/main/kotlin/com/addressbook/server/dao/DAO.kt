@@ -148,12 +148,16 @@ class DAO : AddressBookDAO {
 
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         if (lock) {
-            dataStore.save(Lock(key, user))
+            val userLocked = getById("id", key, Lock::class.java)
+            return if (userLocked == null) {
+                dataStore.save(Lock(key, user))
+                true
+            } else return user.lowercase() == userLocked.login?.lowercase()
         } else {
             val userLocked = getById("id", key, Lock::class.java) ?: return false
             dataStore.delete(userLocked)
+            return true
         }
-        return true
     }
 
     override fun unlockAllRecordsForUser(user: String) {
