@@ -20,7 +20,10 @@ export default function menuReducer(state = initialState, action = {}) {
             };
             if (state.alerts != null && state.alerts.length > 200)
                 state.alerts.pop()
-            return {...state, alerts: [newAlert, ...state.alerts], lastAlert: newAlert};
+            if (newAlert.headline.trim().toLowerCase().includes("record"))
+                return {...state, alerts: [newAlert, ...state.alerts]};
+            else
+                return {...state, alerts: [newAlert, ...state.alerts], lastAlert: newAlert};
         }
         case DISMISS_ALERT: {
             return {...state, alerts: state.alerts.filter((it) => it.id !== action.alert.id)};
