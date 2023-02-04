@@ -54,7 +54,7 @@ export class MenuFormInner extends React.Component {
             allMenus.push(<Button
                 variant="contained"
                 key={`btn_${element.url}`}
-                sx={{ boxShadow: 10 }}
+                sx={{boxShadow: 10}}
                 style={{
                     height: "200px",
                     width: "200px",
