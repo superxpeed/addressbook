@@ -65,10 +65,9 @@ class LoginLogoutWithRolesTest {
                 e.printStackTrace()
             }
         }.start()
-        // Wait for modal window to close
-        Thread.sleep(300)
         // Click logout button
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div/header/div/div/button[4]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[3]/div/div[2]/button[2]"))).click()
         // Login as admin
         loginInput = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"login\"]")))
         loginInput.sendKeys("admin")
@@ -94,11 +93,9 @@ class LoginLogoutWithRolesTest {
                 e.printStackTrace()
             }
         }.start()
-        // Wait for modal window to close
-        Thread.sleep(300)
         // Click logout button
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div/header/div/div/button[4]"))).click()
-        Thread.sleep(300)
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[3]/div/div[2]/button[2]"))).click()
         driver.quit()
     }
 }

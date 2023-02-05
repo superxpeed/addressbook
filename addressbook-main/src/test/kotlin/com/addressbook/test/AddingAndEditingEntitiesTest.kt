@@ -135,7 +135,8 @@ class AddingAndEditingEntitiesTest {
         // Wait until all notifications disappear
         Thread.sleep(10_000)
         // Click logout button
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//html/body/div/div/div/div/header/div/div/button[4]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div[1]/header/div/div/button[5]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[3]/div/div[2]/button[2]"))).click()
         Thread.sleep(300)
         driver.quit()
     }
@@ -326,7 +327,8 @@ class AddingAndEditingEntitiesTest {
         // Wait until all notifications disappear
         Thread.sleep(10_000)
         // Click logout button
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//html/body/div/div/div/div/header/div/div/button[4]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div/div[1]/header/div/div/button[5]"))).click()
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[3]/div/div[2]/button[2]"))).click()
         Thread.sleep(300)
         driver.quit()
     }

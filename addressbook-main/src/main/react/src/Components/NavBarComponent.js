@@ -8,6 +8,8 @@ import {
     Checkbox,
     Chip,
     Container,
+    DialogActions,
+    DialogContentText,
     FormControlLabel,
     FormGroup,
     IconButton,
@@ -37,6 +39,7 @@ export class NavBarComponentInner extends React.Component {
         roles: [],
         showUserInfo: false,
         showSettings: false,
+        showLogoutConfirmation: false,
         buildVersion: "",
         buildTime: "",
     };
@@ -155,9 +158,9 @@ export class NavBarComponentInner extends React.Component {
                                     <SettingsOutlinedIcon/>
                                 </IconButton>
                             </Tooltip>
-                            <Tooltip title="Logout">
+                            <Tooltip title="Log out">
                                 <IconButton color={this.props.useDarkTheme ? "primary" : "topServiceButtonColor"}
-                                            onClick={() => this.props.logout()}>
+                                            onClick={() => this.setState({showLogoutConfirmation: true})}>
                                     <LogoutIcon/>
                                 </IconButton>
                             </Tooltip>
@@ -227,6 +230,22 @@ export class NavBarComponentInner extends React.Component {
                                               label="Use dark theme"/>
                         </FormGroup>
                     </DialogContent>
+                </Dialog>
+                <Dialog
+                    open={this.state.showLogoutConfirmation}
+                    onClose={() => this.setState({showLogoutConfirmation: false})}
+                    aria-describedby="confirmation-modal-description"
+                >
+                    <DialogTitle>Confirm log out</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="confirmation-modal-description">
+                            Do you want to log out?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => this.setState({showLogoutConfirmation: false})}>Cancel</Button>
+                        <Button variant="contained" color="error" onClick={() => this.props.logout()}>Log out</Button>
+                    </DialogActions>
                 </Dialog>
             </div>);
     }

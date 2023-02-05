@@ -510,7 +510,7 @@ export class PersonComponentInner extends React.Component {
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => this.setState({show: false, idToDelete: null})}>Cancel</Button>
-                            <Button variant="outlined" color="error" onClick={this.deleteContact}>Delete</Button>
+                            <Button variant="contained" color="error" onClick={this.deleteContact}>Delete</Button>
                         </DialogActions>
                     </Dialog>
                 </div>
