@@ -12,12 +12,20 @@ module.exports = {
         path: path.resolve(__dirname, '../resources/static'),
         filename: 'bundle.js',
     },
+    resolve: {
+        modules: [
+            path.resolve(__dirname, 'src'),
+            'node_modules'
+        ],
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+    },
     module: {
         rules: [
             {
                 test: /\.(js|ts)x?$/,
                 include: [
                     path.resolve(__dirname, 'src'),
+                    path.resolve(__dirname, 'node_modules/quill')
                 ],
                 use: [
                     {
