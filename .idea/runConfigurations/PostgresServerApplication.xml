@@ -1,6 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="PostresServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="ACTIVE_PROFILES" />
+  <configuration default="false" name="PostgresServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <envs>
       <env name="eureka_host" value="http://localhost:7777/eureka" />
       <env name="postgres_server_hostname" value="localhost" />

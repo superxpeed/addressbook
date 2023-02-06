@@ -1,15 +1,14 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="web-image-biild" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+  <configuration default="false" name="postgre-image-build" type="docker-deploy" factoryName="dockerfile">
     <deployment type="dockerfile">
       <settings>
-        <option name="buildCliOptions" value="" />
+        <option name="imageTag" value="addressbook_postgre" />
         <option name="buildOnly" value="true" />
         <option name="command" value="" />
         <option name="containerName" value="" />
         <option name="entrypoint" value="" />
-        <option name="imageTag" value="addressbook_web" />
         <option name="commandLineOptions" value="" />
-        <option name="sourceFilePath" value="addressbook-main/Dockerfile" />
+        <option name="sourceFilePath" value="postgre-server/Dockerfile" />
       </settings>
     </deployment>
     <method v="2" />
