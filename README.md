@@ -40,7 +40,7 @@ https://user-images.githubusercontent.com/8986329/216774063-d909e32a-14d9-4639-b
 6. [**Spring Doc**](https://springdoc.org) [configuration](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configurations/RootConfiguration.kt#L20) 
 7. [**Apache Ignite**](https://apacheignite.readme.io/docs) [server configuration](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L37), [generic SQL queries](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L262), [transactions](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L109), [binary marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-common/src/main/kotlin/com/addressbook/model/AddressBookEntities.kt#L17)
 8. [**MongoDB with Morphia ORM**](https://github.com/dredwardhyde/addressbook/blob/master/mongo-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt)  
-9. [**PostgreSQL with Spring JPA and TLS 1.3**](https://github.com/dredwardhyde/addressbook/blob/master/postgre-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt)  
+9. [**PostgreSQL with Spring JPA**](https://github.com/dredwardhyde/addressbook/blob/master/postgre-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt) and [**TLS 1.3**](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#postgresql-15-with-tls-13)
 10. [**UI tests using Selenium**](https://github.com/dredwardhyde/addressbook/tree/master/addressbook-main/src/test/kotlin/com/addressbook/test)  
 
 #### Front-end
@@ -74,7 +74,7 @@ https://user-images.githubusercontent.com/8986329/216774063-d909e32a-14d9-4639-b
     - [**Fluent Bit configuration for Elastic**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/fluent_bit_web/cm-web-fluentbit.yaml)  
 3.  [**docker-compose-ignite**](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose-ignite.yml)
 4.  [**docker-compose**](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose.yml)
-5.  [**.zip**](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/distr-zip.xml) artifact [assembly](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/pom.xml#L23)
+5.  [**.zip**](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/distr-zip.xml) artifact [**assembly**](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/pom.xml#L23)
 6.  [**Dockerfile** for layered Spring Boot .jar](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/Dockerfile)
 7.  [**Building Docker images with Maven**](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/pom.xml#L430)  
 
@@ -101,7 +101,7 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, isti
 
 
 #### PostgreSQL setup
-[How to enable TLS 1.3](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#postgresql-15-with-tls-13)  
+[**How to enable TLS 1.3**](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#postgresql-15-with-tls-13)  
 ```sql
 CREATE SCHEMA IF NOT EXISTS test;
 CREATE USER test WITH PASSWORD 'test';
