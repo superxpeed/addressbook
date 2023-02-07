@@ -74,6 +74,9 @@ spec:
               protocol: TCP
           imagePullPolicy: Never
           volumeMounts:
+            - name: db-certs
+              readOnly: true
+              mountPath: /opt/certs/db/
             - name: logsshare
               mountPath: /mnt/logs
             - name: logback
@@ -83,6 +86,15 @@ spec:
           image: {{postgres_image}}
       dnsPolicy: ClusterFirst
       volumes:
+        - name: db-certs
+          secret:
+            secretName: postgres-secret
+            items:
+              - key: client.crt
+                path: client.crt
+              - key: client.key
+                path: client.key
+            defaultMode: 256
         - name: logback
           configMap:
             defaultMode: 256

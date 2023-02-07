@@ -12,6 +12,8 @@ data:
   postgres_host: "{{postgres_host}}"
   postgres_port: "{{postgres_port}}"
   postgres_db: "{{postgres_db}}"
+  postgres_cert: "{{postgres_cert}}"
+  postgres_key: "{{postgres_key}}"
   postgres_min_pool_size: "{{postgres_min_pool_size}}"
   postgres_max_pool_size: "{{postgres_max_pool_size}}"
   postgres_max_idle_time: "{{postgres_max_idle_time}}"

@@ -27,3 +27,8 @@
   file:
     path: ../templates/web/web-secret.yaml
     state: absent
+
+- name: Delete postgres-secret.yaml
+  file:
+    path: ../templates/postgre/postgres-secret.yaml
+    state: absent

@@ -27,3 +27,8 @@
   copy:
     src: ../secrets/web-secret.yaml
     dest: ../templates/web/web-secret.yaml
+
+- name: Decrypt postgres-secret.yaml
+  copy:
+    src: ../secrets/postgres-secret.yaml
+    dest: ../templates/postgre/postgres-secret.yaml

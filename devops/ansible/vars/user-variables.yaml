@@ -89,7 +89,7 @@ postgres_server_port: 12000
 # URL to the addressbook_postgre image
 postgres_image: addressbook_postgre:latest
 # External PostgreSQL port on target server
-external_postgres_port: 5432
+external_postgres_port: 5433
 # Internal MongoDB port inside namespace
 postgres_port: 11111
 # PostgreSQL host name as it's visible from k8s cluster
@@ -98,6 +98,10 @@ postgres_host: host.docker.internal
 postgres_ip: 192.168.65.2
 # PostgreSQL database name
 postgres_db: postgres
+# Path to client certificate
+postgres_cert: /opt/certs/db/client.crt
+# Path to client certificate key
+postgres_key: /opt/certs/db/client.key
 # JVM options
 postgres_java_opts: >
   -XX:InitialRAMPercentage=10 
