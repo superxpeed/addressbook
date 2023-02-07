@@ -39,7 +39,7 @@ https://user-images.githubusercontent.com/8986329/216774063-d909e32a-14d9-4639-b
 5. [**Spring Flux**](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html) for [reactive updates](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/services/JVMStateService.kt) on [front-end](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/react/src/Pages/AdminPageForm.js#L60#)
 6. [**Spring Doc**](https://springdoc.org) [configuration](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/kotlin/com/addressbook/configurations/RootConfiguration.kt#L20) 
 7. [**Apache Ignite**](https://apacheignite.readme.io/docs) [server configuration](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L37), [generic SQL queries](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L262), [transactions](https://github.com/dredwardhyde/addressbook/blob/master/ignite-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt#L109), [binary marshalling](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-common/src/main/kotlin/com/addressbook/model/AddressBookEntities.kt#L17)
-8. [**MongoDB with Morphia ORM**](https://github.com/dredwardhyde/addressbook/blob/master/mongo-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt) and [**TLS**](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#mongodb-with-tls)
+8. [**MongoDB with Morphia ORM**](https://github.com/dredwardhyde/addressbook/blob/master/mongo-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt) and [**TLS 1.2**](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#mongodb-with-tls-12)
 9. [**PostgreSQL with Spring JPA**](https://github.com/dredwardhyde/addressbook/blob/master/postgre-server/src/main/kotlin/com/addressbook/server/dao/DAO.kt) and [**TLS 1.3**](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#postgresql-15-with-tls-13)
 10. [**UI tests using Selenium**](https://github.com/dredwardhyde/addressbook/tree/master/addressbook-main/src/test/kotlin/com/addressbook/test)  
 
@@ -109,7 +109,7 @@ CREATE USER test WITH PASSWORD 'test';
 GRANT ALL ON SCHEMA test TO test;
 ```
 #### MongoDB setup
-[**How to enable TLS**](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#mongodb-with-tls)  
+[**How to enable TLS 1.2**](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#mongodb-with-tls-12)  
 ```mongodb-json-query
 use addressbook
 db.createUser({
