@@ -122,6 +122,7 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web, istio_
 
 ```shell
 # Ingress, Egress, Eureka, PostgreSQL, WebApp, Fluent Bit
+# Requires enabled TLS on PostgreSQL server
 ansible-playbook delete.yaml --tags "ingress, egress, eureka, postgre, web, istio_https, fluent_bit_web"
 ansible-playbook deploy.yaml --tags "ingress, egress, eureka, postgre, web, istio_https, fluent_bit_web"
 ```
