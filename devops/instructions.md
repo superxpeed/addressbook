@@ -260,7 +260,7 @@ https://localhost:10000/#/
   <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgresql_15_tls_check.png" width="600"/>  
 
 
-### MongoDB with TLS
+### MongoDB with TLS 1.2
 
 **1. Stop MongoDB server**
 
