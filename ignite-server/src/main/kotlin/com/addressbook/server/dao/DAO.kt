@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.addressbook.server.dao
 
 import com.addressbook.AddressBookDAO
@@ -27,7 +29,6 @@ import javax.annotation.PreDestroy
 import javax.cache.Cache
 
 @Controller
-@Suppress("DEPRECATION")
 class DAO : AddressBookDAO {
 
     private val logger = LoggerFactory.getLogger(DAO::class.java)

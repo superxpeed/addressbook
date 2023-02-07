@@ -74,12 +74,12 @@ export class TableInner extends React.Component {
             let targetTextColor = this.props.useDarkTheme ? "#000000" : "#FFFFFF"
             return function Formatter({cell}) {
                 return <Box
-                    sx={(theme) => ({
+                    sx={{
                         backgroundColor: targetBoxColor,
                         borderRadius: "0.25rem",
                         color: targetTextColor,
                         p: "0.25rem",
-                    })}
+                    }}
                 >
                     {cell.getValue()}
                 </Box>
