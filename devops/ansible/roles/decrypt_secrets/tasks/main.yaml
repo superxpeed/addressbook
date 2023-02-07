@@ -32,3 +32,8 @@
   copy:
     src: ../secrets/postgres-secret.yaml
     dest: ../templates/postgre/postgres-secret.yaml
+
+- name: Decrypt mongo-secret.yaml
+  copy:
+    src: ../secrets/mongo-secret.yaml
+    dest: ../templates/mongo/mongo-secret.yaml

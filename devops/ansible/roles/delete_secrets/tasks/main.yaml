@@ -32,3 +32,8 @@
   file:
     path: ../templates/postgre/postgres-secret.yaml
     state: absent
+
+- name: Delete mongo-secret.yaml
+  file:
+    path: ../templates/mongo/mongo-secret.yaml
+    state: absent

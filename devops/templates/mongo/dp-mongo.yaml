@@ -74,6 +74,9 @@ spec:
               protocol: TCP
           imagePullPolicy: Never
           volumeMounts:
+            - name: db-certs
+              readOnly: true
+              mountPath: /opt/certs/db/
             - name: logsshare
               mountPath: /mnt/logs
             - name: logback
@@ -83,6 +86,15 @@ spec:
           image: {{mongo_image}}
       dnsPolicy: ClusterFirst
       volumes:
+        - name: db-certs
+          secret:
+            secretName: mongo-secret
+            items:
+              - key: keystore.p12
+                path: keystore.p12
+              - key: truststore.p12
+                path: truststore.p12
+            defaultMode: 256
         - name: logback
           configMap:
             defaultMode: 256

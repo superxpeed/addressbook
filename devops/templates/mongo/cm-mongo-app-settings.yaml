@@ -9,6 +9,8 @@ data:
   eureka_prefer_ip: "{{eureka_prefer_ip}}"
   mongo_server_hostname: "{{mongo_server_hostname}}"
   mongo_server_port: "{{mongo_server_port}}"
+  mongo_truststore_path: "{{mongo_truststore_path}}"
+  mongo_keystore_path: "{{mongo_keystore_path}}"
   mongo_host: "{{mongo_db_host}}"
   mongo_port: "{{mongo_db_port}}"
   java_opts: "{{mongo_java_opts}}"

@@ -115,6 +115,7 @@ ansible-playbook deploy.yaml --tags "ingress, egress, eureka, ignite, web, istio
 
 ```shell
 # Ingress, Egress, Eureka, Mongo, WebApp, Fluent Bit
+# Requires enabled TLS on MongoDB server
 ansible-playbook delete.yaml --tags "ingress, egress, eureka, mongo, web, istio_https, fluent_bit_web"
 ansible-playbook deploy.yaml --tags "ingress, egress, eureka, mongo, web, istio_https, fluent_bit_web"
 ```
@@ -257,4 +258,31 @@ https://localhost:10000/#/
                 ON pg_stat_ssl.pid = pg_stat_activity.pid;
   ```
   <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgresql_15_tls_check.png" width="600"/>  
+
+
+### MongoDB with TLS
+
+**1. Stop MongoDB server**
+
+**2. Add [server certificates](https://github.com/dredwardhyde/addressbook/tree/master/mongo-server/server_certs) to the **data** folder of PostgreSQL  installation:**
+  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_tls_certs_location.png" width="700"/>
+
+**3. Add the following lines to mongod.cfg**
+  ```shell
+  net:
+    ...
+    tls:
+      mode: requireTLS
+      certificateKeyFile: C:\Program Files\MongoDB\Server\6.0\bin\mongodb.pem
+      CAFile: C:\Program Files\MongoDB\Server\6.0\bin\mongodb_ca.pem
+      allowConnectionsWithoutCertificates: true
+  ```
+  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_tls_settings.png" width="500"/>  
+
+**4. Start MongoDB server**
+
+**5. [Deploy project](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project)**
+
+**6. Check if user is connected using TLS**
+  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_tls_check.png" width="600"/>  
   
