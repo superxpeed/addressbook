@@ -283,6 +283,6 @@ https://localhost:10000/#/
 
 **5. [Deploy project](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project)**
 
-**6. Check if user is connected using TLS**
+**6. Check if user is connected using TLS**  
   <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_tls_check.png" width="600"/>  
   
