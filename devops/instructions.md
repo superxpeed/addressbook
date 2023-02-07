@@ -249,7 +249,7 @@ https://localhost:10000/#/
 **5. [Deploy project](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project)**  
 **6. Check if user is connected using TLS**  
   ```sql
-  SELECT datname, usename, ssl, client_addr
+  SELECT datname, usename, ssl, version, client_addr
   FROM pg_stat_ssl
            JOIN pg_stat_activity
                 ON pg_stat_ssl.pid = pg_stat_activity.pid;
