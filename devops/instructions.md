@@ -219,3 +219,39 @@ docker-compose -f addressbook/devops/docker-compose-ignite.yml up -d
 https://localhost:10000/#/
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/docker_tls.png" width="900"/>  
+
+### PostgreSQL 15 with TLS 1.3
+
+**1. Stop PostgreSQL 15 server**  
+
+**2. Add [server certificates](https://github.com/dredwardhyde/addressbook/tree/master/postgre-server/server_certs) to the **data** folder of PostgreSQL  installation:**  
+  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgresql_15_tls_certs_location.png" width="700"/>  
+  
+**3. Add the following lines to postgresql.conf**  
+  ```shell
+  ssl = on
+  ssl_ca_file = 'rootCA.crt'
+  ssl_cert_file = 'localhost.crt'
+  ssl_key_file = 'localhost.key'
+  ssl_passphrase_command = 'echo q1w2e3r4'
+  ssl_passphrase_command_supports_reload = on
+  ```
+  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgresql_15_tls_settings.png" width="500"/>  
+
+**3. Add the following line to pg_hba.conf**  
+  ```shell
+  hostssl all             all             192.168.1.0/24          cert
+  ```
+  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgresql_15_tls_access.png" width="600"/>  
+  
+**4. Start PostgreSQL 15 server**  
+**5. [Deploy project](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project)**  
+**6. Check if user is connected using TLS**  
+  ```sql
+  SELECT datname, usename, ssl, client_addr
+  FROM pg_stat_ssl
+           JOIN pg_stat_activity
+                ON pg_stat_ssl.pid = pg_stat_activity.pid;
+  ```
+  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgresql_15_tls_check.png" width="600"/>  
+  
