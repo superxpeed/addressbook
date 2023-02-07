@@ -16,6 +16,8 @@
       <env name="postgres_idle_connection_test_period" value="10" />
       <env name="postgres_test_connection_on_checkout" value="true" />
       <env name="postgres_preferred_test_query" value="select 1" />
+      <env name="postgres_cert" value="$PROJECT_DIR$/postgre-server/client_certs/admin.crt" />
+      <env name="postgres_key" value="$PROJECT_DIR$/postgre-server/client_certs/admin.key" />
     </envs>
     <module name="postgre-server" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.server.ServerApplication" />
