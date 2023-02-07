@@ -264,7 +264,7 @@ https://localhost:10000/#/
 
 **1. Stop MongoDB server**
 
-**2. Add [server certificates](https://github.com/dredwardhyde/addressbook/tree/master/mongo-server/server_certs) to the **data** folder of PostgreSQL  installation:**
+**2. Add [server certificates](https://github.com/dredwardhyde/addressbook/tree/master/mongo-server/server_certs) to the **bin** folder of MongoDB  installation:**
   <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_tls_certs_location.png" width="700"/>
 
 **3. Add the following lines to mongod.cfg**
