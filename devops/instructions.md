@@ -239,15 +239,17 @@ https://localhost:10000/#/
   ```
   <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgresql_15_tls_settings.png" width="500"/>  
 
-**3. Add the following line to pg_hba.conf**  
+**4. Add the following line to pg_hba.conf**  
   ```shell
   hostssl all             all             192.168.1.0/24          cert
   ```
   <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgresql_15_tls_access.png" width="600"/>  
   
-**4. Start PostgreSQL 15 server**  
-**5. [Deploy project](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project)**  
-**6. Check if user is connected using TLS**  
+**5. Start PostgreSQL 15 server**  
+
+**6. [Deploy project](https://github.com/dredwardhyde/addressbook/blob/master/devops/instructions.md#deploy-project)**  
+
+**7. Check if user is connected using TLS**  
   ```sql
   SELECT datname, usename, ssl, version, client_addr
   FROM pg_stat_ssl
