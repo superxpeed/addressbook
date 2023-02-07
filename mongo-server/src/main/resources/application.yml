@@ -29,3 +29,10 @@ mongo:
   port: ${mongo_port}
   user: ${mongo_user}
   password: ${mongo_password}
+  truststore:
+    path: ${mongo_truststore_path}
+    password: ${mongo_truststore_password}
+  keystore:
+    path: ${mongo_keystore_path}
+    password: ${mongo_keystore_password}
+    key-password: ${mongo_keystore_key_password}

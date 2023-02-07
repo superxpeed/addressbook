@@ -4,10 +4,7 @@ import com.addressbook.AddressBookDAO
 import com.addressbook.FieldDescriptor
 import com.addressbook.dto.*
 import com.addressbook.model.*
-import com.mongodb.MongoClient
-import com.mongodb.MongoClientOptions
-import com.mongodb.MongoCredential
-import com.mongodb.ServerAddress
+import com.mongodb.*
 import dev.morphia.Datastore
 import dev.morphia.Morphia
 import dev.morphia.query.FindOptions
@@ -20,6 +17,10 @@ import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
+import java.io.FileInputStream
+import java.security.KeyStore
+import java.security.SecureRandom
+import javax.net.ssl.*
 
 
 @Controller
@@ -27,7 +28,6 @@ import javax.annotation.PreDestroy
 class DAO : AddressBookDAO {
 
     private val dateFormatEqual = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-    private val dateFormatOther = SimpleDateFormat("yyyy-MM-dd")
 
     private lateinit var mongoClient: MongoClient
     private lateinit var dataStore: Datastore
@@ -37,11 +37,28 @@ class DAO : AddressBookDAO {
 
     @PostConstruct
     fun startClient() {
-        val creds = MongoCredential.createScramSha1Credential(requireNotNull(env.getProperty("mongo.user")),
+        val credentials = MongoCredential.createScramSha1Credential(requireNotNull(env.getProperty("mongo.user")),
                 "addressbook", requireNotNull(env.getProperty("mongo.password")).toCharArray())
+        val clientStore: KeyStore = KeyStore.getInstance("PKCS12")
+        clientStore.load(FileInputStream(requireNotNull(env.getProperty("mongo.keystore.path"))),
+                requireNotNull(env.getProperty("mongo.keystore.password")).toCharArray())
+        val kmf: KeyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+        kmf.init(clientStore, requireNotNull(env.getProperty("mongo.keystore.key-password")).toCharArray())
+        val trustStore: KeyStore = KeyStore.getInstance("PKCS12")
+        trustStore.load(FileInputStream(requireNotNull(env.getProperty("mongo.truststore.path"))),
+                requireNotNull(env.getProperty("mongo.truststore.password")).toCharArray())
+        val tmf: TrustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+        tmf.init(trustStore)
+        val sslContext = SSLContext.getInstance("TLS")
+        sslContext.init(kmf.keyManagers, tmf.trustManagers, SecureRandom())
+        val options: MongoClientOptions = MongoClientOptions.builder()
+                .sslEnabled(true)
+                .sslContext(sslContext)
+                .build()
+
         mongoClient = MongoClient(ServerAddress(requireNotNull(env.getProperty("mongo.host")),
                 Integer.parseInt(requireNotNull(env.getProperty("mongo.port")))),
-                creds, MongoClientOptions.builder().build())
+                credentials, options)
         dataStore = Morphia()
                 .also { it.mapPackage("com.addressbook.model") }
                 .createDatastore(mongoClient, "addressbook")

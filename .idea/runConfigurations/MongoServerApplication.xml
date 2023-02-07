@@ -10,6 +10,11 @@
       <env name="mongo_port" value="27017" />
       <env name="mongo_server_port" value="13000" />
       <env name="mongo_user" value="user" />
+      <env name="mongo_truststore_path" value="$PROJECT_DIR$/mongo-server/client_certs/rootCA.p12" />
+      <env name="mongo_truststore_password" value="q1w2e3r4" />
+      <env name="mongo_keystore_path" value="$PROJECT_DIR$/mongo-server/client_certs/localhost.p12" />
+      <env name="mongo_keystore_password" value="q1w2e3r4" />
+      <env name="mongo_keystore_key_password" value="q1w2e3r4" />
     </envs>
     <module name="mongo-server" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.server.ServerApplication" />
