@@ -221,8 +221,11 @@ class DAO : AddressBookDAO {
                     }
 
                     "TextFilter" -> {
-                        if (it.name == "type") it.value = it.value?.uppercase()
-                        addSql = it.name + " like '%" + it.value?.replace("'", "''") + "%'"
+                        addSql = if (it.name == "type") {
+                            it.name + " = " + it.value
+                        } else {
+                            it.name + " like '%" + it.value?.replace("'", "''") + "%'"
+                        }
                     }
 
                     "DateFilter" -> {
