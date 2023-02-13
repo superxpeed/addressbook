@@ -1,4 +1,4 @@
-package com.addressbook.eureka;
+package com.addressbook.eureka
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
