@@ -2,17 +2,19 @@
 
 ## Client applications
 
-### [Android client application](https://github.com/dredwardhyde/addressbook-android-app)
+- ### [Electron Desktop Application For macOS & Windows](https://github.com/dredwardhyde/addressbook-desktop-app)
 
-#### Light Theme
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/screenshots/all_panels_light.png" width="1000"/>  
+- ### [Android Client Application](https://github.com/dredwardhyde/addressbook-android-app)
 
-#### Dark Theme
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/screenshots/all_panels_dark.png" width="1000"/>  
+  #### Light Theme
+  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/screenshots/all_panels_light.png" width="1000"/>  
 
-### Web client application
+  #### Dark Theme
+  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-android-app/master/screenshots/all_panels_dark.png" width="1000"/>  
 
-https://user-images.githubusercontent.com/8986329/216774063-d909e32a-14d9-4639-bdcc-7f61118c9483.mp4
+- ### Web Client Application
+
+  https://user-images.githubusercontent.com/8986329/216774063-d909e32a-14d9-4639-bdcc-7f61118c9483.mp4
 
 ## Architecture
 
