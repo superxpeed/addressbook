@@ -3,7 +3,7 @@
 ## Client applications
 
 - ### [Electron Desktop Application For macOS & Windows](https://github.com/dredwardhyde/addressbook-desktop-app)
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-desktop-app/master/readme/macos_installed_app_light.png" width="500"/>  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-desktop-app/master/readme/macos_installed_app_dark.png" width="500"/>  
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-desktop-app/master/readme/macos_installed_app_light.png" width="400"/>  <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook-desktop-app/master/readme/macos_installed_app_dark.png" width="400"/>  
 - ### [Android Client Application](https://github.com/dredwardhyde/addressbook-android-app)
 
   #### Light Theme
