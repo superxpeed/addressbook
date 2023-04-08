@@ -7,6 +7,8 @@ import org.junit.Test
 import org.junit.runners.MethodSorters
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
+import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
@@ -19,8 +21,11 @@ class AddingAndEditingEntitiesTest {
 
     @Test
     fun stage1_addAndEditOrganization() {
+        WebDriverManager.chromedriver().setup()
         // Initialize Selenium driver
-        val driver = WebDriverManager.chromedriver().create()
+        val options = ChromeOptions()
+        options.addArguments("--remote-allow-origins=*")
+        val driver = ChromeDriver(options)
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
         // Dismiss certificate choice dialog
@@ -143,8 +148,11 @@ class AddingAndEditingEntitiesTest {
 
     @Test
     fun stage1_addAndEditPerson() {
+        WebDriverManager.chromedriver().setup()
         // Initialize Selenium driver
-        val driver = WebDriverManager.chromedriver().create()
+        val options = ChromeOptions()
+        options.addArguments("--remote-allow-origins=*")
+        val driver = ChromeDriver(options)
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
         // Dismiss certificate choice dialog

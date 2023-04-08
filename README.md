@@ -47,7 +47,7 @@
 
 #### Front-end
 1.  User interface with multiple dynamically added tables/tabs/custom forms, input validation and more
-2.  [**react v18.2.0**](https://reactjs.org/blog/2022/03/29/react-v18.html), [**react-redux v8.0.5**](https://react-redux.js.org), [**react-router v5.2.0**](https://v5.reactrouter.com), component lifecycle, integration with Spring Security for REST API
+2.  [**react v17.0.2**](https://legacy.reactjs.org/blog/2020/10/20/react-v17.html), [**react-redux v8.0.5**](https://react-redux.js.org), [**react-router v5.2.0**](https://v5.reactrouter.com), component lifecycle, integration with Spring Security for REST API
 3.  [**Material React Table**](https://www.material-react-table.com) & [**Material UI v5**](https://mui.com/core) components
 4.  [**webpack-dev-server**](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/react/webpack.config.js#L56) & **npm** configuration & assembly with [**compression**](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/react/webpack.prod.config.js#L17) (+ multiplatform **Maven** configuration)
 5.  Dark & Light Themes with automatic switching

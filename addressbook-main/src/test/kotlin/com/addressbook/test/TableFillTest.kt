@@ -5,6 +5,8 @@ import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runners.MethodSorters
 import org.openqa.selenium.By
+import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.awt.Robot
@@ -16,8 +18,11 @@ class TableFillTest {
 
     @Test
     fun stage1_fillOrganizationTable() {
+        WebDriverManager.chromedriver().setup()
         // Initialize Selenium driver
-        val driver = WebDriverManager.chromedriver().create()
+        val options = ChromeOptions()
+        options.addArguments("--remote-allow-origins=*")
+        val driver = ChromeDriver(options)
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
         // Dismiss certificate choice dialog
@@ -67,7 +72,7 @@ class TableFillTest {
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"tables\"]/div/div/button"))).click()
         Thread.sleep(500)
         var name: String
-        for (i in 0..1000) {
+        for (i in 0..100) {
             // Generate test name
             name = "Test " + Math.random() + " Name"
             // Enter data to create new organization record

@@ -4,6 +4,8 @@ import io.github.bonigarcia.wdm.WebDriverManager
 import org.junit.Assert
 import org.junit.Test
 import org.openqa.selenium.By
+import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.awt.Robot
@@ -14,8 +16,11 @@ class LoginLogoutWithRolesTest {
 
     @Test
     fun stage1_loginLogoutWithRoles() {
+        WebDriverManager.chromedriver().setup()
         // Initialize Selenium driver
-        val driver = WebDriverManager.chromedriver().create()
+        val options = ChromeOptions()
+        options.addArguments("--remote-allow-origins=*")
+        val driver = ChromeDriver(options)
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
         // Dismiss certificate choice dialog
