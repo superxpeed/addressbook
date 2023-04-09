@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="AddressbookApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+  <configuration default="false" name="AddressbookApplicationNoTLS" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <envs>
       <env name="dao_implementation" value="POSTGRE-SERVER" />
       <env name="eureka_host" value="http://localhost:7777/eureka" />
@@ -10,8 +10,8 @@
       <env name="keystore_path" value="$PROJECT_DIR$/addressbook-main/certs/keystore.jks" />
       <env name="truststore_password" value="q1w2e3r4" />
       <env name="truststore_path" value="$PROJECT_DIR$/addressbook-main/certs/truststore.jks" />
-      <env name="web_server_port" value="9000" />
-      <env name="web_ssl_enabled" value="true" />
+      <env name="web_server_port" value="10000" />
+      <env name="web_ssl_enabled" value="false" />
     </envs>
     <module name="addressbook-main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.addressbook.AddressBookApplication" />
