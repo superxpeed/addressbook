@@ -93,8 +93,9 @@ export class OrganizationComponentInner extends React.Component {
             })
             .then((text) => {
                 if (isOk) {
+                    const result = JSON.parse(text);
                     this.props.onSuccess()
-                    this.props.updateRow(this.state.organization, Caches.ORGANIZATION_CACHE);
+                    this.props.updateRow(result.data, Caches.ORGANIZATION_CACHE);
                     if (toCreate)
                         this.props.showCommonAlert("Organization created!")
                     else
