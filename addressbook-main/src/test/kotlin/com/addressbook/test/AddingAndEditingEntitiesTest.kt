@@ -12,8 +12,6 @@ import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import java.awt.Robot
-import java.awt.event.KeyEvent
 import java.time.Duration
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -25,20 +23,10 @@ class AddingAndEditingEntitiesTest {
         // Initialize Selenium driver
         val options = ChromeOptions()
         options.addArguments("--remote-allow-origins=*")
+        options.addArguments("--ignore-urlfetcher-cert-requests")
         val driver = ChromeDriver(options)
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
-        // Dismiss certificate choice dialog
-        Thread {
-            try {
-                Thread.sleep(1_000)
-                val robot = Robot()
-                robot.keyPress(KeyEvent.VK_ESCAPE)
-                robot.keyRelease(KeyEvent.VK_ESCAPE)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }.start()
         // Open login page
         driver.get("https://localhost:9000")
         // Wait until page is loaded
@@ -152,20 +140,10 @@ class AddingAndEditingEntitiesTest {
         // Initialize Selenium driver
         val options = ChromeOptions()
         options.addArguments("--remote-allow-origins=*")
+        options.addArguments("--ignore-urlfetcher-cert-requests")
         val driver = ChromeDriver(options)
         // Initialize wait driver
         val webDriverWait = WebDriverWait(driver, Duration.ofSeconds(20))
-        // Dismiss certificate choice dialog
-        Thread {
-            try {
-                Thread.sleep(1_000)
-                val robot = Robot()
-                robot.keyPress(KeyEvent.VK_ESCAPE)
-                robot.keyRelease(KeyEvent.VK_ESCAPE)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }.start()
         // Open login page
         driver.get("https://localhost:9000")
         // Wait until page is loaded
