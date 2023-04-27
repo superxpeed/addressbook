@@ -17,6 +17,7 @@ import {
     DialogActions,
     DialogContentText,
     DialogTitle,
+    Divider,
     FormControl,
     Grid,
     IconButton,
@@ -43,7 +44,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import {FileUploadOutlined} from "@mui/icons-material";
-import FilePresentIcon from "@mui/icons-material/FilePresent";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 require("../Common/style.css");
@@ -76,7 +77,7 @@ export class PersonComponentInner extends React.Component {
 
     getFileList = () => {
         let documents = []
-        if(this.state.documentList == null || this.state.documentList.length === 0) {
+        if (this.state.documentList == null || this.state.documentList.length === 0) {
             return (<Typography style={{marginTop: "37px"}}
                                 color="primary"
                                 align="center"
@@ -90,17 +91,24 @@ export class PersonComponentInner extends React.Component {
                 <ListItem
                     secondaryAction={
                         <IconButton
-                            onClick={() => this.setState({documentIdToDelete: document.id, showDocumentDeletionDialog: true})}
+                            color="primary"
+                            onClick={() => this.setState({
+                                documentIdToDelete: document.id,
+                                showDocumentDeletionDialog: true
+                            })}
                             edge="end"
                             aria-label="delete">
                             <DeleteIcon/>
                         </IconButton>
                     }
                 >
-                    <Link href={document.url} passHref>
+                    <Link target="_blank"
+                          rel="noopener noreferrer"
+                          href={document.url}
+                          passHref>
                         <ListItemAvatar>
                             <Avatar>
-                                <FilePresentIcon/>
+                                <CloudDownloadIcon color="primary"/>
                             </Avatar>
                         </ListItemAvatar>
                     </Link>
@@ -110,6 +118,7 @@ export class PersonComponentInner extends React.Component {
                     />
                 </ListItem>
             )
+            documents.push(<Divider/>)
         })
         return <List dense={true}>
             {documents}
@@ -578,7 +587,7 @@ export class PersonComponentInner extends React.Component {
                            variant="outlined"
                            disabled={this.state.person.id == null}>
                 Upload document
-                <input hidden accept="application/pdf"
+                <input hidden accept=".xlsx,.xls,image/*,.doc,.docx,.ppt,.pptx,.txt,.pdf"
                        name="file"
                        onChange={this.handleDocumentUpload}
                        type="file"/>
@@ -589,7 +598,7 @@ export class PersonComponentInner extends React.Component {
     render() {
         let contacts = []
         this.state.contactList.forEach(contact => contacts.push(this.getContactComponent(contact)))
-        if(this.state.contactList == null || this.state.contactList.length === 0) {
+        if (this.state.contactList == null || this.state.contactList.length === 0) {
             contacts = []
             contacts.push(<Typography color="primary"
                                       style={{marginTop: "7px"}}

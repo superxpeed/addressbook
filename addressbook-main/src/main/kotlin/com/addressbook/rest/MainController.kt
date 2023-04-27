@@ -23,9 +23,10 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.io.*
+import java.io.FileInputStream
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.net.InetAddress
-import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -33,9 +34,9 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.zip.CRC32
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.io.path.exists
 
 @Timed
 @RestController
@@ -185,6 +186,10 @@ class MainController {
                 ?: return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(InputStreamResource(IOUtils.toInputStream("DOCUMENT NOT FOUND", Charsets.UTF_8)))
         val path = Paths.get("$storagePath/$id/${document.name}")
+        if (!path.exists()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(InputStreamResource(IOUtils.toInputStream("DOCUMENT NOT FOUND", Charsets.UTF_8)))
+        }
         if (Utils.calculateCrc32(path) != document.crc32)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(InputStreamResource(IOUtils.toInputStream("CORRUPTED FILE", Charsets.UTF_8)))
