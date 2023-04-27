@@ -31,7 +31,7 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import {ContentState, convertFromHTML, convertToRaw} from "draft-js"
 import {stateToHTML} from "draft-js-export-html"
 import Button from "@mui/material/Button";
@@ -59,9 +59,8 @@ function CircularProgressWithLabel(props) {
         progressMessage = "Finishing up..."
     }
 
-    return (
-        <div style={{textAlign: 'center'}}>
-            <Box sx={{position: 'relative', display: 'inline-flex'}}>
+    return (<div style={{textAlign: "center", width: "300px"}}>
+            <Box sx={{position: "relative", display: "inline-flex"}}>
                 <CircularProgress variant="determinate" {...props} />
                 <Box
                     sx={{
@@ -69,10 +68,10 @@ function CircularProgressWithLabel(props) {
                         left: 0,
                         bottom: 0,
                         right: 0,
-                        position: 'absolute',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        position: "absolute",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                     }}
                 >
                     <Typography
@@ -87,8 +86,7 @@ function CircularProgressWithLabel(props) {
                 component="div"
                 color="text.secondary"
             >{progressMessage}</Typography>
-        </div>
-    );
+        </div>);
 }
 
 export class PersonComponentInner extends React.Component {
@@ -603,8 +601,12 @@ export class PersonComponentInner extends React.Component {
             this.getDocumentList(personId)
             return response.data;
         }).catch((error) => {
-            if(error.response){
-                this.props.showAxiosErrorAlert(error.response.data);
+            if (error.response) {
+                if (error.response.status === 413) {
+                    this.props.showCommonTextErrorAlert("This document is too large to upload");
+                } else {
+                    this.props.showAxiosErrorAlert(error.response.data);
+                }
             }
             this.setState({uploadInProgress: false})
         });
@@ -778,6 +780,7 @@ export const PersonComponent = connect((state) => ({
     showNotification: state.listReducer.showNotification
 }), (dispatch) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
+    showCommonTextErrorAlert: bindActionCreators(MenuActions.showCommonTextErrorAlert, dispatch),
     showAxiosErrorAlert: bindActionCreators(MenuActions.showAxiosErrorAlert, dispatch),
     showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),
     lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch)

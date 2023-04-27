@@ -67,6 +67,14 @@ export function showCommonAlert(message) {
     };
 }
 
+export function showCommonTextErrorAlert(message) {
+    return (dispatch) => {
+        dispatch({
+            type: ADD_ALERT, alert: {type: "error", message: message, headline: "Error"},
+        });
+    };
+}
+
 export function getBreadcrumbs(currentUrl) {
     let isOk = false;
     return function (dispatch) {
