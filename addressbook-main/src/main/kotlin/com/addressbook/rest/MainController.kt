@@ -168,7 +168,7 @@ class MainController {
         val path = Paths.get("$storagePath/$id/$fileName")
         Files.createDirectories(path.parent)
         file.transferTo(path)
-        dao.saveDocument(DocumentDto(id, personId, file.originalFilename, null, Utils.calculateCrc32(path), null))
+        dao.saveDocument(DocumentDto(id, personId, file.originalFilename, null, Utils.calculateSha256(path), null))
         logger.info(String.format("File name '%s' uploaded successfully of size %s.", file.originalFilename, file.size))
         return ResponseEntity.ok().build<Any>()
     }
@@ -192,7 +192,7 @@ class MainController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(InputStreamResource(IOUtils.toInputStream("DOCUMENT NOT FOUND", Charsets.UTF_8)))
         }
-        if (Utils.calculateCrc32(path) != document.crc32)
+        if (Utils.calculateSha256(path) != document.checksum)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(InputStreamResource(IOUtils.toInputStream("CORRUPTED FILE", Charsets.UTF_8)))
         return ResponseEntity.ok()

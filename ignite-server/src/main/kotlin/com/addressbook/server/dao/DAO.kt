@@ -186,7 +186,7 @@ class DAO : AddressBookDAO {
             val targetDocument = Document()
             targetDocument.id = document.id
             targetDocument.name = document.name
-            targetDocument.crc32 = document.crc32
+            targetDocument.checksum = document.checksum
             targetDocument.personId = document.personId
             cache?.put(targetDocument.id, targetDocument)
             tx?.commit()

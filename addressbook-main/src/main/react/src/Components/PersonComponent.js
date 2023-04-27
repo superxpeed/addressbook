@@ -12,7 +12,7 @@ import {
     AccordionDetails,
     AccordionSummary,
     Avatar,
-    CircularProgress,
+    Box,
     Dialog,
     DialogActions,
     DialogContentText,
@@ -31,6 +31,7 @@ import {
     TextField,
     Typography
 } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 import {ContentState, convertFromHTML, convertToRaw} from "draft-js"
 import {stateToHTML} from "draft-js-export-html"
 import Button from "@mui/material/Button";
@@ -46,8 +47,49 @@ import ContactPageIcon from "@mui/icons-material/ContactPage";
 import {FileUploadOutlined} from "@mui/icons-material";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 require("../Common/style.css");
+
+function CircularProgressWithLabel(props) {
+
+    let progressMessage = "Uploading..."
+
+    if(Math.round(props.value) === 100) {
+        progressMessage = "Finishing up..."
+    }
+
+    return (
+        <div style={{textAlign: 'center'}}>
+            <Box sx={{position: 'relative', display: 'inline-flex'}}>
+                <CircularProgress variant="determinate" {...props} />
+                <Box
+                    sx={{
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        position: 'absolute',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Typography
+                        variant="caption"
+                        component="div"
+                        color="text.secondary"
+                    >{`${Math.round(props.value)}%`}</Typography>
+                </Box>
+            </Box>
+            <Typography
+                variant="caption"
+                component="div"
+                color="text.secondary"
+            >{progressMessage}</Typography>
+        </div>
+    );
+}
 
 export class PersonComponentInner extends React.Component {
 
@@ -70,7 +112,8 @@ export class PersonComponentInner extends React.Component {
             expanded: "",
             contactIdToDelete: null,
             documentIdToDelete: null,
-            uploadInProgress: false
+            uploadInProgress: false,
+            percentCompleted: 0
         };
         this.editor = React.createRef();
     }
@@ -540,25 +583,28 @@ export class PersonComponentInner extends React.Component {
     handleDocumentUpload = (e) => {
         e.preventDefault();
         let personId = this.state.person.id;
-        this.setState({uploadInProgress: true})
+        this.setState({uploadInProgress: true, percentCompleted: 0})
         const formData = new FormData();
         formData.append("file", e.target.files[0]);
-        let isOk = false;
-        let headers = new Headers();
-        AuthTokenUtils.addAuthToken(headers);
-        fetch(url.UPLOAD_DOCUMENT + "?personId=" + personId, {
-            method: "post",
-            body: formData,
-            headers: headers
+        let headers = {
+            "Content-Type": "multipart/form-data"
+        };
+        AuthTokenUtils.addAuthTokenFormData(headers);
+        axios.post(url.UPLOAD_DOCUMENT + "?personId=" + personId, formData, {
+            headers: headers,
+            onUploadProgress: (progressEvent) => {
+                const percentCompleted = Math.round(
+                    (progressEvent.loaded * 100) / progressEvent.total
+                );
+                this.setState({percentCompleted: percentCompleted})
+            },
         }).then((response) => {
-            ifNoAuthorizedRedirect(response);
-            isOk = response.ok;
-            return response.text();
-        }).then((text) => {
-            if (isOk) {
-                this.getDocumentList(personId)
-            } else {
-                this.props.showCommonErrorAlert(text);
+            this.setState({uploadInProgress: false})
+            this.getDocumentList(personId)
+            return response.data;
+        }).catch((error) => {
+            if(error.response){
+                this.props.showAxiosErrorAlert(error.response.data);
             }
             this.setState({uploadInProgress: false})
         });
@@ -574,7 +620,7 @@ export class PersonComponentInner extends React.Component {
                              width: "100%",
                              marginTop: "30px"
                          }}>
-                <CircularProgress/>
+                <CircularProgressWithLabel value={this.state.percentCompleted} />
             </Grid>
         } else {
             return <Button startIcon={<FileUploadOutlined/>}
@@ -732,6 +778,7 @@ export const PersonComponent = connect((state) => ({
     showNotification: state.listReducer.showNotification
 }), (dispatch) => ({
     showCommonErrorAlert: bindActionCreators(MenuActions.showCommonErrorAlert, dispatch),
+    showAxiosErrorAlert: bindActionCreators(MenuActions.showAxiosErrorAlert, dispatch),
     showCommonAlert: bindActionCreators(MenuActions.showCommonAlert, dispatch),
     lockUnlockRecord: bindActionCreators(MenuActions.lockUnlockRecord, dispatch)
 }), null, {withRef: true})(PersonComponentInner);

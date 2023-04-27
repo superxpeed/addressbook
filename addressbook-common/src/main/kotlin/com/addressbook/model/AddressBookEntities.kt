@@ -91,7 +91,7 @@ class Document : Serializable {
 
     @QuerySqlField(index = true)
     @Column(length = 100)
-    var crc32: String? = null
+    var checksum: String? = null
 
     @QuerySqlField(index = true)
     var createDate: Date? = null

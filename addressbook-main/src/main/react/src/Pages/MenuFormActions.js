@@ -51,6 +51,14 @@ export function showCommonErrorAlert(text) {
     };
 }
 
+export function showAxiosErrorAlert(text) {
+    return (dispatch) => {
+        dispatch({
+            type: ADD_ALERT, alert: text,
+        });
+    };
+}
+
 export function showCommonAlert(message) {
     return (dispatch) => {
         dispatch({

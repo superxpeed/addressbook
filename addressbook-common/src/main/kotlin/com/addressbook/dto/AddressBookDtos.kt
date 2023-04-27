@@ -29,21 +29,21 @@ class DocumentDto(id: String?,
                   personId: String?,
                   name: String?,
                   url: String?,
-                  crc32: String?,
+                  checksum: String?,
                   createDate: String?) : Serializable {
 
     var id: String? = null
     var personId: String? = null
     var name: String? = null
     var url: String? = null
-    var crc32: String? = null
+    var checksum: String? = null
     var createDate: String? = null
 
     constructor(document: Document?) : this(document?.id,
             document?.personId,
             document?.name,
             null,
-            document?.crc32,
+            document?.checksum,
             dateFormatter.format(document?.createDate))
 
     init {
@@ -51,7 +51,7 @@ class DocumentDto(id: String?,
         this.name = name
         this.personId = personId
         this.url = url
-        this.crc32 = crc32
+        this.checksum = checksum
         this.createDate = createDate
     }
 }
