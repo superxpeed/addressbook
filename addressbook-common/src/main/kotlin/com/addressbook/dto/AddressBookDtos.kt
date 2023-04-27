@@ -1,6 +1,7 @@
 package com.addressbook.dto
 
 import com.addressbook.model.Contact
+import com.addressbook.model.Document
 import com.addressbook.model.Organization
 import com.addressbook.model.Person
 import java.io.Serializable
@@ -21,6 +22,37 @@ class ContactDto constructor(contact: Contact? = null) : Serializable {
         this.type = "" + contact?.type?.ordinal
         this.data = contact?.data
         this.description = contact?.description
+    }
+}
+
+class DocumentDto(id: String?,
+                  personId: String?,
+                  name: String?,
+                  url: String?,
+                  crc32: String?,
+                  createDate: String?) : Serializable {
+
+    var id: String? = null
+    var personId: String? = null
+    var name: String? = null
+    var url: String? = null
+    var crc32: String? = null
+    var createDate: String? = null
+
+    constructor(document: Document?) : this(document?.id,
+            document?.personId,
+            document?.name,
+            null,
+            document?.crc32,
+            dateFormatter.format(document?.createDate))
+
+    init {
+        this.id = id
+        this.name = name
+        this.personId = personId
+        this.url = url
+        this.crc32 = crc32
+        this.createDate = createDate
     }
 }
 

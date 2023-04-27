@@ -135,10 +135,10 @@ export class OrganizationComponentInner extends React.Component {
     }
 
     render() {
-        return (<div style={{padding: "10px"}}>
+        return (<div style={{padding: "8px"}}>
             <div
                 style={{
-                    width: "50%", display: "inline-block", verticalAlign: "top", paddingRight: "5px",
+                    width: "50%", display: "inline-block", verticalAlign: "top", paddingRight: "4px",
                 }}
             >
                 <TextField
@@ -169,7 +169,7 @@ export class OrganizationComponentInner extends React.Component {
             </div>
             <div
                 style={{
-                    width: "50%", display: "inline-block", verticalAlign: "top", paddingLeft: "5px",
+                    width: "50%", display: "inline-block", verticalAlign: "top", paddingLeft: "4px",
                 }}
             >
                 <TextField

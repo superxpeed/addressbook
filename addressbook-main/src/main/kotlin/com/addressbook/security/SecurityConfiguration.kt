@@ -39,6 +39,7 @@ class SecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/rest/admin/**").hasRole("ADMIN")
+                .antMatchers("/rest/document/**").permitAll()
                 .antMatchers("/rest/**").hasRole("USER")
                 .antMatchers("/auth").permitAll()
                 .antMatchers("/rotateToken").permitAll()

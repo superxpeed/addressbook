@@ -8,6 +8,7 @@
       <env name="key_password" value="q1w2e3r4" />
       <env name="keystore_password" value="q1w2e3r4" />
       <env name="keystore_path" value="$PROJECT_DIR$/addressbook-main/certs/keystore.jks" />
+      <env name="storage_path" value="$PROJECT_DIR$/devops/default_documents_folder" />
       <env name="truststore_password" value="q1w2e3r4" />
       <env name="truststore_path" value="$PROJECT_DIR$/addressbook-main/certs/truststore.jks" />
       <env name="web_server_port" value="10000" />

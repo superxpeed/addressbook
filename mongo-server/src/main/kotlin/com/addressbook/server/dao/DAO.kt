@@ -163,6 +163,36 @@ class DAO : AddressBookDAO {
         return true
     }
 
+    override fun saveDocument(document: DocumentDto) {
+        val targetDocument = Document()
+        targetDocument.id = document.id
+        targetDocument.name = document.name
+        targetDocument.crc32 = document.crc32
+        targetDocument.personId = document.personId
+        dataStore.save(targetDocument)
+    }
+
+    override fun deleteDocument(id: String) {
+        dataStore.delete(getById("id", id, Document::class.java))
+    }
+
+    override fun getDocumentsByPersonId(id: String): List<DocumentDto> {
+        return dataStore.createQuery(Document::class.java)
+                ?.field("personId")
+                ?.equal(id)
+                ?.order(Sort.ascending("createDate"))
+                ?.find()
+                ?.toList()
+                ?.map { DocumentDto(it) }
+                ?.toList()
+                ?: emptyList()
+    }
+
+    override fun getDocumentById(id: String): DocumentDto? {
+        val document = getById("id", id, Document::class.java) ?: return null
+        return DocumentDto(document)
+    }
+
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         if (lock) {
             val userLocked = getById("id", key, Lock::class.java)

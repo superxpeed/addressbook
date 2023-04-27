@@ -8,20 +8,32 @@ import com.addressbook.model.Organization
 import com.addressbook.model.Person
 import com.addressbook.model.User
 import com.addressbook.security.AppUserDetails
+import com.addressbook.util.Utils
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micrometer.core.annotation.Timed
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.info.BuildProperties
+import org.springframework.core.io.InputStreamResource
+import org.springframework.http.*
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.web.bind.annotation.*
-import java.io.PrintWriter
-import java.io.StringWriter
+import org.springframework.web.multipart.MultipartFile
+import java.io.*
 import java.net.InetAddress
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
 import java.util.concurrent.CompletableFuture
+import java.util.zip.CRC32
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -37,6 +49,9 @@ class MainController {
 
     @Autowired
     lateinit var buildProperties: BuildProperties
+
+    @Value("\${storage.path}")
+    private lateinit var storagePath: String
 
     @PostMapping("/getList")
     fun getList(@RequestParam(value = "start") start: Int,
@@ -143,6 +158,51 @@ class MainController {
         dao.unlockAllRecordsForUser(auth.username)
         SecurityContextLogoutHandler().logout(request, response, authentication)
         return "redirect:/#/login"
+    }
+
+    @PostMapping("/uploadDocument")
+    fun uploadDocument(@RequestParam file: MultipartFile, @RequestParam(value = "personId") personId: String): ResponseEntity<*>? {
+        val id = UUID.randomUUID().toString()
+        val fileName = (file.originalFilename?.toString() ?: "file")
+        val path = Paths.get("$storagePath/$id/$fileName")
+        Files.createDirectories(path.parent)
+        file.transferTo(path)
+        dao.saveDocument(DocumentDto(id, personId, file.originalFilename, null, Utils.calculateCrc32(path), null))
+        logger.info(String.format("File name '%s' uploaded successfully of size %s.", file.originalFilename, file.size))
+        return ResponseEntity.ok().build<Any>()
+    }
+
+    @GetMapping("/deleteDocument")
+    fun deleteDocument(@RequestParam(value = "id") id: String): ResponseEntity<*>? {
+        FileUtils.forceDelete(Paths.get("$storagePath/$id").toFile())
+        dao.deleteDocument(id)
+        return ResponseEntity.ok().build<Any>()
+    }
+
+    @GetMapping("/document/{id}")
+    fun getDocument(@PathVariable(value = "id") id: String): ResponseEntity<InputStreamResource>? {
+        val document = dao.getDocumentById(id)
+                ?: return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(InputStreamResource(IOUtils.toInputStream("DOCUMENT NOT FOUND", Charsets.UTF_8)))
+        val path = Paths.get("$storagePath/$id/${document.name}")
+        if (Utils.calculateCrc32(path) != document.crc32)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(InputStreamResource(IOUtils.toInputStream("CORRUPTED FILE", Charsets.UTF_8)))
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.builder("attachment")
+                        .filename(document.name ?: "file.pdf", StandardCharsets.UTF_8)
+                        .build().toString())
+                .contentLength(path.toFile().length())
+                .lastModified(path.toFile().lastModified())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(InputStreamResource(FileInputStream(path.toFile())))
+    }
+
+    @GetMapping("/getDocumentList")
+    fun getDocumentList(@RequestParam(value = "personId") id: String, @RequestParam(value = "origin") origin: String): CompletableFuture<PageDataDto<TableDataDto<DocumentDto>>> {
+        return CompletableFuture.supplyAsync {
+            return@supplyAsync PageDataDto(TableDataDto(Utils.fillUrls(dao.getDocumentsByPersonId(id), origin)))
+        }
     }
 
     @ExceptionHandler(Throwable::class)

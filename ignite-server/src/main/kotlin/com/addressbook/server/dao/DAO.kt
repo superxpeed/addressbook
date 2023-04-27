@@ -179,6 +179,43 @@ class DAO : AddressBookDAO {
         return true
     }
 
+    override fun saveDocument(document: DocumentDto) {
+        val cache: IgniteCache<String, Document>? = ignite.getOrCreateCache(FieldDescriptor.DOCUMENT_CACHE)
+        val tx = ignite.transactions()?.txStart()
+        tx.use {
+            val targetDocument = Document()
+            targetDocument.id = document.id
+            targetDocument.name = document.name
+            targetDocument.crc32 = document.crc32
+            targetDocument.personId = document.personId
+            cache?.put(targetDocument.id, targetDocument)
+            tx?.commit()
+        }
+    }
+
+    override fun deleteDocument(id: String) {
+        val cache: IgniteCache<String, Document>? = ignite.getOrCreateCache(FieldDescriptor.DOCUMENT_CACHE)
+        val tx = ignite.transactions()?.txStart()
+        tx.use {
+            cache?.remove(id)
+            tx?.commit()
+        }
+    }
+
+    override fun getDocumentsByPersonId(id: String): List<DocumentDto> {
+        val cache: IgniteCache<String, Document>? = ignite.getOrCreateCache(FieldDescriptor.DOCUMENT_CACHE)
+        val cacheDtoArrayList = ArrayList<DocumentDto>()
+        val cursor = cache?.query(SqlQuery<String, Document>(Document::class.java, "personId = ? order by createDate asc").setArgs(id))
+        cursor.use { cursor?.forEach { cacheDtoArrayList.add(DocumentDto(it.value)) } }
+        return cacheDtoArrayList
+    }
+
+    override fun getDocumentById(id: String): DocumentDto? {
+        val cache: IgniteCache<String, Document>? = ignite.getOrCreateCache(FieldDescriptor.DOCUMENT_CACHE)
+        val document = cache?.get(id) ?: return null
+        return DocumentDto(document)
+    }
+
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         val cacheLocks: IgniteCache<String, Lock>? = ignite.getOrCreateCache(FieldDescriptor.LOCK_RECORD_CACHE)
         if (lock) {

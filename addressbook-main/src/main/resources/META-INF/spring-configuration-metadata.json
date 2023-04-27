@@ -5,6 +5,10 @@
       "type": "java.lang.String"
     },
     {
+      "name": "storage.path",
+      "type": "java.lang.String"
+    },
+    {
       "name": "jwt.secret",
       "type": "java.lang.String"
     }

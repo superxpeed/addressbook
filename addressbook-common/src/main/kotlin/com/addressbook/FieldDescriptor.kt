@@ -1,9 +1,6 @@
 package com.addressbook
 
-import com.addressbook.dto.ContactDto
-import com.addressbook.dto.FieldDescriptionDto
-import com.addressbook.dto.OrganizationDto
-import com.addressbook.dto.PersonDto
+import com.addressbook.dto.*
 import com.addressbook.model.*
 
 object FieldDescriptor {
@@ -13,6 +10,7 @@ object FieldDescriptor {
     const val CONTACT_CACHE = "com.addressbook.model.Contact"
     const val MENU_CACHE = "com.addressbook.model.MenuEntry"
     const val USER_CACHE = "com.addressbook.model.User"
+    const val DOCUMENT_CACHE = "com.addressbook.model.Document"
     const val LOCK_RECORD_CACHE = "java.lang.String"
 
     private const val STRING_MODEL_TYPE = "java.lang.String"
@@ -49,11 +47,12 @@ object FieldDescriptor {
         cacheClasses[MENU_CACHE] = MenuEntry::class.java
         cacheClasses[USER_CACHE] = User::class.java
         cacheClasses[LOCK_RECORD_CACHE] = Lock::class.java
+        cacheClasses[DOCUMENT_CACHE] = Document::class.java
 
         dtoClasses[ORGANIZATION_CACHE] = OrganizationDto::class.java
         dtoClasses[PERSON_CACHE] = PersonDto::class.java
         dtoClasses[CONTACT_CACHE] = ContactDto::class.java
-
+        dtoClasses[DOCUMENT_CACHE] = DocumentDto::class.java
     }
 
     fun getFieldDescriptionMap(cache: String): Map<String, FieldDescriptionDto>? {

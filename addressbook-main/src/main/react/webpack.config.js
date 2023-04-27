@@ -67,7 +67,7 @@ module.exports = {
             '/bundle.js': {
                 target: 'http://localhost:7070'
             },
-            '**': 'http://localhost:9000',
+            '**': 'http://localhost:10000',
         },
         client: {
             overlay: false,

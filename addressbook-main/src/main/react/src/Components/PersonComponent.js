@@ -11,12 +11,20 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Avatar,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContentText,
     DialogTitle,
     FormControl,
-    InputLabel,
+    Grid,
+    IconButton,
+    InputLabel, Link,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
     MenuItem,
     Select,
     TextField,
@@ -34,6 +42,9 @@ import AlternateEmailOutlinedIcon from "@mui/icons-material/AlternateEmailOutlin
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
+import {FileUploadOutlined} from "@mui/icons-material";
+import FilePresentIcon from "@mui/icons-material/FilePresent";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 require("../Common/style.css");
 
@@ -48,15 +59,61 @@ export class PersonComponentInner extends React.Component {
             locked: true,
             person: props.person,
             contactList: [],
+            documentList: [],
             invalidFields: new Set(),
             salary: salaryPerson,
             currency: currencyPerson,
             resume: this.convertHtmlToMarkUp(resume),
-            show: false,
+            showContactDeletionDialog: false,
+            showDocumentDeletionDialog: false,
             expanded: "",
-            idToDelete: null
+            contactIdToDelete: null,
+            documentIdToDelete: null,
+            uploadInProgress: false
         };
         this.editor = React.createRef();
+    }
+
+    getFileList = () => {
+        let documents = []
+        if(this.state.documentList == null || this.state.documentList.length === 0) {
+            return (<Typography style={{marginTop: "37px"}}
+                                color="primary"
+                                align="center"
+                                variant="h6"
+                                gutterBottom>
+                NO DOCUMENTS
+            </Typography>)
+        }
+        this.state.documentList.forEach(document => {
+            documents.push(
+                <ListItem
+                    secondaryAction={
+                        <IconButton
+                            onClick={() => this.setState({documentIdToDelete: document.id, showDocumentDeletionDialog: true})}
+                            edge="end"
+                            aria-label="delete">
+                            <DeleteIcon/>
+                        </IconButton>
+                    }
+                >
+                    <Link href={document.url} passHref>
+                        <ListItemAvatar>
+                            <Avatar>
+                                <FilePresentIcon/>
+                            </Avatar>
+                        </ListItemAvatar>
+                    </Link>
+                    <ListItemText
+                        primary={document.name}
+                        secondary={document.createDate}
+                    />
+                </ListItem>
+            )
+        })
+        return <List dense={true}>
+            {documents}
+        </List>
     }
 
     handleChange = (e) => {
@@ -100,11 +157,59 @@ export class PersonComponentInner extends React.Component {
             });
     };
 
+    deleteDocument = () => {
+        let personId = this.state.person.id;
+        let isOk = false;
+        let headers = new Headers();
+        AuthTokenUtils.addAuthToken(headers);
+        headers.append("Accept", "application/json");
+        headers.append("Content-Type", "application/json; charset=utf-8");
+        fetch(url.DELETE_DOCUMENT + "?id=" + this.state.documentIdToDelete, {
+            method: "get", headers: headers,
+        })
+            .then((response) => {
+                ifNoAuthorizedRedirect(response);
+                isOk = response.ok;
+                return response.text();
+            })
+            .then((text) => {
+                if (isOk) {
+                    this.setState({documentIdToDelete: null, showDocumentDeletionDialog: false});
+                    this.getDocumentList(personId);
+                } else {
+                    this.props.showCommonErrorAlert(text);
+                }
+            });
+    };
+
+    getDocumentList = (id) => {
+        let isOk = false;
+        let headers = new Headers();
+        AuthTokenUtils.addAuthToken(headers);
+        headers.append("Accept", "application/json");
+        headers.append("Content-Type", "application/json; charset=utf-8");
+        fetch(url.GET_DOCUMENT_LIST + `?personId=${id}&origin=${window.location.origin}`, {
+            method: "get", headers: headers,
+        })
+            .then((response) => {
+                ifNoAuthorizedRedirect(response);
+                isOk = response.ok;
+                return response.text();
+            })
+            .then((text) => {
+                if (isOk) {
+                    this.setState({documentList: JSON.parse(text).data.data});
+                } else {
+                    this.props.showCommonErrorAlert(text);
+                }
+            });
+    };
+
     deleteContact = () => {
-        let filteredContactList = this.state.contactList.filter(contact => contact.id !== this.state.idToDelete);
-        this.state.invalidFields.delete(this.state.idToDelete + "&&data");
-        this.state.invalidFields.delete(this.state.idToDelete + "&&description");
-        this.setState({contactList: filteredContactList, idToDelete: null, show: false});
+        let filteredContactList = this.state.contactList.filter(contact => contact.id !== this.state.contactIdToDelete);
+        this.state.invalidFields.delete(this.state.contactIdToDelete + "&&data");
+        this.state.invalidFields.delete(this.state.contactIdToDelete + "&&description");
+        this.setState({contactList: filteredContactList, contactIdToDelete: null, showContactDeletionDialog: false});
     };
 
     addEmptyContact = () => {
@@ -217,6 +322,7 @@ export class PersonComponentInner extends React.Component {
     componentDidMount() {
         if (this.state.person["id"] != null && this.props.forUpdate) {
             this.getContactList(this.state.person["id"]);
+            this.getDocumentList(this.state.person["id"]);
             this.props.lockUnlockRecord(Caches.PERSON_CACHE, this.state.person["id"], "lock", this.props.showNotification, this.lockCallback);
         } else {
             this.clearContactList();
@@ -296,7 +402,7 @@ export class PersonComponentInner extends React.Component {
                 />
                 <Button startIcon={<DeleteForeverIcon/>}
                         sx={{mt: 2, width: "100%", height: "56px"}}
-                        onClick={() => this.setState({show: true, idToDelete: contact.id})}
+                        onClick={() => this.setState({showContactDeletionDialog: true, contactIdToDelete: contact.id})}
                         variant="outlined"
                         color="error">
                     Delete contact
@@ -354,6 +460,7 @@ export class PersonComponentInner extends React.Component {
             let salaryPerson = this.props.person["salary"] == null ? "" : this.props.person["salary"].substring(0, this.props.person["salary"].length - 4)
             let currencyPerson = this.props.person["salary"] == null ? "USD" : this.props.person["salary"].substring(this.props.person["salary"].length - 3)
             this.getContactList(this.props.person["id"]);
+            this.getDocumentList(this.props.person["id"]);
             this.setState({
                 person: this.props.person,
                 resume: this.convertHtmlToMarkUp(newResume),
@@ -396,7 +503,7 @@ export class PersonComponentInner extends React.Component {
             <div style={{
                 width: "20%",
                 display: "inline-block",
-                paddingLeft: "5px",
+                paddingLeft: "8px",
                 height: "100%",
                 verticalAlign: "top"
             }}>
@@ -421,17 +528,85 @@ export class PersonComponentInner extends React.Component {
         </div>);
     }
 
+    handleDocumentUpload = (e) => {
+        e.preventDefault();
+        let personId = this.state.person.id;
+        this.setState({uploadInProgress: true})
+        const formData = new FormData();
+        formData.append("file", e.target.files[0]);
+        let isOk = false;
+        let headers = new Headers();
+        AuthTokenUtils.addAuthToken(headers);
+        fetch(url.UPLOAD_DOCUMENT + "?personId=" + personId, {
+            method: "post",
+            body: formData,
+            headers: headers
+        }).then((response) => {
+            ifNoAuthorizedRedirect(response);
+            isOk = response.ok;
+            return response.text();
+        }).then((text) => {
+            if (isOk) {
+                this.getDocumentList(personId)
+            } else {
+                this.props.showCommonErrorAlert(text);
+            }
+            this.setState({uploadInProgress: false})
+        });
+    }
+
+    getUploadElement = () => {
+        if (this.state.uploadInProgress === true) {
+            return <Grid container
+                         justifyContent="center"
+                         alignItems="center"
+                         sx={{
+                             height: "56px",
+                             width: "100%",
+                             marginTop: "30px"
+                         }}>
+                <CircularProgress/>
+            </Grid>
+        } else {
+            return <Button startIcon={<FileUploadOutlined/>}
+                           sx={{
+                               height: "56px",
+                               width: "100%",
+                               marginTop: "30px"
+                           }}
+                           component="label"
+                           variant="outlined"
+                           disabled={this.state.person.id == null}>
+                Upload document
+                <input hidden accept="application/pdf"
+                       name="file"
+                       onChange={this.handleDocumentUpload}
+                       type="file"/>
+            </Button>
+        }
+    }
+
     render() {
         let contacts = []
         this.state.contactList.forEach(contact => contacts.push(this.getContactComponent(contact)))
+        if(this.state.contactList == null || this.state.contactList.length === 0) {
+            contacts = []
+            contacts.push(<Typography color="primary"
+                                      style={{marginTop: "7px"}}
+                                      align="center"
+                                      variant="h6"
+                                      gutterBottom>
+                NO CONTACTS
+            </Typography>)
+        }
         return (<div>
             <div
                 style={{
-                    width: "calc(50% - 10px)",
+                    width: "calc(50% - 8px)",
                     display: "inline-block",
                     verticalAlign: "top",
-                    marginLeft: "5px",
-                    marginRight: "5px",
+                    marginLeft: "4px",
+                    marginRight: "4px",
                 }}
             >
                 <TextField
@@ -482,11 +657,11 @@ export class PersonComponentInner extends React.Component {
             </div>
             <div
                 style={{
-                    width: "calc(50% - 10px)",
+                    width: "calc(50% - 8px)",
                     display: "inline-block",
                     verticalAlign: "top",
-                    marginLeft: "5px",
-                    marginRight: "5px",
+                    marginLeft: "4px",
+                    marginRight: "4px",
                 }}
             >
                 <div>
@@ -497,9 +672,11 @@ export class PersonComponentInner extends React.Component {
                         Add contact
                     </Button>
                     {contacts}
+                    {this.getUploadElement()}
+                    {this.getFileList()}
                     <Dialog
-                        open={this.state.show}
-                        onClose={() => this.setState({show: false, idToDelete: null})}
+                        open={this.state.showContactDeletionDialog}
+                        onClose={() => this.setState({showContactDeletionDialog: false, contactIdToDelete: null})}
                         aria-describedby="confirmation-modal-description"
                     >
                         <DialogTitle>Confirm contact deletion</DialogTitle>
@@ -509,8 +686,30 @@ export class PersonComponentInner extends React.Component {
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => this.setState({show: false, idToDelete: null})}>Cancel</Button>
+                            <Button onClick={() => this.setState({
+                                showContactDeletionDialog: false,
+                                contactIdToDelete: null
+                            })}>Cancel</Button>
                             <Button variant="contained" color="error" onClick={this.deleteContact}>Delete</Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Dialog
+                        open={this.state.showDocumentDeletionDialog}
+                        onClose={() => this.setState({showDocumentDeletionDialog: false, documentIdToDelete: null})}
+                        aria-describedby="confirmation-modal-description"
+                    >
+                        <DialogTitle>Confirm document deletion</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="confirmation-modal-description">
+                                Delete this document?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => this.setState({
+                                showDocumentDeletionDialog: false,
+                                documentIdToDelete: null
+                            })}>Cancel</Button>
+                            <Button variant="contained" color="error" onClick={this.deleteDocument}>Delete</Button>
                         </DialogActions>
                     </Dialog>
                 </div>

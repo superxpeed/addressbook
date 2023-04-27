@@ -118,6 +118,35 @@ class DAO : AddressBookDAO {
     }
 
     @Transactional
+    override fun saveDocument(document: DocumentDto) {
+        val targetDocument = Document()
+        targetDocument.id = document.id
+        targetDocument.name = document.name
+        targetDocument.crc32 = document.crc32
+        targetDocument.personId = document.personId
+        entityManager.persist(targetDocument)
+    }
+
+    @Transactional
+    override fun deleteDocument(id: String) {
+        entityManager.remove(entityManager.find(Document::class.java, id))
+    }
+
+    override fun getDocumentsByPersonId(id: String): List<DocumentDto> {
+        return entityManager.createQuery("SELECT u FROM Document u WHERE u.personId=:id order by u.createDate asc ", Document::class.java)
+                .also { it?.setParameter("id", id) }
+                ?.resultList
+                ?.map { DocumentDto(it) }
+                ?.toList()
+                ?: emptyList()
+    }
+
+    override fun getDocumentById(id: String): DocumentDto? {
+        val document = entityManager.find(Document::class.java, id) ?: return null
+        return DocumentDto(document)
+    }
+
+    @Transactional
     override fun lockUnlockRecord(key: String, user: String, lock: Boolean): Boolean {
         if (lock) {
             val userLocked = entityManager.find(Lock::class.java, key)

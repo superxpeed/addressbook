@@ -71,6 +71,48 @@ enum class OrganizationType(s: String) {
 }
 
 @javax.persistence.Entity
+@javax.persistence.Table(name = "documents")
+@dev.morphia.annotations.Entity("documents")
+class Document : Serializable {
+
+    @dev.morphia.annotations.Id
+    @javax.persistence.Id
+    @QuerySqlField(index = true)
+    @Column(length = 100)
+    var id: String? = null
+
+    @QuerySqlField(index = true)
+    @Column(length = 100)
+    var personId: String? = null
+
+    @QuerySqlField(index = true)
+    @Column(length = 500)
+    var name: String? = null
+
+    @QuerySqlField(index = true)
+    @Column(length = 100)
+    var crc32: String? = null
+
+    @QuerySqlField(index = true)
+    var createDate: Date? = null
+
+    constructor(person: Person, name: String) : this() {
+        this.personId = person.id
+        this.name = name
+    }
+
+    constructor() {
+        this.createDate = Timestamp(System.currentTimeMillis())
+    }
+
+    constructor(id: String, personId: String, name: String) : this() {
+        this.id = id
+        this.personId = personId
+        this.name = name
+    }
+}
+
+@javax.persistence.Entity
 @javax.persistence.Table(name = "persons")
 @dev.morphia.annotations.Entity("persons")
 class Person : Serializable {

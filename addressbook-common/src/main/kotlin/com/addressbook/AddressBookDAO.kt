@@ -73,4 +73,16 @@ interface AddressBookDAO {
 
     @LoggedPostRequest("/ifPageExists")
     fun ifPageExists(@RequestParam page: String): Boolean
+
+    @LoggedPostRequest("/saveDocument")
+    fun saveDocument(@RequestBody document: DocumentDto)
+
+    @LoggedGetRequest("/deleteDocument")
+    fun deleteDocument(@RequestParam id: String)
+
+    @LoggedGetRequest("/getDocumentsByPersonId")
+    fun getDocumentsByPersonId(@RequestParam id: String): List<DocumentDto>
+
+    @LoggedGetRequest("/getDocumentById")
+    fun getDocumentById(@RequestParam id: String): DocumentDto?
 }

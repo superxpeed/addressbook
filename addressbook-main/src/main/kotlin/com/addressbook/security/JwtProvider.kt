@@ -13,7 +13,7 @@ import java.util.*
 @Component
 class JwtProvider {
 
-    @Value("$(jwt.secret)")
+    @Value("\${jwt.secret}")
     private lateinit var jwtSecret: String
 
     fun generateToken(login: String?): String {
