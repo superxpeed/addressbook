@@ -175,7 +175,9 @@ class MainController {
 
     @GetMapping("/deleteDocument")
     fun deleteDocument(@RequestParam(value = "id") id: String): ResponseEntity<*>? {
-        FileUtils.forceDelete(Paths.get("$storagePath/$id").toFile())
+        val path = Paths.get("$storagePath/$id")
+        if(path.exists())
+            FileUtils.forceDelete(path.toFile())
         dao.deleteDocument(id)
         return ResponseEntity.ok().build<Any>()
     }
