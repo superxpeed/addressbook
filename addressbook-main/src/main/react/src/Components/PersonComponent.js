@@ -55,38 +55,39 @@ function CircularProgressWithLabel(props) {
 
     let progressMessage = "Uploading..."
 
-    if(Math.round(props.value) === 100) {
+    if (Math.round(props.value) === 100) {
         progressMessage = "Finishing up..."
     }
 
     return (<div style={{textAlign: "center", width: "300px"}}>
-            <Box sx={{position: "relative", display: "inline-flex"}}>
-                <CircularProgress variant="determinate" {...props} />
-                <Box
-                    sx={{
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        right: 0,
-                        position: "absolute",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Typography
-                        variant="caption"
-                        component="div"
-                        color="text.secondary"
-                    >{`${Math.round(props.value)}%`}</Typography>
-                </Box>
+        <Box sx={{position: "relative", display: "inline-flex"}}>
+            <CircularProgress variant="determinate" {...props} />
+            <Box
+                sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: "absolute",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}>
+                <Typography
+                    variant="caption"
+                    component="div"
+                    color="text.secondary">
+                    {`${Math.round(props.value)}%`}
+                </Typography>
             </Box>
-            <Typography
-                variant="caption"
-                component="div"
-                color="text.secondary"
-            >{progressMessage}</Typography>
-        </div>);
+        </Box>
+        <Typography
+            variant="caption"
+            component="div"
+            color="text.secondary">
+            {progressMessage}
+        </Typography>
+    </div>);
 }
 
 export class PersonComponentInner extends React.Component {
@@ -622,7 +623,7 @@ export class PersonComponentInner extends React.Component {
                              width: "100%",
                              marginTop: "30px"
                          }}>
-                <CircularProgressWithLabel value={this.state.percentCompleted} />
+                <CircularProgressWithLabel value={this.state.percentCompleted}/>
             </Grid>
         } else {
             return <Button startIcon={<FileUploadOutlined/>}
