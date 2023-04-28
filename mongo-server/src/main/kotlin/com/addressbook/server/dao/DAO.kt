@@ -169,6 +169,7 @@ class DAO : AddressBookDAO {
         targetDocument.name = document.name
         targetDocument.checksum = document.checksum
         targetDocument.personId = document.personId
+        targetDocument.size = document.size
         dataStore.save(targetDocument)
     }
 

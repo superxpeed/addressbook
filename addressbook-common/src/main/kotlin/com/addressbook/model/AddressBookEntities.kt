@@ -94,6 +94,10 @@ class Document : Serializable {
     var checksum: String? = null
 
     @QuerySqlField(index = true)
+    @Column(length = 50)
+    var size: String? = null
+
+    @QuerySqlField(index = true)
     var createDate: Date? = null
 
     constructor(person: Person, name: String) : this() {
@@ -105,10 +109,11 @@ class Document : Serializable {
         this.createDate = Timestamp(System.currentTimeMillis())
     }
 
-    constructor(id: String, personId: String, name: String) : this() {
+    constructor(id: String, personId: String, name: String, size: String) : this() {
         this.id = id
         this.personId = personId
         this.name = name
+        this.size = size
     }
 }
 

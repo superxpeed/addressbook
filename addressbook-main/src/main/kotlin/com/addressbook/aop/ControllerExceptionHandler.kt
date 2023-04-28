@@ -13,7 +13,7 @@ class ControllerExceptionHandler {
 
     @ExceptionHandler(value = [MaxUploadSizeExceededException::class, SizeLimitExceededException::class])
     protected fun handleMaxUploadSizeExceededException(ex: Exception, request: WebRequest): ResponseEntity<Any?>? {
-        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).build();
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).build()
     }
 
 }

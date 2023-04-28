@@ -156,7 +156,7 @@ export class PersonComponentInner extends React.Component {
                     </Link>
                     <ListItemText
                         primary={document.name}
-                        secondary={document.createDate}
+                        secondary={document.createDate + " | " + document.size}
                     />
                 </ListItem>
             )

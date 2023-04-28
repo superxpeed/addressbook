@@ -30,6 +30,7 @@ class DocumentDto(id: String?,
                   name: String?,
                   url: String?,
                   checksum: String?,
+                  size: String?,
                   createDate: String?) : Serializable {
 
     var id: String? = null
@@ -37,6 +38,7 @@ class DocumentDto(id: String?,
     var name: String? = null
     var url: String? = null
     var checksum: String? = null
+    var size: String? = null
     var createDate: String? = null
 
     constructor(document: Document?) : this(document?.id,
@@ -44,6 +46,7 @@ class DocumentDto(id: String?,
             document?.name,
             null,
             document?.checksum,
+            document?.size,
             dateFormatter.format(document?.createDate))
 
     init {
@@ -52,6 +55,7 @@ class DocumentDto(id: String?,
         this.personId = personId
         this.url = url
         this.checksum = checksum
+        this.size = size
         this.createDate = createDate
     }
 }

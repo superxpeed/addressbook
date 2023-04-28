@@ -168,7 +168,13 @@ class MainController {
         val path = Paths.get("$storagePath/$id/$fileName")
         Files.createDirectories(path.parent)
         file.transferTo(path)
-        dao.saveDocument(DocumentDto(id, personId, file.originalFilename, null, Utils.calculateSha256(path), null))
+        dao.saveDocument(DocumentDto(id,
+                personId,
+                file.originalFilename,
+                null,
+                Utils.calculateSha256(path),
+                Utils.humanReadableByteCount(file.size),
+                null))
         logger.info(String.format("File name '%s' uploaded successfully of size %s.", file.originalFilename, file.size))
         return ResponseEntity.ok().build<Any>()
     }
