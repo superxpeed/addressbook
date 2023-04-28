@@ -156,6 +156,7 @@ export class PersonComponentInner extends React.Component {
                     </Link>
                     <ListItemText
                         primary={document.name}
+                        primaryTypographyProps={{ style: { wordWrap: "break-word" } }}
                         secondary={document.createDate + " | " + document.size}
                     />
                 </ListItem>
