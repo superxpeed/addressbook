@@ -74,6 +74,8 @@
     - [**mTLS inside namespace**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/istio_https/pa-mtls.yaml)  
     - [**Fluent Bit sidecar**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/dp-web.yaml#L90)  
     - [**Fluent Bit configuration for Elastic**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/fluent_bit_web/cm-web-fluentbit.yaml)  
+    - [**Persistent Volume**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/pv-documents.yaml)  
+    - [**Persistent Volume Claim**](https://github.com/dredwardhyde/addressbook/blob/master/devops/templates/web/pvc-documents.yaml)  
 3.  [**docker-compose-ignite**](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose-ignite.yml)
 4.  [**docker-compose**](https://github.com/dredwardhyde/addressbook/blob/master/devops/docker-compose.yml)
 5.  [**.zip**](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/distr-zip.xml) artifact [**assembly**](https://github.com/dredwardhyde/addressbook/blob/master/build-distrib/pom.xml#L23)
