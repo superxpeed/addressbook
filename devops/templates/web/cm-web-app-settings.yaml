@@ -7,8 +7,10 @@ metadata:
 data:
   eureka_host: "{{eureka_client_host}}"
   web_server_port: "{{web_server_port}}"
+  web_service_port: "{{web_service_port}}"
   keystore_path: "{{web_keystore_path}}"
   truststore_path: "{{web_truststore_path}}"
   dao_implementation: "{{web_dao_implementation}}"
+  storage_path: "{{storage_path}}"
   web_ssl_enabled: "{{web_ssl_enabled}}"
   java_opts: "{{web_java_opts}}"

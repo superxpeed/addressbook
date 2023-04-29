@@ -63,7 +63,7 @@ mongo_db_host: host.docker.internal2
 # Internal MongoDB port inside namespace
 mongo_db_port: 11112
 # MongoDB ip as it's visible from k8s cluster
-mongo_db_ip: 192.168.65.2
+mongo_db_ip: 192.168.65.254
 # External MongoDB port on target server
 external_mongo_db_port: 27017
 # Path to client truststore
@@ -99,7 +99,7 @@ postgres_port: 11111
 # PostgreSQL host name as it's visible from k8s cluster
 postgres_host: host.docker.internal
 # PostgreSQL ip as it's visible from k8s cluster
-postgres_ip: 192.168.65.2
+postgres_ip: 192.168.65.254
 # PostgreSQL database name
 postgres_db: postgres
 # Path to client certificate
@@ -138,6 +138,8 @@ web_dao_implementation: POSTGRE-SERVER
 web_route_host: simple-https.localdev.me
 # Route for https when web_ssl_enabled set to false (works only when "istio_https" role deployed)
 web_istio_route_host: istio-https.localdev.me
+# Persistent Volume path for user documents
+documents_pv_path: /run/desktop/mnt/host/c/docs
 # Enable or disable X509 auth (works only when "istio_x509" role deployed)
 web_ssl_enabled: false
 # JVM options
@@ -169,7 +171,7 @@ proxy_image: docker.io/istio/proxyv2:1.14.3
 # Works only when "fluent_bit_web" role deployed
 fluent_bit_enabled: true
 fluent_elasticsearch_host: host.docker.internal1
-fluent_elasticsearch_ip: 192.168.65.2
+fluent_elasticsearch_ip: 192.168.65.254
 external_fluent_elasticsearch_port: 9200
 fluent_elasticsearch_port: 33333
 fluentbit_image: cr.fluentbit.io/fluent/fluent-bit:1.9

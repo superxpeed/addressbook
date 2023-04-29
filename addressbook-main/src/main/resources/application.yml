@@ -41,7 +41,7 @@ management:
       exposure:
         include: "*"
   server:
-    port: 8081
+    port: ${web_service_port}
     ssl:
       enabled: false
   endpoint:

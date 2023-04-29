@@ -12,6 +12,7 @@
       <env name="truststore_password" value="q1w2e3r4" />
       <env name="truststore_path" value="$PROJECT_DIR$/addressbook-main/certs/truststore.jks" />
       <env name="web_server_port" value="10000" />
+      <env name="web_service_port" value="8082" />
       <env name="web_ssl_enabled" value="false" />
     </envs>
     <module name="addressbook-main" />

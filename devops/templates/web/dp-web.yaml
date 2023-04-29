@@ -77,6 +77,8 @@ spec:
               protocol: TCP
           imagePullPolicy: Never
           volumeMounts:
+            - name: docs
+              mountPath: /mnt/docs
             - name: web-certs
               readOnly: true
               mountPath: /opt/certs/web/
@@ -135,6 +137,9 @@ spec:
                 path: logback.xml
         - name: logsshare
           emptyDir: {}
+        - name: docs
+          persistentVolumeClaim:
+            claimName: documents
         - name: web-certs
           secret:
             secretName: web-secret
