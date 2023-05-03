@@ -18,7 +18,7 @@ interface AddressBookDAO {
     fun getOrganizationById(@RequestParam id: String): OrganizationDto?
 
     @LoggedPostRequest("/createOrUpdatePerson")
-    fun createOrUpdatePerson(@RequestBody personDto: PersonDto, @RequestParam user: String): PersonDto
+    fun createOrUpdatePerson(@RequestBody personDto: PersonDto): PersonDto
 
     @LoggedGetRequest("/getPersonById")
     fun getPersonById(@RequestParam id: String): PersonDto?
@@ -69,7 +69,7 @@ interface AddressBookDAO {
     fun ifPersonExists(@RequestParam key: String?): Boolean
 
     @LoggedPostRequest("/ifContactExists")
-    fun ifContactExists(@RequestParam key: String): Boolean
+    fun ifContactExists(@RequestParam key: String?): Boolean
 
     @LoggedPostRequest("/ifPageExists")
     fun ifPageExists(@RequestParam page: String): Boolean

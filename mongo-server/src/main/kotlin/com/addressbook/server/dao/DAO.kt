@@ -92,7 +92,7 @@ class DAO : AddressBookDAO {
         return OrganizationDto(organization)
     }
 
-    override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
+    override fun createOrUpdatePerson(personDto: PersonDto): PersonDto {
         val person = personDto.id?.let { getById("id", personDto.id, Person::class.java) }
                 ?: Person().also { personDto.id = it.id }
         with(person) {
@@ -115,7 +115,7 @@ class DAO : AddressBookDAO {
         val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         contactDtos.forEach {
             it.personId = targetPersonId
-            val contact = getById("contactId", it.id, Contact::class.java) ?: Contact()
+            val contact = if (it.id == null) Contact() else getById("contactId", it.id, Contact::class.java) ?: Contact()
             with(contact) {
                 data = it.data
                 description = it.description
@@ -123,6 +123,7 @@ class DAO : AddressBookDAO {
                 type = ContactType.values()[Integer.parseInt(it.type)]
             }
             dataStore.save(contact)
+            it.id = contact.contactId
         }
         toDelete.forEach { dataStore.delete(getById("contactId", it, Contact::class.java)) }
         return contactDtos
@@ -143,15 +144,21 @@ class DAO : AddressBookDAO {
     }
 
     override fun ifOrganizationExists(key: String?): Boolean {
-        return getById("id", key, Organization::class.java) != null
+        return if (key == null)
+            false
+        else getById("id", key, Organization::class.java) != null
     }
 
     override fun ifPersonExists(key: String?): Boolean {
-        return getById("id", key, Person::class.java) != null
+        return if (key == null)
+            false
+        else getById("id", key, Person::class.java) != null
     }
 
-    override fun ifContactExists(key: String): Boolean {
-        return getById("contactId", key, Contact::class.java) != null
+    override fun ifContactExists(key: String?): Boolean {
+        return if (key == null)
+            false
+        else getById("contactId", key, Contact::class.java) != null
     }
 
     override fun ifPageExists(page: String): Boolean {

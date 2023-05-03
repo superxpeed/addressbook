@@ -39,7 +39,7 @@ class DAO : AddressBookDAO {
     }
 
     @Transactional
-    override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
+    override fun createOrUpdatePerson(personDto: PersonDto): PersonDto {
         val person = personDto.id?.let { entityManager.find(Person::class.java, personDto.id) }
                 ?: Person().also { personDto.id = it.id }
         with(person) {
@@ -64,7 +64,7 @@ class DAO : AddressBookDAO {
         val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         contactDtos.forEach {
             it.personId = targetPersonId
-            val contact = entityManager.find(Contact::class.java, it.id) ?: Contact()
+            val contact = if (it.id == null) Contact() else entityManager.find(Contact::class.java, it.id) ?: Contact()
             with(contact) {
                 data = it.data
                 description = it.description
@@ -72,6 +72,7 @@ class DAO : AddressBookDAO {
                 type = ContactType.values()[Integer.parseInt(it.type)]
             }
             entityManager.persist(contact)
+            it.id = contact.contactId
         }
         toDelete.forEach { entityManager.remove(entityManager.find(Contact::class.java, it)) }
         return contactDtos
@@ -95,17 +96,23 @@ class DAO : AddressBookDAO {
 
     @Transactional
     override fun ifOrganizationExists(key: String?): Boolean {
-        return entityManager.find(Organization::class.java, key) != null
+        return if (key == null)
+            false
+        else entityManager.find(Organization::class.java, key) != null
     }
 
     @Transactional
     override fun ifPersonExists(key: String?): Boolean {
-        return entityManager.find(Person::class.java, key) != null
+        return if (key == null)
+            false
+        else entityManager.find(Person::class.java, key) != null
     }
 
     @Transactional
-    override fun ifContactExists(key: String): Boolean {
-        return entityManager.find(Contact::class.java, key) != null
+    override fun ifContactExists(key: String?): Boolean {
+        return if (key == null)
+            false
+        else entityManager.find(Contact::class.java, key) != null
     }
 
     override fun ifPageExists(page: String): Boolean {

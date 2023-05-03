@@ -76,10 +76,10 @@ class MainController {
     @PostMapping("/saveOrCreatePerson")
     fun saveOrCreatePerson(@RequestBody personDto: PersonDto, authentication: Authentication): CompletableFuture<PageDataDto<PersonDto>> {
         val login = (authentication.principal as AppUserDetails).username
-        if (personDto.id != null && dao.ifPersonExists(personDto.id) && dao.notLockedByUser(Person::class.java.name + personDto.id, login))
+        if (dao.ifPersonExists(personDto.id) && dao.notLockedByUser(Person::class.java.name + personDto.id, login))
             throw LockRecordException("Record was not locked by $login")
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(dao.createOrUpdatePerson(personDto, login))
+            return@supplyAsync PageDataDto(dao.createOrUpdatePerson(personDto))
         }
     }
 
@@ -100,7 +100,7 @@ class MainController {
     @PostMapping("/saveOrCreateOrganization")
     fun saveOrCreateOrganization(@RequestBody organizationDto: OrganizationDto, authentication: Authentication): CompletableFuture<PageDataDto<OrganizationDto>> {
         val login = (authentication.principal as AppUserDetails).username
-        if (organizationDto.id != null && dao.ifOrganizationExists(organizationDto.id) && dao.notLockedByUser(Organization::class.java.name + organizationDto.id, login))
+        if (dao.ifOrganizationExists(organizationDto.id) && dao.notLockedByUser(Organization::class.java.name + organizationDto.id, login))
             throw LockRecordException("Record was not locked by $login")
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(dao.createOrUpdateOrganization(organizationDto, login))

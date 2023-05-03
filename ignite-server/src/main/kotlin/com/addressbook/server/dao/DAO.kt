@@ -96,7 +96,7 @@ class DAO : AddressBookDAO {
         return OrganizationDto(organization)
     }
 
-    override fun createOrUpdatePerson(personDto: PersonDto, user: String): PersonDto {
+    override fun createOrUpdatePerson(personDto: PersonDto): PersonDto {
         val cachePerson: IgniteCache<String, Person>? = ignite.getOrCreateCache(FieldDescriptor.PERSON_CACHE)
         val person = personDto.id?.let { cachePerson?.get(personDto.id) } ?: Person().also { personDto.id = it.id }
         with(person) {
@@ -123,7 +123,7 @@ class DAO : AddressBookDAO {
         tx.use {
             contactDtos.forEach {
                 it.personId = targetPersonId
-                val contact = cacheContacts?.get(it.id) ?: Contact()
+                val contact = if (it.id == null) Contact() else cacheContacts?.get(it.id) ?: Contact()
                 with(contact) {
                     data = it.data
                     description = it.description
@@ -131,6 +131,7 @@ class DAO : AddressBookDAO {
                     type = ContactType.values()[Integer.parseInt(it.type)]
                 }
                 cacheContacts?.put(contact.contactId, contact)
+                it.id = contact.contactId
             }
             toDelete.forEach { cacheContacts?.remove(it) }
             tx?.commit()
@@ -156,17 +157,23 @@ class DAO : AddressBookDAO {
 
     override fun ifOrganizationExists(key: String?): Boolean {
         val cacheOrganization: IgniteCache<String, Organization>? = ignite.getOrCreateCache(FieldDescriptor.ORGANIZATION_CACHE)
-        return cacheOrganization?.get(key) != null
+        return if (key == null)
+            false
+        else cacheOrganization?.get(key) != null
     }
 
     override fun ifPersonExists(key: String?): Boolean {
         val cachePerson: IgniteCache<String, Person>? = ignite.getOrCreateCache(FieldDescriptor.PERSON_CACHE)
-        return cachePerson?.get(key) != null
+        return if (key == null)
+            false
+        else cachePerson?.get(key) != null
     }
 
-    override fun ifContactExists(key: String): Boolean {
+    override fun ifContactExists(key: String?): Boolean {
         val cacheContacts: IgniteCache<String, Contact>? = ignite.getOrCreateCache(FieldDescriptor.CONTACT_CACHE)
-        return cacheContacts?.get(key) != null
+        return if (key == null)
+            false
+        else cacheContacts?.get(key) != null
     }
 
     override fun ifPageExists(page: String): Boolean {
