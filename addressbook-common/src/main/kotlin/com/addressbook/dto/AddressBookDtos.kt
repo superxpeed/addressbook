@@ -9,19 +9,30 @@ import java.text.SimpleDateFormat
 
 val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-class ContactDto constructor(contact: Contact? = null) : Serializable {
-    var personId: String? = null
+class ContactDto(id: String?,
+                 personId: String?,
+                 type: String?,
+                 data: String?,
+                 description: String?) : Serializable {
+
     var id: String? = null
+    var personId: String? = null
     var type: String? = ""
     var data: String? = null
     var description: String? = null
 
+    constructor(contact: Contact?) : this(contact?.contactId,
+            contact?.personId,
+            "" + contact?.type?.ordinal,
+            contact?.data,
+            contact?.description)
+
     init {
-        this.personId = contact?.personId
-        this.id = contact?.contactId
-        this.type = "" + contact?.type?.ordinal
-        this.data = contact?.data
-        this.description = contact?.description
+        this.id = id
+        this.personId = personId
+        this.type = type
+        this.data = data
+        this.description = description
     }
 }
 
