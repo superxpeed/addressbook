@@ -102,7 +102,12 @@ class OrganizationDto(id: String?,
     }
 }
 
-class PersonDto constructor(person: Person? = null) : Serializable {
+class PersonDto(id: String?,
+                orgId: String?,
+                firstName: String?,
+                lastName: String?,
+                resume: String?,
+                salary: String?) : Serializable {
 
     var id: String? = null
     var orgId: String? = null
@@ -111,12 +116,19 @@ class PersonDto constructor(person: Person? = null) : Serializable {
     var resume: String? = null
     var salary: String? = null
 
+    constructor(person: Person?) : this(person?.id,
+            person?.orgId,
+            person?.firstName,
+            person?.lastName,
+            person?.resume,
+            person?.salary)
+
     init {
-        this.id = person?.id
-        this.orgId = person?.orgId
-        this.firstName = person?.firstName
-        this.lastName = person?.lastName
-        this.resume = person?.resume
-        this.salary = person?.salary
+        this.id = id
+        this.orgId = orgId
+        this.firstName = firstName
+        this.lastName = lastName
+        this.resume = resume
+        this.salary = salary
     }
 }
