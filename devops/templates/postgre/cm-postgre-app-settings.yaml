@@ -18,6 +18,5 @@ data:
   postgres_max_pool_size: "{{postgres_max_pool_size}}"
   postgres_max_idle_time: "{{postgres_max_idle_time}}"
   postgres_idle_connection_test_period: "{{postgres_idle_connection_test_period}}"
-  postgres_test_connection_on_checkout: "{{postgres_test_connection_on_checkout}}"
   postgres_preferred_test_query: "{{postgres_preferred_test_query}}"
   java_opts: "{{postgres_java_opts}}"

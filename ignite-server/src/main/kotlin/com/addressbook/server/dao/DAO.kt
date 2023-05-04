@@ -325,6 +325,7 @@ class DAO : AddressBookDAO {
                     } else {
                         addSql = it.name + " LIKE '%" + it.value?.replace("'", "''") + "%'"
                     }
+
                     "DateFilter" -> {
                         it.value = it.value?.substring(0, 10)
                         val tailLower = " 00:00:00.000'"

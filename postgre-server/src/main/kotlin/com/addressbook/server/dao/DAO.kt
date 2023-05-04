@@ -258,6 +258,7 @@ class DAO : AddressBookDAO {
                     "NumberFilter" -> {
                         addSql = it.name + getComparator(it) + Integer.parseInt(it.value)
                     }
+
                     "TextFilter" -> {
                         addSql = if (it.name == "type") {
                             it.value?.let { typeOrdinal ->
@@ -269,6 +270,7 @@ class DAO : AddressBookDAO {
                             it.name + " LIKE '%" + it.value?.replace("'", "''") + "%'"
                         }
                     }
+
                     "DateFilter" -> {
                         it.value = it.value?.substring(0, 10)
                         val tailLower = " 00:00:00.00000'"

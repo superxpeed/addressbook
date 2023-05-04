@@ -41,7 +41,6 @@ datasource:
     max-pool-size: ${postgres_max_pool_size}
     max-idle-time: ${postgres_max_idle_time}
     idle-connection-test-period: ${postgres_idle_connection_test_period}
-    test-connection-on-checkout: ${postgres_test_connection_on_checkout}
     preferred-test-query: ${postgres_preferred_test_query}
 management:
   endpoint:

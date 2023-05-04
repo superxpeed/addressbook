@@ -13,13 +13,13 @@ import dev.morphia.query.Sort
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import java.io.FileInputStream
+import java.security.KeyStore
+import java.security.SecureRandom
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
-import java.io.FileInputStream
-import java.security.KeyStore
-import java.security.SecureRandom
 import javax.net.ssl.*
 
 
@@ -320,6 +320,7 @@ class DAO : AddressBookDAO {
                             "<" -> temp = tempFieldEnd?.lessThan(query)
                         }
                     }
+
                     "TextFilter" -> if (it.name == "type") {
                         it.value?.let { typeOrdinal ->
                             if (typeOrdinal.isNotBlank() && typeOrdinal.toInt() >= 0 && typeOrdinal.toInt() < OrganizationType.values().size)
@@ -328,6 +329,7 @@ class DAO : AddressBookDAO {
                     } else {
                         temp = temp?.field(it.name)?.containsIgnoreCase(it.value)
                     }
+
                     "DateFilter" -> {
                         it.value = it.value?.substring(0, 10)
                         val dateBefore = dateFormatEqual.parse(it.value + "T00:00:00")

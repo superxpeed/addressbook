@@ -37,9 +37,8 @@ postgres_cpu_req: 2
 postgres_mem_req: 4000Mi
 postgres_min_pool_size: 2
 postgres_max_pool_size: 5
-postgres_max_idle_time: 180
-postgres_idle_connection_test_period: 10
-postgres_test_connection_on_checkout: true
+postgres_max_idle_time: 180000
+postgres_idle_connection_test_period: 10000
 postgres_preferred_test_query: select 1
 
 # Web application settings

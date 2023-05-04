@@ -47,6 +47,8 @@ services:
       - "10000:9000"
     environment:
       - web_server_port=9000
+      - web_service_port=8081
+      - storage_path=/mnt/logs
       - dao_implementation=IGNITE-SERVER
       - jwt_secret=q1w2e3r4
       - key_alias=localhost
