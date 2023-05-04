@@ -205,7 +205,7 @@ class DAO : AddressBookDAO {
     override fun getDocumentsByPersonId(id: String): List<DocumentDto> {
         val cache: IgniteCache<String, Document>? = ignite.getOrCreateCache(FieldDescriptor.DOCUMENT_CACHE)
         val cacheDtoArrayList = ArrayList<DocumentDto>()
-        val cursor = cache?.query(SqlQuery<String, Document>(Document::class.java, "personId = ? order by createDate asc").setArgs(id))
+        val cursor = cache?.query(SqlQuery<String, Document>(Document::class.java, "personId = ? ORDER BY createDate ASC").setArgs(id))
         cursor.use { cursor?.forEach { cacheDtoArrayList.add(DocumentDto(it.value)) } }
         return cacheDtoArrayList
     }
@@ -320,10 +320,10 @@ class DAO : AddressBookDAO {
                     "TextFilter" -> if (it.name == "type") {
                         it.value?.let { typeOrdinal ->
                             if (typeOrdinal.isNotBlank() && typeOrdinal.toInt() >= 0 && typeOrdinal.toInt() < OrganizationType.values().size)
-                                addSql = it.name + " like '%" + OrganizationType.values()[typeOrdinal.toInt()].name + "%'"
+                                addSql = it.name + " LIKE '%" + OrganizationType.values()[typeOrdinal.toInt()].name + "%'"
                         }
                     } else {
-                        addSql = it.name + " like '%" + it.value?.replace("'", "''") + "%'"
+                        addSql = it.name + " LIKE '%" + it.value?.replace("'", "''") + "%'"
                     }
                     "DateFilter" -> {
                         it.value = it.value?.substring(0, 10)
@@ -357,9 +357,9 @@ class DAO : AddressBookDAO {
                         }
                     }
                 }
-                if (filterDto.indexOf(it) == 0) baseSql.append(" where ")
+                if (filterDto.indexOf(it) == 0) baseSql.append(" WHERE ")
                 baseSql.append(addSql)
-                if (filterDto.indexOf(it) != (filterDto.size - 1)) baseSql.append(" and ")
+                if (filterDto.indexOf(it) != (filterDto.size - 1)) baseSql.append(" AND ")
             }
         }
         return baseSql
@@ -370,11 +370,11 @@ class DAO : AddressBookDAO {
         val cacheDtoArrayList = ArrayList<Any>()
         val cursor = cache?.query(SqlQuery<String, Any>(FieldDescriptor.getCacheClass(cacheName),
                 getQuerySql(filterDto)
-                        .append(" order by ")
+                        .append(" ORDER BY ")
                         .append(sortName)
                         .append(" ")
                         .append(sortOrder)
-                        .append(" limit ? offset ?").toString())
+                        .append(" LIMIT ? OFFSET ?").toString())
                 .setArgs(pageSize, (page - 1) * pageSize))
         val dtoConstructor = FieldDescriptor.getDtoClass(cacheName)?.getConstructor(FieldDescriptor.getCacheClass(cacheName))
         cursor.use { cursor?.forEach { x -> dtoConstructor?.newInstance(x.value)?.let { cacheDtoArrayList.add(it) } } }
@@ -384,7 +384,7 @@ class DAO : AddressBookDAO {
     override fun getContactsByPersonId(id: String): List<ContactDto> {
         val cache: IgniteCache<String, Contact>? = ignite.getOrCreateCache(FieldDescriptor.CONTACT_CACHE)
         val cacheDtoArrayList = ArrayList<ContactDto>()
-        val cursor = cache?.query(SqlQuery<String, Contact>(Contact::class.java, "personId = ? order by createDate asc").setArgs(id))
+        val cursor = cache?.query(SqlQuery<String, Contact>(Contact::class.java, "personId = ? ORDER BY createDate ASC").setArgs(id))
         cursor.use { cursor?.forEach { cacheDtoArrayList.add(ContactDto(it.value)) } }
         return cacheDtoArrayList
     }
