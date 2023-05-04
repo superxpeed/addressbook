@@ -9,11 +9,9 @@ import com.addressbook.model.Person
 import com.addressbook.model.User
 import com.addressbook.security.AppUserDetails
 import com.addressbook.util.Utils
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micrometer.core.annotation.Timed
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.info.BuildProperties
@@ -24,8 +22,6 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.FileInputStream
-import java.io.PrintWriter
-import java.io.StringWriter
 import java.net.InetAddress
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
