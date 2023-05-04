@@ -19,6 +19,7 @@ class DAO : AddressBookDAO {
 
     @Transactional
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
+        requireNotNull(organizationDto.id)
         val organization = entityManager.find(Organization::class.java, organizationDto.id)
                 ?: Organization(organizationDto)
         with(organization) {
@@ -116,12 +117,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun ifPageExists(page: String): Boolean {
-        try {
-            checkIfMenuExists(page)
-        } catch (e: IllegalArgumentException) {
-            return false
-        }
-        return true
+        return getMenuEntriesByUrl(page).isNotEmpty()
     }
 
     @Transactional
@@ -207,37 +203,40 @@ class DAO : AddressBookDAO {
         return menuEntryDto
     }
 
-    fun checkIfMenuExists(url: String): List<MenuEntry> {
-        val results = entityManager.createQuery("SELECT u FROM MenuEntry u WHERE u.url=:url", MenuEntry::class.java)
-                .also { it?.setParameter("url", url) }?.resultList
-        return if (!results.isNullOrEmpty()) results else throw IllegalArgumentException("Menu with url: $url doesn't exist")
+    fun getMenuEntriesByUrl(url: String): List<MenuEntry> {
+        return entityManager.createQuery("SELECT u FROM MenuEntry u WHERE u.url=:url", MenuEntry::class.java)
+                .also { it?.setParameter("url", url) }?.resultList ?: emptyList()
     }
 
     @Transactional
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
-        val menuEntryDtos = ArrayList<MenuEntryDto>()
+        val entries = getMenuEntriesByUrl(url)
+        if (entries.isEmpty()) return emptyList()
+        val menuEntries = ArrayList<MenuEntryDto>()
         entityManager.createQuery("SELECT u FROM MenuEntry u WHERE u.parentId=:parentId", MenuEntry::class.java)
-                .also { it?.setParameter("parentId", checkIfMenuExists(url)[0].id) }
+                .also { it?.setParameter("parentId", entries[0].id) }
                 ?.resultList?.forEach { e ->
                     for (authority in authorities) {
                         if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
-                            menuEntryDtos.add(MenuEntryDto(e))
+                            menuEntries.add(MenuEntryDto(e))
                             break
                         }
                     }
                 }
-        return menuEntryDtos
+        return menuEntries
     }
 
     @Transactional
     override fun readBreadcrumbs(url: String): List<BreadcrumbDto> {
-        val original = checkIfMenuExists(url)[0]
+        val entries = getMenuEntriesByUrl(url)
+        if (entries.isEmpty()) return emptyList()
+        val original = entries[0]
         var menuEntry = original
         val breadcrumbs = ArrayList<BreadcrumbDto>()
         if (menuEntry.parentId == null) return breadcrumbs
         while (true) {
             val menuEntries = entityManager.createQuery("SELECT u FROM MenuEntry u WHERE u.id=:id", MenuEntry::class.java)
-                    .also { it?.setParameter("id", menuEntry.parentId) }?.resultList as MutableList<MenuEntry>
+                    .also { it?.setParameter("id", menuEntry.parentId) }?.resultList as List<MenuEntry>
             if (menuEntries.isNotEmpty()) {
                 menuEntry = menuEntries[0]
                 breadcrumbs.add(0, BreadcrumbDto(menuEntry.name, menuEntry.url))

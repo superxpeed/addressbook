@@ -77,6 +77,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
+        requireNotNull(organizationDto.id)
         val cacheOrganization: IgniteCache<String, Organization>? = ignite.getOrCreateCache(FieldDescriptor.ORGANIZATION_CACHE)
         val organization = cacheOrganization?.get(organizationDto.id) ?: Organization(organizationDto)
         with(organization) {
@@ -178,12 +179,7 @@ class DAO : AddressBookDAO {
 
     override fun ifPageExists(page: String): Boolean {
         val cache: IgniteCache<String, MenuEntry>? = ignite.getOrCreateCache(FieldDescriptor.MENU_CACHE)
-        try {
-            checkIfMenuExists(cache, page)
-        } catch (e: IllegalArgumentException) {
-            return false
-        }
-        return true
+        return getMenuEntriesByUrl(cache, page).isNotEmpty()
     }
 
     override fun saveDocument(document: DocumentDto) {
@@ -271,31 +267,35 @@ class DAO : AddressBookDAO {
         return menuEntryDto
     }
 
-    private fun checkIfMenuExists(menuCache: IgniteCache<String, MenuEntry>?, url: String): List<Cache.Entry<String, MenuEntry>> {
-        val entries = menuCache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "url = ?").setArgs(url))?.all
-        return if (!entries.isNullOrEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
+    private fun getMenuEntriesByUrl(menuCache: IgniteCache<String, MenuEntry>?, url: String): List<Cache.Entry<String, MenuEntry>> {
+        return menuCache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "url = ?").setArgs(url))?.all
+                ?: emptyList()
     }
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
         val cache: IgniteCache<String, MenuEntry>? = ignite.getOrCreateCache(FieldDescriptor.MENU_CACHE)
-        val menuEntryDtos = ArrayList<MenuEntryDto>()
-        val cursor = cache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "parentId = ?").setArgs(checkIfMenuExists(cache, url)[0].value?.id))
+        val entries = getMenuEntriesByUrl(cache, url)
+        if (entries.isEmpty()) return emptyList()
+        val menuEntries = ArrayList<MenuEntryDto>()
+        val cursor = cache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "parentId = ?").setArgs(entries[0].value?.id))
         cursor.use {
             cursor?.forEach { e ->
                 for (authority in authorities) {
                     if (e.value.roles != null && e.value.roles!!.contains(authority.replace("ROLE_", ""))) {
-                        menuEntryDtos.add(MenuEntryDto(e.value))
+                        menuEntries.add(MenuEntryDto(e.value))
                         break
                     }
                 }
             }
         }
-        return menuEntryDtos
+        return menuEntries
     }
 
     override fun readBreadcrumbs(url: String): List<BreadcrumbDto> {
         val cache: IgniteCache<String, MenuEntry>? = ignite.getOrCreateCache(FieldDescriptor.MENU_CACHE)
-        val original = checkIfMenuExists(cache, url)[0].value
+        val entries = getMenuEntriesByUrl(cache, url)
+        if (entries.isEmpty()) return emptyList()
+        val original = entries[0].value
         var menuEntry = original
         val breadcrumbs = ArrayList<BreadcrumbDto>()
         if (menuEntry?.parentId == null) return breadcrumbs

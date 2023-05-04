@@ -75,6 +75,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
+        requireNotNull(organizationDto.id)
         val organization = getById("id", organizationDto.id, Organization::class.java) ?: Organization(organizationDto)
         with(organization) {
             type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
@@ -115,7 +116,10 @@ class DAO : AddressBookDAO {
         val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         contactDtos.forEach {
             it.personId = targetPersonId
-            val contact = if (it.id == null) Contact() else getById("contactId", it.id, Contact::class.java) ?: Contact()
+            val contact = if (it.id == null)
+                Contact()
+            else
+                getById("contactId", it.id, Contact::class.java) ?: Contact()
             with(contact) {
                 data = it.data
                 description = it.description
@@ -162,12 +166,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun ifPageExists(page: String): Boolean {
-        try {
-            checkIfMenuExists(page)
-        } catch (e: IllegalArgumentException) {
-            return false
-        }
-        return true
+        return getMenuEntriesByUrl(page).isNotEmpty()
     }
 
     override fun saveDocument(document: DocumentDto) {
@@ -245,35 +244,38 @@ class DAO : AddressBookDAO {
         return menuEntryDto
     }
 
-    private fun checkIfMenuExists(url: String): List<MenuEntry> {
-        val entries = dataStore.createQuery(MenuEntry::class.java)
+    private fun getMenuEntriesByUrl(url: String): List<MenuEntry> {
+        return dataStore.createQuery(MenuEntry::class.java)
                 ?.field("url")
                 ?.equal(url)
                 ?.find()
-                ?.toList()
-        return if (!entries.isNullOrEmpty()) entries else throw IllegalArgumentException("Menu with url: $url doesn't exist")
+                ?.toList() ?: emptyList()
     }
 
     override fun readNextLevel(url: String, authorities: List<String>): List<MenuEntryDto> {
-        val menuEntryDtos = ArrayList<MenuEntryDto>()
+        val entries = getMenuEntriesByUrl(url)
+        if (entries.isEmpty()) return emptyList()
+        val menuEntries = ArrayList<MenuEntryDto>()
         dataStore.createQuery(MenuEntry::class.java)
                 ?.field("parentId")
-                ?.equal(checkIfMenuExists(url)[0].id)
+                ?.equal(entries[0].id)
                 ?.find()
                 ?.toList()
                 ?.forEach { e ->
                     for (authority in authorities) {
                         if (e.roles != null && e.roles!!.contains(authority.replace("ROLE_", ""))) {
-                            menuEntryDtos.add(MenuEntryDto(e))
+                            menuEntries.add(MenuEntryDto(e))
                             break
                         }
                     }
                 }
-        return menuEntryDtos
+        return menuEntries
     }
 
     override fun readBreadcrumbs(url: String): List<BreadcrumbDto> {
-        val original = checkIfMenuExists(url)[0]
+        val entries = getMenuEntriesByUrl(url)
+        if (entries.isEmpty()) return emptyList()
+        val original = entries[0]
         var menuEntry = original
         val breadcrumbs = ArrayList<BreadcrumbDto>()
         if (menuEntry.parentId == null) return breadcrumbs

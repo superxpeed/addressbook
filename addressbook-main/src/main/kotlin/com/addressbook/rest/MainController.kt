@@ -43,8 +43,6 @@ import kotlin.io.path.exists
 @RequestMapping(path = ["/rest"])
 class MainController {
 
-    private val logger = LoggerFactory.getLogger(MainController::class.java)
-
     @Autowired
     lateinit var dao: DaoClient
 
@@ -175,7 +173,6 @@ class MainController {
                 Utils.calculateSha256(path),
                 Utils.humanReadableByteCount(file.size),
                 null))
-        logger.info(String.format("File name '%s' uploaded successfully of size %s.", file.originalFilename, file.size))
         return ResponseEntity.ok().build<Any>()
     }
 
@@ -216,24 +213,6 @@ class MainController {
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(TableDataDto(Utils.fillUrls(dao.getDocumentsByPersonId(id), origin)))
         }
-    }
-
-    @ExceptionHandler(Throwable::class)
-    fun handleError(response: HttpServletResponse, ex: Throwable) {
-        logger.error("Exception occurred:", ex)
-        response.status = 500
-        val alert = AlertDto()
-        alert.headline = "Error occurred!"
-        alert.type = AlertDto.DANGER
-        if (ex.javaClass == IllegalArgumentException::class.java || ex.javaClass == LockRecordException::class.java) {
-            alert.message = ex.message
-        } else {
-            val errors = StringWriter()
-            ex.printStackTrace(PrintWriter(errors))
-            alert.message = errors.toString()
-        }
-        val objectMapper = ObjectMapper()
-        objectMapper.writeValue(response.writer, alert)
     }
 
     @GetMapping("/getUserInfo")
