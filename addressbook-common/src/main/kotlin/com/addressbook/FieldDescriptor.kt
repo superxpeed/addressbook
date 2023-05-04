@@ -17,8 +17,8 @@ object FieldDescriptor {
     private const val DATE_MODEL_TYPE = "java.util.Date"
     private const val STANDARD_COLUMN_WIDTH = "200"
 
-    val fieldDescriptionMapOrganization = LinkedHashMap<String, FieldDescriptionDto>()
-    val fieldDescriptionMapPerson = LinkedHashMap<String, FieldDescriptionDto>()
+    private val fieldDescriptionMapOrganization = LinkedHashMap<String, FieldDescriptionDto>()
+    private val fieldDescriptionMapPerson = LinkedHashMap<String, FieldDescriptionDto>()
     private val fieldDescriptionMaps = LinkedHashMap<String, Map<String, FieldDescriptionDto>>()
     private val cacheClasses = LinkedHashMap<String, Class<*>>()
     private val dtoClasses = LinkedHashMap<String, Class<*>>()

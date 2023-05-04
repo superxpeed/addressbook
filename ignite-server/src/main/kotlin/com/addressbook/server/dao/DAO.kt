@@ -67,17 +67,13 @@ class DAO : AddressBookDAO {
                 writeSynchronizationMode = CacheWriteSynchronizationMode.FULL_SYNC
                 setIndexedTypes(String::class.java, it.value)
             }
-            val createdCache: IgniteCache<String, Any>? = ignite.getOrCreateCache(cfg)
-            if (ignite.cluster()?.forDataNodes(createdCache?.name)?.nodes()?.isEmpty() as Boolean) {
-                logger.info("")
-                logger.info(">>> Please start at least 1 remote cache node.")
-                logger.info("")
-            }
+            ignite.getOrCreateCache(cfg)
         }
     }
 
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
         requireNotNull(organizationDto.id)
+        requireNotNull(organizationDto.type)
         val cacheOrganization: IgniteCache<String, Organization>? = ignite.getOrCreateCache(FieldDescriptor.ORGANIZATION_CACHE)
         val organization = cacheOrganization?.get(organizationDto.id) ?: Organization(organizationDto)
         with(organization) {
@@ -326,7 +322,6 @@ class DAO : AddressBookDAO {
                     } else {
                         addSql = it.name + " like '%" + it.value?.replace("'", "''") + "%'"
                     }
-
                     "DateFilter" -> {
                         it.value = it.value?.substring(0, 10)
                         val tailLower = " 00:00:00.000'"

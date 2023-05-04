@@ -12,6 +12,7 @@ import java.util.stream.Stream
 class JVMStateService {
     fun getJVMState(): Flux<JvmMetricsDto> {
         return Flux.zip(Flux.interval(Duration.ofSeconds(1)),
-                Flux.fromStream(Stream.generate(::JvmMetricsDto))).map(Tuple2<Long, JvmMetricsDto>::getT2)
+                Flux.fromStream(Stream.generate(::JvmMetricsDto)))
+                .map(Tuple2<Long, JvmMetricsDto>::getT2)
     }
 }

@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse
 @Component
 class RestAuthenticationEntryPoint : AuthenticationEntryPoint {
 
-    override fun commence(request: HttpServletRequest, response: HttpServletResponse, authException: AuthenticationException) {
+    override fun commence(request: HttpServletRequest,
+                          response: HttpServletResponse,
+                          authException: AuthenticationException) {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
     }
 }

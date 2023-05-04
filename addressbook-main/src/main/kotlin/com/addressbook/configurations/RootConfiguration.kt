@@ -22,7 +22,7 @@ class RootConfiguration {
                 .info(Info().title("Addressbook REST API")
                         .description("Spring Ecosystem Backbone Single Page Application")
                         .version("v1.0")
-                        .license(License().name("Apache 2.0").url("http://springdoc.org")))
+                        .license(License().name("Apache 2.0").url("https://springdoc.org")))
                 .externalDocs(ExternalDocumentation()
                         .description("Addressbook")
                         .url("https://github.com/dredwardhyde/addressbook"))

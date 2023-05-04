@@ -20,6 +20,7 @@ class DAO : AddressBookDAO {
     @Transactional
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
         requireNotNull(organizationDto.id)
+        requireNotNull(organizationDto.type)
         val organization = entityManager.find(Organization::class.java, organizationDto.id)
                 ?: Organization(organizationDto)
         with(organization) {
@@ -137,7 +138,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun getDocumentsByPersonId(id: String): List<DocumentDto> {
-        return entityManager.createQuery("SELECT u FROM Document u WHERE u.personId=:id order by u.createDate asc ", Document::class.java)
+        return entityManager.createQuery("SELECT u FROM Document u WHERE u.personId=:id ORDER BY u.createDate ASC ", Document::class.java)
                 .also { it?.setParameter("id", id) }
                 ?.resultList
                 ?.map { DocumentDto(it) }
@@ -255,15 +256,17 @@ class DAO : AddressBookDAO {
                     "NumberFilter" -> {
                         addSql = it.name + getComparator(it) + Integer.parseInt(it.value)
                     }
-
                     "TextFilter" -> {
                         addSql = if (it.name == "type") {
-                            it.name + " = " + it.value
+                            it.value?.let { typeOrdinal ->
+                                if (typeOrdinal.isNotBlank() && typeOrdinal.toInt() >= 0 && typeOrdinal.toInt() < OrganizationType.values().size)
+                                    it.name + " LIKE '%" + OrganizationType.values()[typeOrdinal.toInt()].name + "%'"
+                                else ""
+                            } ?: ""
                         } else {
-                            it.name + " like '%" + it.value?.replace("'", "''") + "%'"
+                            it.name + " LIKE '%" + it.value?.replace("'", "''") + "%'"
                         }
                     }
-
                     "DateFilter" -> {
                         it.value = it.value?.substring(0, 10)
                         val tailLower = " 00:00:00.00000'"
@@ -296,9 +299,9 @@ class DAO : AddressBookDAO {
                         }
                     }
                 }
-                if (filterDto.indexOf(it) == 0) baseSql.append(" where ")
+                if (filterDto.indexOf(it) == 0) baseSql.append(" WHERE ")
                 baseSql.append(addSql)
-                if (filterDto.indexOf(it) != (filterDto.size - 1)) baseSql.append(" and ")
+                if (filterDto.indexOf(it) != (filterDto.size - 1)) baseSql.append(" AND ")
             }
         }
         return baseSql
@@ -330,7 +333,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun getContactsByPersonId(id: String): List<ContactDto> {
-        return entityManager.createQuery("SELECT u FROM Contact u WHERE u.personId=:id order by u.createDate asc ", Contact::class.java)
+        return entityManager.createQuery("SELECT u FROM Contact u WHERE u.personId=:id ORDER BY u.createDate ASC ", Contact::class.java)
                 .also { it?.setParameter("id", id) }
                 ?.resultList
                 ?.map { ContactDto(it) }

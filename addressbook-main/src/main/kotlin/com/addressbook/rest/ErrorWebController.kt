@@ -20,7 +20,10 @@ class ErrorWebController : ErrorController {
         when (Integer.parseInt(request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE).toString())) {
             HttpStatus.NOT_FOUND.value() -> return "404.html"
             HttpStatus.UNAUTHORIZED.value() -> {
-                ObjectMapper().also { it.writeValue(response.writer, AlertDto("Error occurred!", AlertDto.DANGER, "You are not authorized to see that content!")) }
+                ObjectMapper().also { it.writeValue(response.writer,
+                        AlertDto("Error occurred!",
+                                AlertDto.DANGER,
+                                "You are not authorized to see that content!")) }
             }
         }
         return null

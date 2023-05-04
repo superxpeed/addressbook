@@ -21,7 +21,9 @@ class JwtFilter : GenericFilterBean() {
     @Autowired
     lateinit var appUserDetailsService: AppUserDetailsService
 
-    override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
+    override fun doFilter(servletRequest: ServletRequest,
+                          servletResponse: ServletResponse,
+                          filterChain: FilterChain) {
         getTokenFromRequest(servletRequest as HttpServletRequest)?.let { s ->
             if (jwtProvider.validateToken(s)) {
                 appUserDetailsService.loadUserByUsername(jwtProvider.getLoginFromToken(s)).also {

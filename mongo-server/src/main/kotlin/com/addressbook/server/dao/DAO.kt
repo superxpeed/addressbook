@@ -37,28 +37,31 @@ class DAO : AddressBookDAO {
 
     @PostConstruct
     fun startClient() {
-        val credentials = MongoCredential.createScramSha1Credential(requireNotNull(env.getProperty("mongo.user")),
-                "addressbook", requireNotNull(env.getProperty("mongo.password")).toCharArray())
-        val clientStore: KeyStore = KeyStore.getInstance("PKCS12")
-        clientStore.load(FileInputStream(requireNotNull(env.getProperty("mongo.keystore.path"))),
+        val credentials = MongoCredential.createScramSha1Credential(
+                requireNotNull(env.getProperty("mongo.user")),
+                "addressbook",
+                requireNotNull(env.getProperty("mongo.password")).toCharArray())
+        val clientStore = KeyStore.getInstance("PKCS12")
+        clientStore.load(FileInputStream(
+                requireNotNull(env.getProperty("mongo.keystore.path"))),
                 requireNotNull(env.getProperty("mongo.keystore.password")).toCharArray())
-        val kmf: KeyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+        val kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
         kmf.init(clientStore, requireNotNull(env.getProperty("mongo.keystore.key-password")).toCharArray())
-        val trustStore: KeyStore = KeyStore.getInstance("PKCS12")
-        trustStore.load(FileInputStream(requireNotNull(env.getProperty("mongo.truststore.path"))),
+        val trustStore = KeyStore.getInstance("PKCS12")
+        trustStore.load(FileInputStream(
+                requireNotNull(env.getProperty("mongo.truststore.path"))),
                 requireNotNull(env.getProperty("mongo.truststore.password")).toCharArray())
-        val tmf: TrustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+        val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
         tmf.init(trustStore)
         val sslContext = SSLContext.getInstance("TLS")
         sslContext.init(kmf.keyManagers, tmf.trustManagers, SecureRandom())
-        val options: MongoClientOptions = MongoClientOptions.builder()
-                .sslEnabled(true)
-                .sslContext(sslContext)
-                .build()
 
         mongoClient = MongoClient(ServerAddress(requireNotNull(env.getProperty("mongo.host")),
                 Integer.parseInt(requireNotNull(env.getProperty("mongo.port")))),
-                credentials, options)
+                credentials, MongoClientOptions.builder()
+                .sslEnabled(true)
+                .sslContext(sslContext)
+                .build())
         dataStore = Morphia()
                 .also { it.mapPackage("com.addressbook.model") }
                 .createDatastore(mongoClient, "addressbook")
@@ -76,6 +79,7 @@ class DAO : AddressBookDAO {
 
     override fun createOrUpdateOrganization(organizationDto: OrganizationDto, user: String): OrganizationDto {
         requireNotNull(organizationDto.id)
+        requireNotNull(organizationDto.type)
         val organization = getById("id", organizationDto.id, Organization::class.java) ?: Organization(organizationDto)
         with(organization) {
             type = OrganizationType.values()[Integer.parseInt(organizationDto.type)]
@@ -313,7 +317,6 @@ class DAO : AddressBookDAO {
                             "<" -> temp = tempFieldEnd?.lessThan(query)
                         }
                     }
-
                     "TextFilter" -> if (it.name == "type") {
                         it.value?.let { typeOrdinal ->
                             if (typeOrdinal.isNotBlank() && typeOrdinal.toInt() >= 0 && typeOrdinal.toInt() < OrganizationType.values().size)
@@ -322,7 +325,6 @@ class DAO : AddressBookDAO {
                     } else {
                         temp = temp?.field(it.name)?.containsIgnoreCase(it.value)
                     }
-
                     "DateFilter" -> {
                         it.value = it.value?.substring(0, 10)
                         val dateBefore = dateFormatEqual.parse(it.value + "T00:00:00")

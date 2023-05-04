@@ -60,7 +60,14 @@ class MainController {
                 @RequestParam(value = "cache") cache: String,
                 @RequestBody filterDto: List<FilterDto>): CompletableFuture<PageDataDto<TableDataDto<Any>>> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync PageDataDto(TableDataDto(dao.selectCachePage(start, pageSize, sortName, sortOrder, filterDto, cache), dao.getTotalDataSize(cache, filterDto)), FieldDescriptor.getFieldDescriptionMap(cache))
+            return@supplyAsync PageDataDto(TableDataDto(dao.selectCachePage(start,
+                    pageSize,
+                    sortName,
+                    sortOrder,
+                    filterDto,
+                    cache),
+                    dao.getTotalDataSize(cache, filterDto)),
+                    FieldDescriptor.getFieldDescriptionMap(cache))
         }
     }
 
@@ -96,7 +103,8 @@ class MainController {
     }
 
     @PostMapping("/saveOrCreateOrganization")
-    fun saveOrCreateOrganization(@RequestBody organizationDto: OrganizationDto, authentication: Authentication): CompletableFuture<PageDataDto<OrganizationDto>> {
+    fun saveOrCreateOrganization(@RequestBody organizationDto: OrganizationDto,
+                                 authentication: Authentication): CompletableFuture<PageDataDto<OrganizationDto>> {
         val login = (authentication.principal as AppUserDetails).username
         if (dao.ifOrganizationExists(organizationDto.id) && dao.notLockedByUser(Organization::class.java.name + organizationDto.id, login))
             throw LockRecordException("Record was not locked by $login")
@@ -113,7 +121,8 @@ class MainController {
     }
 
     @GetMapping("/getNextLevelMenus")
-    fun getNextLevelMenus(@RequestParam(value = "currentUrl") url: String, authentication: Authentication): CompletableFuture<PageDataDto<List<MenuEntryDto>>> {
+    fun getNextLevelMenus(@RequestParam(value = "currentUrl") url: String,
+                          authentication: Authentication): CompletableFuture<PageDataDto<List<MenuEntryDto>>> {
         val authorities = (authentication.principal as AppUserDetails).authorities.map { x -> x.authority }
         return CompletableFuture.supplyAsync {
             return@supplyAsync PageDataDto(dao.readNextLevel(url, authorities))
@@ -126,7 +135,9 @@ class MainController {
     }
 
     @PostMapping("/saveOrCreateContacts")
-    fun saveOrCreateContacts(@RequestBody contactDto: List<ContactDto>, @RequestParam(value = "personId") personId: String, authentication: Authentication): CompletableFuture<PageDataDto<List<ContactDto>>> {
+    fun saveOrCreateContacts(@RequestBody contactDto: List<ContactDto>,
+                             @RequestParam(value = "personId") personId: String,
+                             authentication: Authentication): CompletableFuture<PageDataDto<List<ContactDto>>> {
         val login = (authentication.principal as AppUserDetails).username
         if (dao.ifPersonExists(personId) && dao.notLockedByUser(Person::class.java.name + personId, login))
             throw LockRecordException("Parent record was not locked by $login")
@@ -136,7 +147,9 @@ class MainController {
     }
 
     @GetMapping("/lockRecord")
-    fun lockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String, authentication: Authentication): PageDataDto<AlertDto> {
+    fun lockRecord(@RequestParam(value = "type") type: String,
+                   @RequestParam(value = "id") id: String,
+                   authentication: Authentication): PageDataDto<AlertDto> {
         val login = (authentication.principal as AppUserDetails).username
         return PageDataDto(if (dao.lockUnlockRecord(type + id, login, true))
             AlertDto("Record locked!", AlertDto.SUCCESS, AlertDto.RECORD_PREFIX + id + " locked!")
@@ -144,7 +157,9 @@ class MainController {
     }
 
     @GetMapping("/unlockRecord")
-    fun unlockRecord(@RequestParam(value = "type") type: String, @RequestParam(value = "id") id: String, authentication: Authentication): PageDataDto<AlertDto> {
+    fun unlockRecord(@RequestParam(value = "type") type: String,
+                     @RequestParam(value = "id") id: String,
+                     authentication: Authentication): PageDataDto<AlertDto> {
         val login = (authentication.principal as AppUserDetails).username
         return PageDataDto(if (dao.lockUnlockRecord(type + id, login, false))
             AlertDto("Record unlocked!", AlertDto.SUCCESS, AlertDto.RECORD_PREFIX + id + " unlocked!")
@@ -152,7 +167,9 @@ class MainController {
     }
 
     @GetMapping("/logout")
-    fun logoutPage(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication): String {
+    fun logoutPage(request: HttpServletRequest,
+                   response: HttpServletResponse,
+                   authentication: Authentication): String {
         val auth = authentication.principal as AppUserDetails
         dao.unlockAllRecordsForUser(auth.username)
         SecurityContextLogoutHandler().logout(request, response, authentication)
@@ -160,7 +177,8 @@ class MainController {
     }
 
     @PostMapping("/uploadDocument")
-    fun uploadDocument(@RequestParam file: MultipartFile, @RequestParam(value = "personId") personId: String): ResponseEntity<*>? {
+    fun uploadDocument(@RequestParam file: MultipartFile,
+                       @RequestParam(value = "personId") personId: String): ResponseEntity<*>? {
         val id = UUID.randomUUID().toString()
         val fileName = (file.originalFilename?.toString() ?: "file")
         val path = Paths.get("$storagePath/$id/$fileName")

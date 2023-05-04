@@ -23,7 +23,7 @@ class ContactDto(id: String?,
 
     constructor(contact: Contact?) : this(contact?.contactId,
             contact?.personId,
-            "" + contact?.type?.ordinal,
+            contact?.type?.ordinal.toString() ?: "",
             contact?.data,
             contact?.description)
 
@@ -89,7 +89,7 @@ class OrganizationDto(id: String?,
             organization?.name,
             organization?.addr?.street,
             organization?.addr?.zip,
-            "" + organization?.type?.ordinal,
+            organization?.type?.ordinal.toString() ?: "",
             dateFormatter.format(organization?.lastUpdated))
 
     init {
