@@ -293,6 +293,9 @@ class DAO : AddressBookDAO {
         if (entries.isEmpty()) return emptyList()
         val original = entries[0].value
         var menuEntry = original
+        if (menuEntry.parentId == null) {
+            return listOf(BreadcrumbDto(original.name, original.url))
+        }
         val breadcrumbs = ArrayList<BreadcrumbDto>()
         if (menuEntry?.parentId == null) return breadcrumbs
         while (true) {

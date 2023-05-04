@@ -14,8 +14,7 @@ object Utils {
 
     fun calculateSha256(path: Path): String {
         val byteSource = com.google.common.io.Files.asByteSource(path.toFile())
-        val hc = byteSource.hash(Hashing.sha256())
-        return hc.toString()
+        return byteSource.hash(Hashing.sha256()).toString()
     }
 
     fun humanReadableByteCount(size: Long): String {

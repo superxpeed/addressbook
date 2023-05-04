@@ -233,8 +233,10 @@ class DAO : AddressBookDAO {
         if (entries.isEmpty()) return emptyList()
         val original = entries[0]
         var menuEntry = original
+        if (menuEntry.parentId == null) {
+            return listOf(BreadcrumbDto(original.name, original.url))
+        }
         val breadcrumbs = ArrayList<BreadcrumbDto>()
-        if (menuEntry.parentId == null) return breadcrumbs
         while (true) {
             val menuEntries = entityManager.createQuery("SELECT u FROM MenuEntry u WHERE u.id=:id", MenuEntry::class.java)
                     .also { it?.setParameter("id", menuEntry.parentId) }?.resultList as List<MenuEntry>
