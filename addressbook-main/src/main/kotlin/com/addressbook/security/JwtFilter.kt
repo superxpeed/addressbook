@@ -1,5 +1,7 @@
 package com.addressbook.security
 
+import com.addressbook.dto.AlertDto
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -10,6 +12,7 @@ import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 
 @Component
@@ -24,12 +27,17 @@ class JwtFilter : GenericFilterBean() {
     override fun doFilter(servletRequest: ServletRequest,
                           servletResponse: ServletResponse,
                           filterChain: FilterChain) {
-        getTokenFromRequest(servletRequest as HttpServletRequest)?.let { s ->
-            if (jwtProvider.validateToken(s)) {
-                appUserDetailsService.loadUserByUsername(jwtProvider.getLoginFromToken(s)).also {
-                    SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(it, null, it.authorities)
+        try {
+            getTokenFromRequest(servletRequest as HttpServletRequest)?.let { s ->
+                if (jwtProvider.validateToken(s)) {
+                    appUserDetailsService.loadUserByUsername(jwtProvider.getLoginFromToken(s)).also {
+                        SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(it, null, it.authorities)
+                    }
                 }
             }
+        } catch (ex: Exception) {
+            (servletResponse as HttpServletResponse).status = 500
+            ObjectMapper().writeValue(servletResponse.writer, AlertDto("Error occurred!", AlertDto.DANGER, ex.message))
         }
         filterChain.doFilter(servletRequest, servletResponse)
     }
