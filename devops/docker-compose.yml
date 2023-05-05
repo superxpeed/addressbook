@@ -54,12 +54,21 @@ services:
       - eureka_host=http://eureka:7777/eureka
       - eureka_prefer_ip=true
       - mongo_server_hostname=mongo
+      - mongo_truststore_password=q1w2e3r4
+      - mongo_keystore_password=q1w2e3r4
+      - mongo_keystore_key_password=q1w2e3r4
+      - mongo_truststore_path=/mnt/certs/rootCA.p12
+      - mongo_keystore_path=/mnt/certs/localhost.p12
+      - java_opts=-Xms1g -Xmx4g -XX:MaxMetaspaceSize=512m -XX:MetaspaceSize=256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:InitiatingHeapOccupancyPercent=60 -XX:G1HeapRegionSize=32m -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/mnt/logs -Dlogging.config=/mnt/logback.xml
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:10000/actuator/health 2>&1 | grep UP || exit 1"]
       interval: 20s
       timeout: 5s
       retries: 5
     volumes:
+      - type: bind
+        source: /var/lib/docker/volumes/mongo_certs/_data
+        target: /mnt/certs
       - type: bind
         source: /var/lib/docker/volumes/logback/_data
         target: /mnt/
@@ -71,7 +80,7 @@ services:
     environment:
       - postgres_server_port=12000
       - postgres_host=host.docker.internal
-      - postgres_port=5432
+      - postgres_port=5433
       - postgres_db=postgres
       - postgres_user=test
       - postgres_password=test
@@ -83,6 +92,8 @@ services:
       - postgres_preferred_test_query=select 1
       - eureka_prefer_ip=true
       - postgres_server_hostname=postgres
+      - postgres_cert=/mnt/certs/admin.crt
+      - postgres_key=/mnt/certs/admin.key
     ports:
       - "13000:10000"
     healthcheck:
@@ -91,6 +102,9 @@ services:
       timeout: 5s
       retries: 5
     volumes:
+      - type: bind
+        source: /var/lib/docker/volumes/postgre_certs/_data
+        target: /mnt/certs
       - type: bind
         source: /var/lib/docker/volumes/logback/_data
         target: /mnt/
@@ -115,11 +129,11 @@ services:
       - key_password=q1w2e3r4
       - eureka_host=http://eureka:7777/eureka
       - web_ssl_enabled=true
-      - java_opts=-Xms1g -Xmx4g -XX:MaxMetaspaceSize=512m -XX:MetaspaceSize=256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:InitiatingHeapOccupancyPercent=60 -XX:G1HeapRegionSize=32m -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/mnt/logs -Dlogging.config=/mnt/logback.xml -DIGNITE_NO_SHUTDOWN_HOOK=true
+      - java_opts=-Xms1g -Xmx4g -XX:MaxMetaspaceSize=512m -XX:MetaspaceSize=256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:InitiatingHeapOccupancyPercent=60 -XX:G1HeapRegionSize=32m -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/mnt/logs -Dlogging.config=/mnt/logback.xml
     restart: on-failure
     volumes:
       - type: bind
-        source: /var/lib/docker/volumes/certs/_data
+        source: /var/lib/docker/volumes/web_certs/_data
         target: /mnt/certs
       - type: bind
         source: /var/lib/docker/volumes/logback/_data

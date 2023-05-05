@@ -199,12 +199,14 @@ https://www.docker.com/products/docker-desktop/
 ### Create Volumes
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/volumes.png" width="900"/>  
 
-### Copy [keystore.jks](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/certs/keystore.jks), [truststore.jks](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/certs/truststore.jks), [logback.xml](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/resources/logback.xml) to the Volume folders
+### Copy [web-app](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/certs), [postgre-server](https://github.com/dredwardhyde/addressbook/blob/master/postgre-server/client_certs), [mongo-server](https://github.com/dredwardhyde/addressbook/blob/master/mongo-server/client_certs) certificates, [logback.xml](https://github.com/dredwardhyde/addressbook/blob/master/addressbook-main/src/main/resources/logback.xml) to the Volume folders
 ```shell
 \\wsl$\docker-desktop-data\version-pack-data\community\docker\volumes
 ```
 <img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/logback_volume.png" width="900"/>
-<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/certs_volume.png" width="900"/>  
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/web_certs_volume.png" width="900"/>  
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/mongo_certs_volume.png" width="900"/>  
+<img src="https://raw.githubusercontent.com/dredwardhyde/addressbook/master/devops/readme/postgre_certs_volume.png" width="900"/>  
 
 ### Deploy project
 ```shell
