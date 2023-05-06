@@ -297,10 +297,10 @@ export class PersonComponentInner extends React.Component {
                     if (creation) {
                         this.props.lockUnlockRecord(Caches.PERSON_CACHE, personId, "unlock", this.props.showNotification);
                         this.props.showCommonAlert("Person created!")
-                        this.props.onUpdate(savedPerson);
                     } else {
                         this.props.showCommonAlert("Changes saved!")
                     }
+                    this.props.onUpdate(savedPerson);
                 } else {
                     this.props.showCommonErrorAlert(text);
                 }

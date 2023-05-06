@@ -80,7 +80,7 @@ services:
     environment:
       - postgres_server_port=12000
       - postgres_host=host.docker.internal
-      - postgres_port=5433
+      - postgres_port=5432
       - postgres_db=postgres
       - postgres_user=test
       - postgres_password=test

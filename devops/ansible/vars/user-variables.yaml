@@ -93,7 +93,7 @@ postgres_server_port: 12000
 # URL to the addressbook_postgre image
 postgres_image: addressbook_postgre:latest
 # External PostgreSQL port on target server
-external_postgres_port: 5433
+external_postgres_port: 5432
 # Internal MongoDB port inside namespace
 postgres_port: 11111
 # PostgreSQL host name as it's visible from k8s cluster
