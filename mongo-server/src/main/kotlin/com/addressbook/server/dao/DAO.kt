@@ -147,7 +147,7 @@ class DAO : AddressBookDAO {
     }
 
     override fun notLockedByUser(key: String, user: String): Boolean {
-        val userLocked = getById("id", key, Lock::class.java) ?: return false
+        val userLocked = getById("id", key, Lock::class.java) ?: return true
         return user != userLocked.login
     }
 

@@ -148,7 +148,7 @@ class DAO : AddressBookDAO {
 
     override fun notLockedByUser(key: String, user: String): Boolean {
         val cacheLocks: IgniteCache<String, Lock>? = ignite.getOrCreateCache(FieldDescriptor.LOCK_RECORD_CACHE)
-        val userLocked = cacheLocks?.get(key) ?: return false
+        val userLocked = cacheLocks?.get(key) ?: return true
         return user != userLocked.login
     }
 

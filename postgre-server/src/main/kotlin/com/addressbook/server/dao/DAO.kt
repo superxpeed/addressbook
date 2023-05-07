@@ -92,7 +92,7 @@ class DAO : AddressBookDAO {
 
     @Transactional
     override fun notLockedByUser(key: String, user: String): Boolean {
-        val userLocked = entityManager.find(Lock::class.java, key) ?: return false
+        val userLocked = entityManager.find(Lock::class.java, key) ?: return true
         return user != userLocked.login
     }
 
