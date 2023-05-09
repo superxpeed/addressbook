@@ -120,7 +120,7 @@ class DAO : AddressBookDAO {
         val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         contactDtos.forEach {
             it.personId = targetPersonId
-            val contact = if (it.id == null)
+            val contact = if (it.id.isNullOrBlank())
                 Contact()
             else
                 getById("contactId", it.id, Contact::class.java) ?: Contact()
@@ -152,19 +152,19 @@ class DAO : AddressBookDAO {
     }
 
     override fun ifOrganizationExists(key: String?): Boolean {
-        return if (key == null)
+        return if (key.isNullOrBlank())
             false
         else getById("id", key, Organization::class.java) != null
     }
 
     override fun ifPersonExists(key: String?): Boolean {
-        return if (key == null)
+        return if (key.isNullOrBlank())
             false
         else getById("id", key, Person::class.java) != null
     }
 
     override fun ifContactExists(key: String?): Boolean {
-        return if (key == null)
+        return if (key.isNullOrBlank())
             false
         else getById("contactId", key, Contact::class.java) != null
     }
@@ -281,11 +281,11 @@ class DAO : AddressBookDAO {
         if (entries.isEmpty()) return emptyList()
         val original = entries[0]
         var menuEntry = original
-        if (menuEntry.parentId == null) {
+        if (menuEntry.parentId.isNullOrBlank()) {
             return listOf(BreadcrumbDto(original.name, original.url))
         }
         val breadcrumbs = ArrayList<BreadcrumbDto>()
-        if (menuEntry.parentId == null) return breadcrumbs
+        if (menuEntry.parentId.isNullOrBlank()) return breadcrumbs
         while (true) {
             val menuEntries = dataStore.createQuery(MenuEntry::class.java)
                     ?.field("id")

@@ -66,7 +66,7 @@ class DAO : AddressBookDAO {
         val toDelete = getContactsByPersonId(targetPersonId).mapNotNull { it.id }.minus(contactDtos.mapNotNull { it.id }.toSet())
         contactDtos.forEach {
             it.personId = targetPersonId
-            val contact = if (it.id == null) Contact() else entityManager.find(Contact::class.java, it.id) ?: Contact()
+            val contact = if (it.id.isNullOrBlank()) Contact() else entityManager.find(Contact::class.java, it.id) ?: Contact()
             with(contact) {
                 data = it.data
                 description = it.description
@@ -98,21 +98,21 @@ class DAO : AddressBookDAO {
 
     @Transactional
     override fun ifOrganizationExists(key: String?): Boolean {
-        return if (key == null)
+        return if (key.isNullOrBlank())
             false
         else entityManager.find(Organization::class.java, key) != null
     }
 
     @Transactional
     override fun ifPersonExists(key: String?): Boolean {
-        return if (key == null)
+        return if (key.isNullOrBlank())
             false
         else entityManager.find(Person::class.java, key) != null
     }
 
     @Transactional
     override fun ifContactExists(key: String?): Boolean {
-        return if (key == null)
+        return if (key.isNullOrBlank())
             false
         else entityManager.find(Contact::class.java, key) != null
     }
@@ -233,7 +233,7 @@ class DAO : AddressBookDAO {
         if (entries.isEmpty()) return emptyList()
         val original = entries[0]
         var menuEntry = original
-        if (menuEntry.parentId == null) {
+        if (menuEntry.parentId.isNullOrBlank()) {
             return listOf(BreadcrumbDto(original.name, original.url))
         }
         val breadcrumbs = ArrayList<BreadcrumbDto>()
@@ -312,7 +312,7 @@ class DAO : AddressBookDAO {
     }
 
     private fun getComparator(filterDto: FilterDto): String {
-        return if (filterDto.comparator == null || filterDto.comparator.equals("")) " = "
+        return if (filterDto.comparator.isNullOrBlank() || filterDto.comparator.equals("")) " = "
         else " " + filterDto.comparator + " "
     }
 

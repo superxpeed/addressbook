@@ -120,7 +120,7 @@ class DAO : AddressBookDAO {
         tx.use {
             contactDtos.forEach {
                 it.personId = targetPersonId
-                val contact = if (it.id == null) Contact() else cacheContacts?.get(it.id) ?: Contact()
+                val contact = if (it.id.isNullOrBlank()) Contact() else cacheContacts?.get(it.id) ?: Contact()
                 with(contact) {
                     data = it.data
                     description = it.description
@@ -154,21 +154,21 @@ class DAO : AddressBookDAO {
 
     override fun ifOrganizationExists(key: String?): Boolean {
         val cacheOrganization: IgniteCache<String, Organization>? = ignite.getOrCreateCache(FieldDescriptor.ORGANIZATION_CACHE)
-        return if (key == null)
+        return if (key.isNullOrBlank())
             false
         else cacheOrganization?.get(key) != null
     }
 
     override fun ifPersonExists(key: String?): Boolean {
         val cachePerson: IgniteCache<String, Person>? = ignite.getOrCreateCache(FieldDescriptor.PERSON_CACHE)
-        return if (key == null)
+        return if (key.isNullOrBlank())
             false
         else cachePerson?.get(key) != null
     }
 
     override fun ifContactExists(key: String?): Boolean {
         val cacheContacts: IgniteCache<String, Contact>? = ignite.getOrCreateCache(FieldDescriptor.CONTACT_CACHE)
-        return if (key == null)
+        return if (key.isNullOrBlank())
             false
         else cacheContacts?.get(key) != null
     }
@@ -293,11 +293,11 @@ class DAO : AddressBookDAO {
         if (entries.isEmpty()) return emptyList()
         val original = entries[0].value
         var menuEntry = original
-        if (menuEntry.parentId == null) {
+        if (menuEntry.parentId.isNullOrBlank()) {
             return listOf(BreadcrumbDto(original.name, original.url))
         }
         val breadcrumbs = ArrayList<BreadcrumbDto>()
-        if (menuEntry?.parentId == null) return breadcrumbs
+        if (menuEntry?.parentId.isNullOrBlank()) return breadcrumbs
         while (true) {
             val menuEntries = cache?.query(SqlQuery<String, MenuEntry>(MenuEntry::class.java, "id = ?")
                     .setArgs(menuEntry?.parentId))?.all as List<Cache.Entry<String, MenuEntry>>
@@ -391,7 +391,7 @@ class DAO : AddressBookDAO {
     }
 
     private fun getComparator(filterDto: FilterDto): String {
-        return if (filterDto.comparator == null || filterDto.comparator.equals("")) " = "
+        return if (filterDto.comparator.isNullOrBlank()) " = "
         else " " + filterDto.comparator + " "
     }
 
